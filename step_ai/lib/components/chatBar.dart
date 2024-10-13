@@ -43,7 +43,7 @@ class _ChatBarState extends State<ChatBar> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 2),
-      margin: const EdgeInsets.symmetric(horizontal: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 10,vertical: 5),
       decoration: BoxDecoration(
         color: Colors.grey[500],
         border: Border.all(

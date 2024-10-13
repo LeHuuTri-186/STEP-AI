@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../pages/emailPage.dart';
+
 class HistoryDrawer extends StatelessWidget {
   TextEditingController searchController = TextEditingController();
   HistoryDrawer({super.key});
@@ -40,16 +42,15 @@ class HistoryDrawer extends StatelessWidget {
               height: 25,
             ),
             // Search Bar
-                SizedBox(
-                  height: 40,
-                  child: SearchBar(
-                    controller: searchController,
-                    onTap: onSearchTextChanged,
-                    leading: const Icon(Icons.search),
-                    hintText: 'Search...',
-                    
-                  ),
-                ),
+            SizedBox(
+              height: 40,
+              child: SearchBar(
+                controller: searchController,
+                onTap: onSearchTextChanged,
+                leading: const Icon(Icons.search),
+                hintText: 'Search...',
+              ),
+            ),
           ],
         ),
       ),
@@ -63,9 +64,26 @@ class HistoryDrawer extends StatelessWidget {
               ExpansionTile(
                 title: const Text('BOTs'),
                 children: <Widget>[
-                  ListTile(title: const Text('ChatGPT'), onTap: () {}),
-                  ListTile(title: const Text('Gemini'), onTap: () {}),
-                  ListTile(title: const Text('Email BOT'), onTap: () {}),
+                  ListTile(
+                      title: const Text('Math BOT'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      }),
+                  ListTile(
+                      title: const Text('English BOT'),
+                      onTap: () {
+                        Navigator.pop(context);
+                      }),
+                  ListTile(
+                      title: const Text('Email BOT'),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const EmailPage()),
+                        );
+                      }),
                 ],
               ),
 

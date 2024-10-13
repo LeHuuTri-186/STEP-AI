@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:step_ai/components/chatBar.dart';
 import 'package:step_ai/pages/chatPage.dart';
+import 'package:step_ai/pages/emailPage.dart';
 
 import 'components/historyDrawer.dart';
 
@@ -19,14 +20,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        drawer: HistoryDrawer(),
-        appBar: AppBar(
-          title: const Text('Step AI',style: TextStyle(fontSize: 25),),
-          backgroundColor: Colors.blue[900],
-        ),
-        body: const ChatPage(),
-      ),
+      home: const ChatPage(),
     );
   }
 }
