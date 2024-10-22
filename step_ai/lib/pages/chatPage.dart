@@ -5,77 +5,98 @@ import 'package:step_ai/components/messageTile.dart';
 import '../components/chatBar.dart';
 import '../components/historyDrawer.dart';
 
-class ChatPage extends StatelessWidget {
-  const ChatPage({super.key});
+class ChatPage extends StatefulWidget {
+  ChatPage({super.key});
+
+  @override
+  State<ChatPage> createState() => _ChatPageState();
+}
+
+class _ChatPageState extends State<ChatPage> {
+  List<MessageTile> messages = [
+    // const MessageTile(isAI: false, message: "Hello, can you help me?"),
+    // const MessageTile(
+    //     iconSendObject: Icons.deblur,
+    //     isAI: true,
+    //     message: "Hello, I am Step AI. How can I help you?"),
+    // const MessageTile(isAI: false, message: "what is the solar system?"),
+    // const MessageTile(
+    //     iconSendObject: Icons.deblur,
+    //     isAI: true,
+    //     message: "The Solar System consists of the Sun, eight planets..."),
+    // const MessageTile(isAI: false, message: "Summarize"),
+    // const MessageTile(
+    //     iconSendObject: Icons.deblur,
+    //     isAI: true,
+    //     message: "The Solar System includes the Sun, eight planets..."),
+    // const MessageTile(isAI: false, message: "Detail"),
+    // const MessageTile(
+    //     iconSendObject: Icons.deblur,
+    //     isAI: true,
+    //     message: "Terrestrial planets (rocky planets): Mercury..."),
+    // const MessageTile(isAI: false, message: "Detail"),
+    // const MessageTile(
+    //     iconSendObject: Icons.deblur,
+    //     isAI: true,
+    //     message: "Terrestrial planets (rocky planets): Mercury..."),
+    // const MessageTile(isAI: false, message: "Detail"),
+    // const MessageTile(
+    //     iconSendObject: Icons.deblur,
+    //     isAI: true,
+    //     message: "Terrestrial planets (rocky planets): Mercury..."),
+    // const MessageTile(isAI: false, message: "Detail"),
+    // const MessageTile(
+    //     iconSendObject: Icons.deblur,
+    //     isAI: true,
+    //     message: "Terrestrial planets (rocky planets): Mercury..."),
+  ];
+
+  void onSendMessage(String sendMessage) {
+    setState(() {
+      messages.add(MessageTile(
+          isAI: false, message: sendMessage, iconSendObject: Icons.deblur));
+      messages.add(const MessageTile(isAI: true, message: "OK"));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: HistoryDrawer(),
-        appBar: AppBar(
-          title: const Text('Step AI',style: TextStyle(fontSize: 25,color: Colors.white),),
-          backgroundColor: Colors.blue,
-          actions: [
-            IconButton(onPressed: (){}, icon: const Icon(Icons.add,color: Colors.white,)),
-          ],
-          iconTheme: const IconThemeData(color: Colors.white),
+      drawer: HistoryDrawer(),
+      appBar: AppBar(
+        title: const Text(
+          'Step AI',
+          style: TextStyle(fontSize: 25, color: Colors.white),
         ),
+        backgroundColor: Colors.blue,
+        actions: [
+          IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                Icons.add,
+                color: Colors.white,
+              )),
+        ],
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
       body: Padding(
           padding: const EdgeInsets.all(5),
           child: Column(
             children: [
               Expanded(
-                  child: ListView(
-                children: const [
-                  MessageTile(isAI: false, message: "Hello, can you help me?"),
-                  //demo for AI icon: deblur
-                  MessageTile(
-                      iconSendObject: Icons.deblur,
-                      isAI: true,
-                      message: "Hello, I am Step AI. How can I help you?"),
-      
-                  MessageTile(isAI: false, message: "what is the solar system?"),
-                  //demo for AI icon: deblur
-                  MessageTile(
-                      iconSendObject: Icons.deblur,
-                      isAI: true,
-                      message:
-                          """The Solar System consists of the Sun, eight planets (Mercury,
-                          Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune), dwarf planets
-                          (like Pluto), moons, and other objects like asteroids and comets. 
-                          The Sun's gravity holds all these celestial bodies together. 
-                          The planets are divided into terrestrial (rocky) planets and gas/ice giants."""),
-      
-                  MessageTile(isAI: false, message: "Summarize"),
-                  //demo for AI icon: deblur
-                  MessageTile(
-                      iconSendObject: Icons.deblur,
-                      isAI: true,
-                      message:
-                          "The Solar System includes the Sun, eight planets, dwarf planets, moons, asteroids, and comets, all held together by the Sun's gravity. The planets are categorized as either rocky or gas/ice giants."),
-                  MessageTile(isAI: false, message: "Detail"),
-                  //demo for AI icon: deblur
-                  MessageTile(
-                      iconSendObject: Icons.deblur,
-                      isAI: true,
-                      message: """Terrestrial planets (rocky planets):
-                                Mercury: The smallest planet, closest to the Sun, with a very thin atmosphere.
-                                Venus: Similar in size to Earth but with a thick atmosphere and extreme surface temperatures.
-                                Earth: The only planet known to support life, with water, land, and a diverse atmosphere.
-                                Mars: Known as the "Red Planet" because of its iron oxide surface, with a thin atmosphere and evidence of water ice.
-                                Gas giants and ice giants:
-                                Jupiter: The largest planet, with a thick atmosphere of hydrogen and helium, known for its Great Red Spot.
-                                Saturn: Famous for its spectacular ring system, also primarily composed of hydrogen and helium.
-                                Uranus: An ice giant with a blue-green color due to methane in its atmosphere, rotating on its side.
-                                Neptune: The farthest planet from the Sun, an ice giant with strong winds and a deep blue color."""),
-                ],
-              )),
-              const Column(
+                child: ListView.builder(
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+                    return messages[index];
+                  },
+                ),
+              ),
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  DropdownAI(),
-                  SizedBox(height: 8), // Khoảng cách giữa DropdownAI và ChatBar
-                  ChatBar(),
+                  const DropdownAI(),
+                  const SizedBox(height: 8), // Khoảng cách giữa DropdownAI và ChatBar
+                  ChatBar(onSendMessage: onSendMessage,),
                 ],
               ),
             ],

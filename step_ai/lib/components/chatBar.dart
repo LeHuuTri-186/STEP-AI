@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ChatBar extends StatefulWidget {
-  const ChatBar({super.key});
+  void Function(String) onSendMessage;
+  ChatBar({super.key,required this.onSendMessage});
 
   @override
   _ChatBarState createState() => _ChatBarState();
@@ -43,11 +44,10 @@ class _ChatBarState extends State<ChatBar> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 2),
-      margin: const EdgeInsets.symmetric(horizontal: 10,vertical: 5),
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
         color: Colors.grey[500],
-        border: Border.all(
-            color: Colors.black87, width: 1), 
+        border: Border.all(color: Colors.black87, width: 1),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
@@ -114,7 +114,10 @@ class _ChatBarState extends State<ChatBar> {
                 Icons.send,
                 color: Colors.white,
               ),
-              onPressed: () {})
+              onPressed: () {
+                widget.onSendMessage(_controller.text);
+                _controller.clear();
+              })
         ],
       ),
     );

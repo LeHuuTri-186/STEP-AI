@@ -7,8 +7,25 @@ import '../components/chatBar.dart';
 import '../components/emailOptionTile.dart';
 import '../components/historyDrawer.dart';
 
-class EmailPage extends StatelessWidget {
-  const EmailPage({super.key});
+class EmailPage extends StatefulWidget {
+
+  EmailPage({super.key});
+
+  @override
+  State<EmailPage> createState() => _EmailPageState();
+}
+
+class _EmailPageState extends State<EmailPage> {
+  List<MessageTile> messages = [
+  ];
+
+    void onSendMessage(String sendMessage) {
+    setState(() {
+      messages.add(MessageTile(
+          isAI: false, message: sendMessage, iconSendObject: Icons.deblur));
+      messages.add(const MessageTile(isAI: true, message: "OK"));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,39 +43,13 @@ class EmailPage extends StatelessWidget {
           child: Column(
             children: [
               Expanded(
-                  child: ListView(
-                children: const [
-                  MessageTile(isAI: false, message: "Hello, can you help me?"),
-                  //demo for AI icon: deblur
-                  MessageTile(
-                      iconSendObject: Icons.deblur,
-                      isAI: true,
-                      message: "Hello, I am Step AI. How can I help you?"),
-
-                  MessageTile(isAI: false, message: "Write an email"),
-                  //demo for AI icon: deblur
-                  MessageTile(
-                      iconSendObject: Icons.deblur,
-                      isAI: true,
-                      message: """Dear [Recipient's Name],
-                            I hope this email finds you well. I am writing to [reason for writing the email].
-                            I would like to discuss [topic] and [additional details]. Please let me know if you have any questions or need further information. Thank you for your time and attention. I look forward to hearing from you soon. Sincerely, [Your Name]"""),
-
-                  MessageTile(isAI: false, message: "Summarize"),
-                  //demo for AI icon: deblur
-                  MessageTile(
-                      iconSendObject: Icons.deblur,
-                      isAI: true,
-                      message:
-                          "Dear [Recipient's Name], I am writing to [reason for writing the email]. I would like to discuss [topic] and [additional details]. Please let me know if you have any questions or need further information. Thank you for your time and attention. I look forward to hearing from you soon. Sincerely, [Your Name]"),
-                  MessageTile(isAI: false, message: "Detail"),
-                  //demo for AI icon: deblur
-                  MessageTile(
-                      iconSendObject: Icons.deblur, isAI: true, message: """
-                      Dear [Recipient's Name],
-                      I hope this email finds you well. I am writing to [reason for writing the email]. I would like to discuss [topic] and [additional details]. Please let me know if you have any questions or need further information. Thank you for your time and attention. I look forward to hearing from you soon."""),
-                ],
-              )),
+                  child: ListView.builder(
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+                    return messages[index];
+                  },
+                ),
+              ),
               //EmailOptionTile(icon: Icons.abc_sharp,label: "ABC",onTap: (){},)
 
               //EmailOptions(),
@@ -70,14 +61,14 @@ class EmailPage extends StatelessWidget {
                   const SizedBox(height: 5),
                   // ChatBar(),
                   // DropdownAI(),
-                  const Row(
+                  Row(
                     children: [
                       Expanded(
                         flex: 3,
-                        child: ChatBar(),
+                        child: ChatBar(onSendMessage:onSendMessage ,),
                       ),
-                      SizedBox(width: 10),
-                      Expanded(flex:1,child: DropdownAI()),
+                      const SizedBox(width: 10),
+                      const Expanded(flex:1,child: DropdownAI()),
                       
                     ],
                   )

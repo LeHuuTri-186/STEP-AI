@@ -81,7 +81,7 @@ class HistoryDrawer extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const EmailPage()),
+                              builder: (context) => EmailPage()),
                         );
                       }),
                 ],
