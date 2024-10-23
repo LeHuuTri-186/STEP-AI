@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:step_ai/components/chatBar.dart';
+import 'package:step_ai/pages/botManagerPage.dart';
 import 'package:step_ai/pages/chatPage.dart';
 import 'package:step_ai/pages/emailPage.dart';
 
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: ChatPage(),
+      home: BotManagerPage(),
     );
   }
 }
