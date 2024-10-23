@@ -5,19 +5,19 @@ class EmailOptionTile extends StatelessWidget {
   final String label;
   final Function()? onTap;
 
-  EmailOptionTile({Key? key, required this.icon, required this.label, this.onTap})
-      : super(key: key);
+  const EmailOptionTile({super.key, required this.icon, required this.label, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
         decoration: BoxDecoration(
-          color: Colors.grey,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.black, width: 1),
+          shape: BoxShape.rectangle,
+          color: Colors.blueAccent,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.blueAccent, width: 0),
         ),
         margin: const EdgeInsets.all(4.0),
         child: Row(

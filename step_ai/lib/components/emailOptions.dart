@@ -11,12 +11,14 @@ class EmailOptions extends StatelessWidget {
     {'icon': Icons.refresh, 'label': 'Follow up'},
   ];
 
+  EmailOptions({super.key});
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Padding(
-          padding: const EdgeInsets.all(2.0),
+          padding: const EdgeInsets.all(10.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

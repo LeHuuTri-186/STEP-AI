@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="d36423b6-326c-41d1-9fba-ad3516026006" name="Changes" comment="Test ui for prompt library">
+      <change afterPath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/step_ai/ios/Podfile.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/step_ai/lib/components/appNameWidget.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/step_ai/lib/core/assets/img/empty-box.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/step_ai/lib/core/assets/img/file.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/step_ai/lib/pages/personal_page/personalPage.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/step_ai/lib/pages/personal_page/widgets/dropdownWidget.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/step_ai/lib/pages/personal_page/widgets/noBotPanel.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/step_ai/lib/pages/personal_page/widgets/noKnowledgePanel.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/step_ai/lib/pages/personal_page/widgets/searchBarWidget.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/step_ai/lib/pages/plan_pricing_page/planPricingPage.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/step_ai/lib/pages/plan_pricing_page/widgets/planContainer.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/step_ai/lib/utils/routes/routes.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/ios/Runner.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/ios/Runner.xcodeproj/project.pbxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/ios/Runner.xcworkspace/contents.xcworkspacedata" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/ios/Runner.xcworkspace/contents.xcworkspacedata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/lib/components/chatBar.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/components/chatBar.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/lib/components/dropdownAI.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/components/dropdownAI.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/lib/components/emailOptionTile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/components/emailOptionTile.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/lib/components/emailOptions.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/components/emailOptions.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/lib/components/historyDrawer.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/components/historyDrawer.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/lib/components/messageTile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/components/messageTile.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/botManagerPage.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/chatPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/pages/chat_page/chatPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/emailPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/pages/email_page/emailPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/pubspec.yaml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Dart File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="mock_ui_le_huu_tri" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;LeHuuTri-186&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/LeHuuTri-186/STEP-AI.git&quot;,
+    &quot;accountId&quot;: &quot;62d97789-2552-40bd-9fca-043bb35448e7&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="2n8xYLYUlMeQFNmQv51UvaX1rqL" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Flutter.main.dart.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "nths__lht",
+    "io.flutter.reload.alreadyRun": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/lehuutri/AndroidStudioProjects/STEP-AI/step_ai/lib/core/util/device",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "dart.settings",
+    "show.migrate.to.gradle.popup": "false"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/step_ai/lib/core/util/device" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/step_ai/lib/pages/emailPage" />
+      <recent name="$PROJECT_DIR$/step_ai/lib/pages/chat_page" />
+      <recent name="$PROJECT_DIR$/step_ai/lib/core/assets/img" />
+      <recent name="$PROJECT_DIR$/step_ai/lib/pages/bot_manager_page" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="main.dart" type="FlutterRunConfigurationType" factoryName="Flutter">
+      <option name="filePath" value="$PROJECT_DIR$/step_ai/lib/main.dart" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d36423b6-326c-41d1-9fba-ad3516026006" name="Changes" comment="" />
+      <created>1728368564200</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1728368564200</updated>
+    </task>
+    <task id="LOCAL-00001" summary="Test ui for prompt library">
+      <option name="closed" value="true" />
+      <created>1729702617410</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1729702617410</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="Test ui for prompt library" />
+    <option name="LAST_COMMIT_MESSAGE" value="Test ui for prompt library" />
+  </component>
+</project>

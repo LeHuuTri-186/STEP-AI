@@ -6,11 +6,11 @@ class MessageTile extends StatelessWidget {
   final IconData? iconSendObject;
 
   const MessageTile({
-    Key? key,
+    super.key,
     required this.isAI,
     required this.message,
     this.iconSendObject,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

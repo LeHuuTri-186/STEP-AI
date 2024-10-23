@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:step_ai/components/chatBar.dart';
-import 'package:step_ai/pages/botManagerPage.dart';
-import 'package:step_ai/pages/chatPage.dart';
-import 'package:step_ai/pages/emailPage.dart';
+import 'package:step_ai/pages/chat_page/chatPage.dart';
+import 'package:step_ai/pages/plan_pricing_page/planPricingPage.dart';
+import 'package:step_ai/utils/routes/routes.dart';
 
-import 'components/historyDrawer.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,7 +19,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: BotManagerPage(),
+      routes: Routes.routes,
+      initialRoute: Routes.planAndPricing,
+      home: ChatPage(chatName: "Chat"),
     );
   }
 }

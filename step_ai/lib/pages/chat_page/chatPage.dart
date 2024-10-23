@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:step_ai/components/dropDownAI.dart';
 import 'package:step_ai/components/messageTile.dart';
+import 'package:step_ai/pages/personal_page/personalPage.dart';
+import 'package:step_ai/pages/personal_page/widgets/dropdownWidget.dart';
 
-import '../components/chatBar.dart';
-import '../components/historyDrawer.dart';
+import 'package:step_ai/components/appNameWidget.dart';
+import '../../components/chatBar.dart';
+import '../../components/historyDrawer.dart';
+import '../../utils/routes/routes.dart';
 
 class ChatPage extends StatefulWidget {
-  ChatPage({super.key});
+  const ChatPage({super.key, this.chatName = "Chat"});
+  final String? chatName;
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -64,9 +70,15 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       drawer: HistoryDrawer(),
       appBar: AppBar(
-        title: const Text(
-          'Step AI',
-          style: TextStyle(fontSize: 25, color: Colors.white),
+        title: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(widget.chatName??"Chat", style: GoogleFonts.jetBrainsMono(
+            color: Colors.white,
+            fontWeight: FontWeight.w700,
+            fontSize: MediaQuery.of(context).size.width * 0.05),),
+          ],
         ),
         backgroundColor: Colors.blue,
         actions: [
@@ -94,9 +106,20 @@ class _ChatPageState extends State<ChatPage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const DropdownAI(),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.5,
+                        child: DropdownWidget(display: "Bots:",types: const ["New bot", "Chat GPT", "Bing", "Llama"], onSelect: (m) {
+                          if (m == "New bot") {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const PersonalPage()));
+                          }
+                        },)
+                    ),
+                  ),
                   const SizedBox(height: 8), // Khoảng cách giữa DropdownAI và ChatBar
                   ChatBar(onSendMessage: onSendMessage,),
+                  SizedBox(height: 20,),
                 ],
               ),
             ],

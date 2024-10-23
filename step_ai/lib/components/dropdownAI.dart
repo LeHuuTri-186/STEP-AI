@@ -9,16 +9,16 @@ class DropdownAI extends StatefulWidget {
 
 class _DropdownAIState extends State<DropdownAI> {
   String selectedOption = 'GPT';
-  List<String> options = ['GPT', 'Bing', 'Gemini'];
+  List<String> options = ['GPT', 'Bing', 'Gemini', 'New bot'];
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       margin: const EdgeInsets.only(top:5,left: 10),
       decoration: BoxDecoration(
-        color: Colors.grey[500],
+        color: Colors.blueAccent,
         borderRadius: BorderRadius.circular(10.0),
-        border: Border.all(color: Colors.black, width: 1),
+        border: Border.all(color: Colors.transparent, width: 0),
       ),
       child: DropdownButton<String>(
         isDense: true, 
@@ -35,7 +35,7 @@ class _DropdownAIState extends State<DropdownAI> {
           );
         }).toList(),
         style: const TextStyle(color: Colors.white), 
-        dropdownColor: Colors.grey[500],
+        dropdownColor: Colors.blueAccent,
        
       ),
     );

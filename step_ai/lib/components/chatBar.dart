@@ -43,12 +43,12 @@ class _ChatBarState extends State<ChatBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 2),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color: Colors.grey[500],
-        border: Border.all(color: Colors.black87, width: 1),
-        borderRadius: BorderRadius.circular(20),
+        color: Colors.white54,
+        border: Border.all(color: Colors.grey, width: 0.8),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
         children: [
@@ -58,7 +58,7 @@ class _ChatBarState extends State<ChatBar> {
               padding: const EdgeInsets.all(2),
               icon: const Icon(
                 Icons.add,
-                color: Colors.white,
+                color: Colors.black,
               ),
               onPressed: _toggleIcons,
             ),
@@ -69,7 +69,7 @@ class _ChatBarState extends State<ChatBar> {
               icon: const Icon(
                 Icons.camera_alt_rounded,
                 size: 20,
-                color: Colors.white,
+                color: Colors.black,
               ),
               onPressed: () {},
             ),
@@ -78,7 +78,7 @@ class _ChatBarState extends State<ChatBar> {
               icon: const Icon(
                 Icons.photo,
                 size: 20,
-                color: Colors.white,
+                color: Colors.black,
               ),
               onPressed: () {},
             ),
@@ -87,9 +87,22 @@ class _ChatBarState extends State<ChatBar> {
               icon: const Icon(
                 Icons.attach_file,
                 size: 20,
-                color: Colors.white,
+                color: Colors.black,
               ),
               onPressed: () {},
+            ),
+
+            IconButton(
+              icon: const Icon(
+                Icons.arrow_left,
+                size: 20,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                setState(() {
+                  _toggleIcons();
+                });
+              },
             ),
           ],
 
@@ -112,7 +125,7 @@ class _ChatBarState extends State<ChatBar> {
               padding: const EdgeInsets.all(2),
               icon: const Icon(
                 Icons.send,
-                color: Colors.white,
+                color: Colors.black,
               ),
               onPressed: () {
                 widget.onSendMessage(_controller.text);
