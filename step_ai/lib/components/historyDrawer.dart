@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:step_ai/components/appNameWidget.dart';
 import 'package:step_ai/pages/personal_page/widgets/searchBarWidget.dart';
 import 'package:step_ai/pages/plan_pricing_page/planPricingPage.dart';
+import 'package:step_ai/pages/sign_in_page/signIn.dart';
 
 import '../pages/chat_page/chatPage.dart';
 import '../pages/email_page/emailPage.dart';
@@ -34,7 +35,7 @@ class HistoryDrawer extends StatelessWidget {
                   size: 50,
                 ),
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.05,
+                  width: 10
                 ),
                 AppNameWidget(),
               ],
@@ -85,7 +86,7 @@ class HistoryDrawer extends StatelessWidget {
                               color: Colors.black,
                               fontWeight: FontWeight.w700,
                               fontSize:
-                                  MediaQuery.of(context).size.width * 0.04),
+                              15),
                         ),
                       )),
                     ],
@@ -113,7 +114,7 @@ class HistoryDrawer extends StatelessWidget {
                               color: Colors.black,
                               fontWeight: FontWeight.w700,
                               fontSize:
-                                  MediaQuery.of(context).size.width * 0.04),
+                              15),
                         ),
                       )),
                     ],
@@ -136,7 +137,7 @@ class HistoryDrawer extends StatelessWidget {
                         color: Colors.black,
                         fontWeight: FontWeight.w700,
                         fontSize:
-                        MediaQuery.of(context).size.width * 0.04),),
+                        15),),
                   ],
                 ),
                 children: <Widget>[
@@ -188,8 +189,7 @@ class HistoryDrawer extends StatelessWidget {
                 style: GoogleFonts.jetBrainsMono(
                     color: Colors.black,
                     fontWeight: FontWeight.w700,
-                    fontSize:
-                    MediaQuery.of(context).size.width * 0.04),
+                    fontSize: 15),
               ),
               ListView.builder(
                 shrinkWrap: true,
@@ -213,7 +213,13 @@ class HistoryDrawer extends StatelessWidget {
         children: [
           Expanded(
               child: TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SignInApp()),
+                  );
+                },
                 style: ButtonStyle(
                     shape: WidgetStateProperty.resolveWith(
                             (states) => ContinuousRectangleBorder()),
@@ -234,7 +240,7 @@ class HistoryDrawer extends StatelessWidget {
                             color: Colors.black,
                             fontWeight: FontWeight.w700,
                             fontSize:
-                            MediaQuery.of(context).size.width * 0.04),
+                            15),
                       ),
                     ],
                   ),

@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       routes: Routes.routes,
-      initialRoute: Routes.planAndPricing,
+      initialRoute: Routes.signIn,
       home: ChatPage(chatName: "Chat"),
     );
   }

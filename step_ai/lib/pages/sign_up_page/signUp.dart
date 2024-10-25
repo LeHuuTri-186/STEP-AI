@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:step_ai/main.dart';
-import 'package:step_ai/screens/signIn.dart';
+import 'package:step_ai/pages/sign_in_page/signIn.dart';
 
 class SignUpApp extends StatelessWidget{
   const SignUpApp({super.key});

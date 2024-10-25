@@ -4,34 +4,20 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d36423b6-326c-41d1-9fba-ad3516026006" name="Changes" comment="Test ui for prompt library">
-      <change afterPath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/step_ai/ios/Podfile.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/step_ai/lib/components/appNameWidget.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/step_ai/lib/core/assets/img/empty-box.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/step_ai/lib/core/assets/img/file.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/step_ai/lib/pages/personal_page/personalPage.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/step_ai/lib/pages/personal_page/widgets/dropdownWidget.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/step_ai/lib/pages/personal_page/widgets/noBotPanel.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/step_ai/lib/pages/personal_page/widgets/noKnowledgePanel.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/step_ai/lib/pages/personal_page/widgets/searchBarWidget.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/step_ai/lib/pages/plan_pricing_page/planPricingPage.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/step_ai/lib/pages/plan_pricing_page/widgets/planContainer.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/step_ai/lib/utils/routes/routes.dart" afterDir="false" />
+    <list default="true" id="d36423b6-326c-41d1-9fba-ad3516026006" name="Changes" comment="restructure code merge pages and create basic navigation">
+      <change afterPath="$PROJECT_DIR$/llm_demo.zip" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/ios/Runner.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/ios/Runner.xcodeproj/project.pbxproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/ios/Runner.xcworkspace/contents.xcworkspacedata" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/ios/Runner.xcworkspace/contents.xcworkspacedata" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/components/chatBar.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/components/chatBar.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/components/dropdownAI.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/components/dropdownAI.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/components/emailOptionTile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/components/emailOptionTile.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/components/emailOptions.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/components/emailOptions.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/lib/components/appNameWidget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/components/appNameWidget.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/step_ai/lib/components/historyDrawer.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/components/historyDrawer.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/components/messageTile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/components/messageTile.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/step_ai/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/botManagerPage.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/chatPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/pages/chat_page/chatPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/emailPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/pages/email_page/emailPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/personal_page/widgets/noBotPanel.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/pages/personal_page/widgets/noBotPanel.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/personal_page/widgets/noKnowledgePanel.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/pages/personal_page/widgets/noKnowledgePanel.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/lib/screens/forgotPassword.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/pages/forgot_password_page/forgotPassword.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/lib/screens/oldMain.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/lib/screens/promptList.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/pages/prompt_list_page/promptList.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/lib/screens/signIn.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/pages/sign_in_page/signIn.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/lib/screens/signUp.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/pages/sign_up_page/signUp.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/lib/utils/routes/routes.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/utils/routes/routes.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,10 +91,11 @@
       <recent name="$PROJECT_DIR$/step_ai/lib/core/util/device" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/step_ai/lib/pages/sign_up_page" />
+      <recent name="$PROJECT_DIR$/step_ai/lib/pages/sign_in_page" />
+      <recent name="$PROJECT_DIR$/step_ai/lib/pages/prompt_list" />
+      <recent name="$PROJECT_DIR$/step_ai/lib/pages/forgot_password" />
       <recent name="$PROJECT_DIR$/step_ai/lib/pages/emailPage" />
-      <recent name="$PROJECT_DIR$/step_ai/lib/pages/chat_page" />
-      <recent name="$PROJECT_DIR$/step_ai/lib/core/assets/img" />
-      <recent name="$PROJECT_DIR$/step_ai/lib/pages/bot_manager_page" />
     </key>
   </component>
   <component name="RunManager">
@@ -134,12 +121,40 @@
       <option name="project" value="LOCAL" />
       <updated>1729702617410</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="restructure code merge pages and create basic navigation">
+      <option name="closed" value="true" />
+      <created>1729805162862</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1729805162862</updated>
+    </task>
+    <task id="LOCAL-00003" summary="restructure code merge pages and create basic navigation">
+      <option name="closed" value="true" />
+      <created>1729805294251</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1729805294251</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Test ui for prompt library" />
-    <option name="LAST_COMMIT_MESSAGE" value="Test ui for prompt library" />
+    <MESSAGE value="restructure code merge pages and create basic navigation" />
+    <option name="LAST_COMMIT_MESSAGE" value="restructure code merge pages and create basic navigation" />
   </component>
 </project>

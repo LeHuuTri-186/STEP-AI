@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:step_ai/screens/signUp.dart';
+import 'package:step_ai/pages/sign_up_page/signUp.dart';
 
 class ForgotPasswordApp extends StatelessWidget{
   const ForgotPasswordApp({super.key});
