@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:step_ai/pages/chat_page/chatPage.dart';
 
 //Screen import
-import 'signUp.dart';
+import '../sign_up_page/signUp.dart';
 
 // void main() {
 //   runApp(const SignInApp());
@@ -40,6 +41,12 @@ class _LoginFormState extends State<LoginForm> {
       _formKey.currentState!.save();
       //API request
       print('Username: $_uname, Password: $_pword');
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => const ChatPage()),
+      );
     }
   }
   @override

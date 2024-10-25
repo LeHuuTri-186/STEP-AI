@@ -14,7 +14,7 @@ class NoBotPanel extends StatelessWidget {
     children: [
       Image(
         image: AssetImage('lib/core/assets/img/empty-box.png'),
-        width: MediaQuery.of(context).size.width * 0.5,
+        width: 300,
       ),
       Text(
         "No bots found",

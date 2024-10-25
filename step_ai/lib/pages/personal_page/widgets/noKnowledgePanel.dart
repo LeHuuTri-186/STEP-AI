@@ -12,7 +12,7 @@ class NoKnowledgePanel extends StatelessWidget {
       children: [
         Image(
           image: AssetImage('lib/core/assets/img/file.png'),
-          width: MediaQuery.of(context).size.width * 0.5,
+          width: 300,
         ),
         Text(
           "No data",

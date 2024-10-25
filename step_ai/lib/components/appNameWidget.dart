@@ -12,7 +12,7 @@ class AppNameWidget extends StatelessWidget {
         style: GoogleFonts.jetBrainsMono(
             color: Colors.black,
             fontWeight: FontWeight.w800,
-            fontSize: MediaQuery.of(context).size.width * 0.05),
+            fontSize: 20),
         children: [
           TextSpan(
               text: "STEP",
@@ -24,13 +24,13 @@ class AppNameWidget extends StatelessWidget {
             style: GoogleFonts.jetBrainsMono(
                 color: Colors.black,
                 fontWeight: FontWeight.w800,
-                fontSize: MediaQuery.of(context).size.width * 0.01),
+                fontSize: 15),
           ),
           TextSpan(text: "AI",
               style: GoogleFonts.jetBrainsMono(
                   color: Colors.white,
                   fontStyle: FontStyle.italic,
-                  fontSize: MediaQuery.of(context).size.width * 0.07)
+                  fontSize: 20)
           ),
         ]));
   }
