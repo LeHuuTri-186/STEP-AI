@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:step_ai/main.dart';
 import 'package:step_ai/pages/sign_in_page/signIn.dart';
 
+import '../chat_page/chatPage.dart';
+
 class SignUpApp extends StatelessWidget{
   const SignUpApp({super.key});
 
@@ -39,6 +41,7 @@ class _SignUpFormState extends State<SignUpForm>{
     if (_formKey.currentState!.validate()){
       _formKey.currentState!.save();
       print('Uname:  $_uname, Password: $_pword, Confirm Password: $_cpword, Email: $_email');
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const ChatPage()));
     }
   }
   @override

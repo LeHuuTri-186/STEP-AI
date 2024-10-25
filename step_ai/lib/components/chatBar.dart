@@ -111,7 +111,7 @@ class _ChatBarState extends State<ChatBar> {
           Expanded(
             child: TextField(
               controller: _controller,
-              style: const TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.black),
               decoration: const InputDecoration(
                 hintText: 'Enter your question',
                 hintStyle: TextStyle(color: Colors.white),

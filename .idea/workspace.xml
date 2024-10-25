@@ -5,19 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d36423b6-326c-41d1-9fba-ad3516026006" name="Changes" comment="restructure code merge pages and create basic navigation">
-      <change afterPath="$PROJECT_DIR$/llm_demo.zip" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/components/appNameWidget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/components/appNameWidget.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/components/historyDrawer.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/components/historyDrawer.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/personal_page/widgets/noBotPanel.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/pages/personal_page/widgets/noBotPanel.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/personal_page/widgets/noKnowledgePanel.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/pages/personal_page/widgets/noKnowledgePanel.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/screens/forgotPassword.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/pages/forgot_password_page/forgotPassword.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/screens/oldMain.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/screens/promptList.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/pages/prompt_list_page/promptList.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/screens/signIn.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/pages/sign_in_page/signIn.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/screens/signUp.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/pages/sign_up_page/signUp.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/utils/routes/routes.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/utils/routes/routes.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/lib/components/chatBar.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/components/chatBar.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/lib/components/messageTile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/components/messageTile.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/forgot_password_page/forgotPassword.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/pages/forgot_password_page/forgotPassword.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/sign_in_page/signIn.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/pages/sign_in_page/signIn.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/sign_up_page/signUp.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/pages/sign_up_page/signUp.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

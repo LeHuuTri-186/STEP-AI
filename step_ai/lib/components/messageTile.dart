@@ -37,7 +37,7 @@ class MessageTile extends StatelessWidget {
           child: Text(
             message,
             style: TextStyle(
-              color: isAI ? Colors.black : Colors.white,
+              color: isAI ? Colors.black : Colors.indigo,
             ),
           ),
         ),
