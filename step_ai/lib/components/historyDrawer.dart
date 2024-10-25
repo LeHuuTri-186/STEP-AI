@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:step_ai/components/appNameWidget.dart';
 import 'package:step_ai/pages/personal_page/widgets/searchBarWidget.dart';
 import 'package:step_ai/pages/plan_pricing_page/planPricingPage.dart';
+import 'package:step_ai/pages/prompt_list_page/promptList.dart';
 import 'package:step_ai/pages/sign_in_page/signIn.dart';
 
 import '../pages/chat_page/chatPage.dart';
@@ -89,6 +90,7 @@ class HistoryDrawer extends StatelessWidget {
                               15),
                         ),
                       )),
+
                     ],
                   ),
                   SizedBox(
@@ -117,6 +119,34 @@ class HistoryDrawer extends StatelessWidget {
                               15),
                         ),
                       )),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                          child: TextButton(
+                            onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const PromptApp()));
+                            },
+                            style: ButtonStyle(
+                                shape: WidgetStateProperty.resolveWith(
+                                        (states) => ContinuousRectangleBorder()),
+                                overlayColor: WidgetStateProperty.resolveWith(
+                                        (states) => Colors.blue.withOpacity(0.5)),
+                                surfaceTintColor:
+                                WidgetStatePropertyAll(Colors.blueAccent)),
+                            child: Text(
+                              "Prompts",
+                              style: GoogleFonts.jetBrainsMono(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize:
+                                  15),
+                            ),
+                          )),
                     ],
                   ),
                 ],

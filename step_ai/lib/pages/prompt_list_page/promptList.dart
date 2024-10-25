@@ -5,12 +5,7 @@ class PromptApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return MaterialApp(
-      home: Scaffold(
-        body: PromptScreen(),
-      ),
-    );
-    throw UnimplementedError();
+    return PromptScreen();
   }
 
 }

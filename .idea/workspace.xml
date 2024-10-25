@@ -4,14 +4,12 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d36423b6-326c-41d1-9fba-ad3516026006" name="Changes" comment="restructure code merge pages and create basic navigation">
+    <list default="true" id="d36423b6-326c-41d1-9fba-ad3516026006" name="Changes" comment="merge flow and UI pages">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/llm_demo.zip" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/step_ai/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/components/chatBar.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/components/chatBar.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/components/messageTile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/components/messageTile.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/forgot_password_page/forgotPassword.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/pages/forgot_password_page/forgotPassword.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/sign_in_page/signIn.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/pages/sign_in_page/signIn.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/sign_up_page/signUp.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/pages/sign_up_page/signUp.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/lib/components/historyDrawer.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/components/historyDrawer.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/prompt_list_page/promptList.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/pages/prompt_list_page/promptList.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -131,7 +129,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729805294251</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="merge flow and UI pages">
+      <option name="closed" value="true" />
+      <created>1729872623228</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1729872623228</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -149,6 +155,8 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Test ui for prompt library" />
     <MESSAGE value="restructure code merge pages and create basic navigation" />
-    <option name="LAST_COMMIT_MESSAGE" value="restructure code merge pages and create basic navigation" />
+    <MESSAGE value="Merge remote-tracking branch 'origin/nths_lht' into nths_lht" />
+    <MESSAGE value="merge flow and UI pages" />
+    <option name="LAST_COMMIT_MESSAGE" value="merge flow and UI pages" />
   </component>
 </project>
