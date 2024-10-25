@@ -6,8 +6,9 @@ class EmailOptions extends StatelessWidget {
     {'icon': Icons.thumb_up, 'label': 'Yes'},
     {'icon': Icons.thumb_down, 'label': 'No'},
     {'icon': Icons.tag_faces, 'label': 'Thanks'},
+    {'icon': Icons.celebration, 'label': 'Congratulations'},
     {'icon': Icons.sentiment_dissatisfied, 'label': 'Sorry'},
-    {'icon': Icons.info_outline, 'label': 'Request for more information information information'},
+    {'icon': Icons.info_outline, 'label': 'Request for more information'},
     {'icon': Icons.refresh, 'label': 'Follow up'},
   ];
 
@@ -23,7 +24,7 @@ class EmailOptions extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                children: emailOptions.sublist(0, 3).map((option) {
+                children: emailOptions.sublist(0, 4).map((option) {
                   return EmailOptionTile(
                     icon: option['icon'],
                     label: option['label'],
@@ -32,7 +33,7 @@ class EmailOptions extends StatelessWidget {
               ),
               const SizedBox(height: 5),
               Row(
-                children: emailOptions.sublist(3, 6).map((option) {
+                children: emailOptions.sublist(4, 7).map((option) {
                   return EmailOptionTile(
                     icon: option['icon'],
                     label: option['label'],

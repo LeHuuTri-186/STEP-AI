@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 class MessageTile extends StatelessWidget {
   final bool isAI;
   final String message;
-  final IconData? iconSendObject;
+  final String? logoAI;
 
   const MessageTile({
     super.key,
     required this.isAI,
     required this.message,
-    this.iconSendObject,
+    this.logoAI,
   });
 
   @override
@@ -18,10 +18,10 @@ class MessageTile extends StatelessWidget {
       mainAxisAlignment: isAI ? MainAxisAlignment.start : MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (isAI && iconSendObject != null)
+        if (isAI && logoAI != null)
           Padding(
             padding: const EdgeInsets.all(10.0),
-            child: Icon(iconSendObject, color: Colors.blue),
+            child: Image.asset(logoAI??"", width: 30, height: 30,),
           ),
 
         Container(

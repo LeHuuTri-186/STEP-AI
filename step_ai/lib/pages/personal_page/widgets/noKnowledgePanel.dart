@@ -11,7 +11,7 @@ class NoKnowledgePanel extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Image(
-          image: AssetImage('lib/core/assets/img/file.png'),
+          image: AssetImage('lib/core/assets/imgs/file.png'),
           width: 300,
         ),
         Text(

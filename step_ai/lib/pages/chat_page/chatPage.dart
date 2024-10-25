@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:step_ai/components/dropDownAI.dart';
+import 'package:step_ai/components/dropdownAI.dart';
 import 'package:step_ai/components/messageTile.dart';
 import 'package:step_ai/pages/personal_page/personalPage.dart';
 import 'package:step_ai/pages/personal_page/widgets/dropdownWidget.dart';
@@ -19,49 +19,22 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-  List<MessageTile> messages = [
-    // const MessageTile(isAI: false, message: "Hello, can you help me?"),
-    // const MessageTile(
-    //     iconSendObject: Icons.deblur,
-    //     isAI: true,
-    //     message: "Hello, I am Step AI. How can I help you?"),
-    // const MessageTile(isAI: false, message: "what is the solar system?"),
-    // const MessageTile(
-    //     iconSendObject: Icons.deblur,
-    //     isAI: true,
-    //     message: "The Solar System consists of the Sun, eight planets..."),
-    // const MessageTile(isAI: false, message: "Summarize"),
-    // const MessageTile(
-    //     iconSendObject: Icons.deblur,
-    //     isAI: true,
-    //     message: "The Solar System includes the Sun, eight planets..."),
-    // const MessageTile(isAI: false, message: "Detail"),
-    // const MessageTile(
-    //     iconSendObject: Icons.deblur,
-    //     isAI: true,
-    //     message: "Terrestrial planets (rocky planets): Mercury..."),
-    // const MessageTile(isAI: false, message: "Detail"),
-    // const MessageTile(
-    //     iconSendObject: Icons.deblur,
-    //     isAI: true,
-    //     message: "Terrestrial planets (rocky planets): Mercury..."),
-    // const MessageTile(isAI: false, message: "Detail"),
-    // const MessageTile(
-    //     iconSendObject: Icons.deblur,
-    //     isAI: true,
-    //     message: "Terrestrial planets (rocky planets): Mercury..."),
-    // const MessageTile(isAI: false, message: "Detail"),
-    // const MessageTile(
-    //     iconSendObject: Icons.deblur,
-    //     isAI: true,
-    //     message: "Terrestrial planets (rocky planets): Mercury..."),
+  
+  List<MessageTile> messages = [];
+  final List<Map<String, String>> _aiModels = [
+    {
+      'name': 'Gemini 1.5 Flash',
+      'logo': 'lib/core/assets/imgs/gemini.png'
+    },
+    {'name': 'Chat GPT 4o', 'logo': 'lib/core/assets/imgs/gpt.png'},
   ];
+  String _currentModelPathLogo = "lib/core/assets/imgs/gpt.png";
 
   void onSendMessage(String sendMessage) {
     setState(() {
       messages.add(MessageTile(
-          isAI: false, message: sendMessage, iconSendObject: Icons.deblur));
-      messages.add(const MessageTile(isAI: true, message: "OK"));
+          isAI: false, message: sendMessage));
+      messages.add(MessageTile(isAI: true, message: "OK",logoAI: _currentModelPathLogo ));
     });
   }
 
@@ -110,16 +83,14 @@ class _ChatPageState extends State<ChatPage> {
                     padding: const EdgeInsets.all(10.0),
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width * 0.5,
-                        child: DropdownWidget(display: "Bots:",types: const ["New bot", "Chat GPT", "Bing", "Llama"], onSelect: (m) {
-                          if (m == "New bot") {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const PersonalPage()));
-                          }
-                        },)
+                        child: DropdownAI(aiModels: _aiModels, onChange: (nameModel){
+                          _currentModelPathLogo = _aiModels.firstWhere((element) => element['name'] == nameModel)['logo']!;
+                        }),
+                        )
                     ),
-                  ),
-                  const SizedBox(height: 8), // Khoảng cách giữa DropdownAI và ChatBar
+                  const SizedBox(height: 8),
                   ChatBar(onSendMessage: onSendMessage,),
-                  SizedBox(height: 20,),
+                  const SizedBox(height: 20,),
                 ],
               ),
             ],

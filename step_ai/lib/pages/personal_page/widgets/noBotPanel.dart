@@ -13,7 +13,7 @@ class NoBotPanel extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
     children: [
       Image(
-        image: AssetImage('lib/core/assets/img/empty-box.png'),
+        image: AssetImage('lib/core/assets/imgs/empty-box.png'),
         width: 300,
       ),
       Text(

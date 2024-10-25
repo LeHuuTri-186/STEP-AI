@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:step_ai/components/dropDownAI.dart';
-import 'package:step_ai/components/emailOptions.dart';
+import 'package:step_ai/components/dropdownAI.dart';
+import 'package:step_ai/pages/email_page/widgets/emailOptions.dart';
 import 'package:step_ai/components/messageTile.dart';
 
 import '../../components/chatBar.dart';
@@ -17,12 +17,20 @@ class EmailPage extends StatefulWidget {
 class _EmailPageState extends State<EmailPage> {
   List<MessageTile> messages = [
   ];
+  final List<Map<String, String>> _aiModels = [
+    {
+      'name': 'Gemini 1.5 Flash',
+      'logo': 'lib/core/assets/imgs/gemini.png'
+    },
+    {'name': 'Chat GPT 4o', 'logo': 'lib/core/assets/imgs/gpt.png'},
+  ];
+  String _currentModelPathLogo = "lib/core/assets/imgs/gpt.png";
 
     void onSendMessage(String sendMessage) {
     setState(() {
       messages.add(MessageTile(
-          isAI: false, message: sendMessage, iconSendObject: Icons.deblur));
-      messages.add(const MessageTile(isAI: true, message: "OK"));
+          isAI: false, message: sendMessage));
+      messages.add(MessageTile(isAI: true, message: "OK", logoAI: _currentModelPathLogo));
     });
   }
 
@@ -71,11 +79,13 @@ class _EmailPageState extends State<EmailPage> {
                     child: Row(
                       children: [
                         Expanded(
-                          flex: 2,
+              
                           child: ChatBar(onSendMessage:onSendMessage ,),
                         ),
                         const SizedBox(width: 10),
-                        const Expanded(flex:1,child: DropdownAI()),
+                        DropdownAI(aiModels: _aiModels, onChange: (nameModel){
+                           _currentModelPathLogo = _aiModels.firstWhere((element) => element['name'] == nameModel)['logo']!;
+                        }),
 
                       ],
                     ),

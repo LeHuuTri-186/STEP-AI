@@ -1,43 +1,73 @@
 import 'package:flutter/material.dart';
-
 class DropdownAI extends StatefulWidget {
-  const DropdownAI({super.key});
+  DropdownAI({super.key, required this.aiModels, required this.onChange});
+  List<Map<String, String>> aiModels;
+  ValueChanged<String?> onChange;
 
   @override
-  State<DropdownAI> createState() => _DropdownAIState();
+  _DropdownAIState createState() => _DropdownAIState();
 }
 
 class _DropdownAIState extends State<DropdownAI> {
-  String selectedOption = 'GPT';
-  List<String> options = ['GPT', 'Bing', 'Gemini', 'New bot'];
+  late List<Map<String, String>> _aiModels;
+  late String? _selectedModel;
+  late String? _selectedLogo;
+
+  @override
+  void initState() {
+    super.initState();
+    _aiModels = widget.aiModels;
+    _selectedModel = widget.aiModels.last['model'];
+    _selectedLogo = widget.aiModels.last['logo'];
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 5),
-      margin: const EdgeInsets.only(top:5,left: 10),
-      decoration: BoxDecoration(
-        color: Colors.blueAccent,
-        borderRadius: BorderRadius.circular(10.0),
-        border: Border.all(color: Colors.transparent, width: 0),
-      ),
-      child: DropdownButton<String>(
-        isDense: true, 
-        value: selectedOption,
-        onChanged: (String? newValue) {
-          setState(() {
-            selectedOption = newValue!;
-          });
-        },
-        items: options.map<DropdownMenuItem<String>>((String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Center(child: Text(value, style: const TextStyle(fontSize: 16), )),
-          );
-        }).toList(),
-        style: const TextStyle(color: Colors.white), 
-        dropdownColor: Colors.blueAccent,
-       
-      ),
+    return Center(
+        child: PopupMenuButton(
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(16.0)),
+          ),
+          itemBuilder: (context) {
+            return _aiModels.map((model) {
+              return PopupMenuItem(
+                value: model['name'],
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 30,
+                        height: 30,
+                        child: Image.asset(model['logo']??"")),
+                    SizedBox(width: 10),
+                    Text(model['name']??""),
+                  ],
+                ),
+              );
+            }).toList();
+          },
+          onSelected: (value) {
+             setState(() {
+                _selectedModel = value.toString();
+                _selectedLogo = _aiModels.firstWhere((model) => model['name'] == _selectedModel)['logo'];
+             });
+
+             widget.onChange(_selectedModel);
+            // Handle selection here (e.g., navigate or update UI)
+          },
+          child: Row(
+            children: [
+              Image.asset(_selectedLogo??"", width: 30, height: 30,),
+              Icon(Icons.arrow_drop_up),
+              
+            ],
+          ),
+        ),
     );
+
   }
 }

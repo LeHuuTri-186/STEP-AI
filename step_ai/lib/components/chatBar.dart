@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class ChatBar extends StatefulWidget {
   void Function(String) onSendMessage;
-  ChatBar({super.key,required this.onSendMessage});
+  ChatBar({super.key, required this.onSendMessage});
 
   @override
   _ChatBarState createState() => _ChatBarState();
@@ -10,6 +10,7 @@ class ChatBar extends StatefulWidget {
 
 class _ChatBarState extends State<ChatBar> {
   bool _showIcons = false;
+  bool _showIconSend = false;
   final TextEditingController _controller = TextEditingController();
 
   @override
@@ -27,9 +28,18 @@ class _ChatBarState extends State<ChatBar> {
 
   //Event to display/hide the accessibility icons
   void onTextChanged() {
-    if (_controller.text.isNotEmpty && _showIcons) {
+    if (_controller.text.isNotEmpty) {
+      if (_showIcons) {
+        setState(() {
+          _showIcons = false;
+        });
+      }
       setState(() {
-        _showIcons = false;
+        _showIconSend = true;
+      });
+    }else{
+      setState(() {
+        _showIconSend = false;
       });
     }
   }
@@ -121,16 +131,20 @@ class _ChatBarState extends State<ChatBar> {
           ),
           const SizedBox(width: 4),
           //Icon send
-          IconButton(
-              padding: const EdgeInsets.all(2),
-              icon: const Icon(
-                Icons.send,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                widget.onSendMessage(_controller.text);
-                _controller.clear();
-              })
+          if (_showIconSend)
+            IconButton(
+                padding: const EdgeInsets.all(2),
+                icon: const Icon(
+                  Icons.send,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  widget.onSendMessage(_controller.text);
+                  _controller.clear();
+                  setState(() {
+                    _showIconSend = false;
+                  });
+                })
         ],
       ),
     );
