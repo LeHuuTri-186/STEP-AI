@@ -4,12 +4,20 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d36423b6-326c-41d1-9fba-ad3516026006" name="Changes" comment="merge flow and UI pages">
+    <list default="true" id="d36423b6-326c-41d1-9fba-ad3516026006" name="Changes" comment="Add unversioned files">
+      <change afterPath="$PROJECT_DIR$/step_ai/lib/pages/prompt_list_page/models/prompt.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/step_ai/lib/pages/prompt_list_page/widgets/myPromptWidget.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/step_ai/lib/pages/prompt_list_page/widgets/personalPromptTile.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/step_ai/lib/pages/prompt_list_page/widgets/publicPromptTile.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/step_ai/lib/pages/prompt_list_page/widgets/publicPromptWidget.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_25_10_24__22_46__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_25_10_24__22_46__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_25_10_24__12_30__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_25_10_24__12_30__Changes_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/llm_demo.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/components/historyDrawer.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/components/historyDrawer.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/prompt_list_page/promptList.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/pages/prompt_list_page/promptList.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/macos/Flutter/GeneratedPluginRegistrant.swift" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/macos/Flutter/GeneratedPluginRegistrant.swift" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,37 +65,37 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Flutter.main.dart.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;nths__lht&quot;,
-    &quot;io.flutter.reload.alreadyRun&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/lehuutri/AndroidStudioProjects/STEP-AI/step_ai/lib/core/util/device&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;dart.settings&quot;,
-    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Flutter.main.dart.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "nohiup-144",
+    "io.flutter.reload.alreadyRun": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/lehuutri/AndroidStudioProjects/STEP-AI/step_ai/lib/core/util/device",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "flutter.settings",
+    "show.migrate.to.gradle.popup": "false"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/step_ai/lib/core/util/device" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Admins\Downloads\STEP-AI\step_ai\lib\pages\prompt_list_page" />
       <recent name="$PROJECT_DIR$/step_ai/lib/pages/sign_up_page" />
       <recent name="$PROJECT_DIR$/step_ai/lib/pages/sign_in_page" />
       <recent name="$PROJECT_DIR$/step_ai/lib/pages/prompt_list" />
       <recent name="$PROJECT_DIR$/step_ai/lib/pages/forgot_password" />
-      <recent name="$PROJECT_DIR$/step_ai/lib/pages/emailPage" />
     </key>
   </component>
   <component name="RunManager">
@@ -157,6 +165,7 @@
     <MESSAGE value="restructure code merge pages and create basic navigation" />
     <MESSAGE value="Merge remote-tracking branch 'origin/nths_lht' into nths_lht" />
     <MESSAGE value="merge flow and UI pages" />
-    <option name="LAST_COMMIT_MESSAGE" value="merge flow and UI pages" />
+    <MESSAGE value="Add unversioned files" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add unversioned files" />
   </component>
 </project>
