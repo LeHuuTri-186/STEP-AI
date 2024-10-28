@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:step_ai/screens/promptList.dart';
-import 'package:step_ai/screens/signIn.dart';
-import 'package:step_ai/screens/signUp.dart';
+import 'package:step_ai/pages/chat_page/chatPage.dart';
+import 'package:step_ai/pages/plan_pricing_page/planPricingPage.dart';
+import 'package:step_ai/utils/routes/routes.dart';
 
-void main(){
+
+void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget{
-  const MyApp();
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return MaterialApp(
-      home: SignUpApp(),
+      title: 'Step AI',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      debugShowCheckedModeBanner: false,
+      routes: Routes.routes,
+      initialRoute: Routes.signIn,
+      home: ChatPage(chatName: "Chat"),
     );
-    throw UnimplementedError();
   }
 }

@@ -1,46 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:step_ai/main.dart';
-import 'package:step_ai/screens/signIn.dart';
+import 'package:step_ai/pages/sign_up_page/signUp.dart';
 
-class SignUpApp extends StatelessWidget{
-  const SignUpApp({super.key});
+import '../chat_page/chatPage.dart';
+import '../personal_page/personalPage.dart';
+
+class ForgotPasswordApp extends StatelessWidget{
+  const ForgotPasswordApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return MaterialApp(
       home: Scaffold(
-        body: SignUpForm(),
-      ),
+        body: ForgotPasswordForm(),
+      )
     );
     throw UnimplementedError();
   }
 }
 
-class SignUpForm extends StatefulWidget{
+class ForgotPasswordForm extends StatefulWidget{
   @override
-  _SignUpFormState createState() => _SignUpFormState();
+  _ForgotPasswordFormState createState() => _ForgotPasswordFormState();
+
 }
 
-class _SignUpFormState extends State<SignUpForm>{
+class _ForgotPasswordFormState extends State<ForgotPasswordForm>{
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _pwordController = TextEditingController();
   final TextEditingController _cpwordController = TextEditingController();
-
 
   String _uname = '';
   String _pword = '';
   String _cpword = '';
   String _email = '';
 
-
-
-  void submit() {
-    if (_formKey.currentState!.validate()){
-      _formKey.currentState!.save();
-      print('Uname:  $_uname, Password: $_pword, Confirm Password: $_cpword, Email: $_email');
-    }
-  }
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -142,44 +136,19 @@ class _SignUpFormState extends State<SignUpForm>{
                           overlayColor: Colors.white.withOpacity(0.8),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                         ),
-                        child: Text('Sign up')),
-                    SizedBox(height: 16),
-                    //Switch to login
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('Already have an account? ',
-                          style: TextStyle(
-                            fontSize: 14,
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () => ToLogin(context),
-                          child: Text(
-                            'Sign in',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.indigo,
-                            ),
-                          ),
-                        )
-                      ],
-                    )
+                        child: Text('change password')),
                   ],
                 ))
           ],
         ),
       ),
     );
-    // TODO: implement build
-    throw UnimplementedError();
   }
-  
-}
 
-void ToLogin(BuildContext context) {
-  Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (content)=> SignInApp()));
-  print("Switch to login page.");
+  void submit() {
+    if (_formKey.currentState!.validate()){
+      _formKey.currentState!.save();
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const ChatPage()));
+    }
+  }
 }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:step_ai/pages/chat_page/chatPage.dart';
+import 'package:step_ai/pages/forgot_password_page/forgotPassword.dart';
 
 //Screen import
-import 'signUp.dart';
+import '../sign_up_page/signUp.dart';
 
 // void main() {
 //   runApp(const SignInApp());
@@ -40,6 +42,12 @@ class _LoginFormState extends State<LoginForm> {
       _formKey.currentState!.save();
       //API request
       print('Username: $_uname, Password: $_pword');
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => const ChatPage()),
+      );
     }
   }
   @override
@@ -77,8 +85,13 @@ class _LoginFormState extends State<LoginForm> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Padding(
-                    padding:  const EdgeInsets.only(right: 10.0),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => ForgotPasswordApp()),
+                      );
+                    },
                     child: Text(
                       'Forgot password?',
                       style: TextStyle(

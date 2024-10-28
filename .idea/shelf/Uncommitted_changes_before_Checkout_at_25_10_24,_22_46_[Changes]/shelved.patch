@@ -1,0 +1,17 @@
+Index: .idea/modules.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"ProjectModuleManager\">\n    <modules>\n      <module fileurl=\"file://$PROJECT_DIR$/step_ai/step_ai.iml\" filepath=\"$PROJECT_DIR$/step_ai/step_ai.iml\" />\n    </modules>\n  </component>\n</project>
+===================================================================
+diff --git a/.idea/modules.xml b/.idea/modules.xml
+--- a/.idea/modules.xml	
++++ b/.idea/modules.xml	
+@@ -3,6 +3,7 @@
+   <component name="ProjectModuleManager">
+     <modules>
+       <module fileurl="file://$PROJECT_DIR$/step_ai/step_ai.iml" filepath="$PROJECT_DIR$/step_ai/step_ai.iml" />
++      <module fileurl="file://$PROJECT_DIR$/step_ai/android/step_ai_android.iml" filepath="$PROJECT_DIR$/step_ai/android/step_ai_android.iml" />
+     </modules>
+   </component>
+ </project>
+\ No newline at end of file
