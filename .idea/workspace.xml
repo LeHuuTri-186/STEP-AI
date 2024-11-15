@@ -4,12 +4,13 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d36423b6-326c-41d1-9fba-ad3516026006" name="Changes" comment="merge flow and UI pages">
+    <list default="true" id="d36423b6-326c-41d1-9fba-ad3516026006" name="Changes" comment="Merge remote-tracking branch 'origin/nths_lht' into nths_lht">
+      <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_25_10_24,_12_30_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_25_10_24__12_30__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/llm_demo.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/components/historyDrawer.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/components/historyDrawer.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/prompt_list_page/promptList.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/pages/prompt_list_page/promptList.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,7 +30,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="mock_ui_le_huu_tri" />
+        <entry key="$PROJECT_DIR$" value="nths_lht" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -97,6 +98,10 @@
     </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SwiftWorkspaceSettings">
+    <option name="detectedToolchain" value="true" />
+    <option name="toolchainPathValue" value="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain" />
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="d36423b6-326c-41d1-9fba-ad3516026006" name="Changes" comment="" />
@@ -137,7 +142,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729872623228</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Merge remote-tracking branch 'origin/nths_lht' into nths_lht">
+      <option name="closed" value="true" />
+      <created>1729873318561</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1729873318561</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -155,8 +168,9 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Test ui for prompt library" />
     <MESSAGE value="restructure code merge pages and create basic navigation" />
-    <MESSAGE value="Merge remote-tracking branch 'origin/nths_lht' into nths_lht" />
     <MESSAGE value="merge flow and UI pages" />
-    <option name="LAST_COMMIT_MESSAGE" value="merge flow and UI pages" />
+    <MESSAGE value="update demo Video" />
+    <MESSAGE value="Merge remote-tracking branch 'origin/nths_lht' into nths_lht" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge remote-tracking branch 'origin/nths_lht' into nths_lht" />
   </component>
 </project>
