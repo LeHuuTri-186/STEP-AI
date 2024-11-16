@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:step_ai/components/appNameWidget.dart';
-import 'package:step_ai/pages/personal_page/widgets/searchBarWidget.dart';
-import 'package:step_ai/pages/plan_pricing_page/planPricingPage.dart';
-import 'package:step_ai/pages/prompt_list_page/promptList.dart';
-import 'package:step_ai/pages/sign_in_page/signIn.dart';
+import 'package:step_ai/shared/widgets/app_name_widget.dart';
+import 'package:step_ai/features/personal/presentation/widgets/search_bar_widget.dart';
+import 'package:step_ai/features/plan/presentation/pages/planPricingPage.dart';
+import 'package:step_ai/features/prompt/presentation/pages/prompt_list.dart';
+import 'package:step_ai/features/authentication/presentation/pages/sign_in_page.dart';
 
-import '../pages/chat_page/chatPage.dart';
-import '../pages/email_page/emailPage.dart';
-import '../pages/personal_page/personalPage.dart';
+import '../../features/chat/presentation/pages/chat_page.dart';
+import '../../features/authentication/presentation/pages/email_page.dart';
+import '../../features/personal/presentation/pages/personal_page.dart';
 
 class HistoryDrawer extends StatelessWidget {
-  TextEditingController searchController = TextEditingController();
+  final TextEditingController searchController = TextEditingController();
   HistoryDrawer({super.key});
 
   void onSearchTextChanged() {}
@@ -247,7 +247,7 @@ class HistoryDrawer extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => SignInApp()),
+                        builder: (context) => SignInPage()),
                   );
                 },
                 style: ButtonStyle(

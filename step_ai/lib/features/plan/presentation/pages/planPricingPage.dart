@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:step_ai/components/historyDrawer.dart';
-import 'package:step_ai/pages/plan_pricing_page/widgets/planContainer.dart';
+import 'package:step_ai/shared/widgets/history_drawer.dart';
+import 'package:step_ai/features/plan/presentation/widgets/planContainer.dart';
 
 class PlanPricingPage extends StatefulWidget {
   const PlanPricingPage({super.key});

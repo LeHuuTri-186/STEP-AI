@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:step_ai/components/dropdownAI.dart';
-import 'package:step_ai/components/messageTile.dart';
-import 'package:step_ai/pages/personal_page/personalPage.dart';
-import 'package:step_ai/pages/personal_page/widgets/dropdownWidget.dart';
+import 'package:step_ai/shared/widgets/dropdown_Ai.dart';
+import 'package:step_ai/shared/widgets/message_tile.dart';
 
-import 'package:step_ai/components/appNameWidget.dart';
-import '../../components/chatBar.dart';
-import '../../components/historyDrawer.dart';
-import '../../utils/routes/routes.dart';
+import '../../../../shared/widgets/chat_bar.dart';
+import '../../../../shared/widgets/history_drawer.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key, this.chatName = "Chat"});

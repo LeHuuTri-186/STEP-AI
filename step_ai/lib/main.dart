@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:step_ai/pages/chat_page/chatPage.dart';
-import 'package:step_ai/pages/plan_pricing_page/planPricingPage.dart';
-import 'package:step_ai/utils/routes/routes.dart';
+import 'package:step_ai/features/chat/presentation/pages/chat_page.dart';
+import 'package:step_ai/features/plan/presentation/pages/planPricingPage.dart';
+
+import 'config/routes/routes.dart';
 
 
 void main() {
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: Routes.routes,
       initialRoute: Routes.signIn,
-      home: ChatPage(chatName: "Chat"),
+      home: const ChatPage(chatName: "Chat"),
     );
   }
 }

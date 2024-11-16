@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:step_ai/pages/chat_page/chatPage.dart';
-import 'package:step_ai/pages/forgot_password_page/forgotPassword.dart';
+import 'package:step_ai/features/chat/presentation/pages/chat_page.dart';
+import 'package:step_ai/features/authentication/presentation/pages/forgot_password_page.dart';
 
 //Screen import
-import '../sign_up_page/signUp.dart';
+import 'sign_up_page.dart';
 
 // void main() {
 //   runApp(const SignInApp());
 // }
 
-class SignInApp extends StatelessWidget {
-  const SignInApp({super.key});
+class SignInPage extends StatelessWidget {
+  const SignInPage({super.key});
 
   // This widget is the root of your application.
   @override
@@ -89,7 +89,7 @@ class _LoginFormState extends State<LoginForm> {
                     onPressed: () {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => ForgotPasswordApp()),
+                        MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
                       );
                     },
                     child: Text(
@@ -158,7 +158,7 @@ class _LoginFormState extends State<LoginForm> {
     print('Switch to Sign Up screen!');
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => SignUpApp()),
+      MaterialPageRoute(builder: (context) => SignUpPage()),
     );
   }
 

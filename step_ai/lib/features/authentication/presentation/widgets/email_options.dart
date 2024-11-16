@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'emailOptionTile.dart';
+import 'email_option_tile.dart';
 
 class EmailOptions extends StatelessWidget {
   final List<Map<String, dynamic>> emailOptions = [

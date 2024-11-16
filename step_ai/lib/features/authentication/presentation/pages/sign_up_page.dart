@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:step_ai/main.dart';
-import 'package:step_ai/pages/sign_in_page/signIn.dart';
+import 'package:step_ai/features/authentication/presentation/pages/sign_in_page.dart';
 
-import '../chat_page/chatPage.dart';
+import '../../../chat/presentation/pages/chat_page.dart';
 
-class SignUpApp extends StatelessWidget{
-  const SignUpApp({super.key});
+class SignUpPage extends StatelessWidget{
+  const SignUpPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -183,6 +183,6 @@ class _SignUpFormState extends State<SignUpForm>{
 void ToLogin(BuildContext context) {
   Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (content)=> SignInApp()));
+      MaterialPageRoute(builder: (content)=> SignInPage()));
   print("Switch to login page.");
 }
