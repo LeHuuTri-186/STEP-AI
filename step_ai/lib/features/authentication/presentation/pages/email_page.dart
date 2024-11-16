@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:step_ai/components/dropdownAI.dart';
-import 'package:step_ai/pages/email_page/widgets/emailOptions.dart';
-import 'package:step_ai/components/messageTile.dart';
+import 'package:step_ai/shared/widgets/dropdown_Ai.dart';
+import 'package:step_ai/features/authentication/presentation/widgets/email_options.dart';
+import 'package:step_ai/shared/widgets/message_tile.dart';
 
-import '../../components/chatBar.dart';
+import '../../../../shared/widgets/chat_bar.dart';
 
 class EmailPage extends StatefulWidget {
 

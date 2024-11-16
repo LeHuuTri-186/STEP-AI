@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:step_ai/components/historyDrawer.dart';
-import 'package:step_ai/pages/personal_page/widgets/searchBarWidget.dart';
-import 'package:step_ai/pages/personal_page/widgets/dropdownWidget.dart';
-import 'package:step_ai/pages/personal_page/widgets/noBotPanel.dart';
-import 'package:step_ai/pages/personal_page/widgets/noKnowledgePanel.dart';
+import 'package:step_ai/shared/widgets/history_drawer.dart';
+import 'package:step_ai/features/personal/presentation/widgets/search_bar_widget.dart';
+import 'package:step_ai/features/personal/presentation/widgets/dropdown_widget.dart';
+import 'package:step_ai/features/personal/presentation/widgets/no_knowledge_panel.dart';
+
+import '../widgets/no_bot_panel.dart';
 
 class PersonalPage extends StatefulWidget {
   const PersonalPage({super.key});

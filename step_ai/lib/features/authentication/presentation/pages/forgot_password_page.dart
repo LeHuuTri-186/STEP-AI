@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:step_ai/pages/sign_up_page/signUp.dart';
+import 'package:step_ai/features/authentication/presentation/pages/sign_up_page.dart';
 
-import '../chat_page/chatPage.dart';
-import '../personal_page/personalPage.dart';
+import '../../../chat/presentation/pages/chat_page.dart';
+import '../../../personal/presentation/pages/personal_page.dart';
 
-class ForgotPasswordApp extends StatelessWidget{
-  const ForgotPasswordApp({super.key});
+class ForgotPasswordPage extends StatelessWidget{
+  const ForgotPasswordPage({super.key});
 
   @override
   Widget build(BuildContext context) {

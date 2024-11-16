@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:step_ai/pages/chat_page/chatPage.dart';
-import 'package:step_ai/pages/email_page/emailPage.dart';
-import 'package:step_ai/pages/forgot_password_page/forgotPassword.dart';
-import 'package:step_ai/pages/plan_pricing_page/planPricingPage.dart';
-import 'package:step_ai/pages/prompt_list_page/promptList.dart';
-import 'package:step_ai/pages/sign_in_page/signIn.dart';
+import 'package:step_ai/features/chat/presentation/pages/chat_page.dart';
+import 'package:step_ai/features/authentication/presentation/pages/email_page.dart';
+import 'package:step_ai/features/authentication/presentation/pages/forgot_password_page.dart';
+import 'package:step_ai/features/plan/presentation/pages/planPricingPage.dart';
+import 'package:step_ai/features/prompt/presentation/pages/prompt_list.dart';
+import 'package:step_ai/features/authentication/presentation/pages/sign_in_page.dart';
 
-import '../../pages/personal_page/personalPage.dart';
-import '../../pages/sign_up_page/signUp.dart';
+import '../../features/authentication/presentation/pages/sign_up_page.dart';
+import '../../features/personal/presentation/pages/personal_page.dart';
+
 
 class Routes {
   Routes._();
@@ -28,9 +29,9 @@ class Routes {
     chat: (BuildContext context) => ChatPage(),
     email: (BuildContext context) => EmailPage(),
     planAndPricing: (BuildContext context) => PlanPricingPage(),
-    signIn: (BuildContext context) => SignInApp(),
-    signUp: (BuildContext context) => SignUpApp(),
+    signIn: (BuildContext context) => SignInPage(),
+    signUp: (BuildContext context) => SignUpPage(),
     promptList: (BuildContext context) => PromptApp(),
-    forgotPassword: (BuildContext context) => ForgotPasswordApp(),
+    forgotPassword: (BuildContext context) => ForgotPasswordPage(),
   };
 }
