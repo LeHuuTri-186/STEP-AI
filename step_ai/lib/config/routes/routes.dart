@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:step_ai/features/authentication/presentation/pages/authenticate.dart';
 import 'package:step_ai/features/chat/presentation/pages/chat_page.dart';
 import 'package:step_ai/features/authentication/presentation/pages/email_page.dart';
 import 'package:step_ai/features/authentication/presentation/pages/forgot_password_page.dart';
@@ -29,7 +30,8 @@ class Routes {
     chat: (BuildContext context) => ChatPage(),
     email: (BuildContext context) => EmailPage(),
     planAndPricing: (BuildContext context) => PlanPricingPage(),
-    signIn: (BuildContext context) => SignInPage(),
+    // signIn: (BuildContext context) => SignInPage(),
+    signIn: (BuildContext context) => AuthenticateScreen(),
     signUp: (BuildContext context) => SignUpPage(),
     promptList: (BuildContext context) => PromptApp(),
     forgotPassword: (BuildContext context) => ForgotPasswordPage(),

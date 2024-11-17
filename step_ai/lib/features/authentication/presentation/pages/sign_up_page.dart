@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:step_ai/features/authentication/api/sign_up_api.dart';
 import 'package:step_ai/main.dart';
 import 'package:step_ai/features/authentication/presentation/pages/sign_in_page.dart';
 
 import '../../../chat/presentation/pages/chat_page.dart';
+
+//Note: uname as email
 
 class SignUpPage extends StatelessWidget{
   const SignUpPage({super.key});
@@ -35,15 +38,10 @@ class _SignUpFormState extends State<SignUpForm>{
   String _cpword = '';
   String _email = '';
 
+  //Singleton API
+  final signUpApi = SignUpAPI();
 
 
-  void submit() {
-    if (_formKey.currentState!.validate()){
-      _formKey.currentState!.save();
-      print('Uname:  $_uname, Password: $_pword, Confirm Password: $_cpword, Email: $_email');
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const ChatPage()));
-    }
-  }
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -58,17 +56,17 @@ class _SignUpFormState extends State<SignUpForm>{
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Step AI',
+                    const Text('Step AI',
                       style: TextStyle(
                         color: Color(0xFF172B4D),
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     //Username field
                     TextFormField(
-                      decoration: InputDecoration(labelText: 'Username'),
+                      decoration: const InputDecoration(labelText: 'Username'),
                       keyboardType: TextInputType.text,
                       validator: (value){
                         if  (value == null || value.isEmpty) {
@@ -81,11 +79,11 @@ class _SignUpFormState extends State<SignUpForm>{
                       },
 
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     //Password field
                     TextFormField(
                       controller: _pwordController,
-                      decoration: InputDecoration(labelText: 'Password'),
+                      decoration: const InputDecoration(labelText: 'Password'),
                       obscureText: true,
                       validator: (value){
                         if  (value == null || value.isEmpty) {
@@ -102,11 +100,11 @@ class _SignUpFormState extends State<SignUpForm>{
                       },
 
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     //Confirm password field
                     TextFormField(
                       controller: _cpwordController,
-                      decoration: InputDecoration(labelText: 'Confirm password'),
+                      decoration: const InputDecoration(labelText: 'Confirm password'),
                       obscureText: true,
                       validator: (value){
                         if  (value == null || value.isEmpty) {
@@ -177,8 +175,31 @@ class _SignUpFormState extends State<SignUpForm>{
     // TODO: implement build
     throw UnimplementedError();
   }
-  
+
+  void submit() async{
+    if (_formKey.currentState!.validate()){
+      _formKey.currentState!.save();
+      //Handle api call for register:
+      print('Uname:  $_uname, Password: $_pword, '
+          'Confirm Password: $_cpword, Email: $_email');
+
+      signUpApi.call(_email, _pword, _uname).then((message){
+        print('Sign up message: $message');
+      });
+
+      Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const ChatPage())
+      );
+
+
+    }
+  }
+
+
 }
+
+
 
 void ToLogin(BuildContext context) {
   Navigator.pushReplacement(
@@ -186,3 +207,4 @@ void ToLogin(BuildContext context) {
       MaterialPageRoute(builder: (content)=> SignInPage()));
   print("Switch to login page.");
 }
+

@@ -4,33 +4,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d36423b6-326c-41d1-9fba-ad3516026006" name="Changes" comment="create new branch">
-      <change afterPath="$PROJECT_DIR$/step_ai/lib/config/app_theme.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/step_ai/lib/config/constants.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/components/appNameWidget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/shared/widgets/app_name_widget.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/components/chatBar.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/shared/widgets/chat_bar.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/components/dropdownAI.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/shared/widgets/dropdown_Ai.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/components/historyDrawer.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/shared/widgets/history_drawer.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/components/messageTile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/shared/widgets/message_tile.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/chat_page/chatPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/features/chat/presentation/pages/chat_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/email_page/emailPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/features/authentication/presentation/pages/email_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/email_page/widgets/emailOptionTile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/features/authentication/presentation/widgets/email_option_tile.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/email_page/widgets/emailOptions.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/features/authentication/presentation/widgets/email_options.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/forgot_password_page/forgotPassword.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/features/authentication/presentation/pages/forgot_password_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/personal_page/personalPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/features/personal/presentation/pages/personal_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/personal_page/widgets/dropdownWidget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/features/personal/presentation/widgets/dropdown_widget.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/personal_page/widgets/noBotPanel.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/features/personal/presentation/widgets/no_bot_panel.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/personal_page/widgets/noKnowledgePanel.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/features/personal/presentation/widgets/no_knowledge_panel.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/personal_page/widgets/searchBarWidget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/features/personal/presentation/widgets/search_bar_widget.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/plan_pricing_page/planPricingPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/features/plan/presentation/pages/planPricingPage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/plan_pricing_page/widgets/planContainer.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/features/plan/presentation/widgets/planContainer.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/prompt_list_page/promptList.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/features/prompt/presentation/pages/prompt_list.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/sign_in_page/signIn.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/features/authentication/presentation/pages/sign_in_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/pages/sign_up_page/signUp.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/features/authentication/presentation/pages/sign_up_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/step_ai/lib/utils/routes/routes.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/config/routes/routes.dart" afterDir="false" />
-    </list>
+    <list default="true" id="d36423b6-326c-41d1-9fba-ad3516026006" name="Changes" comment="create new branch" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -96,7 +70,7 @@
     "git-widget-placeholder": "basic-feature",
     "io.flutter.reload.alreadyRun": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/Users/lehuutri/AndroidStudioProjects/STEP-AI/step_ai/lib/features/personal",
+    "last_opened_file_path": "C:/Users/Admins/Downloads/STEP-AI/step_ai",
     "run.code.analysis.last.selected.profile": "pProject Default",
     "settings.editor.selected.configurable": "dart.settings",
     "show.migrate.to.gradle.popup": "false"
