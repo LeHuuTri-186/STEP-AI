@@ -25,13 +25,13 @@ class Routes {
   static const String forgotPassword = "/resetPassword";
 
   static final routes = <String, WidgetBuilder>{
-    personal: (BuildContext context) => PersonalPage(),
-    chat: (BuildContext context) => ChatPage(),
-    email: (BuildContext context) => EmailPage(),
-    planAndPricing: (BuildContext context) => PlanPricingPage(),
-    signIn: (BuildContext context) => SignInPage(),
-    signUp: (BuildContext context) => SignUpPage(),
-    promptList: (BuildContext context) => PromptApp(),
-    forgotPassword: (BuildContext context) => ForgotPasswordPage(),
+    personal: (BuildContext context) => const PersonalPage(),
+    chat: (BuildContext context) => const ChatPage(),
+    email: (BuildContext context) => const EmailPage(),
+    planAndPricing: (BuildContext context) => const PlanPricingPage(),
+    signIn: (BuildContext context) => const SignInPage(),
+    signUp: (BuildContext context) => const SignUpPage(),
+    promptList: (BuildContext context) => const PromptApp(),
+    forgotPassword: (BuildContext context) => const ForgotPasswordPage(),
   };
 }
