@@ -60,7 +60,7 @@ class _LoginFormState extends State<LoginForm> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Step AI',
+              const Text('Step AI',
                 style: TextStyle(
                     fontSize: 24,
                     color: Color(0xFF172B4D),

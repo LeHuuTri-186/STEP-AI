@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:step_ai/features/authentication/notifier/error_notifier.dart';
+import 'package:step_ai/features/authentication/notifier/ui_notifier.dart';
 import 'package:step_ai/features/authentication/presentation/pages/authenticate.dart';
 import 'package:step_ai/features/chat/presentation/pages/chat_page.dart';
 import 'package:step_ai/features/authentication/presentation/pages/email_page.dart';
@@ -30,8 +33,19 @@ class Routes {
     chat: (BuildContext context) => ChatPage(),
     email: (BuildContext context) => EmailPage(),
     planAndPricing: (BuildContext context) => PlanPricingPage(),
+
     // signIn: (BuildContext context) => SignInPage(),
-    signIn: (BuildContext context) => AuthenticateScreen(),
+    signIn: (BuildContext context) => Builder(
+      builder: (context) {
+        return MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (_) => AuthenticateUINotifier()),
+            ChangeNotifierProvider(create: (_) => AuthenticateErrorNotifier()),
+          ],
+          child: AuthenticateScreen(),
+        );
+      },
+    ),
     signUp: (BuildContext context) => SignUpPage(),
     promptList: (BuildContext context) => PromptApp(),
     forgotPassword: (BuildContext context) => ForgotPasswordPage(),
