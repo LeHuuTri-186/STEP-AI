@@ -30,9 +30,15 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     _loginNotifier = Provider.of<LoginNotifier>(context);
     _registerNotifier = Provider.of<RegisterNotifier>(context);
 
-    return Scaffold(
-      appBar: _buildAppBar(),
-      body: _buildBody(),
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: _buildAppBar(),
+          body: _buildBody(),
+        ),
+        if (_loginNotifier.isLoading || _registerNotifier.isLoading)
+          Positioned.fill(child: _buildProgressIndicator()),
+      ],
     );
   }
 
@@ -53,32 +59,26 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
   }
 
   Widget _buildBody() {
-    return Stack(
-      children: [
-        SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(height: 70),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(height: 70),
 
-                _buildToggleButton(),
+            _buildToggleButton(),
 
-                const SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-                _authUINotifier.isLogin
-                    ? _buildLoginView()
-                    : _buildRegisterView(),
-              ],
-            ),
-          ),
+            _authUINotifier.isLogin
+                ? _buildLoginView()
+                : _buildRegisterView(),
+          ],
         ),
-
-        if (_loginNotifier.isLoading || _registerNotifier.isLoading)
-          Positioned.fill(child: _buildProgressIndicator()),
-      ],
+      ),
     );
+
   }
 
 
