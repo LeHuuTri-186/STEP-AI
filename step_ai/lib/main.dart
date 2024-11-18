@@ -12,6 +12,7 @@ import 'core/di/service_locator.dart';
 
 
 Future<void> main() async{
+  WidgetsFlutterBinding.ensureInitialized();
   await ServiceLocator.configureDependencies();
   FlutterSecureStorage.setMockInitialValues({});
 
@@ -19,8 +20,9 @@ Future<void> main() async{
   final IsLoggedInUseCase isLoggedInUseCase = getIt<IsLoggedInUseCase>();
   final isLoggedIn = await isLoggedInUseCase.call(params: null);
   final initialRoute = isLoggedIn ? Routes.chat : Routes.authenticate;
+  final initialRoute1=Routes.chat;//to test chat page
 
-  runApp(MyApp(initialRoute: initialRoute));
+  runApp(MyApp(initialRoute: initialRoute1));
 }
 
 class MyApp extends StatelessWidget {
@@ -37,7 +39,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: Routes.routes,
       initialRoute: initialRoute,
-      home: ChatPage(),
     );
     // return MaterialApp(
     //   home: const PromptBottomSheet(),

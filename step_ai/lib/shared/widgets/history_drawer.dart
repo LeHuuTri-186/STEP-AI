@@ -201,12 +201,12 @@ class HistoryDrawer extends StatelessWidget {
                       title: Text('Email BOT',  style: GoogleFonts.jetBrainsMono(
                         color: Colors.black,)),
                       onTap: () {
-                        Navigator.pop(context);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const EmailPage()),
-                        );
+                        // Navigator.pop(context);
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //       builder: (context) => const EmailPage()),
+                        // );
                       }),
                 ],
               ),

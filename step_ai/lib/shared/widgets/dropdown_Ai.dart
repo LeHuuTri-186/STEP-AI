@@ -1,73 +1,56 @@
 import 'package:flutter/material.dart';
-class DropdownAI extends StatefulWidget {
-  DropdownAI({super.key, required this.aiModels, required this.onChange});
-  List<Map<String, String>> aiModels;
-  ValueChanged<String?> onChange;
+import 'package:provider/provider.dart';
+import 'package:step_ai/features/chat/notifier/assistant_notifier.dart';
 
-  @override
-  _DropdownAIState createState() => _DropdownAIState();
-}
+import '../../core/di/service_locator.dart';
 
-class _DropdownAIState extends State<DropdownAI> {
-  late List<Map<String, String>> _aiModels;
-  late String? _selectedModel;
-  late String? _selectedLogo;
-
-  @override
-  void initState() {
-    super.initState();
-    _aiModels = widget.aiModels;
-    _selectedModel = widget.aiModels.last['model'];
-    _selectedLogo = widget.aiModels.last['logo'];
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
+class DropdownAI extends StatelessWidget {
+  DropdownAI({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final _assistantNotifier =
+        Provider.of<AssistantNotifier>(context, listen: true);
     return Center(
-        child: PopupMenuButton(
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(16.0)),
-          ),
-          itemBuilder: (context) {
-            return _aiModels.map((model) {
-              return PopupMenuItem(
-                value: model['name'],
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 30,
-                        height: 30,
-                        child: Image.asset(model['logo']??"")),
-                    SizedBox(width: 10),
-                    Text(model['name']??""),
-                  ],
-                ),
-              );
-            }).toList();
-          },
-          onSelected: (value) {
-             setState(() {
-                _selectedModel = value.toString();
-                _selectedLogo = _aiModels.firstWhere((model) => model['name'] == _selectedModel)['logo'];
-             });
-
-             widget.onChange(_selectedModel);
-            // Handle selection here (e.g., navigate or update UI)
-          },
-          child: Row(
-            children: [
-              Image.asset(_selectedLogo??"", width: 30, height: 30,),
-              Icon(Icons.arrow_drop_up),
-              
-            ],
-          ),
+      child: PopupMenuButton(
+        offset:
+            Offset(25, -(_assistantNotifier.assistants.length * 50.0) - 5.0),
+        position: PopupMenuPosition.over,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(16.0)),
         ),
+        itemBuilder: (context) {
+          return _assistantNotifier.assistants.map((model) {
+            return PopupMenuItem(
+              value: model.id,
+              child: Row(
+                children: [
+                  SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: Image.asset(model.logoPath!)),
+                  SizedBox(width: 10),
+                  Text(model.name!),
+                ],
+              ),
+            );
+          }).toList();
+        },
+        onSelected: (value) {
+          _assistantNotifier.setCurrentAssistantId(value);
+          // Handle selection here (e.g., navigate or update UI)
+        },
+        child: Row(
+          children: [
+            Image.asset(
+              _assistantNotifier.currentAssistant.logoPath!,
+              width: 25,
+              height: 25,
+            ),
+            const Icon(Icons.arrow_drop_up),
+          ],
+        ),
+      ),
     );
-
   }
 }

@@ -9,7 +9,9 @@ import 'package:step_ai/features/authentication/domain/repository/logout_reposit
 import 'package:step_ai/features/authentication/domain/usecase/login_usecase.dart';
 import 'package:step_ai/features/authentication/domain/usecase/logout_usecase.dart';
 import 'package:step_ai/features/authentication/domain/usecase/register_usecase.dart';
-
+import 'package:step_ai/features/chat/domain/repository/conversation_repository.dart';
+import 'package:step_ai/features/chat/domain/usecase/get_messages_by_conversation_id_usecase.dart';
+import 'package:step_ai/features/chat/domain/usecase/send_message_usecase.dart';
 
 import '../../../../features/authentication/domain/repository/register_repository.dart';
 import '../../../di/service_locator.dart';
@@ -19,7 +21,8 @@ class UseCaseModule {
     //login:--------------------------------------------------------------------
     getIt.registerSingleton<LoginUseCase>(
       LoginUseCase(
-          getIt<LoginRepository>(), getIt<SecureStorageHelper>(),
+        getIt<LoginRepository>(),
+        getIt<SecureStorageHelper>(),
       ),
     );
 
@@ -29,27 +32,32 @@ class UseCaseModule {
       ),
     );
 
-    getIt.registerSingleton<SaveLoginStatusUseCase>(
-      SaveLoginStatusUseCase(
-        getIt<LoginRepository>(),
-      )
-    );
+    getIt.registerSingleton<SaveLoginStatusUseCase>(SaveLoginStatusUseCase(
+      getIt<LoginRepository>(),
+    ));
 
     //Register:-----------------------------------------------------------------
     getIt.registerSingleton<RegisterUseCase>(
-      RegisterUseCase(
-          getIt<RegisterRepository>(), getIt<LoginUseCase>()
-      ),
+      RegisterUseCase(getIt<RegisterRepository>(), getIt<LoginUseCase>()),
     );
 
     //Logout:-------------------------------------------------------------------
-    getIt.registerSingleton<LogoutUseCase>(
-      LogoutUseCase(
-        getIt<LogoutRepository>(),
-        getIt<SharedPreferencesHelper>(),
-        getIt<SecureStorageHelper>(),
-      )
-    );
+    getIt.registerSingleton<LogoutUseCase>(LogoutUseCase(
+      getIt<LogoutRepository>(),
+      getIt<SharedPreferencesHelper>(),
+      getIt<SecureStorageHelper>(),
+    ));
 
+    //Chat:---------------------------------------------------------------------
+    getIt.registerSingleton<SendMessageUsecase>(
+      SendMessageUsecase(
+        getIt<ConversationRepository>(),
+      ),
+    );
+    getIt.registerSingleton<GetMessagesByConversationIdUsecase>(
+      GetMessagesByConversationIdUsecase(
+        getIt<ConversationRepository>(),
+      ),
+    );
   }
 }

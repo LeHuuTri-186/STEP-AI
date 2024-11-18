@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 import 'package:step_ai/core/di/service_locator.dart';
@@ -8,27 +7,38 @@ import 'package:step_ai/features/authentication/domain/usecase/save_login_status
 import 'package:step_ai/features/authentication/notifier/login_notifier.dart';
 import 'package:step_ai/features/authentication/notifier/register_notifier.dart';
 import 'package:step_ai/features/authentication/notifier/ui_notifier.dart';
+import 'package:step_ai/features/chat/domain/usecase/send_message_usecase.dart';
+import 'package:step_ai/features/chat/notifier/assistant_notifier.dart';
+import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
 
 class ProviderModule {
   static Future<void> configureStoreModuleInjection() async {
     // Providers:---------------------------------------------------------------
 
     // Authenticate:------------------------------------------------------------
-    getIt.registerSingleton<LoginNotifier>(
-        LoginNotifier(
-          getIt<LoginUseCase>(),
-          getIt<SaveLoginStatusUseCase>(),
-        )
-    );
+    getIt.registerSingleton<LoginNotifier>(LoginNotifier(
+      getIt<LoginUseCase>(),
+      getIt<SaveLoginStatusUseCase>(),
+    ));
 
     getIt.registerSingleton<AuthenticateUINotifier>(
       AuthenticateUINotifier(),
     );
 
-    getIt.registerSingleton<RegisterNotifier>(
-        RegisterNotifier(
-            getIt<LoginUseCase>(), getIt<RegisterUseCase>(),
-        )
+    getIt.registerSingleton<RegisterNotifier>(RegisterNotifier(
+      getIt<LoginUseCase>(),
+      getIt<RegisterUseCase>(),
+    ));
+
+    //Assistants:---------------------------------------------------------------
+    //Note: It must be registered before chatNotifier
+    getIt.registerSingleton<AssistantNotifier>(
+      AssistantNotifier(),
+    );
+
+    //ChatNotifier:---------------------------------------------------------------------
+    getIt.registerSingleton<ChatNotifier>(
+      ChatNotifier(getIt<SendMessageUsecase>(), getIt<AssistantNotifier>()),
     );
   }
 }

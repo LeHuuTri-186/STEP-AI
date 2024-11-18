@@ -7,6 +7,7 @@ import 'package:step_ai/features/authentication/notifier/register_notifier.dart'
 import 'package:step_ai/features/authentication/notifier/ui_notifier.dart';
 
 import 'package:step_ai/features/authentication/presentation/pages/authenticate.dart';
+import 'package:step_ai/features/chat/notifier/assistant_notifier.dart';
 
 import 'package:step_ai/features/chat/presentation/pages/chat_page.dart';
 
@@ -16,6 +17,7 @@ import 'package:step_ai/features/authentication/presentation/pages/forgot_passwo
 import 'package:step_ai/features/plan/presentation/pages/planPricingPage.dart';
 import 'package:step_ai/features/prompt/presentation/pages/prompt_list.dart';
 
+import '../../features/chat/notifier/chat_notifier.dart';
 import '../../features/personal/presentation/pages/personal_page.dart';
 
 
@@ -34,8 +36,16 @@ class Routes {
 
   static final routes = <String, WidgetBuilder>{
     personal: (BuildContext context) => PersonalPage(),
-    chat: (BuildContext context) => ChatPage(),
-    email: (BuildContext context) => EmailPage(),
+    chat: (BuildContext context) => Builder(builder:(context){
+      return MultiProvider(
+        providers: [
+          ChangeNotifierProvider.value(value: getIt<AssistantNotifier>()),
+          ChangeNotifierProvider.value(value: getIt<ChatNotifier>()),
+        ],
+        child: ChatPage(),
+      );
+    } ),
+    // email: (BuildContext context) => EmailPage(),
     planAndPricing: (BuildContext context) => PlanPricingPage(),
 
     // signIn: (BuildContext context) => SignInPage(),
