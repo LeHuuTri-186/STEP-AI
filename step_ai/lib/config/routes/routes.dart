@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:step_ai/core/di/service_locator.dart';
+import 'package:step_ai/features/authentication/data/repository/auth_secure_storage_impl.dart';
+import 'package:step_ai/features/authentication/data/repository/login_repository_impl.dart';
+import 'package:step_ai/features/authentication/domain/repository/auth_secure_storage_repository.dart';
+import 'package:step_ai/features/authentication/domain/repository/login_repository.dart';
+import 'package:step_ai/features/authentication/domain/usecase/login_usecase.dart';
+import 'package:step_ai/features/authentication/domain/usecase/save_token_usecase.dart';
 import 'package:step_ai/features/authentication/notifier/error_notifier.dart';
+import 'package:step_ai/features/authentication/notifier/login_notifier.dart';
 import 'package:step_ai/features/authentication/notifier/ui_notifier.dart';
 import 'package:step_ai/features/authentication/presentation/pages/authenticate.dart';
 import 'package:step_ai/features/chat/presentation/pages/chat_page.dart';
@@ -41,6 +49,8 @@ class Routes {
           providers: [
             ChangeNotifierProvider(create: (_) => AuthenticateUINotifier()),
             ChangeNotifierProvider(create: (_) => AuthenticateErrorNotifier()),
+            ChangeNotifierProvider(create: (_) => getIt<LoginNotifier>(),
+            ),
           ],
           child: AuthenticateScreen(),
         );

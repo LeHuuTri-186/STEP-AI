@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:step_ai/features/authentication/api/login_api.dart';
+import 'package:step_ai/features/authentication/api/sign_up_api.dart';
 import 'package:step_ai/features/authentication/notifier/error_notifier.dart';
+import 'package:step_ai/features/authentication/notifier/login_notifier.dart';
 import 'package:step_ai/features/authentication/notifier/ui_notifier.dart';
 
 class AuthenticateScreen extends StatefulWidget {
@@ -13,6 +16,7 @@ class AuthenticateScreen extends StatefulWidget {
 class _AuthenticateScreenState extends State<AuthenticateScreen> {
   late AuthenticateUINotifier _authUINotifier;
   late AuthenticateErrorNotifier _errorNotifier;
+  late LoginNotifier _loginNotifier;
 
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -24,6 +28,7 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
   Widget build(BuildContext context) {
     _authUINotifier = Provider.of<AuthenticateUINotifier>(context);
     _errorNotifier = Provider.of<AuthenticateErrorNotifier>(context);
+    _loginNotifier = Provider.of<LoginNotifier>(context);
 
     return Scaffold(
       appBar: _buildAppBar(),
@@ -283,22 +288,8 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     );
   }
 
-  AlertDialog _buildDialog(String text) {
-    return AlertDialog(
-      title: const Text('Input Validation'),
-      content: Text(text),
-      actions: [
-        TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('OK')),
-      ],
-    );
-  }
 
   //Other methods:--------------------------------------------------------------
-
   void forgotPasswordPress(){
 
   }
@@ -325,7 +316,7 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     }
   }
 
-  void registerValidateSubmit(){
+  void registerValidateSubmit() async{
 
     _errorNotifier.setEmailError(validateEmail(_emailController.text));
     _errorNotifier.setPasswordError(validatePassword(_passwordController.text));
@@ -334,7 +325,33 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     _errorNotifier.setUsernameError(validateUsername(_usernameController.text));
 
     if (_errorNotifier.isValidRegister()){
-      print('OK');
+      //call API register
+      SignUpAPI api = SignUpAPI();
+      String response = await api.call(
+          _emailController.text,
+          _passwordController.text,
+          _usernameController.text
+      );
+      //Email already exists
+      if (api.statusCode == 422){
+        _errorNotifier.setEmailError('Email already exists');
+        return;
+      }
+      //Good
+      if (api.statusCode == 201) {
+        print('OK');
+        //Call login api for tokens
+        if (await _loginNotifier.login(
+            _emailController.text, _passwordController.text)){
+          print('Login true');
+        }
+        else{
+          print('Login false');
+        }
+        //Switch screen
+      }
+
+
     }
     else {
       print('Failed');
@@ -356,8 +373,17 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     if (password.isEmpty) {
       return "Password can not be empty";
     }
-    if (password.length < 6) {
-      return "Password must have at least 6 characters";
+    if (password.length < 8) {
+      return 'Password must be at least 8 characters long.';
+    }
+    if (!RegExp(r'[A-Z]').hasMatch(password)) {
+      return 'Password must include at least one uppercase letter.';
+    }
+    if (!RegExp(r'[a-z]').hasMatch(password)) {
+      return 'Password must include at least one lowercase letter.';
+    }
+    if (!RegExp(r'[0-9]').hasMatch(password)) {
+      return 'Password must include at least one number.';
     }
     return null;
   }
@@ -389,7 +415,5 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     _confirmPwController.text = '';
     _usernameController.text = '';
   }
-
-
 }
 

@@ -3,13 +3,14 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class SignUpAPI {
-  final String _baseUrl = 'https://api.jarvis.cx';
+  final String _baseUrl = 'https://api.dev.jarvis.cx';
   final _headers = {
     'x-jarvis-guid': '',
     'Content-Type': 'application/json'
   };
   final String _endPoint = '/api/v1/auth/sign-up';
 
+  int _statusCode = 0;
 
   static final SignUpAPI _instance = SignUpAPI._internal();
 
@@ -19,30 +20,32 @@ class SignUpAPI {
     return _instance;
   }
 
-  Future<String> call(String email, String password, String username) async{
+  int get statusCode => _statusCode;
+
+  Future<String> call(String email, String password, String username) async {
     var request = http.Request('POST', Uri.parse(_baseUrl + _endPoint));
     request.body = json.encode({
-      "email": "Alexie9911@gmail.com",
-      "password": "2wyML3agdX695ae",
-      "username": "Terence",
+      "email": email,
+      "password": password,
+      "username": username,
     });
 
     request.headers.addAll(_headers);
     http.StreamedResponse response;
     try {
       response = await request.send();
+      _statusCode = response.statusCode;
+      print(_statusCode);
 
-      if (response.statusCode == 200) {
-        print(response.statusCode);
+      if (response.statusCode == 201) {
         return response.stream.bytesToString();
       }
       else {
-        return response.reasonPhrase!;
+        return response.stream.transform(utf8.decoder).join();
       }
-    } catch (e){
+    } catch (e) {
       print('Exception: $e');
-      return 'can';
+      return 'Error from Register API';
     }
   }
-
 }
