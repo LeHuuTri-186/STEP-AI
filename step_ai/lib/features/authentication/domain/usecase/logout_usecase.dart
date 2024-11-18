@@ -1,22 +1,27 @@
 import 'dart:async';
 
+import 'package:step_ai/core/data/local/securestorage/secure_storage_helper.dart';
+import 'package:step_ai/core/data/local/sharedpref/shared_preferences_helper.dart';
 import 'package:step_ai/core/usecase/use_case.dart';
 import 'package:step_ai/features/authentication/domain/repository/logout_repository.dart';
-import 'package:step_ai/shared/business_logic/token_logic/domain/usecase/delete_token_usecase.dart';
 
-import '../../../../config/constants.dart';
 
 class LogoutUseCase extends UseCase<void, void>{
-  final DeleteTokenUseCase _deleteTokenUseCase;
   final LogoutRepository _logoutRepository;
+  final SharedPreferencesHelper _sharedPreferencesHelper;
+  final SecureStorageHelper _secureStorageHelper;
 
-  LogoutUseCase(this._deleteTokenUseCase, this._logoutRepository);
+  LogoutUseCase(
+      this._logoutRepository,
+      this._sharedPreferencesHelper,
+      this._secureStorageHelper);
+
   @override
   FutureOr<void> call({required void params}) async{
     int statusCode = await _logoutRepository.logout();
     if (statusCode == 401){
-      await _deleteTokenUseCase.call(params: Constant.access);
-      await _deleteTokenUseCase.call(params: Constant.refresh);
+      await _secureStorageHelper.deleteAll();
+      await _sharedPreferencesHelper.saveIsLoggedIn(false);
       return;
     }
     throw ('Error at logout use case');

@@ -1,13 +1,19 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:step_ai/config/constants.dart';
 import 'package:step_ai/core/api/api_service.dart';
-import 'package:step_ai/shared/business_logic/token_logic/data/model/token_model.dart';
+import 'package:step_ai/core/data/local/sharedpref/shared_preferences_helper.dart';
+import 'package:step_ai/core/data/model/token_model.dart';
 import 'package:step_ai/features/authentication/domain/repository/login_repository.dart';
 
 class LoginRepositoryImpl extends LoginRepository{
   final ApiService _apiService = ApiService(Constant.apiBaseUrl);
+  final SharedPreferencesHelper _sharedPreferencesHelper;
+
+  LoginRepositoryImpl(this._sharedPreferencesHelper);
+
   final _headers = {
     'x-jarvis-guid': '',
     'Content-Type': 'application/json'
@@ -51,4 +57,11 @@ class LoginRepositoryImpl extends LoginRepository{
       http.StreamedResponse response) async{
     return jsonDecode(await response.stream.bytesToString());
   }
+
+  @override
+  Future<bool> get isLoggedIn => _sharedPreferencesHelper.isLoggedIn;
+
+  @override
+  Future<void> saveLoginStatus(bool status) =>
+      _sharedPreferencesHelper.saveIsLoggedIn(status);
 }
