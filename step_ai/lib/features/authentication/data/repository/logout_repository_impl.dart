@@ -1,13 +1,13 @@
 
 import 'package:step_ai/config/constants.dart';
 import 'package:step_ai/core/api/api_service.dart';
-import 'package:step_ai/shared/business_logic/token_logic/domain/repository/auth_secure_storage_repository.dart';
+import 'package:step_ai/core/data/local/securestorage/secure_storage_helper.dart';
 import 'package:step_ai/features/authentication/domain/repository/logout_repository.dart';
 
 class LogoutRepositoryImpl extends LogoutRepository{
-  final AuthSecureStorageRepository _secureStorageRepository;
+  final SecureStorageHelper _secureStorageHelper;
   final ApiService _apiService = ApiService(Constant.apiBaseUrl);
-  LogoutRepositoryImpl(this._secureStorageRepository);
+  LogoutRepositoryImpl(this._secureStorageHelper);
 
   @override
   Future<int> logout() async{
@@ -18,7 +18,7 @@ class LogoutRepositoryImpl extends LogoutRepository{
   }
 
   Future<Map<String, String>> _executeHeadersBuild() async{
-    String? token = await _secureStorageRepository.getToken(Constant.access);
+    String? token = await _secureStorageHelper.accessToken;
     var headers = {
       'x-jarvis-guid': '',
       'Authorization': 'Bearer $token}'

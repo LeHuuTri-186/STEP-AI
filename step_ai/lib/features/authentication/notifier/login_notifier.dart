@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:step_ai/features/authentication/domain/param/login_param.dart';
+import 'package:step_ai/features/authentication/domain/usecase/is_logged_in_usecase.dart';
+import 'package:step_ai/features/authentication/domain/usecase/save_login_status_usecase.dart';
 
 import '../domain/usecase/login_usecase.dart';
-import '../../../shared/business_logic/token_logic/domain/usecase/save_token_usecase.dart';
 
 class LoginNotifier extends ChangeNotifier{
   //Use cases:------------------------------------------------------------------
-  final SaveTokenUseCase _saveTokenUseCase;
+  final SaveLoginStatusUseCase _saveLoginStatusUseCase;
   final LoginUseCase _loginUseCase;
 
   //Others:---------------------------------------------------------------------
@@ -17,7 +18,7 @@ class LoginNotifier extends ChangeNotifier{
   String? _passwordError;
 
   //Methods:--------------------------------------------------------------------
-  LoginNotifier(this._saveTokenUseCase, this._loginUseCase);
+  LoginNotifier(this._loginUseCase, this._saveLoginStatusUseCase);
 
   String? get emailError => _emailError;
   String? get passwordError => _passwordError;
@@ -69,6 +70,7 @@ class LoginNotifier extends ChangeNotifier{
     try {
       await _loginUseCase.call(
           params: LoginParam(email: email, password: password));
+      _saveLoginStatusUseCase.call(params: true);
       return true;
     }
     catch (e){
