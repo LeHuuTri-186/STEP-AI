@@ -4,7 +4,10 @@ import 'package:step_ai/features/authentication/api/login_api.dart';
 import 'package:step_ai/features/authentication/api/sign_up_api.dart';
 import 'package:step_ai/features/authentication/notifier/error_notifier.dart';
 import 'package:step_ai/features/authentication/notifier/login_notifier.dart';
+import 'package:step_ai/features/authentication/notifier/register_notifier.dart';
 import 'package:step_ai/features/authentication/notifier/ui_notifier.dart';
+
+import '../../../../core/di/service_locator.dart';
 
 class AuthenticateScreen extends StatefulWidget {
   AuthenticateScreen({super.key});
@@ -17,6 +20,7 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
   late AuthenticateUINotifier _authUINotifier;
   late AuthenticateErrorNotifier _errorNotifier;
   late LoginNotifier _loginNotifier;
+  late RegisterNotifier _registerNotifier;
 
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -29,6 +33,7 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     _authUINotifier = Provider.of<AuthenticateUINotifier>(context);
     _errorNotifier = Provider.of<AuthenticateErrorNotifier>(context);
     _loginNotifier = Provider.of<LoginNotifier>(context);
+    _registerNotifier = Provider.of<RegisterNotifier>(context);
 
     return Scaffold(
       appBar: _buildAppBar(),
@@ -52,26 +57,45 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     );
   }
 
-  Widget _buildBody(){
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          SizedBox(height: 70),
+  Widget _buildBody() {
+    return Stack(
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(height: 70),
 
-          _buildToggleButton(),
+              _buildToggleButton(),
 
-          const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-          _authUINotifier.isLogin? _buildLoginView(): _buildRegisterView(),
-        ],
-      ),
+              _authUINotifier.isLogin
+                  ? _buildLoginView()
+                  : _buildRegisterView(),
+            ],
+          ),
+        ),
+
+        if (_loginNotifier.isLoading || _registerNotifier.isLoading)
+          Positioned.fill(child: _buildProgressIndicator()),
+      ],
     );
   }
 
 
   //Build items:----------------------------------------------------------------
+
+  Widget _buildProgressIndicator(){
+    return Container(
+      color: Colors.black.withOpacity(0.5),
+      child: const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+
   Widget _buildToggleButton() {
     return LayoutBuilder(builder: (context, constraints) =>
         ToggleButtons(
@@ -106,13 +130,13 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
         children: [
           _buildTextFieldView(
               'Email', 'Enter your email address',
-              _errorNotifier.emailError, _emailController, false),
+              _loginNotifier.emailError, _emailController, false),
 
           SizedBox(height: 15),
           _buildPasswordTypeField(
             'Password',
             'Enter your password',
-            _errorNotifier.passwordError,
+            _loginNotifier.passwordError,
             _passwordController,
             _authUINotifier.isPasswordShowing,
             setStatePassword,
@@ -164,20 +188,20 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
       children: <Widget>[
         _buildTextFieldView(
             'Email', 'Enter your email address',
-            _errorNotifier.emailError,
+            _registerNotifier.emailError,
             _emailController, false),
         const SizedBox(height: 15),
 
         _buildTextFieldView(
             'Username', 'Enter your username',
-            _errorNotifier.usernameError,
+            _registerNotifier.usernameError,
             _usernameController, false),
         const SizedBox(height: 15),
 
         _buildPasswordTypeField(
           'Password',
           'Enter your password',
-          _errorNotifier.passwordError,
+          _registerNotifier.passwordError,
           _passwordController,
           _authUINotifier.isPasswordShowing,
           setStatePassword,
@@ -187,7 +211,7 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
         _buildPasswordTypeField(
           'Confirm password',
           'Re-enter your password',
-          _errorNotifier.confirmError,
+          _registerNotifier.confirmError,
           _confirmPwController,
           _authUINotifier.isConfirmPwShowing,
           setStateConfirmPw,
@@ -302,14 +326,20 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     _authUINotifier.toggleShowConfirmPassword();
   }
 
-  void loginValidateSubmit() {
+  void loginValidateSubmit() async{
+    _loginNotifier.setEmailError(_emailController.text);
+    _loginNotifier.setPasswordError(_passwordController.text);
 
-    _errorNotifier.setEmailError(validateEmail(_emailController.text));
-    _errorNotifier.setPasswordError(validatePassword(_passwordController.text));
-
-    if (_errorNotifier.isValidLogin()) {
+    if (_loginNotifier.isInputValid()) {
       print('OK');
       //Call login API
+      bool isLogged = await _loginNotifier.login(
+          _emailController.text, _passwordController.text);
+      if (isLogged) {
+
+      }
+      else {
+      }
     }
     else {
       print('Failed');
@@ -318,43 +348,29 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
 
   void registerValidateSubmit() async{
 
-    _errorNotifier.setEmailError(validateEmail(_emailController.text));
-    _errorNotifier.setPasswordError(validatePassword(_passwordController.text));
-    _errorNotifier.setConfirmError(validateConfirmPw(
-        _confirmPwController.text, _passwordController.text));
-    _errorNotifier.setUsernameError(validateUsername(_usernameController.text));
+    _registerNotifier.setEmailError(_emailController.text);
+    _registerNotifier.setPasswordError(_passwordController.text);
+    _registerNotifier.setConfirmError(
+        _confirmPwController.text,
+        _passwordController.text
+    );
+    _registerNotifier.setUsernameError(_usernameController.text);
 
-    if (_errorNotifier.isValidRegister()){
+
+    if (_registerNotifier.isInputValid()){
       //call API register
-      SignUpAPI api = SignUpAPI();
-      String response = await api.call(
+      bool isRegistered = await _registerNotifier.register(
           _emailController.text,
           _passwordController.text,
           _usernameController.text
       );
-      //Email already exists
-      if (api.statusCode == 422){
-        _errorNotifier.setEmailError('Email already exists');
-        return;
-      }
-      //Good
-      if (api.statusCode == 201) {
-        print('OK');
-        //Call login api for tokens
-        if (await _loginNotifier.login(
-            _emailController.text, _passwordController.text)){
-          print('Login true');
-        }
-        else{
-          print('Login false');
-        }
+      if (isRegistered){
+        print('Logging in');
         //Switch screen
       }
-
-
     }
     else {
-      print('Failed');
+      print('Failed register');
     }
   }
 
@@ -404,8 +420,6 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     }
     return null;
   }
-  
-
 
   void resetTextFieldValue(){
     _errorNotifier.reset();

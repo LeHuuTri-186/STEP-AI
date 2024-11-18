@@ -11,7 +11,6 @@ class LoginNotifier extends ChangeNotifier{
 
   //Others:---------------------------------------------------------------------
   bool _isLoading = false;
-  bool _isLogging = false;
   String? _errorMessage;
 
   String? _emailError;
@@ -22,6 +21,7 @@ class LoginNotifier extends ChangeNotifier{
 
   String? get emailError => _emailError;
   String? get passwordError => _passwordError;
+  bool get isLoading => _isLoading;
 
   String? validateEmail(String email){
     if (email.isEmpty) {
@@ -66,9 +66,10 @@ class LoginNotifier extends ChangeNotifier{
       return true;
     }
     catch (e){
-      print(e);
+      if (e == '422'){
+        _emailError = 'Email or password invalid';
+      }
       return false;
-
     } finally {
       _isLoading = false;
       notifyListeners();

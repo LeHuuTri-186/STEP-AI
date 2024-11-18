@@ -9,6 +9,7 @@ import 'package:step_ai/features/authentication/domain/usecase/login_usecase.dar
 import 'package:step_ai/features/authentication/domain/usecase/save_token_usecase.dart';
 import 'package:step_ai/features/authentication/notifier/error_notifier.dart';
 import 'package:step_ai/features/authentication/notifier/login_notifier.dart';
+import 'package:step_ai/features/authentication/notifier/register_notifier.dart';
 import 'package:step_ai/features/authentication/notifier/ui_notifier.dart';
 import 'package:step_ai/features/authentication/presentation/pages/authenticate.dart';
 import 'package:step_ai/features/chat/presentation/pages/chat_page.dart';
@@ -48,9 +49,11 @@ class Routes {
         return MultiProvider(
           providers: [
             ChangeNotifierProvider(create: (_) => AuthenticateUINotifier()),
-            ChangeNotifierProvider(create: (_) => AuthenticateErrorNotifier()),
-            ChangeNotifierProvider(create: (_) => getIt<LoginNotifier>(),
+            ChangeNotifierProvider(
+                create: (_) => getIt<AuthenticateErrorNotifier>()
             ),
+            ChangeNotifierProvider(create: (_) => getIt<LoginNotifier>()),
+            ChangeNotifierProvider(create: (_) => getIt<RegisterNotifier>()),
           ],
           child: AuthenticateScreen(),
         );
