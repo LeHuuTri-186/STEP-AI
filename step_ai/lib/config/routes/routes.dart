@@ -8,6 +8,7 @@ import 'package:step_ai/features/authentication/notifier/ui_notifier.dart';
 
 import 'package:step_ai/features/authentication/presentation/pages/authenticate.dart';
 import 'package:step_ai/features/chat/notifier/assistant_notifier.dart';
+import 'package:step_ai/features/chat/notifier/history_conversation_list_notifier.dart';
 
 import 'package:step_ai/features/chat/presentation/pages/chat_page.dart';
 
@@ -41,6 +42,7 @@ class Routes {
         providers: [
           ChangeNotifierProvider.value(value: getIt<AssistantNotifier>()),
           ChangeNotifierProvider.value(value: getIt<ChatNotifier>()),
+          ChangeNotifierProvider.value(value: getIt<HistoryConversationListNotifier>()),
         ],
         child: ChatPage(),
       );

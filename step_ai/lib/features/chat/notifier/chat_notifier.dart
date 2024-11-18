@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:step_ai/features/chat/domain/entity/message.dart';
+import 'package:step_ai/features/chat/domain/params/send_message_param.dart';
 import 'package:step_ai/features/chat/domain/usecase/send_message_usecase.dart';
 import 'package:step_ai/features/chat/notifier/assistant_notifier.dart';
+import 'package:step_ai/features/chat/notifier/history_conversation_list_notifier.dart';
 
 class ChatNotifier with ChangeNotifier {
   //number of rest token
@@ -14,6 +16,7 @@ class ChatNotifier with ChangeNotifier {
 
   //Notifier
   AssistantNotifier _assistantNotifier;
+  HistoryConversationListNotifier _historyConversationListNotifier;
 
   ///history messages
   List<Message> _historyMessages = [];
@@ -21,7 +24,8 @@ class ChatNotifier with ChangeNotifier {
 
   //usecase -----------------------------
   SendMessageUsecase _sendMessageUsecase;
-  ChatNotifier(this._sendMessageUsecase, this._assistantNotifier);
+  ChatNotifier(this._sendMessageUsecase, this._assistantNotifier,
+      this._historyConversationListNotifier);
 
   Future<void> sendMessage(String contentSend) async {
     //Add message send to history
@@ -37,7 +41,11 @@ class ChatNotifier with ChangeNotifier {
     notifyListeners();
 
     try {
-      final response = await _sendMessageUsecase.call(params: _historyMessages);
+      final response = await _sendMessageUsecase.call(
+          params: SendMessageParam(
+              historyMessages: _historyMessages,
+              conversationId:
+                  _historyConversationListNotifier.idCurrentConversation));
       updateLastMessage(response.content!);
     } catch (error) {
       updateLastMessage(error.toString());

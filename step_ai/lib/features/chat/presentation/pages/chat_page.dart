@@ -26,7 +26,7 @@ class _ChatPageState extends State<ChatPage> {
     if (_scrollController.hasClients) {
       _scrollController.animateTo(
         _scrollController.position.maxScrollExtent,
-        duration: const Duration(microseconds: 200),
+        duration: const Duration(microseconds: 1000),
         curve: Curves.easeOut,
       );
     }

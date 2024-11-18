@@ -13,20 +13,20 @@ class Message {
     this.content,
     this.files,
   });
-  // factory Message.fromJson(Map<String, dynamic> json) {
-  //   return Message(
-  //     assistant: Assistant.fromJson(json['assistant']),
-  //     role: json['role'],
-  //     content: json['content'],
-  //     files: json['files'],
-  //   );
-  // }
-  // Map<String, dynamic> toJson() {
-  //   return {
-  //     'assistant': assistant.toJson(),
-  //     'role': role,
-  //     'content': content,
-  //     'files': files,
-  //   };
-  // }
+  factory Message.fromJson(Map<String, dynamic> json) {
+    return Message(
+      assistant: Assistant.fromJson(json['assistant']),
+      role: json['role'],
+      content: json['content'],
+      files: json['files'],
+    );
+  }
+  Map<String, dynamic> toJson() {
+    return {
+      'assistant': assistant.toJson(),
+      'role': role,
+      'content': content,
+      'files': files,
+    };
+  }
 }

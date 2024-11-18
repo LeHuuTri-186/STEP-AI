@@ -7,9 +7,11 @@ import 'package:step_ai/features/authentication/domain/usecase/save_login_status
 import 'package:step_ai/features/authentication/notifier/login_notifier.dart';
 import 'package:step_ai/features/authentication/notifier/register_notifier.dart';
 import 'package:step_ai/features/authentication/notifier/ui_notifier.dart';
+import 'package:step_ai/features/chat/domain/usecase/get_messages_by_conversation_id_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/send_message_usecase.dart';
 import 'package:step_ai/features/chat/notifier/assistant_notifier.dart';
 import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
+import 'package:step_ai/features/chat/notifier/history_conversation_list_notifier.dart';
 
 class ProviderModule {
   static Future<void> configureStoreModuleInjection() async {
@@ -35,10 +37,14 @@ class ProviderModule {
     getIt.registerSingleton<AssistantNotifier>(
       AssistantNotifier(),
     );
-
+    //HistoryConversationListNotifier:-----------------------------------------------------
+    getIt.registerSingleton<HistoryConversationListNotifier>(
+      HistoryConversationListNotifier(
+          getIt<GetMessagesByConversationIdUsecase>()),
+    );
     //ChatNotifier:---------------------------------------------------------------------
     getIt.registerSingleton<ChatNotifier>(
-      ChatNotifier(getIt<SendMessageUsecase>(), getIt<AssistantNotifier>()),
+      ChatNotifier(getIt<SendMessageUsecase>(), getIt<AssistantNotifier>(),getIt<HistoryConversationListNotifier>()),
     );
   }
 }

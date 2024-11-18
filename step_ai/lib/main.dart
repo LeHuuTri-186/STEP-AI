@@ -22,7 +22,7 @@ Future<void> main() async{
   final initialRoute = isLoggedIn ? Routes.chat : Routes.authenticate;
   final initialRoute1=Routes.chat;//to test chat page
 
-  runApp(MyApp(initialRoute: initialRoute1));
+  runApp(MyApp(initialRoute: initialRoute));
 }
 
 class MyApp extends StatelessWidget {
