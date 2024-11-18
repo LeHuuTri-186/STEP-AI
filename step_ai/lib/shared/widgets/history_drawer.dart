@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:step_ai/config/routes/routes.dart';
+import 'package:step_ai/core/di/service_locator.dart';
+import 'package:step_ai/features/authentication/domain/usecase/logout_usecase.dart';
 import 'package:step_ai/shared/widgets/app_name_widget.dart';
 import 'package:step_ai/features/personal/presentation/widgets/search_bar_widget.dart';
 import 'package:step_ai/features/plan/presentation/pages/planPricingPage.dart';
 import 'package:step_ai/features/prompt/presentation/pages/prompt_list.dart';
-import 'package:step_ai/features/authentication/presentation/pages/sign_in_page.dart';
 
 import '../../features/chat/presentation/pages/chat_page.dart';
 import '../../features/authentication/presentation/pages/email_page.dart';
@@ -13,6 +15,8 @@ import '../../features/personal/presentation/pages/personal_page.dart';
 
 class HistoryDrawer extends StatelessWidget {
   final TextEditingController searchController = TextEditingController();
+  final LogoutUseCase _logoutUseCase = getIt<LogoutUseCase>();
+
   HistoryDrawer({super.key});
 
   void onSearchTextChanged() {}
@@ -244,12 +248,15 @@ class HistoryDrawer extends StatelessWidget {
           Expanded(
               child: TextButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => SignInPage()),
-                  );
+                  try {
+                    _logoutUseCase.call(params: null);
+                    Navigator.of(context).pushReplacementNamed(
+                        Routes.authenticate);
+                  } catch (e){
+                    print(e);
+                  }
                 },
+
                 style: ButtonStyle(
                     shape: WidgetStateProperty.resolveWith(
                             (states) => ContinuousRectangleBorder()),

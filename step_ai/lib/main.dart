@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       routes: Routes.routes,
-      initialRoute: Routes.signIn,
+      initialRoute: Routes.authenticate,
       home: const ChatPage(chatName: "Chat"),
     );
     // return MaterialApp(
