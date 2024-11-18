@@ -55,6 +55,12 @@ class LoginNotifier extends ChangeNotifier{
     return (_emailError == null && _passwordError == null);
   }
 
+  void resetError(){
+    _emailError = null;
+    _passwordError = null;
+    notifyListeners();
+  }
+
   Future<bool> login(String email, String password) async{
     _isLoading = true;
     _errorMessage = null;

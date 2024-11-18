@@ -104,6 +104,14 @@ class RegisterNotifier extends ChangeNotifier{
     notifyListeners();
   }
 
+  void resetError(){
+    _emailError = null;
+    _passwordError = null;
+    _usernameError = null;
+    _confirmError = null;
+    notifyListeners();
+  }
+
   //Register...
   Future<bool> register(
       String email, String password, String username) async{

@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:step_ai/features/authentication/api/login_api.dart';
-import 'package:step_ai/features/authentication/api/sign_up_api.dart';
-import 'package:step_ai/features/authentication/notifier/error_notifier.dart';
+import 'package:step_ai/config/routes/routes.dart';
+
 import 'package:step_ai/features/authentication/notifier/login_notifier.dart';
 import 'package:step_ai/features/authentication/notifier/register_notifier.dart';
 import 'package:step_ai/features/authentication/notifier/ui_notifier.dart';
-
-import '../../../../core/di/service_locator.dart';
 
 class AuthenticateScreen extends StatefulWidget {
   AuthenticateScreen({super.key});
@@ -18,7 +15,6 @@ class AuthenticateScreen extends StatefulWidget {
 
 class _AuthenticateScreenState extends State<AuthenticateScreen> {
   late AuthenticateUINotifier _authUINotifier;
-  late AuthenticateErrorNotifier _errorNotifier;
   late LoginNotifier _loginNotifier;
   late RegisterNotifier _registerNotifier;
 
@@ -31,7 +27,6 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
   @override
   Widget build(BuildContext context) {
     _authUINotifier = Provider.of<AuthenticateUINotifier>(context);
-    _errorNotifier = Provider.of<AuthenticateErrorNotifier>(context);
     _loginNotifier = Provider.of<LoginNotifier>(context);
     _registerNotifier = Provider.of<RegisterNotifier>(context);
 
@@ -60,21 +55,23 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
   Widget _buildBody() {
     return Stack(
       children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(height: 70),
+        SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(height: 70),
 
-              _buildToggleButton(),
+                _buildToggleButton(),
 
-              const SizedBox(height: 20),
+                const SizedBox(height: 20),
 
-              _authUINotifier.isLogin
-                  ? _buildLoginView()
-                  : _buildRegisterView(),
-            ],
+                _authUINotifier.isLogin
+                    ? _buildLoginView()
+                    : _buildRegisterView(),
+              ],
+            ),
           ),
         ),
 
@@ -86,7 +83,6 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
 
 
   //Build items:----------------------------------------------------------------
-
   Widget _buildProgressIndicator(){
     return Container(
       color: Colors.black.withOpacity(0.5),
@@ -336,9 +332,9 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
       bool isLogged = await _loginNotifier.login(
           _emailController.text, _passwordController.text);
       if (isLogged) {
-
-      }
-      else {
+        if (mounted){
+          Navigator.of(context).pushReplacementNamed(Routes.chat);
+        }
       }
     }
     else {
@@ -367,6 +363,9 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
       if (isRegistered){
         print('Logging in');
         //Switch screen
+        if (mounted){
+          Navigator.of(context).pushReplacementNamed(Routes.chat);
+        }
       }
     }
     else {
@@ -374,55 +373,9 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     }
   }
 
-  String? validateEmail(String email){
-    if (email.isEmpty) {
-      return "Email can not be empty";
-    }
-    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
-    if (!emailRegex.hasMatch(email)) {
-      return "Email invalid";
-    }
-    return null;
-  }
-
-  String? validatePassword(String password){
-    if (password.isEmpty) {
-      return "Password can not be empty";
-    }
-    if (password.length < 8) {
-      return 'Password must be at least 8 characters long.';
-    }
-    if (!RegExp(r'[A-Z]').hasMatch(password)) {
-      return 'Password must include at least one uppercase letter.';
-    }
-    if (!RegExp(r'[a-z]').hasMatch(password)) {
-      return 'Password must include at least one lowercase letter.';
-    }
-    if (!RegExp(r'[0-9]').hasMatch(password)) {
-      return 'Password must include at least one number.';
-    }
-    return null;
-  }
-
-  String? validateConfirmPw(String confirmPassword, String password){
-    if (confirmPassword.isEmpty) {
-      return "Confirm password can not be empty";
-    }
-    if (confirmPassword != password) {
-      return "Confirm password mismatch ";
-    }
-    return null;
-  }
-
-  String? validateUsername(String username){
-    if (username.isEmpty) {
-      return "Username can not be empty";
-    }
-    return null;
-  }
-
   void resetTextFieldValue(){
-    _errorNotifier.reset();
+    _registerNotifier.resetError();
+    _loginNotifier.resetError();
 
     _emailController.text = '';
     _passwordController.text = '';
