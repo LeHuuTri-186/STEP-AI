@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:step_ai/config/constants.dart';
 import 'package:step_ai/core/api/api_service.dart';
-import 'package:step_ai/features/authentication/data/models/token_model.dart';
+import 'package:step_ai/shared/business_logic/token_logic/data/model/token_model.dart';
 import 'package:step_ai/features/authentication/domain/repository/login_repository.dart';
 
 class LoginRepositoryImpl extends LoginRepository{

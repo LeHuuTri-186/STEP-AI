@@ -4,7 +4,7 @@ import 'package:step_ai/features/authentication/domain/repository/register_repos
 import 'package:step_ai/features/authentication/domain/usecase/register_usecase.dart';
 
 import '../domain/usecase/login_usecase.dart';
-import '../domain/usecase/save_token_usecase.dart';
+import '../../../shared/business_logic/token_logic/domain/usecase/save_token_usecase.dart';
 
 class RegisterNotifier extends ChangeNotifier{
   //Use cases:------------------------------------------------------------------

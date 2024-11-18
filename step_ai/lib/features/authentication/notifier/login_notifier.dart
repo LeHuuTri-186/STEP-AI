@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:step_ai/features/authentication/domain/param/login_param.dart';
 
 import '../domain/usecase/login_usecase.dart';
-import '../domain/usecase/save_token_usecase.dart';
+import '../../../shared/business_logic/token_logic/domain/usecase/save_token_usecase.dart';
 
 class LoginNotifier extends ChangeNotifier{
   //Use cases:------------------------------------------------------------------

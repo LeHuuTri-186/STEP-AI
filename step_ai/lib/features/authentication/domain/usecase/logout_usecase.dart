@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:step_ai/core/usecase/use_case.dart';
 import 'package:step_ai/features/authentication/domain/repository/logout_repository.dart';
-import 'package:step_ai/features/authentication/domain/usecase/delete_token_usecase.dart';
+import 'package:step_ai/shared/business_logic/token_logic/domain/usecase/delete_token_usecase.dart';
 
 import '../../../../config/constants.dart';
 
