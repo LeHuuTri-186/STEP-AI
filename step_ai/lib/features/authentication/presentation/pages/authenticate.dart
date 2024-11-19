@@ -331,6 +331,12 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
         print('Logging in');
         //Switch screen
         if (mounted) {
+          final ChatNotifier chatNotifier = getIt<ChatNotifier>();
+          await chatNotifier.getNumberRestToken();
+          final HistoryConversationListNotifier
+              historyConversationListNotifier =
+              getIt<HistoryConversationListNotifier>();
+          await historyConversationListNotifier.getHistoryConversationList(100);
           Navigator.of(context).pushReplacementNamed(Routes.chat);
         }
       }

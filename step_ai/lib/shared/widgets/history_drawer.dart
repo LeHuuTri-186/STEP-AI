@@ -263,15 +263,23 @@ class HistoryDrawer extends StatelessWidget {
                   return ListTile(
                       title: Text(
                           "${historyConversationListNotifier.historyConversationList[index].title}"),
-                      onTap: () {
+                      onTap: () async {
+                        if (Provider.of<ChatNotifier>(context, listen: false)
+                                .idCurrentConversation ==
+                            historyConversationListNotifier
+                                .historyConversationList[index].id) {
+                          Navigator.pop(context);
+                          return;
+                        }
+
+                        await Provider.of<ChatNotifier>(context, listen: false)
+                            .resetChatNotifier();
                         //set id current conversation
-                        historyConversationListNotifier.idCurrentConversation =
+                        Provider.of<ChatNotifier>(context, listen: false)
+                                .idCurrentConversation =
                             historyConversationListNotifier
                                 .historyConversationList[index].id;
-                                
-                        Provider.of<ChatNotifier>(context, listen: false)
-                            .clearHistoryMessages();
-                        
+
                         //update detail conversation in here
 
                         Navigator.of(context).pushNamedAndRemoveUntil(

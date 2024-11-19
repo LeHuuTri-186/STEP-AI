@@ -15,6 +15,13 @@ class ChatNotifier with ChangeNotifier {
     notifyListeners();
   }
 
+  //current conversation id
+  String? _idCurrentConversation;
+  String? get idCurrentConversation => _idCurrentConversation;
+  set idCurrentConversation(String? setIdConversation) {
+    _idCurrentConversation = setIdConversation;
+  }
+
   //run first time when open chat
   Future<void> getNumberRestToken() async {
     try {
@@ -56,16 +63,14 @@ class ChatNotifier with ChangeNotifier {
       final messageModel = await _sendMessageUsecase.call(
           params: SendMessageParam(
               historyMessages: _historyMessages,
-              conversationId:
-                  _historyConversationListNotifier.idCurrentConversation));
+              conversationId: _idCurrentConversation));
 
       updateLastMessage(messageModel.message);
       _numberRestToken = messageModel.remainingUsage;
-      if (_historyConversationListNotifier.idCurrentConversation == null) {
-        //if the first time, add conversation to history
-        _historyConversationListNotifier.idCurrentConversation =
-            messageModel.conversationId;
-        _historyConversationListNotifier
+      if (_idCurrentConversation == null) {
+        //if the first time send, add conversation title to historyConversationList
+        _idCurrentConversation = messageModel.conversationId;
+        await _historyConversationListNotifier
             .getNewestConversationWhenAfterSendMessage();
       }
     } catch (error) {
@@ -85,11 +90,21 @@ class ChatNotifier with ChangeNotifier {
 
   void clearHistoryMessages() {
     _historyMessages.clear();
+  }
+
+  Future<void> resetChatNotifier() async {
+    this._idCurrentConversation = null;
+    clearHistoryMessages();
     notifyListeners();
   }
 
-  void resetChatNotifier() {
-    _historyConversationListNotifier.idCurrentConversation = null;
-    clearHistoryMessages();
+  String getTitleCurrentConversation() {
+    if (_idCurrentConversation == null) {
+      return "New Chat";
+    } else {
+      return _historyConversationListNotifier.historyConversationList
+          .firstWhere((element) => element.id == _idCurrentConversation)
+          .title!;
+    }
   }
 }

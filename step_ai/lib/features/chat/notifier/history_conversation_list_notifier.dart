@@ -54,10 +54,10 @@ class HistoryConversationListNotifier extends ChangeNotifier {
     }
   }
 
-  //conversation id
-  String? _idCurrentConversation;
-  String? get idCurrentConversation => _idCurrentConversation;
-  set idCurrentConversation(String? setIdConversation) {
-    _idCurrentConversation = setIdConversation;
-  }
+  // //conversation id
+  // String? _idCurrentConversation;
+  // String? get idCurrentConversation => _idCurrentConversation;
+  // set idCurrentConversation(String? setIdConversation) {
+  //   _idCurrentConversation = setIdConversation;
+  // }
 }

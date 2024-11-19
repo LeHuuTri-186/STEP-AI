@@ -189,6 +189,7 @@ class ApiClientChat {
           .get('${Constant.refreshTokenPartEndpoint}$refreshToken');
 
       if (myResponse.statusCode == 200) {
+        print("*****************Làm mới token thành công");
         TokenModel token;
         token = TokenModel.fromJson(
             jsonDecode(await myResponse.stream.bytesToString()));
@@ -196,6 +197,9 @@ class ApiClientChat {
         //lưu để gọi lại sau
         accessToken = await secureStorageHelper.accessToken;
         //_dio.options.headers['Authorization'] = 'Bearer $accessToken';
+      }else{
+        print("*****************Làm mới token thất bại");
+        throw Exception('Không thể làm mới token');
       }
     } catch (e) {
       print("*****************Không thể làm mới token");

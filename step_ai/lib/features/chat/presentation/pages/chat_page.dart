@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/config/routes/routes.dart';
-import 'package:step_ai/core/di/service_locator.dart';
 import 'package:step_ai/features/chat/domain/entity/message.dart';
 import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
 import 'package:step_ai/shared/widgets/chat_bar.dart';
@@ -35,8 +34,9 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    _chatNotifier = Provider.of<ChatNotifier>(context, listen: true);
-    final messages = _chatNotifier.historyMessages;
+    final messages =
+        Provider.of<ChatNotifier>(context, listen: true).historyMessages;
+    _chatNotifier = Provider.of<ChatNotifier>(context, listen: false);
 
     // Add this to scroll when messages update
     WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
@@ -48,24 +48,27 @@ class _ChatPageState extends State<ChatPage> {
       },
       drawer: HistoryDrawer(),
       appBar: AppBar(
-        title: Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              widget.chatName ?? "Chat",
-              style: GoogleFonts.jetBrainsMono(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: MediaQuery.of(context).size.width * 0.05),
-            ),
-          ],
+        title: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                _chatNotifier.getTitleCurrentConversation(),
+                style: GoogleFonts.jetBrainsMono(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontSize: MediaQuery.of(context).size.width * 0.05),
+              ),
+            ],
+          ),
         ),
         backgroundColor: Colors.blue,
         actions: [
           IconButton(
-              onPressed: () {
-                _chatNotifier.resetChatNotifier();
+              onPressed: () async {
+                await _chatNotifier.resetChatNotifier();
                 Navigator.of(context).pushNamedAndRemoveUntil(
                   Routes.chat,
                   (Route<dynamic> route) => false,
