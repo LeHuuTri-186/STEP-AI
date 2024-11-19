@@ -1,4 +1,3 @@
-
 import 'package:step_ai/core/data/model/conversation_model.dart';
 import 'package:step_ai/core/data/model/message_model.dart';
 import 'package:step_ai/core/data/model/usage_token_model.dart';
@@ -54,9 +53,21 @@ class ConversationRepositoryImpl extends ConversationRepository {
   }
 
   @override
-  Future<List<ConversationModel>> getHistoryConversationList(int limit) {
-    // TODO: implement getHistoryConversationList
-    throw UnimplementedError();
+  Future<ConversationModel> getHistoryConversationList(int limit) async {
+    final Map<String, dynamic> queryParams = {
+      "limit": limit,
+      "assistantId": "gpt-4o-mini",
+      "assistantModel": "dify"
+    };
+    try {
+      final response = await _apiClientChat.getHistoryList(
+          "/api/v1/ai-chat/conversations",
+          queryParams: queryParams);
+      print(response);
+      return ConversationModel.fromJson(response.data);
+    } catch (e) {
+      throw e;
+    }
   }
 
   @override
@@ -65,8 +76,7 @@ class ConversationRepositoryImpl extends ConversationRepository {
       final response =
           await _apiClientChat.getUsageToken("/api/v1/tokens/usage");
       print(response);
-      final a = UsageTokenModel.fromJson(response.data);
-      return a;
+      return UsageTokenModel.fromJson(response.data);
     } catch (e) {
       throw e;
     }

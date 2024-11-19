@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:step_ai/features/chat/domain/usecase/get_history_conversation_list_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_messages_by_conversation_id_usecase.dart';
 
 import '../domain/entity/conversation.dart';
@@ -10,22 +11,48 @@ class HistoryConversationListNotifier extends ChangeNotifier {
 
   //usecase -----------------------------
   GetMessagesByConversationIdUsecase _getMessagesByConversationIdUsecase;
-  HistoryConversationListNotifier(this._getMessagesByConversationIdUsecase);
+  GetHistoryConversationListUsecase _getHistoryConversationListUsecase;
+  HistoryConversationListNotifier(this._getMessagesByConversationIdUsecase,
+      this._getHistoryConversationListUsecase);
 
-  void addHistoryConservation(Conversation newConservation) {
-    _historyConversationList.add(newConservation);
-    notifyListeners();
+  Future<void> getHistoryConversationList(int limitConversation) async {
+    try {
+      final conversationModel = await _getHistoryConversationListUsecase.call(
+          params: limitConversation);
+      this._historyConversationList = conversationModel.items.map((item) {
+        return Conversation(
+          id: item.id!,
+          title: item.title,
+          createdAt: item.createdAt,
+        );
+      }).toList();
+    } catch (e) {
+      _historyConversationList = [];
+      print(e);
+    } finally {
+      notifyListeners();
+    }
   }
 
-  void updateHistoryConservation(List<Conversation> newHistoryConversations) {
-    _historyConversationList = newHistoryConversations;
-    notifyListeners();
-  }
+  Future<void> getNewestConversationWhenAfterSendMessage() async {
+    try {
+      final conversationModel = await _getHistoryConversationListUsecase.call(
+          params: 1); //only return list 1 item
 
-  void getHistoryConversationList(){
-    
+      this._historyConversationList.insert(
+            0,
+            Conversation(
+              id: conversationModel.items.first.id!,
+              title: conversationModel.items.first.title,
+              createdAt: conversationModel.items.first.createdAt,
+            ),
+          );
+    } catch (e) {
+      print(e);
+    } finally {
+      notifyListeners();
+    }
   }
-
 
   //conversation id
   String? _idCurrentConversation;

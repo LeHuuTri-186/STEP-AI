@@ -62,9 +62,11 @@ class ChatNotifier with ChangeNotifier {
       updateLastMessage(messageModel.message);
       _numberRestToken = messageModel.remainingUsage;
       if (_historyConversationListNotifier.idCurrentConversation == null) {
+        //if the first time, add conversation to history
         _historyConversationListNotifier.idCurrentConversation =
             messageModel.conversationId;
-        _historyConversationListNotifier.getHistoryConversationList();
+        _historyConversationListNotifier
+            .getNewestConversationWhenAfterSendMessage();
       }
     } catch (error) {
       updateLastMessage("Server not response. Try again!");
@@ -83,11 +85,11 @@ class ChatNotifier with ChangeNotifier {
 
   void clearHistoryMessages() {
     _historyMessages.clear();
+    notifyListeners();
   }
 
   void resetChatNotifier() {
-    clearHistoryMessages();
     _historyConversationListNotifier.idCurrentConversation = null;
-    notifyListeners();
+    clearHistoryMessages();
   }
 }

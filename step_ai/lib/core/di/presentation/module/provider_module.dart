@@ -7,6 +7,7 @@ import 'package:step_ai/features/authentication/domain/usecase/save_login_status
 import 'package:step_ai/features/authentication/notifier/login_notifier.dart';
 import 'package:step_ai/features/authentication/notifier/register_notifier.dart';
 import 'package:step_ai/features/authentication/notifier/ui_notifier.dart';
+import 'package:step_ai/features/chat/domain/usecase/get_history_conversation_list_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_messages_by_conversation_id_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_usage_token_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/send_message_usecase.dart';
@@ -41,7 +42,7 @@ class ProviderModule {
     //HistoryConversationListNotifier:-----------------------------------------------------
     getIt.registerSingleton<HistoryConversationListNotifier>(
       HistoryConversationListNotifier(
-          getIt<GetMessagesByConversationIdUsecase>()),
+          getIt<GetMessagesByConversationIdUsecase>(),getIt<GetHistoryConversationListUsecase>()),
     );
     //ChatNotifier:---------------------------------------------------------------------
     getIt.registerSingleton<ChatNotifier>(

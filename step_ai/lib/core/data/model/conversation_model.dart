@@ -11,7 +11,7 @@ class ConversationModel {
   Map<String, dynamic> toJson() {
     return {
       'cursor': cursor,
-      'hasMore': hasMore,
+      'has_more': hasMore,
       'limit': limit,
       'items': items.map((item) => item.toJson()).toList(),
     };
@@ -19,7 +19,7 @@ class ConversationModel {
   factory ConversationModel.fromJson(Map<String, dynamic> json) {
     return ConversationModel(
       cursor: json['cursor'],
-      hasMore: json['hasMore'],
+      hasMore: json['has_more'],
       limit: json['limit'],
       items: List<Item>.from(json['items'].map((item) => Item.fromJson(item))),
     );

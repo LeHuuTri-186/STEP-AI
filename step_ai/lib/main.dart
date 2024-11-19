@@ -4,6 +4,7 @@ import 'package:step_ai/features/authentication/domain/usecase/is_logged_in_usec
 import 'package:step_ai/features/authentication/presentation/pages/authenticate.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_usage_token_usecase.dart';
 import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
+import 'package:step_ai/features/chat/notifier/history_conversation_list_notifier.dart';
 import 'package:step_ai/features/chat/presentation/pages/chat_page.dart';
 import 'package:step_ai/features/plan/presentation/pages/planPricingPage.dart';
 import 'package:step_ai/features/prompt/presentation/pages/prompt_bottom_sheet.dart';
@@ -26,6 +27,9 @@ Future<void> main() async {
   if (isLoggedIn) {
     final ChatNotifier chatNotifier = getIt<ChatNotifier>();
     await chatNotifier.getNumberRestToken();
+    final HistoryConversationListNotifier historyConversationListNotifier =
+        getIt<HistoryConversationListNotifier>();
+    await historyConversationListNotifier.getHistoryConversationList(100);
   }
 
   runApp(MyApp(initialRoute: initialRoute));

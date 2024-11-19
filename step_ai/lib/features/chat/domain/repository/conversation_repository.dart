@@ -7,6 +7,6 @@ import '../../../../core/data/model/message_model.dart';
 abstract class ConversationRepository {
   Future<MessageModel> sendMessage(SendMessageParam params);
   Future<void> getMessagesByConversationId(String idConversation);
-  Future<List<ConversationModel>> getHistoryConversationList(int limit);
+  Future<ConversationModel> getHistoryConversationList(int limit);
   Future<UsageTokenModel> getUsageToken();
 }

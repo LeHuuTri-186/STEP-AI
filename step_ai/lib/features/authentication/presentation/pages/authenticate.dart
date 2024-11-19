@@ -7,6 +7,7 @@ import 'package:step_ai/features/authentication/notifier/login_notifier.dart';
 import 'package:step_ai/features/authentication/notifier/register_notifier.dart';
 import 'package:step_ai/features/authentication/notifier/ui_notifier.dart';
 import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
+import 'package:step_ai/features/chat/notifier/history_conversation_list_notifier.dart';
 
 class AuthenticateScreen extends StatefulWidget {
   AuthenticateScreen({super.key});
@@ -299,9 +300,12 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
           _emailController.text, _passwordController.text);
       if (isLogged) {
         if (mounted) {
-          print("ABCDEF");
           final ChatNotifier chatNotifier = getIt<ChatNotifier>();
           await chatNotifier.getNumberRestToken();
+          final HistoryConversationListNotifier
+              historyConversationListNotifier =
+              getIt<HistoryConversationListNotifier>();
+          await historyConversationListNotifier.getHistoryConversationList(100);
           Navigator.of(context).pushReplacementNamed(Routes.chat);
         }
       }

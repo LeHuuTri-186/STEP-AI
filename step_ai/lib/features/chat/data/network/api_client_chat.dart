@@ -182,6 +182,7 @@ class ApiClientChat {
 
   // Call API to make a new access token and saved it in RefreshTokenUseCase
   Future<void> _refreshToken() async {
+    print("------------refreshToken------------");
     try {
       // int statusCode = await refreshTokenUseCase.call(params: null);
       var myResponse = await _apiService
@@ -197,6 +198,7 @@ class ApiClientChat {
         //_dio.options.headers['Authorization'] = 'Bearer $accessToken';
       }
     } catch (e) {
+      print("*****************Không thể làm mới token");
       throw Exception('Không thể làm mới token');
     }
   }
@@ -231,7 +233,7 @@ class ApiClientChat {
 
   // Method to get message history (requires query parameters)
   Future<Response> getHistoryList(String path,
-      {Map<String, String>? queryParams}) {
+      {Map<String, dynamic>? queryParams}) {
     return _dio.get(
       path,
       queryParameters: queryParams,
