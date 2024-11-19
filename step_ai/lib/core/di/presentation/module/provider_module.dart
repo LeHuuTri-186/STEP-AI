@@ -8,6 +8,7 @@ import 'package:step_ai/features/authentication/notifier/login_notifier.dart';
 import 'package:step_ai/features/authentication/notifier/register_notifier.dart';
 import 'package:step_ai/features/authentication/notifier/ui_notifier.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_messages_by_conversation_id_usecase.dart';
+import 'package:step_ai/features/chat/domain/usecase/get_usage_token_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/send_message_usecase.dart';
 import 'package:step_ai/features/chat/notifier/assistant_notifier.dart';
 import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
@@ -44,7 +45,11 @@ class ProviderModule {
     );
     //ChatNotifier:---------------------------------------------------------------------
     getIt.registerSingleton<ChatNotifier>(
-      ChatNotifier(getIt<SendMessageUsecase>(), getIt<AssistantNotifier>(),getIt<HistoryConversationListNotifier>()),
+      ChatNotifier(
+          getIt<SendMessageUsecase>(),
+          getIt<AssistantNotifier>(),
+          getIt<HistoryConversationListNotifier>(),
+          getIt<GetUsageTokenUsecase>()),
     );
   }
 }

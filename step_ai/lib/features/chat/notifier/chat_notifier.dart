@@ -1,17 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:step_ai/features/chat/domain/entity/message.dart';
 import 'package:step_ai/features/chat/domain/params/send_message_param.dart';
+import 'package:step_ai/features/chat/domain/usecase/get_usage_token_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/send_message_usecase.dart';
 import 'package:step_ai/features/chat/notifier/assistant_notifier.dart';
 import 'package:step_ai/features/chat/notifier/history_conversation_list_notifier.dart';
 
 class ChatNotifier with ChangeNotifier {
   //number of rest token
-  int _numberRestToken = 50;
+  int _numberRestToken = 0;
   int get numberRestToken => _numberRestToken;
   set numberRestToken(int numberRestToken) {
     _numberRestToken = numberRestToken;
     notifyListeners();
+  }
+
+  //run first time when open chat
+  Future<void> getNumberRestToken() async {
+    try {
+      final usageTokenModel = await _getUsageTokenUsecase.call(params: null);
+      numberRestToken = usageTokenModel.availableTokens;
+    } catch (e) {
+      print(e);
+    }
   }
 
   //Notifier
@@ -24,8 +35,9 @@ class ChatNotifier with ChangeNotifier {
 
   //usecase -----------------------------
   SendMessageUsecase _sendMessageUsecase;
+  GetUsageTokenUsecase _getUsageTokenUsecase;
   ChatNotifier(this._sendMessageUsecase, this._assistantNotifier,
-      this._historyConversationListNotifier);
+      this._historyConversationListNotifier, this._getUsageTokenUsecase);
 
   Future<void> sendMessage(String contentSend) async {
     //Add message send to history
@@ -52,10 +64,10 @@ class ChatNotifier with ChangeNotifier {
       if (_historyConversationListNotifier.idCurrentConversation == null) {
         _historyConversationListNotifier.idCurrentConversation =
             messageModel.conversationId;
-            _historyConversationListNotifier.getHistoryConversationList();
+        _historyConversationListNotifier.getHistoryConversationList();
       }
     } catch (error) {
-      updateLastMessage(error.toString());
+      updateLastMessage("Server not response. Try again!");
     } finally {
       notifyListeners();
     }

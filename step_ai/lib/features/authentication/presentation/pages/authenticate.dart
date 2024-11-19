@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/config/routes/routes.dart';
+import 'package:step_ai/core/di/service_locator.dart';
 
 import 'package:step_ai/features/authentication/notifier/login_notifier.dart';
 import 'package:step_ai/features/authentication/notifier/register_notifier.dart';
 import 'package:step_ai/features/authentication/notifier/ui_notifier.dart';
+import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
 
 class AuthenticateScreen extends StatefulWidget {
   AuthenticateScreen({super.key});
@@ -22,7 +24,6 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPwController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +44,7 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
   }
 
   //Build components:-----------------------------------------------------------
-  AppBar _buildAppBar(){
+  AppBar _buildAppBar() {
     return AppBar(
       automaticallyImplyLeading: false,
       title: const Center(
@@ -66,24 +67,17 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             SizedBox(height: 70),
-
             _buildToggleButton(),
-
             const SizedBox(height: 20),
-
-            _authUINotifier.isLogin
-                ? _buildLoginView()
-                : _buildRegisterView(),
+            _authUINotifier.isLogin ? _buildLoginView() : _buildRegisterView(),
           ],
         ),
       ),
     );
-
   }
 
-
   //Build items:----------------------------------------------------------------
-  Widget _buildProgressIndicator(){
+  Widget _buildProgressIndicator() {
     return Container(
       color: Colors.black.withOpacity(0.5),
       child: const Center(
@@ -93,28 +87,26 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
   }
 
   Widget _buildToggleButton() {
-    return LayoutBuilder(builder: (context, constraints) =>
-        ToggleButtons(
-          constraints: BoxConstraints.expand(
-              width: (constraints.maxWidth-16)/2, height: 40),
-          fillColor: Colors.blueAccent,
-          color: Colors.black,
-          selectedColor: Colors.white,
-
-          borderRadius: BorderRadius.circular(8.0),
-          isSelected: [_authUINotifier.isLogin, !_authUINotifier.isLogin],
-          onPressed: (index) {
-            setState(() {
-              _authUINotifier.setToSpecific((index == 0));
-              resetTextFieldValue();
-            });
-          },
-          children: <Widget>[
-            _buildToggleText('Login'),
-            _buildToggleText('Register'),
-          ],
-        )
-    );
+    return LayoutBuilder(
+        builder: (context, constraints) => ToggleButtons(
+              constraints: BoxConstraints.expand(
+                  width: (constraints.maxWidth - 16) / 2, height: 40),
+              fillColor: Colors.blueAccent,
+              color: Colors.black,
+              selectedColor: Colors.white,
+              borderRadius: BorderRadius.circular(8.0),
+              isSelected: [_authUINotifier.isLogin, !_authUINotifier.isLogin],
+              onPressed: (index) {
+                setState(() {
+                  _authUINotifier.setToSpecific((index == 0));
+                  resetTextFieldValue();
+                });
+              },
+              children: <Widget>[
+                _buildToggleText('Login'),
+                _buildToggleText('Register'),
+              ],
+            ));
   }
 
   Widget _buildToggleText(String text) {
@@ -122,78 +114,67 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
   }
 
   Widget _buildLoginView() {
-    return Column(
-        children: [
-          _buildTextFieldView(
-              'Email', 'Enter your email address',
-              _loginNotifier.emailError, _emailController, false),
-
-          SizedBox(height: 15),
-          _buildPasswordTypeField(
-            'Password',
-            'Enter your password',
-            _loginNotifier.passwordError,
-            _passwordController,
-            _authUINotifier.isPasswordShowing,
-            setStatePassword,
+    return Column(children: [
+      _buildTextFieldView('Email', 'Enter your email address',
+          _loginNotifier.emailError, _emailController, false),
+      SizedBox(height: 15),
+      _buildPasswordTypeField(
+        'Password',
+        'Enter your password',
+        _loginNotifier.passwordError,
+        _passwordController,
+        _authUINotifier.isPasswordShowing,
+        setStatePassword,
+      ),
+      SizedBox(height: 10),
+      Align(
+        alignment: Alignment.centerRight,
+        child: TextButton(
+          onPressed: forgotPasswordPress,
+          child: const Text('Forgot password'),
+        ),
+      ),
+      ElevatedButton(
+          onPressed: loginValidateSubmit,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blueAccent,
           ),
-
-          SizedBox(height: 10),
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton(
-              onPressed: forgotPasswordPress,
-              child: const Text('Forgot password'),
-            ),
-          ),
-
-          ElevatedButton(
-              onPressed: loginValidateSubmit,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
+          child: Container(
+            height: 50,
+            child: Center(
+              child: Text(
+                'Login',
+                style: TextStyle(color: Colors.white),
               ),
-              child: Container(
-                height: 50,
-                child: Center(
-                  child: Text(
-                    'Login',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              )
-          ),
-          SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Do not have account?'),
-              TextButton(onPressed: () {
+            ),
+          )),
+      SizedBox(height: 10),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('Do not have account?'),
+          TextButton(
+              onPressed: () {
                 setState(() {
                   _authUINotifier.setToRegister();
                   resetTextFieldValue();
                 });
-              }, child: Text('Register')),
-            ],
-          )
-        ]
-    );
+              },
+              child: Text('Register')),
+        ],
+      )
+    ]);
   }
 
-  Widget _buildRegisterView(){
+  Widget _buildRegisterView() {
     return Column(
       children: <Widget>[
-        _buildTextFieldView(
-            'Email', 'Enter your email address',
-            _registerNotifier.emailError,
-            _emailController, false),
+        _buildTextFieldView('Email', 'Enter your email address',
+            _registerNotifier.emailError, _emailController, false),
         const SizedBox(height: 15),
-
-        _buildTextFieldView(
-            'Username', 'Enter your username',
-            _registerNotifier.usernameError,
-            _usernameController, false),
+        _buildTextFieldView('Username', 'Enter your username',
+            _registerNotifier.usernameError, _usernameController, false),
         const SizedBox(height: 15),
-
         _buildPasswordTypeField(
           'Password',
           'Enter your password',
@@ -203,7 +184,6 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
           setStatePassword,
         ),
         const SizedBox(height: 15),
-
         _buildPasswordTypeField(
           'Confirm password',
           'Re-enter your password',
@@ -213,7 +193,6 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
           setStateConfirmPw,
         ),
         const SizedBox(height: 15),
-
         ElevatedButton(
             onPressed: registerValidateSubmit,
             style: ElevatedButton.styleFrom(
@@ -227,31 +206,27 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
                   style: TextStyle(color: Colors.white),
                 ),
               ),
-            )
-        ),
-
+            )),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text('Already have account?'),
-            TextButton(onPressed: () {
-              setState(() {
-                _authUINotifier.setToLogin();
-                resetTextFieldValue();
-              });
-            }, child: Text('Login')),
+            TextButton(
+                onPressed: () {
+                  setState(() {
+                    _authUINotifier.setToLogin();
+                    resetTextFieldValue();
+                  });
+                },
+                child: Text('Login')),
           ],
         )
       ],
     );
   }
 
-  Widget _buildTextFieldView(
-      String label,
-      String hint,
-      String? error,
-      TextEditingController controller,
-      bool isPasswordType){
+  Widget _buildTextFieldView(String label, String hint, String? error,
+      TextEditingController controller, bool isPasswordType) {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
@@ -271,15 +246,9 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
       ),
     );
   }
-  
-  Widget _buildPasswordTypeField(
-      String label,
-      String hint,
-      String? error,
-      TextEditingController controller,
-      bool isShowing,
-      VoidCallback callback){
 
+  Widget _buildPasswordTypeField(String label, String hint, String? error,
+      TextEditingController controller, bool isShowing, VoidCallback callback) {
     return TextField(
       controller: controller,
       obscureText: !isShowing,
@@ -299,7 +268,7 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
         ),
         suffixIcon: IconButton(
           icon: Icon(
-            isShowing? Icons.visibility : Icons.visibility_off,
+            isShowing ? Icons.visibility : Icons.visibility_off,
             color: Colors.grey,
           ),
           onPressed: callback,
@@ -308,21 +277,18 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     );
   }
 
-
   //Other methods:--------------------------------------------------------------
-  void forgotPasswordPress(){
+  void forgotPasswordPress() {}
 
-  }
-
-  void setStatePassword(){
+  void setStatePassword() {
     _authUINotifier.toggleShowPassword();
   }
 
-  void setStateConfirmPw(){
+  void setStateConfirmPw() {
     _authUINotifier.toggleShowConfirmPassword();
   }
 
-  void loginValidateSubmit() async{
+  void loginValidateSubmit() async {
     _loginNotifier.setEmailError(_emailController.text);
     _loginNotifier.setPasswordError(_passwordController.text);
 
@@ -332,48 +298,44 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
       bool isLogged = await _loginNotifier.login(
           _emailController.text, _passwordController.text);
       if (isLogged) {
-        if (mounted){
+        if (mounted) {
+          print("ABCDEF");
+          final ChatNotifier chatNotifier = getIt<ChatNotifier>();
+          await chatNotifier.getNumberRestToken();
           Navigator.of(context).pushReplacementNamed(Routes.chat);
         }
       }
-    }
-    else {
+    } else {
       print('Failed');
     }
   }
 
-  void registerValidateSubmit() async{
-
+  void registerValidateSubmit() async {
     _registerNotifier.setEmailError(_emailController.text);
     _registerNotifier.setPasswordError(_passwordController.text);
     _registerNotifier.setConfirmError(
-        _confirmPwController.text,
-        _passwordController.text
-    );
+        _confirmPwController.text, _passwordController.text);
     _registerNotifier.setUsernameError(_usernameController.text);
 
-
-    if (_registerNotifier.isInputValid()){
+    if (_registerNotifier.isInputValid()) {
       //call API register
       bool isRegistered = await _registerNotifier.register(
           _emailController.text,
           _passwordController.text,
-          _usernameController.text
-      );
-      if (isRegistered){
+          _usernameController.text);
+      if (isRegistered) {
         print('Logging in');
         //Switch screen
-        if (mounted){
+        if (mounted) {
           Navigator.of(context).pushReplacementNamed(Routes.chat);
         }
       }
-    }
-    else {
+    } else {
       print('Failed register');
     }
   }
 
-  void resetTextFieldValue(){
+  void resetTextFieldValue() {
     _registerNotifier.resetError();
     _loginNotifier.resetError();
 
@@ -383,4 +345,3 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     _usernameController.text = '';
   }
 }
-

@@ -1,14 +1,15 @@
-import 'package:step_ai/core/api/api_client_chat.dart';
+
+import 'package:step_ai/core/data/model/conversation_model.dart';
 import 'package:step_ai/core/data/model/message_model.dart';
-import 'package:step_ai/features/chat/domain/entity/message.dart';
+import 'package:step_ai/core/data/model/usage_token_model.dart';
 import 'package:step_ai/features/chat/domain/params/send_message_param.dart';
 import 'package:step_ai/features/chat/domain/repository/conversation_repository.dart';
 
+import '../network/api_client_chat.dart';
+
 class ConversationRepositoryImpl extends ConversationRepository {
-  ApiClientChat _apiClientChat = ApiClientChat();
-  // final chatNotifier = getIt<ChatNotifier>();
-  // final assistantNotifier = getIt<AssistantNotifier>();
-  // final conservationNotifier = getIt<HistoryConversationListNotifier>();
+  final ApiClientChat _apiClientChat;
+  ConversationRepositoryImpl(this._apiClientChat);
   @override
   Future<void> getMessagesByConversationId(String idConversation) {
     // TODO: implement getMessages
@@ -47,6 +48,25 @@ class ConversationRepositoryImpl extends ConversationRepository {
       print(response);
       print("\n\n\n\n\n\n\n\n\n");
       return MessageModel.fromJson(response.data);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  @override
+  Future<List<ConversationModel>> getHistoryConversationList(int limit) {
+    // TODO: implement getHistoryConversationList
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<UsageTokenModel> getUsageToken() async {
+    try {
+      final response =
+          await _apiClientChat.getUsageToken("/api/v1/tokens/usage");
+      print(response);
+      final a = UsageTokenModel.fromJson(response.data);
+      return a;
     } catch (e) {
       throw e;
     }

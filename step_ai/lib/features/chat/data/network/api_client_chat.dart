@@ -108,13 +108,11 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:step_ai/config/constants.dart';
 import 'package:step_ai/core/api/api_service.dart';
 import 'package:step_ai/core/data/local/securestorage/secure_storage_helper.dart';
 import 'package:step_ai/core/data/model/token_model.dart';
 import 'package:step_ai/core/di/service_locator.dart';
-import 'package:step_ai/shared/usecase/refresh_token_usecase.dart';
 
 class ApiClientChat {
   final Dio _dio = Dio();
@@ -126,13 +124,11 @@ class ApiClientChat {
 
   ApiClientChat() {
     _dio.options.baseUrl = 'https://api.jarvis.cx'; // Base URL API
-  
 
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
         print(
-            "\n-----------------------------ok--------------------------------1");
-        print("OnRequest");
+            "\n-----------------------------OnRequest--------------------------------1");
         await _initializeTokens();
         options.headers['x-jarvis-guid'] = '';
         if (accessToken != null) {
@@ -152,12 +148,13 @@ class ApiClientChat {
       },
       onResponse: (response, handler) {
         print(
-            "-----------------------------ok--------------------------------2");
+            "-----------------------------OnResponse--------------------------------2");
+            print("Response: ${response.data}");
         return handler.next(response);
       },
       onError: (DioException error, handler) async {
         print(
-            "\n-----------------------------ok--------------------------------3");
+            "\n-----------------------------Error--------------------------------3");
         print("Error: ${error.response?.statusCode}");
         print("Error: ${error.response?.data}");
         if (error.response?.statusCode == 401) {
@@ -239,5 +236,9 @@ class ApiClientChat {
       path,
       queryParameters: queryParams,
     );
+  }
+
+  Future<Response> getUsageToken(String path) {
+    return _dio.get(path);
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:step_ai/core/di/service_locator.dart';
 import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
 import 'package:step_ai/shared/widgets/popup_attachment_options.dart';
 
@@ -29,14 +30,31 @@ class _ChatBarState extends State<ChatBar> {
 
   //Event to display/hide the accessibility icons
   void onTextChanged() {
+    bool isLoadingResponse = false;
+    if ((Provider.of<ChatNotifier>(context, listen: false)
+            .historyMessages
+            .isNotEmpty &&
+        Provider.of<ChatNotifier>(context, listen: false)
+                .historyMessages
+                .last
+                .content ==
+            null)) {
+      isLoadingResponse = true;
+    }
     if (_controller.text.isNotEmpty) {
-        setState(() {
-          _showIconSend = true;
-        });
-      } else {
+      if (isLoadingResponse) {
         setState(() {
           _showIconSend = false;
         });
+      } else {
+        setState(() {
+          _showIconSend = true;
+        });
+      }
+    } else {
+      setState(() {
+        _showIconSend = false;
+      });
     }
   }
 
@@ -94,7 +112,8 @@ class _ChatBarState extends State<ChatBar> {
                 onPressed: () {
                   // Hide keyboard
                   FocusScope.of(context).unfocus();
-                  Provider.of<ChatNotifier>(context,listen: false).sendMessage(_controller.text);
+                  Provider.of<ChatNotifier>(context, listen: false)
+                      .sendMessage(_controller.text);
                   _controller.clear();
                 })
         ],
