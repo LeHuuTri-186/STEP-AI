@@ -125,38 +125,43 @@ class ApiClientChat {
   String? refreshToken;
 
   ApiClientChat() {
-    _initializeTokens();
     _dio.options.baseUrl = 'https://api.jarvis.cx'; // Base URL API
     // _dio.options.connectTimeout = const Duration(seconds: 15);
     // _dio.options.receiveTimeout = const Duration(seconds: 15);
 
     _dio.interceptors.add(InterceptorsWrapper(
-      onRequest: (options, handler) {
+      onRequest: (options, handler) async {
+        print(
+            "\n-----------------------------ok--------------------------------1");
+        print("OnRequest");
+        await _initializeTokens();
         options.headers['x-jarvis-guid'] = '';
         if (accessToken != null) {
           options.headers['Authorization'] = 'Bearer $accessToken';
         }
-        options.headers['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImJlZjgxMDA4LTg4MTktNGM5NS1iNzZjLWQwODA3YzU0MTNiNSIsImVtYWlsIjoibmd1eWVuYm9jaGFAZ21haWwuY29tIiwiaWF0IjoxNzMxOTYyOTc2LCJleHAiOjE3MzE5NjQ3NzZ9.h4U1raHyJpeq_yz3OVRKSFN6KQDgoNKueOMO8_xiLCY';
-      print("accessToken: $accessToken");
-      print("-----------------------------ok--------------------------------") ;
+        //options.headers['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImJlZjgxMDA4LTg4MTktNGM5NS1iNzZjLWQwODA3YzU0MTNiNSIsImVtYWlsIjoibmd1eWVuYm9jaGFAZ21haWwuY29tIiwiaWF0IjoxNzMxOTYyOTc2LCJleHAiOjE3MzE5NjQ3NzZ9.h4U1raHyJpeq_yz3OVRKSFN6KQDgoNKueOMO8_xiLCY';
         // In ra headers
-      print("Headers: ${options.headers}");
-      
-      // In ra body (payload)
-      if (options.data != null) {
-        print("Body: ${options.data}");
-      } else {
-        print("Body: null");
-      }
-       print("-----------------------------ok--------------------------------") ;
+        print("Headers: ${options.headers}");
+
+        // In ra body (payload)
+        if (options.data != null) {
+          print("Body: ${options.data}");
+        } else {
+          print("Body: null");
+        }
 
         return handler.next(options);
       },
       onResponse: (response, handler) {
+        print(
+            "-----------------------------ok--------------------------------2");
         return handler.next(response);
       },
       onError: (DioException error, handler) async {
+        print(
+            "\n-----------------------------ok--------------------------------3");
         print("Error: ${error.response?.statusCode}");
+        print("Error: ${error.response?.data}");
         if (error.response?.statusCode == 401) {
           //token expired, refresh token
           try {
@@ -178,7 +183,6 @@ class ApiClientChat {
   Future<void> _initializeTokens() async {
     accessToken = await secureStorageHelper.accessToken;
     refreshToken = await secureStorageHelper.refreshToken;
-    print('----------------->accessToken: $accessToken');
   }
 
   // Call API to make a new access token and saved it in RefreshTokenUseCase
@@ -195,7 +199,7 @@ class ApiClientChat {
         await secureStorageHelper.saveAccessToken(token.accessToken);
         //lưu để gọi lại sau
         accessToken = await secureStorageHelper.accessToken;
-        _dio.options.headers['Authorization'] = 'Bearer $accessToken';
+        //_dio.options.headers['Authorization'] = 'Bearer $accessToken';
       }
     } catch (e) {
       throw Exception('Không thể làm mới token');
@@ -204,6 +208,7 @@ class ApiClientChat {
 
   //Request again with new access token
   Future<Response> _retryRequest(RequestOptions requestOptions) async {
+    print("retryRequest");
     final options = Options(
       method: requestOptions.method,
       headers: requestOptions.headers,

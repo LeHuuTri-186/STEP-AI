@@ -41,12 +41,16 @@ class ChatNotifier with ChangeNotifier {
     notifyListeners();
 
     try {
-      final response = await _sendMessageUsecase.call(
+      final messageModel = await _sendMessageUsecase.call(
           params: SendMessageParam(
               historyMessages: _historyMessages,
               conversationId:
                   _historyConversationListNotifier.idCurrentConversation));
-      updateLastMessage(response.content!);
+
+      updateLastMessage(messageModel.message);
+      _numberRestToken = messageModel.remainingUsage;
+      _historyConversationListNotifier.idCurrentConversation =
+          messageModel.conversationId;
     } catch (error) {
       updateLastMessage(error.toString());
     } finally {

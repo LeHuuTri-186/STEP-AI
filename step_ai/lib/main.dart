@@ -14,7 +14,7 @@ import 'core/di/service_locator.dart';
 Future<void> main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await ServiceLocator.configureDependencies();
-  FlutterSecureStorage.setMockInitialValues({});
+  // FlutterSecureStorage.setMockInitialValues({});
 
   //Define first page:
   final IsLoggedInUseCase isLoggedInUseCase = getIt<IsLoggedInUseCase>();

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../../features/chat/domain/entity/message.dart';
 
 class MessageTile extends StatelessWidget {
@@ -41,7 +42,10 @@ class MessageTile extends StatelessWidget {
               ? MarkdownBody(
                   data: currentMessage.content!,
                 )
-              : Text("Is Loading"),
+              : LoadingAnimationWidget.threeArchedCircle(
+                  color: isAI ? Colors.grey[700]! : Colors.white,
+                  size: 12,
+                ),
           // child: MarkdownBody(
           //   data: currentMessage.content,
           // styleSheet: MarkdownStyleSheet(
