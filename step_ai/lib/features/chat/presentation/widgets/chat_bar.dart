@@ -52,8 +52,7 @@ class _ChatBarState extends State<ChatBar> {
           _chatBarNotifier.setShowOverlay(true);
           TaskStatus status = await _listNotifier.getPrompts(_controller.text);
           if (status == TaskStatus.UNAUTHORIZED) {
-            print('Reach');
-            _chatBarNotifier.callLogout();
+            _chatBarNotifier.setLogout(true);
           }
         });
       }

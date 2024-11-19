@@ -76,4 +76,12 @@ class PromptListNotifier extends ChangeNotifier{
     needRebuildCounter++;
     if (needRebuildCounter > 5000) needRebuildCounter = 1;
   }
+  void reset(){
+    key = '';
+    list = SlashPromptList(prompts: []);
+    isFetching = false;
+    needRebuildCounter = 0;
+
+    notifyListeners();
+  }
 }

@@ -47,13 +47,13 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: Routes.routes,
       initialRoute: initialRoute,
-      home: MultiProvider(
-        providers: [
-          ChangeNotifierProvider.value(value: getIt<ChatBarNotifier>()),
-          ChangeNotifierProvider.value(value: getIt<PromptListNotifier>()),
-        ],
-        child: ChatPage(),
-      ),
+      // home: MultiProvider(
+      //   providers: [
+      //     ChangeNotifierProvider.value(value: getIt<ChatBarNotifier>()),
+      //     ChangeNotifierProvider.value(value: getIt<PromptListNotifier>()),
+      //   ],
+      //   child: ChatPage(),
+      // ),
     );
     // return MaterialApp(
     //   home: const PromptBottomSheet(),

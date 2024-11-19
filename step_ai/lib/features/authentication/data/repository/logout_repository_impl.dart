@@ -19,7 +19,7 @@ class LogoutRepositoryImpl extends LogoutRepository{
 
   Future<Map<String, String>> _executeHeadersBuild() async{
     String? token = await _secureStorageHelper.accessToken;
-    print('Token: $token');
+    token ??= '';
     var headers = {
       'x-jarvis-guid': '',
       'Authorization': 'Bearer $token}'

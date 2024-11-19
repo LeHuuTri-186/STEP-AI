@@ -40,7 +40,8 @@ class _ChatPageState extends State<ChatPage> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    if (_promptListOverlay.mounted){
+
+    if(_promptListOverlay.mounted){
       _promptListOverlay.remove();
     }
 
@@ -67,7 +68,7 @@ class _ChatPageState extends State<ChatPage> {
     _chatBarNotifier = Provider.of<ChatBarNotifier>(context);
     _promptListNotifier = Provider.of<PromptListNotifier>(context);
 
-    WidgetsBinding.instance.addPostFrameCallback((_){
+    WidgetsBinding.instance.addPostFrameCallback((_) async{
       //Overlay insert:--------
       OverlayState o = Overlay.of(context);
       if (_chatBarNotifier.showOverlay){
@@ -90,7 +91,11 @@ class _ChatPageState extends State<ChatPage> {
       //Logout listener:-------------
       if(_chatBarNotifier.isUnauthorized) {
         //TODO: Handle logout
+        _chatBarNotifier.reset();
+        _promptListNotifier.reset();
         Navigator.of(context).pushReplacementNamed(Routes.authenticate);
+        // _promptListOverlay.remove();
+        await _chatBarNotifier.callLogout();
       }
 
       //Prompt trigger:--------------

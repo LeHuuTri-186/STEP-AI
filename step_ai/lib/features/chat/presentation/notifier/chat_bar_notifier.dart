@@ -30,9 +30,8 @@ class ChatBarNotifier extends ChangeNotifier{
     notifyListeners();
   }
 
-  void callLogout(){
-    isUnauthorized = true;
-    _logoutUseCase.call(params: null);
+  void setLogout(bool value) {
+    isUnauthorized = value;
     notifyListeners();
   }
 
@@ -45,9 +44,21 @@ class ChatBarNotifier extends ChangeNotifier{
     notifyListeners();
   }
   String get content => contentToSet;
-//Basic:=---------------------------------------------------------------------
+  //Basic:=---------------------------------------------------------------------
   void setContent(String value){
     contentToSet = value;
   }
+  Future<void> callLogout()async{
+    await _logoutUseCase.call(params: null);
+  }
 
+  void reset(){
+    showIcons = false;
+    showIconSend = false;
+    showOverlay = false;
+    triggeredPrompt = false;
+    contentToSet = '';
+    isUnauthorized = false;
+    notifyListeners();
+  }
 }
