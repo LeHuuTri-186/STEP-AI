@@ -9,6 +9,9 @@ import 'package:step_ai/features/authentication/domain/repository/logout_reposit
 import 'package:step_ai/features/authentication/domain/usecase/login_usecase.dart';
 import 'package:step_ai/features/authentication/domain/usecase/logout_usecase.dart';
 import 'package:step_ai/features/authentication/domain/usecase/register_usecase.dart';
+import 'package:step_ai/features/chat/domain/repository/slash_prompt_repository.dart';
+import 'package:step_ai/features/chat/domain/usecase/get_prompt_list_usecase.dart';
+import 'package:step_ai/shared/usecase/refresh_token_usecase.dart';
 
 
 import '../../../../features/authentication/domain/repository/register_repository.dart';
@@ -19,7 +22,7 @@ class UseCaseModule {
     //login:--------------------------------------------------------------------
     getIt.registerSingleton<LoginUseCase>(
       LoginUseCase(
-          getIt<LoginRepository>(), getIt<SecureStorageHelper>(),
+        getIt<LoginRepository>(), getIt<SecureStorageHelper>(),
       ),
     );
 
@@ -30,15 +33,24 @@ class UseCaseModule {
     );
 
     getIt.registerSingleton<SaveLoginStatusUseCase>(
-      SaveLoginStatusUseCase(
-        getIt<LoginRepository>(),
-      )
+        SaveLoginStatusUseCase(
+          getIt<LoginRepository>(),
+        )
     );
+
 
     //Register:-----------------------------------------------------------------
     getIt.registerSingleton<RegisterUseCase>(
       RegisterUseCase(
           getIt<RegisterRepository>(), getIt<LoginUseCase>()
+      ),
+    );
+
+
+    //Refresh token:------------------------------------------------------------
+    getIt.registerSingleton<RefreshTokenUseCase>(
+      RefreshTokenUseCase(
+        getIt<SecureStorageHelper>(),
       ),
     );
 
@@ -48,6 +60,15 @@ class UseCaseModule {
         getIt<LogoutRepository>(),
         getIt<SharedPreferencesHelper>(),
         getIt<SecureStorageHelper>(),
+      )
+    );
+
+    //Slash command:------------------------------------------------------------
+    getIt.registerSingleton<GetPromptListUseCase>(
+      GetPromptListUseCase(
+        getIt<SlashPromptRepository>(),
+        getIt<RefreshTokenUseCase>(),
+        getIt<LogoutUseCase>(),
       )
     );
 

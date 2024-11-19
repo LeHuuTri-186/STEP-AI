@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:step_ai/config/constants.dart';
 import 'package:step_ai/core/api/api_service.dart';
 import 'package:step_ai/core/data/local/sharedpref/shared_preferences_helper.dart';

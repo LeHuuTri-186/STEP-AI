@@ -8,6 +8,8 @@ import 'package:step_ai/features/authentication/data/repository/register_reposit
 import 'package:step_ai/features/authentication/domain/repository/login_repository.dart';
 import 'package:step_ai/features/authentication/domain/repository/logout_repository.dart';
 import 'package:step_ai/features/authentication/domain/repository/register_repository.dart';
+import 'package:step_ai/features/chat/data/repository/slash_prompt_repository_impl.dart';
+import 'package:step_ai/features/chat/domain/repository/slash_prompt_repository.dart';
 
 
 import '../../service_locator.dart';
@@ -28,5 +30,10 @@ class RepositoryModule {
     getIt.registerSingleton<LogoutRepository>(
       LogoutRepositoryImpl(
           getIt<SecureStorageHelper>()) as LogoutRepository);
+    //Slash command:------------------------------------------------------------
+    getIt.registerSingleton<SlashPromptRepository>(
+      SlashPromptRepositoryImpl(
+        getIt<SecureStorageHelper>(),
+      ) as SlashPromptRepository);
   }
 }

@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:step_ai/config/enum/task_status.dart';
 import 'package:step_ai/features/chat/presentation/notifier/chat_bar_notifier.dart';
+import 'package:step_ai/features/chat/presentation/notifier/prompt_list_notifier.dart';
 
 class ChatBar extends StatefulWidget {
-  void Function(String) onSendMessage;
+  final Function(String) onSendMessage;
   ChatBar({super.key, required this.onSendMessage});
 
   @override
@@ -11,9 +15,10 @@ class ChatBar extends StatefulWidget {
 }
 
 class _ChatBarState extends State<ChatBar> {
-  bool _showIcons = false;
-  bool _showIconSend = false;
   final TextEditingController _controller = TextEditingController();
+  late ChatBarNotifier _chatBarNotifier;
+  late PromptListNotifier _listNotifier;
+  Timer? _debounce;
 
   @override
   void initState() {
@@ -25,39 +30,61 @@ class _ChatBarState extends State<ChatBar> {
   void dispose() {
     _controller.removeListener(onTextChanged);
     _controller.dispose();
+
+    _debounce?.cancel();
     super.dispose();
   }
 
   //Event to display/hide the accessibility icons
   void onTextChanged() {
     if (_controller.text.isNotEmpty) {
-      if (_showIcons) {
-        setState(() {
-          _showIcons = false;
-        });
+      if (_chatBarNotifier.showIcons) {
+        _chatBarNotifier.setShowIcons(false);
       }
-      setState(() {
-        _showIconSend = true;
-      });
+      _chatBarNotifier.setShowIconSend(true);
 
       if (_controller.text.startsWith('/')){
 
+        if (_debounce?.isActive ?? false){
+          _debounce?.cancel();
+        }
+        _debounce = Timer(const Duration(milliseconds: 800), () async{
+          _chatBarNotifier.setShowOverlay(true);
+          TaskStatus status = await _listNotifier.getPrompts(_controller.text);
+          if (status == TaskStatus.UNAUTHORIZED) {
+            print('Reach');
+            _chatBarNotifier.callLogout();
+          }
+        });
       }
+      else {
+        _chatBarNotifier.setShowOverlay(false);
+      }
+
     } else{
-      setState(() {
-        _showIconSend = false;
-      });
+      _chatBarNotifier.setShowIconSend(false);
+      _chatBarNotifier.setShowOverlay(false);
     }
   }
 
   void _toggleIcons() {
-    setState(() {
-      _showIcons = !_showIcons;
-    });
+    _chatBarNotifier.setShowIcons(!_chatBarNotifier.showIcons);
   }
 
   @override
   Widget build(BuildContext context) {
+    _chatBarNotifier = Provider.of<ChatBarNotifier>(context);
+    _listNotifier = Provider.of<PromptListNotifier>(context);
+
+    if (_chatBarNotifier.triggeredPrompt) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _controller.text = '';
+        _controller.text = _chatBarNotifier.content;
+        _chatBarNotifier.cancelPrompt();
+      });
+
+    }
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -69,7 +96,7 @@ class _ChatBarState extends State<ChatBar> {
       child: Row(
         children: [
           //show icon "add" to display the other accessibility icons
-          if (!_showIcons)
+          if (!_chatBarNotifier.showIcons)
             IconButton(
               padding: const EdgeInsets.all(2),
               icon: const Icon(
@@ -79,7 +106,7 @@ class _ChatBarState extends State<ChatBar> {
               onPressed: _toggleIcons,
             ),
           //show the other accessibility icons
-          if (_showIcons) ...[
+          if (_chatBarNotifier.showIcons) ...[
             //Icon camera
             IconButton(
               icon: const Icon(
@@ -137,7 +164,7 @@ class _ChatBarState extends State<ChatBar> {
           ),
           const SizedBox(width: 4),
           //Icon send
-          if (_showIconSend)
+          if (_chatBarNotifier.showIconSend)
             IconButton(
                 padding: const EdgeInsets.all(2),
                 icon: const Icon(
@@ -147,9 +174,7 @@ class _ChatBarState extends State<ChatBar> {
                 onPressed: () {
                   widget.onSendMessage(_controller.text);
                   _controller.clear();
-                  setState(() {
-                    _showIconSend = false;
-                  });
+                  _chatBarNotifier.setShowIconSend(false);
                 })
         ],
       ),
