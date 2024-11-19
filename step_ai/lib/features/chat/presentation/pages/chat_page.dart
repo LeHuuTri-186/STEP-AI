@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:step_ai/config/routes/routes.dart';
 import 'package:step_ai/core/di/service_locator.dart';
 import 'package:step_ai/features/chat/domain/entity/message.dart';
 import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
@@ -34,8 +35,8 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    _chatNotifier = Provider.of<ChatNotifier>(context,listen: true);
-    final messages= _chatNotifier.historyMessages;
+    _chatNotifier = Provider.of<ChatNotifier>(context, listen: true);
+    final messages = _chatNotifier.historyMessages;
 
     // Add this to scroll when messages update
     WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
@@ -63,7 +64,13 @@ class _ChatPageState extends State<ChatPage> {
         backgroundColor: Colors.blue,
         actions: [
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                _chatNotifier.resetChatNotifier();
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  Routes.chat,
+                  (Route<dynamic> route) => false,
+                );
+              },
               icon: const Icon(
                 Icons.add,
                 color: Colors.white,

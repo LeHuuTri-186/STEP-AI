@@ -126,8 +126,7 @@ class ApiClientChat {
 
   ApiClientChat() {
     _dio.options.baseUrl = 'https://api.jarvis.cx'; // Base URL API
-    // _dio.options.connectTimeout = const Duration(seconds: 15);
-    // _dio.options.receiveTimeout = const Duration(seconds: 15);
+  
 
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
@@ -139,7 +138,6 @@ class ApiClientChat {
         if (accessToken != null) {
           options.headers['Authorization'] = 'Bearer $accessToken';
         }
-        //options.headers['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImJlZjgxMDA4LTg4MTktNGM5NS1iNzZjLWQwODA3YzU0MTNiNSIsImVtYWlsIjoibmd1eWVuYm9jaGFAZ21haWwuY29tIiwiaWF0IjoxNzMxOTYyOTc2LCJleHAiOjE3MzE5NjQ3NzZ9.h4U1raHyJpeq_yz3OVRKSFN6KQDgoNKueOMO8_xiLCY';
         // In ra headers
         print("Headers: ${options.headers}");
 

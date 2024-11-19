@@ -49,8 +49,11 @@ class ChatNotifier with ChangeNotifier {
 
       updateLastMessage(messageModel.message);
       _numberRestToken = messageModel.remainingUsage;
-      _historyConversationListNotifier.idCurrentConversation =
-          messageModel.conversationId;
+      if (_historyConversationListNotifier.idCurrentConversation == null) {
+        _historyConversationListNotifier.idCurrentConversation =
+            messageModel.conversationId;
+            _historyConversationListNotifier.getHistoryConversationList();
+      }
     } catch (error) {
       updateLastMessage(error.toString());
     } finally {
@@ -68,5 +71,11 @@ class ChatNotifier with ChangeNotifier {
 
   void clearHistoryMessages() {
     _historyMessages.clear();
+  }
+
+  void resetChatNotifier() {
+    clearHistoryMessages();
+    _historyConversationListNotifier.idCurrentConversation = null;
+    notifyListeners();
   }
 }

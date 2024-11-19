@@ -22,6 +22,11 @@ class HistoryConversationListNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+  void getHistoryConversationList(){
+    
+  }
+
+
   //conversation id
   String? _idCurrentConversation;
   String? get idCurrentConversation => _idCurrentConversation;

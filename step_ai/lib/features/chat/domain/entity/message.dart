@@ -25,7 +25,7 @@ class Message {
     return {
       'assistant': assistant.toJson(),
       'role': role,
-      'content': content,
+      'content': content??'',
       'files': files,
     };
   }
