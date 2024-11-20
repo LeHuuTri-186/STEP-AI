@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:step_ai/features/chat/presentation/pages/chat_page.dart';
-import 'package:step_ai/features/plan/presentation/pages/planPricingPage.dart';
 import 'package:step_ai/features/prompt/presentation/pages/prompt_bottom_sheet.dart';
 
-import 'config/routes/routes.dart';
 import 'config/theme/app_theme.dart';
+import 'package:provider/provider.dart';
+import 'core/di/service_locator.dart';
+import 'features/prompt/di/presentation_injection/prompt_presentation_di.dart';
+import 'features/prompt/presentation/state/prompt_view_provider.dart';
 
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await setupDependencyInjection();
 
-void main() {
-  runApp(const MyApp());
+  runApp(
+    const MyApp(),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -26,9 +31,14 @@ class MyApp extends StatelessWidget {
     //   initialRoute: Routes.signIn,
     //   home: const ChatPage(chatName: "Chat"),
     // );
-    return MaterialApp(
-      home: const PromptBottomSheet(),
-      theme: AppTheme.light,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => getIt<PromptViewState>()),
+      ],
+      child: MaterialApp(
+        home: const PromptBottomSheet(),
+        theme: AppTheme.light,
+      ),
     );
   }
 }
