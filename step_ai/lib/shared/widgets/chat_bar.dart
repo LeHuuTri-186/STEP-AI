@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/core/di/service_locator.dart';
 import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
 import 'package:step_ai/shared/widgets/popup_attachment_options.dart';
+
+import '../../features/prompt/presentation/pages/prompt_bottom_sheet.dart';
+import '../styles/colors.dart';
 
 class ChatBar extends StatefulWidget {
   ChatBar({super.key});
@@ -14,6 +18,8 @@ class ChatBar extends StatefulWidget {
 class _ChatBarState extends State<ChatBar> {
   bool _showIconSend = false;
   final TextEditingController _controller = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
+
 
   @override
   void initState() {
@@ -23,6 +29,7 @@ class _ChatBarState extends State<ChatBar> {
 
   @override
   void dispose() {
+    _focusNode.dispose();
     _controller.removeListener(onTextChanged);
     _controller.dispose();
     super.dispose();
@@ -60,63 +67,130 @@ class _ChatBarState extends State<ChatBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: Colors.white54,
-        border: Border.all(color: Colors.grey, width: 0.8),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          //show the other accessibility icons
-          const PopupAttachmentOptions(),
-
-          const SizedBox(width: 4),
-          //TextField to chat
-          Expanded(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * 0.20,
-              ),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: TextField(
-                  controller: _controller,
-                  style: const TextStyle(color: Colors.black),
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                  minLines: 1, // Add this
-                  textCapitalization: TextCapitalization.sentences,
-                  decoration: const InputDecoration(
-                    hintText: 'Enter your question',
-                    hintStyle: TextStyle(color: Colors.white),
-                    border: InputBorder.none,
-                  ),
-                ),
+    return Focus(
+      focusNode: _focusNode,
+      child: GestureDetector(
+        onTap: () {
+          _focusNode.requestFocus(); // Focus when tapped
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: _focusNode.hasFocus
+                  ? TColor.doctorWhite
+                  : TColor.northEastSnow.withOpacity(0.8),
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(
+                color:
+                    _focusNode.hasFocus ? TColor.tamarama : Colors.transparent,
+                width: 2,
               ),
             ),
-          ),
-          const SizedBox(width: 4),
-          //Icon send
-          if (_showIconSend)
-            IconButton(
-                padding: const EdgeInsets.all(2),
-                icon: const Icon(
-                  Icons.send,
-                  size: 30,
-                  color: Colors.black,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                //TextField to chat
+                SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      top: 3.0,
+                      left: 10.0,
+                      right: 10.0,
+                    ),
+                    child: TextField(
+                      cursorColor: TColor.squidInk,
+                      controller: _controller,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontSize: 16,
+                            color: TColor.squidInk,
+                          ),
+                      keyboardType: TextInputType.multiline,
+                      maxLines: 4,
+                      textCapitalization: TextCapitalization.sentences,
+                      decoration: InputDecoration(
+                        focusedBorder: InputBorder.none,
+                        hintText: 'Enter your question',
+                        hintStyle:
+                            Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  fontSize: 15,
+                                  color: TColor.petRock.withOpacity(0.5),
+                                ),
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
                 ),
-                onPressed: () {
-                  // Hide keyboard
-                  FocusScope.of(context).unfocus();
-                  Provider.of<ChatNotifier>(context, listen: false)
-                      .sendMessage(_controller.text);
-                  _controller.clear();
-                })
-        ],
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        showModalBottomSheet(
+                          backgroundColor: TColor.doctorWhite,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          context: context,
+                          builder: (_) {
+                            return ClipRRect(
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(30),
+                                topRight: Radius.circular(30),
+                              ),
+                              child: PromptBottomSheet(returnPrompt: (value) {
+                                _controller.clear();
+                                _controller.text = value;
+                                _controller.selection = TextSelection.fromPosition(
+                                  TextPosition(offset: _controller.text.length)
+                                );
+                                Provider.of<ChatNotifier>(context, listen: false)
+                                    .sendMessage(_controller.text);
+                                _controller.clear();
+                                setState(() {
+                                  _showIconSend = true;
+                                });
+                              },),
+                            );
+                          },
+                        );
+                      },
+                      icon: Icon(
+                        FontAwesomeIcons.wandMagicSparkles,
+                        color: TColor.petRock,
+                        size: 20,
+                      ),
+                    ),
+                    _showIconSend
+                        ? IconButton(
+                            padding: const EdgeInsets.all(2),
+                            icon: Icon(
+                              Icons.send,
+                              size: 20,
+                              color: TColor.tamarama,
+                            ),
+                            onPressed: () {
+                              // Hide keyboard
+                              FocusScope.of(context).unfocus();
+                              Provider.of<ChatNotifier>(context, listen: false)
+                                  .sendMessage(_controller.text);
+                              _controller.clear();
+                            })
+                        : IconButton(
+                            padding: const EdgeInsets.all(2),
+                            icon: Icon(
+                              Icons.send,
+                              size: 20,
+                              color: TColor.petRock,
+                            ),
+                            onPressed: () {}),
+                  ],
+                )
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

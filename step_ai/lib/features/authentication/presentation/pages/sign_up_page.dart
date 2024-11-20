@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:step_ai/main.dart';
-import 'package:step_ai/features/authentication/presentation/pages/sign_in_page.dart';
 
 import '../../../chat/presentation/pages/chat_page.dart';
 
@@ -155,7 +154,7 @@ class _SignUpFormState extends State<SignUpForm>{
                           ),
                         ),
                         GestureDetector(
-                          onTap: () => ToLogin(context),
+                          // onTap: () => ToLogin(context),
                           child: Text(
                             'Sign in',
                             style: TextStyle(
@@ -178,9 +177,9 @@ class _SignUpFormState extends State<SignUpForm>{
   
 }
 
-void ToLogin(BuildContext context) {
-  Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (content)=> SignInPage()));
-  print("Switch to login page.");
-}
+// void ToLogin(BuildContext context) {
+//   Navigator.pushReplacement(
+//       context,
+//       MaterialPageRoute(builder: (content)=> SignInPage()));
+//   print("Switch to login page.");
+// }

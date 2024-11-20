@@ -13,7 +13,8 @@ import '../widgets/no_prompts_panel.dart';
 import '../widgets/prompt_list_view.dart';
 
 class PublicPromptsPanel extends StatefulWidget {
-  const PublicPromptsPanel({super.key});
+  const PublicPromptsPanel({super.key, required this.returnPrompt});
+  final Function(String) returnPrompt;
 
   @override
   State<PublicPromptsPanel> createState() => _PublicPromptsPanelState();
@@ -135,7 +136,7 @@ class _PublicPromptsPanelState extends State<PublicPromptsPanel> {
           return PromptListView(
             scrollController: _scrollController,
             prompts: promptsState.prompts,
-            toggleFavorite: promptsState.toggleFavorite,
+            toggleFavorite: promptsState.toggleFavorite, returnPrompt: widget.returnPrompt,
           );
         },
       );

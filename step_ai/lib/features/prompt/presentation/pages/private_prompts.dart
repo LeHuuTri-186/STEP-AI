@@ -67,20 +67,6 @@ class _PrivatePromptsPanelState extends State<PrivatePromptsPanel> {
     );
   }
 
-  Icon _buildFavoriteIcon(bool isFavorite) => isFavorite
-      ? Icon(
-    Icons.star_rounded,
-    color: TColor.goldenState,
-    semanticLabel: "Favorite",
-    size: 25,
-  )
-      : Icon(
-    Icons.star_border_rounded,
-    color: TColor.petRock.withOpacity(0.5),
-    semanticLabel: "Favorite",
-    size: 25,
-  );
-
   Widget _buildLoader(PrivateViewState promptsState) {
     return promptsState.isFetchingMore
         ? _twistingDotsLoadIndicator()
@@ -109,7 +95,7 @@ class _PrivatePromptsPanelState extends State<PrivatePromptsPanel> {
 
     return Expanded(
       child: Center(
-        child: _buildNoPromptPanel(),
+        child: SingleChildScrollView(child: _buildNoPromptPanel()),
       ),
     );
   }

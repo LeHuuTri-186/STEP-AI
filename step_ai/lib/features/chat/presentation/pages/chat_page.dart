@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/config/routes/routes.dart';
 import 'package:step_ai/features/chat/domain/entity/message.dart';
 import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
+import 'package:step_ai/features/prompt/presentation/pages/prompt_bottom_sheet.dart';
 import 'package:step_ai/shared/widgets/chat_bar.dart';
 import 'package:step_ai/shared/widgets/dropdown_Ai.dart';
 import 'package:step_ai/shared/widgets/history_drawer.dart';
 import 'package:step_ai/shared/widgets/message_tile.dart';
+
+import '../../../../shared/styles/colors.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key, this.chatName = "Chat"});
@@ -56,15 +60,15 @@ class _ChatPageState extends State<ChatPage> {
             children: [
               Text(
                 _chatNotifier.getTitleCurrentConversation(),
-                style: GoogleFonts.jetBrainsMono(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                    fontSize: MediaQuery.of(context).size.width * 0.05),
+                style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                  color: TColor.petRock,
+                  fontSize: 25,
+                ),
               ),
             ],
           ),
         ),
-        backgroundColor: Colors.blue,
+        backgroundColor: TColor.doctorWhite,
         actions: [
           IconButton(
               onPressed: () async {
@@ -74,54 +78,61 @@ class _ChatPageState extends State<ChatPage> {
                   (Route<dynamic> route) => false,
                 );
               },
-              icon: const Icon(
+              icon: Icon(
                 Icons.add,
-                color: Colors.white,
+                color: TColor.petRock,
               )),
         ],
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: TColor.petRock),
       ),
-      body: Padding(
-          padding: const EdgeInsets.all(5),
-          child: Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  controller: _scrollController,
-                  itemCount: messages.length,
-                  itemBuilder: (context, index) {
-                    return MessageTile(currentMessage: messages[index]);
-                  },
+      body: SafeArea(
+        child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    itemCount: messages.length,
+                    itemBuilder: (context, index) {
+                      return MessageTile(currentMessage: messages[index]);
+                    },
+                  ),
                 ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        child: DropdownAI(),
-                      )),
-                  const SizedBox(height: 8),
-                  ChatBar(),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: Text(
-                      "Token còn lại: ${_chatNotifier.numberRestToken}",
-                      style: GoogleFonts.jetBrainsMono(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w700,
-                          fontSize: MediaQuery.of(context).size.width * 0.03),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.5,
+                              child: DropdownAI(),
+                            ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-            ],
-          )),
+                    const SizedBox(height: 8),
+                    ChatBar(),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Text(
+                        "Token còn lại: ${_chatNotifier.numberRestToken}",
+                        style: GoogleFonts.jetBrainsMono(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w700,
+                            fontSize: MediaQuery.of(context).size.width * 0.03),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            )),
+      ),
     );
   }
 }

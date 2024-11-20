@@ -19,8 +19,8 @@ class NoPromptPanel extends StatelessWidget {
           const IntrinsicHeight(
             child: Image(
               image: AssetImage('lib/core/assets/imgs/searching.png'),
-              height: 250,
-              width: 250,
+              height: 200,
+              width: 200,
             ),
           ),
           VSpacing.md,

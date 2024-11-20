@@ -16,47 +16,46 @@ import '../state/private_prompt/private_view_provider.dart';
 import '../state/prompt_view_provider.dart';
 import '../state/public_prompt/public_view_provider.dart';
 
-class PromptBottomSheet extends StatelessWidget {
-  const PromptBottomSheet({super.key});
+class PromptBottomSheet extends StatefulWidget {
+  const PromptBottomSheet({super.key, required this.returnPrompt});
+  final Function(String) returnPrompt;
 
   @override
+  State<PromptBottomSheet> createState() => _PromptBottomSheetState();
+}
+
+class _PromptBottomSheetState extends State<PromptBottomSheet> {
+  @override
   Widget build(BuildContext context) {
+
     final promptState = context.watch<PromptViewState>();
 
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => getIt<PublicFilterState>()),
-        ChangeNotifierProvider(create: (_) => getIt<PrivateFilterState>()),
-        ChangeNotifierProvider(create: (_) => getIt<PublicViewState>()),
-        ChangeNotifierProvider(create: (_) => getIt<PrivateViewState>()),
-        ChangeNotifierProvider(create: (_) => getIt<FormModel>()),
-      ],
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-        ),
-        child: Scaffold(
-          appBar: _buildAppBar(context, promptState),
-          body: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ButtonsPair(
-                  isFirstSelected: promptState.isPrivate,
-                  firstOnTap: () => promptState.togglePrivate(true),
-                  secondOnTap: () => promptState.togglePrivate(false),
-                  firstButtonText: 'My prompts',
-                  secondButtonText: 'Public prompts',
-                ),
-                VSpacing.sm,
-                Expanded(
-                  child: promptState.isPrivate
-                      ? const PrivatePromptsPanel()
-                      : const PublicPromptsPanel(),
-                )
-              ],
-            ),
+    return Container(
+      decoration: BoxDecoration(
+        color: TColor.doctorWhite,
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: Scaffold(
+        appBar: _buildAppBar(context, promptState),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ButtonsPair(
+                isFirstSelected: promptState.isPrivate,
+                firstOnTap: () => promptState.togglePrivate(true),
+                secondOnTap: () => promptState.togglePrivate(false),
+                firstButtonText: 'My prompts',
+                secondButtonText: 'Public prompts',
+              ),
+              VSpacing.sm,
+              Expanded(
+                child: promptState.isPrivate
+                    ? const PrivatePromptsPanel()
+                    : PublicPromptsPanel(returnPrompt:  widget.returnPrompt,),
+              )
+            ],
           ),
         ),
       ),
@@ -65,13 +64,14 @@ class PromptBottomSheet extends StatelessWidget {
 
   AppBar _buildAppBar(BuildContext context, PromptViewState promptState) {
     return AppBar(
+      automaticallyImplyLeading: false,
       title: const Text("Prompt Library"),
       titleTextStyle: Theme.of(context).textTheme.titleLarge,
       centerTitle: false,
       actions: [
         Material(
           color: Colors.transparent,
-          borderRadius: BorderRadius.circular(50),
+          borderRadius: BorderRadius.circular(30),
           child: InkWell(
             onTap: () {
               showPromptDialog(context: context, promptState: promptState);

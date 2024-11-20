@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:step_ai/features/prompt/data/models/prompt_model.dart';
 import 'package:step_ai/features/prompt/presentation/widgets/prompt_info_dialog.dart';
 import 'package:step_ai/features/prompt/presentation/widgets/prompt_tile.dart';
+import 'package:step_ai/shared/widgets/use_prompt_bottom_sheet.dart';
 
 class PromptListView extends StatelessWidget {
   const PromptListView({
@@ -9,11 +10,13 @@ class PromptListView extends StatelessWidget {
     required ScrollController scrollController,
     required this.prompts,
     required this.toggleFavorite,
+    required this.returnPrompt,
   }) : _scrollController = scrollController;
 
   final ScrollController _scrollController;
   final List<PromptModel> prompts;
   final Function(int) toggleFavorite;
+  final Function(String) returnPrompt;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +30,19 @@ class PromptListView extends StatelessWidget {
           return PromptTile(
               prompt: prompts[index],
               index: index,
-              onTap: () {},
+              onTap: () async {
+                await showModalBottomSheet(
+                    context: context,
+                    builder: (_) {
+                      return PromptEditor(
+                        promptModel: prompts[index],
+                        returnPrompt: (value) {
+                          returnPrompt(value);
+                          Navigator.of(context).pop();
+                        },
+                      );
+                    });
+              },
               onGetInfoClick: () => showPromptDialog(
                   context: context,
                   prompt: prompts[index],
@@ -51,7 +66,7 @@ class PromptListView extends StatelessWidget {
       context: context,
       builder: (context) => PromptDialog(
         prompt: prompt,
-        onUsePrompt: onUsePrompt,
+        onUsePrompt: () {},
         setFavorite: () => toggleFavorite(index),
       ),
     );

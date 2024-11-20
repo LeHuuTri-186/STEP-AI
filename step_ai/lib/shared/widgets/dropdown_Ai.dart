@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/features/chat/notifier/assistant_notifier.dart';
+import 'package:step_ai/shared/styles/horizontal_spacing.dart';
 
 import '../../core/di/service_locator.dart';
 
@@ -29,7 +30,7 @@ class DropdownAI extends StatelessWidget {
                       width: 20,
                       height: 20,
                       child: Image.asset(model.logoPath!)),
-                  SizedBox(width: 10),
+                  HSpacing.sm,
                   Text(model.name!),
                 ],
               ),
