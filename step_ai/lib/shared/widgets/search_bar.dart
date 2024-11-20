@@ -53,7 +53,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
               borderSide: BorderSide(
-                color: TColor.petRock,
+                color: TColor.tamarama.withOpacity(0.5),
               )),
           hintText: widget.hintText,
           hintStyle: VarelaRoundStyle.basic.copyWith(

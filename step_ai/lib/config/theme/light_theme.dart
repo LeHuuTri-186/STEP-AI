@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:step_ai/shared/styles/a_bee_zee_style.dart';
 import 'package:step_ai/shared/styles/colors.dart';
+import 'package:step_ai/shared/styles/varela_round_style.dart';
 
 import 'app_bar_theme.dart';
 import 'bottom_nav_theme.dart';
@@ -15,10 +16,12 @@ class LightTheme {
       appBarTheme: AppBarThemeData.lightTheme,
       textTheme: TextTheme(
         titleLarge: ABeeZeeStyle.titleW800,
+        titleMedium: ABeeZeeStyle.titleW700.copyWith(
+          fontSize: 25,
+        ),
         displayLarge: GoogleFonts.aBeeZee(
             fontWeight: FontWeight.w800, fontSize: 40, color: TColor.squidInk,),
-        displayMedium: GoogleFonts.aBeeZee(
-            fontWeight: FontWeight.w800, fontSize: 30, color: TColor.squidInk,),
+        displayMedium: VarelaRoundStyle.basic,
         headlineLarge: GoogleFonts.varelaRound(
             fontSize: 96, fontWeight: FontWeight.bold, color: TColor.squidInk,),
         headlineSmall: GoogleFonts.varelaRound(

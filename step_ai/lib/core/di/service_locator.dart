@@ -12,4 +12,8 @@ class ServiceLocator {
     await DomainLayerInjection.configureDomainLayerInjection();
     await PresentationLayerInjection.configurePresentationLayerInjection();
   }
+}import 'package:step_ai/features/prompt/di/prompt_service_locator.dart';
+
+Future<void> setupDependencyInjection() async {
+  await initPromptService();
 }
