@@ -1,29 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import '../../features/chat/domain/entity/message.dart';
 
 class MessageTile extends StatelessWidget {
-  final bool isAI;
-  final String message;
-  final String? logoAI;
+  final Message currentMessage;
 
   const MessageTile({
     super.key,
-    required this.isAI,
-    required this.message,
-    this.logoAI,
+    required this.currentMessage,
   });
 
   @override
   Widget build(BuildContext context) {
+    bool isAI = currentMessage.role == "model";
     return Row(
       mainAxisAlignment: isAI ? MainAxisAlignment.start : MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (isAI && logoAI != null)
+        if (isAI)
           Padding(
             padding: const EdgeInsets.all(10.0),
-            child: Image.asset(logoAI??"", width: 30, height: 30,),
+            child: Image.asset(
+              currentMessage.assistant.logoPath!,
+              width: 30,
+              height: 30,
+            ),
           ),
-
         Container(
           constraints: BoxConstraints(
             maxWidth: MediaQuery.of(context).size.width * 2 / 3,
@@ -34,12 +37,27 @@ class MessageTile extends StatelessWidget {
             color: isAI ? Colors.grey[300] : Colors.blue[300],
             borderRadius: BorderRadius.circular(10),
           ),
-          child: Text(
-            message,
-            style: TextStyle(
-              color: isAI ? Colors.black : Colors.indigo,
-            ),
-          ),
+
+          child: currentMessage.content != null
+              ? MarkdownBody(
+                  data: currentMessage.content!,
+                )
+              : LoadingAnimationWidget.threeArchedCircle(
+                  color: isAI ? Colors.grey[700]! : Colors.white,
+                  size: 12,
+                ),
+          // child: MarkdownBody(
+          //   data: currentMessage.content,
+          // styleSheet: MarkdownStyleSheet(
+          //   p: TextStyle(
+          //     color: isAI ? Colors.black : Colors.indigo,
+          //   ),
+          //   code: TextStyle(
+          //     backgroundColor: isAI ? Colors.grey[400] : Colors.blue[400],
+          //     color: isAI ? Colors.black : Colors.white,
+          //   ),
+          // ),
+          // ),
         ),
       ],
     );

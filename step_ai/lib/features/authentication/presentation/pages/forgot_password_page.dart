@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:step_ai/features/authentication/presentation/pages/sign_up_page.dart';
 
 import '../../../chat/presentation/pages/chat_page.dart';
-import '../../../personal/presentation/pages/personal_page.dart';
 
 class ForgotPasswordPage extends StatelessWidget{
   const ForgotPasswordPage({super.key});

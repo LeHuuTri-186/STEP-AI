@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:step_ai/core/di/service_locator.dart';
+import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
+import 'package:step_ai/shared/widgets/popup_attachment_options.dart';
 
 class ChatBar extends StatefulWidget {
-  void Function(String) onSendMessage;
-  ChatBar({super.key, required this.onSendMessage});
+  ChatBar({super.key});
 
   @override
   _ChatBarState createState() => _ChatBarState();
 }
 
 class _ChatBarState extends State<ChatBar> {
-  bool _showIcons = false;
   bool _showIconSend = false;
   final TextEditingController _controller = TextEditingController();
 
@@ -28,26 +30,32 @@ class _ChatBarState extends State<ChatBar> {
 
   //Event to display/hide the accessibility icons
   void onTextChanged() {
+    bool isLoadingResponse = false;
+    if ((Provider.of<ChatNotifier>(context, listen: false)
+            .historyMessages
+            .isNotEmpty &&
+        Provider.of<ChatNotifier>(context, listen: false)
+                .historyMessages
+                .last
+                .content ==
+            null)) {
+      isLoadingResponse = true;
+    }
     if (_controller.text.isNotEmpty) {
-      if (_showIcons) {
+      if (isLoadingResponse) {
         setState(() {
-          _showIcons = false;
+          _showIconSend = false;
+        });
+      } else {
+        setState(() {
+          _showIconSend = true;
         });
       }
-      setState(() {
-        _showIconSend = true;
-      });
-    }else{
+    } else {
       setState(() {
         _showIconSend = false;
       });
     }
-  }
-
-  void _toggleIcons() {
-    setState(() {
-      _showIcons = !_showIcons;
-    });
   }
 
   @override
@@ -61,71 +69,33 @@ class _ChatBarState extends State<ChatBar> {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          //show icon "add" to display the other accessibility icons
-          if (!_showIcons)
-            IconButton(
-              padding: const EdgeInsets.all(2),
-              icon: const Icon(
-                Icons.add,
-                color: Colors.black,
-              ),
-              onPressed: _toggleIcons,
-            ),
           //show the other accessibility icons
-          if (_showIcons) ...[
-            //Icon camera
-            IconButton(
-              icon: const Icon(
-                Icons.camera_alt_rounded,
-                size: 20,
-                color: Colors.black,
-              ),
-              onPressed: () {},
-            ),
-            //Icon photo
-            IconButton(
-              icon: const Icon(
-                Icons.photo,
-                size: 20,
-                color: Colors.black,
-              ),
-              onPressed: () {},
-            ),
-            //Icon file
-            IconButton(
-              icon: const Icon(
-                Icons.attach_file,
-                size: 20,
-                color: Colors.black,
-              ),
-              onPressed: () {},
-            ),
-
-            IconButton(
-              icon: const Icon(
-                Icons.arrow_left,
-                size: 20,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                setState(() {
-                  _toggleIcons();
-                });
-              },
-            ),
-          ],
+          const PopupAttachmentOptions(),
 
           const SizedBox(width: 4),
           //TextField to chat
           Expanded(
-            child: TextField(
-              controller: _controller,
-              style: const TextStyle(color: Colors.black),
-              decoration: const InputDecoration(
-                hintText: 'Enter your question',
-                hintStyle: TextStyle(color: Colors.white),
-                border: InputBorder.none,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.20,
+              ),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: TextField(
+                  controller: _controller,
+                  style: const TextStyle(color: Colors.black),
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  minLines: 1, // Add this
+                  textCapitalization: TextCapitalization.sentences,
+                  decoration: const InputDecoration(
+                    hintText: 'Enter your question',
+                    hintStyle: TextStyle(color: Colors.white),
+                    border: InputBorder.none,
+                  ),
+                ),
               ),
             ),
           ),
@@ -136,14 +106,15 @@ class _ChatBarState extends State<ChatBar> {
                 padding: const EdgeInsets.all(2),
                 icon: const Icon(
                   Icons.send,
+                  size: 30,
                   color: Colors.black,
                 ),
                 onPressed: () {
-                  widget.onSendMessage(_controller.text);
+                  // Hide keyboard
+                  FocusScope.of(context).unfocus();
+                  Provider.of<ChatNotifier>(context, listen: false)
+                      .sendMessage(_controller.text);
                   _controller.clear();
-                  setState(() {
-                    _showIconSend = false;
-                  });
                 })
         ],
       ),
