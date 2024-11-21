@@ -10,11 +10,7 @@ import 'package:step_ai/features/prompt/presentation/widgets/prompt_create_dialo
 import 'package:step_ai/shared/styles/colors.dart';
 import 'package:step_ai/shared/styles/vertical_spacing.dart';
 
-import '../../di/data_injection/prompt_data_di.dart';
-import '../state/private_prompt/private_filter_provider.dart';
-import '../state/private_prompt/private_view_provider.dart';
 import '../state/prompt_view_provider.dart';
-import '../state/public_prompt/public_view_provider.dart';
 
 class PromptBottomSheet extends StatefulWidget {
   const PromptBottomSheet({super.key, required this.returnPrompt});
@@ -52,7 +48,7 @@ class _PromptBottomSheetState extends State<PromptBottomSheet> {
               VSpacing.sm,
               Expanded(
                 child: promptState.isPrivate
-                    ? const PrivatePromptsPanel()
+                    ? PrivatePromptsPanel(returnPrompt: widget.returnPrompt,)
                     : PublicPromptsPanel(returnPrompt:  widget.returnPrompt,),
               )
             ],

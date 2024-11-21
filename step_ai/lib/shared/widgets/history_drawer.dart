@@ -7,14 +7,18 @@ import 'package:step_ai/core/di/service_locator.dart';
 import 'package:step_ai/features/authentication/domain/usecase/logout_usecase.dart';
 import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
 import 'package:step_ai/features/chat/notifier/history_conversation_list_notifier.dart';
+import 'package:step_ai/shared/styles/horizontal_spacing.dart';
+import 'package:step_ai/shared/styles/vertical_spacing.dart';
 import 'package:step_ai/shared/widgets/app_name_widget.dart';
 import 'package:step_ai/features/personal/presentation/widgets/search_bar_widget.dart';
 import 'package:step_ai/features/plan/presentation/pages/planPricingPage.dart';
 import 'package:step_ai/features/prompt/presentation/pages/prompt_list.dart';
+import 'package:step_ai/shared/widgets/search_bar.dart';
 
 import '../../features/chat/presentation/pages/chat_page.dart';
 import '../../features/authentication/presentation/pages/email_page.dart';
 import '../../features/personal/presentation/pages/personal_page.dart';
+import '../styles/colors.dart';
 
 class HistoryDrawer extends StatefulWidget {
   HistoryDrawer({super.key});
@@ -58,17 +62,18 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
     final historyConversationListNotifier =
         Provider.of<HistoryConversationListNotifier>(context);
     return Drawer(
+      backgroundColor: TColor.doctorWhite,
         child: Column(children: [
       //Logo and App Name
       DrawerHeader(
-        decoration: const BoxDecoration(
-          color: Colors.blue,
+        decoration: BoxDecoration(
+          color: TColor.snorlax,
         ),
         child: Column(
           children: [
-            Row(
+            const Row(
               children: [
-                const Icon(
+                Icon(
                   Icons.deblur,
                   color: Colors.white,
                   size: 50,
@@ -81,13 +86,7 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
               height: 25,
             ),
             // Search Bar
-            Expanded(
-              child: SearchBarWidget(
-                onSearch: (searchValue) {},
-                backgroundColor: Colors.white,
-                hasBorder: false,
-              ),
-            ),
+            CustomSearchBar(onChanged: (_) {}),
           ],
         ),
       ),
@@ -100,14 +99,7 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
             children: [
               Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: ListTile(
-                      leading: const Icon(Icons.account_circle),
-                      title: const Text('Account'),
-                      onTap: () {},
-                    ),
-                  ),
+                  VSpacing.md,
                   Row(
                     children: [
                       Expanded(
@@ -118,26 +110,16 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
                               MaterialPageRoute(
                                   builder: (context) => const PersonalPage()));
                         },
-                        style: ButtonStyle(
-                            shape: WidgetStateProperty.resolveWith(
-                                (states) => ContinuousRectangleBorder()),
-                            overlayColor: WidgetStateProperty.resolveWith(
-                                (states) => Colors.blue.withOpacity(0.5)),
-                            surfaceTintColor:
-                                WidgetStatePropertyAll(Colors.blueAccent)),
-                        child: Text(
-                          "Personal",
-                          style: GoogleFonts.jetBrainsMono(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 15),
-                        ),
+                        child: Text("Personal",
+                            style: Theme.of(context)
+                                .textTheme
+                                .displayMedium
+                                ?.copyWith(
+                                    fontSize: 16, fontWeight: FontWeight.w600)),
                       )),
                     ],
                   ),
-                  SizedBox(
-                    height: 10,
-                  ),
+                  VSpacing.sm,
                   Row(
                     children: [
                       Expanded(
@@ -149,57 +131,23 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
                                   builder: (context) =>
                                       const PlanPricingPage()));
                         },
-                        style: ButtonStyle(
-                            shape: WidgetStateProperty.resolveWith(
-                                (states) => ContinuousRectangleBorder()),
-                            overlayColor: WidgetStateProperty.resolveWith(
-                                (states) => Colors.blue.withOpacity(0.5)),
-                            surfaceTintColor:
-                                WidgetStatePropertyAll(Colors.blueAccent)),
                         child: Text(
-                          "Plan Pricing",
-                          style: GoogleFonts.jetBrainsMono(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 15),
+                          "Plan pricing",
+                          style: Theme.of(context)
+                              .textTheme
+                              .displayMedium
+                              ?.copyWith(
+                                  fontSize: 16, fontWeight: FontWeight.w600),
                         ),
                       )),
                     ],
                   ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                          child: TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const PromptApp()));
-                        },
-                        style: ButtonStyle(
-                            shape: WidgetStateProperty.resolveWith(
-                                (states) => ContinuousRectangleBorder()),
-                            overlayColor: WidgetStateProperty.resolveWith(
-                                (states) => Colors.blue.withOpacity(0.5)),
-                            surfaceTintColor:
-                                WidgetStatePropertyAll(Colors.blueAccent)),
-                        child: Text(
-                          "Prompts",
-                          style: GoogleFonts.jetBrainsMono(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 15),
-                        ),
-                      )),
-                    ],
-                  ),
+                  VSpacing.sm,
                 ],
               ),
               // List of BOTs
               ExpansionTile(
+                expandedCrossAxisAlignment: CrossAxisAlignment.center,
                 expandedAlignment: Alignment.center,
                 shape: const RoundedRectangleBorder(side: BorderSide.none),
                 title: Row(
@@ -210,15 +158,13 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
                       FontAwesomeIcons.robot,
                       color: Colors.black,
                     ),
-                    SizedBox(
-                      width: 30,
-                    ),
+                    HSpacing.md,
                     Text(
-                      'BOTs',
-                      style: GoogleFonts.jetBrainsMono(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 15),
+                      "BOTs",
+                      style: Theme.of(context)
+                          .textTheme
+                          .displayMedium
+                          ?.copyWith(fontSize: 16, fontWeight: FontWeight.w600),
                     ),
                   ],
                 ),
@@ -269,11 +215,11 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
                 ],
               ),
 
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+              const Padding(
+                padding: EdgeInsets.only(left: 10.0, right: 10.0),
                 child: Divider(),
               ),
               // Histories
@@ -282,7 +228,7 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
                 style: GoogleFonts.jetBrainsMono(
                     color: Colors.black,
                     fontWeight: FontWeight.w700,
-                    fontSize: 15),
+                    fontSize: 18),
               ),
               ListView.builder(
                 shrinkWrap: true,

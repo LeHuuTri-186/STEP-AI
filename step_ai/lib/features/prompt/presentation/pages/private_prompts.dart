@@ -15,7 +15,8 @@ import '../widgets/private_prompt_list_view.dart';
 import '../widgets/prompt_list_view.dart';
 
 class PrivatePromptsPanel extends StatefulWidget {
-  const PrivatePromptsPanel({super.key});
+  const PrivatePromptsPanel({super.key, required this.returnPrompt});
+  final Function(String) returnPrompt;
 
   @override
   State<PrivatePromptsPanel> createState() => _PrivatePromptsPanelState();
@@ -87,15 +88,17 @@ class _PrivatePromptsPanelState extends State<PrivatePromptsPanel> {
         builder: (BuildContext context, PrivateViewState value, Widget? child) {
           return PrivatePromptListView(
             scrollController: _scrollController,
-            prompts: promptsState.prompts,  deleteIndex: promptsState.onPromptDelete, updatePrompt: promptsState.onPromptUpdate,
+            prompts: promptsState.prompts,  deleteIndex: promptsState.onPromptDelete, updatePrompt: promptsState.onPromptUpdate, returnPrompt: widget.returnPrompt,
           );
         },
       );
     }
 
     return Expanded(
-      child: Center(
-        child: SingleChildScrollView(child: _buildNoPromptPanel()),
+      child: SingleChildScrollView(
+        child: Center(
+          child: _buildNoPromptPanel(),
+        ),
       ),
     );
   }

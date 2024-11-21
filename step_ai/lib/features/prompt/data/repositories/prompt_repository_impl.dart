@@ -1,77 +1,58 @@
-import 'package:dio/dio.dart';
 import 'package:step_ai/features/prompt/data/models/prompt_query_response_model.dart';
 import 'package:step_ai/features/prompt/domain/repositories/prompt_repository.dart';
+import 'package:step_ai/features/prompt/data/models/prompt_model.dart';
+import 'package:step_ai/core/api/api_service.dart';
 
-import '../models/prompt_model.dart';
+import '../network/prompt_api.dart';
 
 class PromptRepositoryImpl extends PromptRepository {
-  final Dio dio;
+  final PromptApi _promptApi;
 
-  PromptRepositoryImpl({required this.dio});
-
-  final Map<String, dynamic> headers = {
-    'x-jarvis-guid': '361331f8-fc9b-4dfe-a3f7-6d9a1e8b289b',
-    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVhMGUwN2RkLWQ3ZDgtNDA3MS1iMmFmLWM3ZTA0ZGE1YjU0MyIsImVtYWlsIjoiYWxleGllOTkxMUBnbWFpbC5jb20iLCJpYXQiOjE3MzE4NTQ3MTcsImV4cCI6MTczMTg1NDc3N30.I8L7OGHsWubeE7kIxvQ53P0X8vcsmtXIEV1RVbyqg-s',
-    'Content-Type': 'application/json',
-  };
+  PromptRepositoryImpl(this._promptApi);
 
   @override
-  Future<List<PromptModel>> getPrompts({int offset = 0, int limit = 10, String? query, required bool isPublic, String category = "all", bool isFavorite = false}) async {
-
-    // Query Parameters
-    Map<String, dynamic> queryParameters = {
+  Future<List<PromptModel>> getPrompts({
+    int offset = 0,
+    int limit = 10,
+    String? query,
+    required bool isPublic,
+    String category = "all",
+    bool isFavorite = false,
+  }) async {
+    // Query Parameters for the GET request
+    final queryParameters = {
       'offset': offset,
       'limit': limit,
       'isPublic': isPublic,
+      if (query != null && query.isNotEmpty) 'query': query,
+      if (isFavorite) 'isFavorite': true,
+      if (category.toLowerCase() != 'all') 'category': category.toLowerCase(),
     };
 
-    // Conditionally add non-null parameters
-    if (query != null && query.isNotEmpty) {
-      queryParameters['query'] = query;
-    }
-
-    if (isFavorite) {
-      queryParameters['isFavorite'] = true;
-    }
-
-    if (category.toLowerCase() != 'all') {
-      queryParameters['category'] = category.toLowerCase();
-    }
-
-    var response = await dio.get(
+    // API call using PromptApi
+    final response = await _promptApi.get(
       '/api/v1/prompts',
-      queryParameters: queryParameters,
-      options: Options(
-        headers: headers,
-      )
+      queryParams: queryParameters,
     );
 
+    // Deserialize response data into models
     return PromptQueryResponse.fromJson(response.data).items;
   }
 
   @override
   Future<void> addPromptToFavorite({required String id}) async {
-    var response = await dio.post(
-        '/api/v1/prompts/$id/favorite',
-        options: Options(
-          headers: headers,
-        )
-    );
+    await _promptApi.post('/api/v1/prompts/$id/favorite');
   }
 
   @override
   Future<void> removePromptFromFavorite({required String id}) async {
-    var response = await dio.delete(
-        '/api/v1/prompts/$id/favorite',
-        options: Options(
-          headers: headers,
-        )
-    );
+    await _promptApi.delete('/api/v1/prompts/$id/favorite');
   }
 
   @override
   Future<void> createPrompt({required PromptModel prompt}) async {
-    Map<String, dynamic> data = {
+    // Map PromptModel to request body
+    final data = {
       "title": prompt.title,
       "category": prompt.category,
       "content": prompt.content,
@@ -80,28 +61,18 @@ class PromptRepositoryImpl extends PromptRepository {
       "language": prompt.language,
     };
 
-    var response = await dio.post(
-        '/api/v1/prompts',
-        data: data,
-        options: Options(
-          headers: headers,
-        )
-    );
+    await _promptApi.post('/api/v1/prompts', data: data);
   }
 
   @override
   Future<void> deletePrompt({required String id}) async {
-    var response = await dio.delete(
-        '/api/v1/prompts/$id',
-        options: Options(
-          headers: headers,
-        )
-    );
+    await _promptApi.delete('/api/v1/prompts/$id');
   }
 
   @override
   Future<void> updatePrompt({required PromptModel prompt}) async {
-    Map<String, dynamic> data = {
+    // Map PromptModel to request body
+    final data = {
       "title": prompt.title,
       "category": prompt.category,
       "content": prompt.content,
@@ -110,12 +81,6 @@ class PromptRepositoryImpl extends PromptRepository {
       "language": prompt.language,
     };
 
-    var response = await dio.patch(
-        '/api/v1/prompts/${prompt.id}',
-        data: data,
-        options: Options(
-          headers: headers,
-        )
-    );
+    await _promptApi.patch('/api/v1/prompts/${prompt.id}', data: data);
   }
 }

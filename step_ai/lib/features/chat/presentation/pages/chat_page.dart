@@ -7,8 +7,9 @@ import 'package:step_ai/features/chat/domain/entity/message.dart';
 import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
 import 'package:step_ai/features/prompt/presentation/pages/prompt_bottom_sheet.dart';
 import 'package:step_ai/shared/widgets/chat_bar.dart';
-import 'package:step_ai/shared/widgets/dropdown_Ai.dart';
+import 'package:step_ai/shared/widgets/dropdown_ai.dart';
 import 'package:step_ai/shared/widgets/history_drawer.dart';
+import 'package:step_ai/shared/widgets/image_by_text_widget.dart';
 import 'package:step_ai/shared/widgets/message_tile.dart';
 
 import '../../../../shared/styles/colors.dart';
@@ -119,44 +120,42 @@ class _ChatPageState extends State<ChatPage> {
                         ),
                     )
                     : Expanded(
-                        child: ListView.builder(
-                          controller: _scrollController,
-                          itemCount: messages.length,
-                          itemBuilder: (context, index) {
-                            return MessageTile(currentMessage: messages[index]);
-                          },
-                        ),
-                      ),
+                         child: ListView.builder(
+                    controller: _scrollController,
+                    itemCount: messages.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4.0),
+                        child: MessageTile(currentMessage: messages[index]),
+                      );
+                    },
+                  ),
+                ),
 
-                //DropdownAI(), and ChatBar
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
+                    const SizedBox(height: 4),
+                    const Row(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.5,
-                            child: DropdownAI(),
-                          ),
+                          padding: EdgeInsets.only(left: 8.0),
+                          child: DropdownAI(),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 2),
                     ChatBar(),
                     const SizedBox(
-                      height: 5,
+                      height: 2,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: Text(
-                        "Token còn lại: ${_chatNotifier.numberRestToken}",
-                        style: GoogleFonts.jetBrainsMono(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w700,
-                            fontSize: MediaQuery.of(context).size.width * 0.03),
-                      ),
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: ImageByText(imagePath: "lib/core/assets/imgs/flame.png", text: _chatNotifier.numberRestToken.toString())
+                        ),
+                      ],
                     ),
                   ],
                 ),
