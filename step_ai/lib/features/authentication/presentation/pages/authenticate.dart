@@ -305,7 +305,7 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
           final HistoryConversationListNotifier
               historyConversationListNotifier =
               getIt<HistoryConversationListNotifier>();
-          await historyConversationListNotifier.getHistoryConversationList(100);
+          await historyConversationListNotifier.getHistoryConversationList();
           Navigator.of(context).pushReplacementNamed(Routes.chat);
         }
       }
@@ -336,7 +336,7 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
           final HistoryConversationListNotifier
               historyConversationListNotifier =
               getIt<HistoryConversationListNotifier>();
-          await historyConversationListNotifier.getHistoryConversationList(100);
+          await historyConversationListNotifier.getHistoryConversationList();
           Navigator.of(context).pushReplacementNamed(Routes.chat);
         }
       }

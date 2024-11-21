@@ -43,9 +43,9 @@ class ConversationRepositoryImpl extends ConversationRepository {
     try {
       final response = await _apiClientChat
           .sendMessage("/api/v1/ai-chat/messages", data: body);
-      print("Response -----------------");
-      print(response);
-      print("\n\n\n\n\n\n\n\n\n");
+      // print("Response -----------------");
+      // print(response);
+      // print("\n\n\n\n\n\n\n\n\n");
       return MessageModel.fromJson(response.data);
     } catch (e) {
       throw e;
@@ -63,7 +63,7 @@ class ConversationRepositoryImpl extends ConversationRepository {
       final response = await _apiClientChat.getHistoryList(
           "/api/v1/ai-chat/conversations",
           queryParams: queryParams);
-      print(response);
+      //print(response);
       return ConversationModel.fromJson(response.data);
     } catch (e) {
       throw e;
@@ -75,7 +75,7 @@ class ConversationRepositoryImpl extends ConversationRepository {
     try {
       final response =
           await _apiClientChat.getUsageToken("/api/v1/tokens/usage");
-      print(response);
+      //print(response);
       return UsageTokenModel.fromJson(response.data);
     } catch (e) {
       throw e;

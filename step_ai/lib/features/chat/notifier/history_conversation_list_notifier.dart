@@ -5,6 +5,10 @@ import 'package:step_ai/features/chat/domain/usecase/get_messages_by_conversatio
 import '../domain/entity/conversation.dart';
 
 class HistoryConversationListNotifier extends ChangeNotifier {
+  int _limitConversation = 0;
+  bool _hasMore = false;
+  get hasMore => _hasMore;
+  get limitConversation => _limitConversation;
   List<Conversation> _historyConversationList = [];
 
   List<Conversation> get historyConversationList => _historyConversationList;
@@ -15,10 +19,12 @@ class HistoryConversationListNotifier extends ChangeNotifier {
   HistoryConversationListNotifier(this._getMessagesByConversationIdUsecase,
       this._getHistoryConversationListUsecase);
 
-  Future<void> getHistoryConversationList(int limitConversation) async {
+  Future<void> getHistoryConversationList() async {
     try {
+      _limitConversation = _limitConversation + 10;
       final conversationModel = await _getHistoryConversationListUsecase.call(
-          params: limitConversation);
+          params: _limitConversation);
+      this._historyConversationList.clear();
       this._historyConversationList = conversationModel.items.map((item) {
         return Conversation(
           id: item.id!,
@@ -26,8 +32,11 @@ class HistoryConversationListNotifier extends ChangeNotifier {
           createdAt: item.createdAt,
         );
       }).toList();
+      _hasMore = conversationModel.hasMore;
     } catch (e) {
       _historyConversationList = [];
+      _limitConversation = 0;
+      _hasMore = false;
       print(e);
     } finally {
       notifyListeners();
