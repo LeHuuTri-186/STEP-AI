@@ -9,6 +9,8 @@ import 'package:step_ai/features/authentication/domain/repository/logout_reposit
 import 'package:step_ai/features/authentication/domain/usecase/login_usecase.dart';
 import 'package:step_ai/features/authentication/domain/usecase/logout_usecase.dart';
 import 'package:step_ai/features/authentication/domain/usecase/register_usecase.dart';
+import 'package:step_ai/features/chat/domain/repository/slash_prompt_repository.dart';
+import 'package:step_ai/features/chat/domain/usecase/get_prompt_list_usecase.dart';
 import 'package:step_ai/features/chat/domain/repository/conversation_repository.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_history_conversation_list_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_messages_by_conversation_id_usecase.dart';
@@ -35,18 +37,24 @@ class UseCaseModule {
       ),
     );
 
-    getIt.registerSingleton<SaveLoginStatusUseCase>(SaveLoginStatusUseCase(
-      getIt<LoginRepository>(),
-    ));
-    // getIt.registerSingleton<RefreshTokenUseCase>(
-    //   RefreshTokenUseCase(
-    //     getIt<SecureStorageHelper>(),
-    //   ),
-    // );
+
+    getIt.registerSingleton<SaveLoginStatusUseCase>(
+        SaveLoginStatusUseCase(
+          getIt<LoginRepository>(),
+        )
+    );
 
     //Register:-----------------------------------------------------------------
     getIt.registerSingleton<RegisterUseCase>(
       RegisterUseCase(getIt<RegisterRepository>(), getIt<LoginUseCase>()),
+    );
+
+
+    //Refresh token:------------------------------------------------------------
+    getIt.registerSingleton<RefreshTokenUseCase>(
+      RefreshTokenUseCase(
+        getIt<SecureStorageHelper>(),
+      ),
     );
 
     //Logout:-------------------------------------------------------------------
@@ -55,6 +63,15 @@ class UseCaseModule {
       getIt<SharedPreferencesHelper>(),
       getIt<SecureStorageHelper>(),
     ));
+
+    //Slash command:------------------------------------------------------------
+    getIt.registerSingleton<GetPromptListUseCase>(
+      GetPromptListUseCase(
+        getIt<SlashPromptRepository>(),
+        getIt<RefreshTokenUseCase>(),
+        getIt<LogoutUseCase>(),
+      )
+    );
 
     //Chat:---------------------------------------------------------------------
     getIt.registerSingleton<SendMessageUsecase>(

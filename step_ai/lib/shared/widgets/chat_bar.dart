@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:step_ai/features/chat/presentation/notifier/chat_bar_notifier.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/config/routes/routes.dart';
@@ -58,7 +60,14 @@ class _ChatBarState extends State<ChatBar> {
           _showIconSend = true;
         });
       }
-    } else {
+      setState(() {
+        _showIconSend = true;
+      });
+
+      if (_controller.text.startsWith('/')){
+
+      }
+    } else{
       setState(() {
         _showIconSend = false;
       });
