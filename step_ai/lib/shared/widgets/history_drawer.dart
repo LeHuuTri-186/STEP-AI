@@ -234,6 +234,7 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
                     ),
                     Expanded(
                       child: ListView.separated(
+                        controller: _scrollController,
                         padding: EdgeInsets.zero,
                         shrinkWrap: true,
                         itemCount: historyConversationListNotifier
