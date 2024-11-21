@@ -46,13 +46,16 @@ class CodeBlockHighlightBuilder extends MarkdownElementBuilder {
       child: isBlockCode
           ? Stack(
         children: [
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: HighlightView(
-              code.replaceAll(RegExp(r'[\r\n]+$'), ''), // Trim trailing lines
-              language: language, // Use extracted language
-              theme: customTheme,
-              textStyle: GoogleFonts.jetBrainsMono(fontSize: 15.0),
+          Padding(
+            padding: const EdgeInsets.only(top: 25.0),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: HighlightView(
+                code.replaceAll(RegExp(r'[\r\n]+$'), ''), // Trim trailing lines
+                language: language, // Use extracted language
+                theme: customTheme,
+                textStyle: GoogleFonts.jetBrainsMono(fontSize: 15.0),
+              ),
             ),
           ),
           if (isAi)

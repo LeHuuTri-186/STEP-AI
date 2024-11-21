@@ -59,7 +59,6 @@ class _ChatBarState extends State<ChatBar> {
       else {
         _chatBarNotifier.setShowOverlay(false);
       }
-
     } else{
       _chatBarNotifier.setShowIconSend(false);
       _chatBarNotifier.setShowOverlay(false);

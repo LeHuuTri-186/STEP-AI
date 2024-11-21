@@ -3,7 +3,7 @@ import 'package:step_ai/config/enum/task_status.dart';
 import 'package:step_ai/features/chat/domain/entity/slash_prompt_list.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_prompt_list_usecase.dart';
 
-class PromptListNotifier extends ChangeNotifier{
+class PromptListNotifier extends ChangeNotifier {
   final GetPromptListUseCase _getPromptListUseCase;
   String key = '';
   SlashPromptList list = SlashPromptList(prompts: []);
@@ -11,47 +11,44 @@ class PromptListNotifier extends ChangeNotifier{
   int needRebuildCounter = 0;
   PromptListNotifier(this._getPromptListUseCase);
 
-  bool isChangingKey(String value){
+  bool isChangingKey(String value) {
     if (value.isEmpty) return false;
     if (value == '/$key') return false;
     if (value == '/') {
       key = '';
-    }
-    else {
+    } else {
       key = value.substring(1);
     }
     return true;
   }
 
-  void setRebuild(){
+  void setRebuild() {
     increaseRebuildCounter();
     notifyListeners();
   }
 
-  void setList(value){
+  void setList(value) {
     list = value;
     notifyListeners();
   }
 
-
-  Future<TaskStatus> getPrompts(String value) async{
-
+  Future<TaskStatus> getPrompts(String value) async {
     if (!isChangingKey(value)) return TaskStatus.SIMILAR;
-    list =SlashPromptList(prompts: []);
+    list = SlashPromptList(prompts: []);
     isFetching = true;
     notifyListeners();
 
     try {
       final prompts = await _getPromptListUseCase.call(params: key);
-      prompts != null?
-      list.setList(prompts.prompts) : list =SlashPromptList(prompts: []);
+      prompts != null
+          ? list.setList(prompts.prompts)
+          : list = SlashPromptList(prompts: []);
       isFetching = false;
 
       increaseRebuildCounter();
       notifyListeners();
       return TaskStatus.OK;
-
-    } catch (e){
+    } catch (e) {
       if (e == 'Exit') {
         print('Throw exit');
         isFetching = false;
@@ -60,8 +57,7 @@ class PromptListNotifier extends ChangeNotifier{
         notifyListeners();
 
         return TaskStatus.UNAUTHORIZED;
-      }
-      else {
+      } else {
         print('Error: $e');
         isFetching = false;
 
@@ -72,11 +68,12 @@ class PromptListNotifier extends ChangeNotifier{
     }
   }
 
-  void increaseRebuildCounter(){
+  void increaseRebuildCounter() {
     needRebuildCounter++;
     if (needRebuildCounter > 5000) needRebuildCounter = 1;
   }
-  void reset(){
+
+  void reset() {
     key = '';
     list = SlashPromptList(prompts: []);
     isFetching = false;

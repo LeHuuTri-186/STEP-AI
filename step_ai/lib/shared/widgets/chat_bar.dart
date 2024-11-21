@@ -35,7 +35,6 @@ class _ChatBarState extends State<ChatBar> {
   void initState() {
     super.initState();
     _controller.addListener(onTextChanged);
-
   }
 
   @override
@@ -49,54 +48,62 @@ class _ChatBarState extends State<ChatBar> {
 
   //Event to display/hide the accessibility icons
   void onTextChanged() {
-    bool isLoadingResponse = false;
-    if ((Provider.of<ChatNotifier>(context, listen: false)
-            .historyMessages
-            .isNotEmpty &&
-        Provider.of<ChatNotifier>(context, listen: false)
-                .historyMessages
-                .last
-                .content ==
-            null)) {
-      isLoadingResponse = true;
+    final currentText = _controller.text;
+
+    // Log current text for debugging
+    print(currentText);
+
+    // If the text is empty, reset relevant states and return
+    if (currentText.isEmpty) {
+      _chatBarNotifier.setShowOverlay(false);
+      setState(() {
+        _showIconSend = false;
+      });
+      _debounce?.cancel(); // Cancel any pending debounce timer
+      return;
     }
-    if (_controller.text.isNotEmpty) {
-      if (isLoadingResponse) {
-        setState(() {
-          _showIconSend = false;
-        });
-      } else {
-        setState(() {
-          _showIconSend = true;
-        });
-      }
 
+    // Determine if a response is loading
+    final chatNotifier = Provider.of<ChatNotifier>(context, listen: false);
+    final isLoadingResponse = chatNotifier.historyMessages.isNotEmpty &&
+        chatNotifier.historyMessages.last.content == null;
 
-      if (_controller.text.startsWith('/')){
+    // Update the state of the send icon
+    setState(() {
+      _showIconSend = !isLoadingResponse && !currentText.startsWith('/');
+    });
 
-        if (_debounce?.isActive ?? false){
-          _debounce?.cancel();
+    // Handle command input if the text starts with "/"
+    if (currentText.startsWith('/')) {
+      _debounce?.cancel(); // Cancel any previous debounce
+      _debounce = Timer(const Duration(milliseconds: 800), () async {
+        _chatBarNotifier.setShowOverlay(true);
+        final status = await _listNotifier.getPrompts(currentText);
+
+        // Handle unauthorized status if detected
+        if (status == TaskStatus.UNAUTHORIZED) {
+          _chatBarNotifier.setLogout(true);
         }
-        _debounce = Timer(const Duration(milliseconds: 800), () async{
-          _chatBarNotifier.setShowOverlay(true);
-          TaskStatus status = await _listNotifier.getPrompts(_controller.text);
-          if (status == TaskStatus.UNAUTHORIZED) {
-            _chatBarNotifier.setLogout(true);
-          }
-        });
-      }
-      else {
-        _chatBarNotifier.setShowOverlay(false);
-      }
-    }
-    else {
-      _chatBarNotifier.setShowIconSend(false);
+      });
+    } else {
+      // If not a command, hide the overlay
       _chatBarNotifier.setShowOverlay(false);
     }
-}
+  }
+
 
   @override
   Widget build(BuildContext context) {
+    _chatBarNotifier = Provider.of<ChatBarNotifier>(context);
+    _listNotifier = Provider.of<PromptListNotifier>(context);
+    if (_chatBarNotifier.triggeredPrompt) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _controller.text = '';
+        _controller.text = _chatBarNotifier.content;
+        _chatBarNotifier.cancelPrompt();
+      });
+
+    }
     return Focus(
       focusNode: _focusNode,
       child: GestureDetector(
@@ -142,7 +149,7 @@ class _ChatBarState extends State<ChatBar> {
                       textCapitalization: TextCapitalization.sentences,
                       decoration: InputDecoration(
                         focusedBorder: InputBorder.none,
-                        hintText: 'Enter your question',
+                        hintText: 'Enter your question, or / to use a prompt',
                         hintStyle:
                             Theme.of(context).textTheme.bodyMedium?.copyWith(
                                   fontSize: 15,
@@ -158,6 +165,7 @@ class _ChatBarState extends State<ChatBar> {
                   children: [
                     IconButton(
                       onPressed: () {
+                        _chatBarNotifier.setShowOverlay(false);
                         showModalBottomSheet(
                           backgroundColor: TColor.doctorWhite,
                           shape: RoundedRectangleBorder(
@@ -171,7 +179,7 @@ class _ChatBarState extends State<ChatBar> {
                                 topRight: Radius.circular(30),
                               ),
                               child: PromptBottomSheet(
-                                returnPrompt: (value) async{
+                                returnPrompt: (value) async {
                                   _controller.clear();
                                   try {
                                     await Provider.of<ChatNotifier>(context,
@@ -179,7 +187,8 @@ class _ChatBarState extends State<ChatBar> {
                                         .sendMessage(value);
                                   } catch (e) {
                                     //e is 401 and return to login screen
-                                    print("e is 401 and return to login screen");
+                                    print(
+                                        "e is 401 and return to login screen");
                                     print(e);
                                     Navigator.of(context)
                                         .pushNamedAndRemoveUntil(
@@ -211,6 +220,7 @@ class _ChatBarState extends State<ChatBar> {
                               // Hide keyboard
                               FocusScope.of(context).unfocus();
                               try {
+                                _chatBarNotifier.setShowOverlay(false);
                                 await Provider.of<ChatNotifier>(context,
                                         listen: false)
                                     .sendMessage(_controller.text);
@@ -230,7 +240,9 @@ class _ChatBarState extends State<ChatBar> {
                               size: 20,
                               color: TColor.petRock,
                             ),
-                            onPressed: () {}),
+                            onPressed: () {
+
+                            }),
                   ],
                 )
               ],

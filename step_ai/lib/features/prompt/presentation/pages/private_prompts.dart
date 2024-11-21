@@ -6,6 +6,7 @@ import 'package:step_ai/shared/styles/horizontal_spacing.dart';
 import 'package:step_ai/shared/styles/vertical_spacing.dart';
 import 'package:step_ai/shared/widgets/search_bar.dart';
 
+import '../../../../config/routes/routes.dart';
 import '../../../../shared/styles/colors.dart';
 
 import '../state/private_prompt/private_filter_provider.dart';
@@ -31,9 +32,18 @@ class _PrivatePromptsPanelState extends State<PrivatePromptsPanel> {
     _scrollController = ScrollController();
     _scrollController.addListener(_onScroll);
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<PrivateViewState>().fetchPrompts();
-    });
+    try {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.read<PrivateViewState>().fetchPrompts();
+      });
+    } catch (e) {
+      print("e is 401 and return to login screen");
+      print(e);
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        Routes.authenticate,
+        (Route<dynamic> route) => false,
+      );
+    }
   }
 
   @override
@@ -52,7 +62,8 @@ class _PrivatePromptsPanelState extends State<PrivatePromptsPanel> {
     );
   }
 
-  Widget _buildBody(PrivateViewState promptsState, PrivateFilterState filterState) {
+  Widget _buildBody(
+      PrivateViewState promptsState, PrivateFilterState filterState) {
     return Column(
       children: [
         VSpacing.sm,
@@ -71,7 +82,10 @@ class _PrivatePromptsPanelState extends State<PrivatePromptsPanel> {
   Widget _buildLoader(PrivateViewState promptsState) {
     return promptsState.isFetchingMore
         ? _twistingDotsLoadIndicator()
-        : const SizedBox(width: 0, height: 0,);
+        : const SizedBox(
+            width: 0,
+            height: 0,
+          );
   }
 
   Widget _buildListView(PrivateViewState promptsState) {
@@ -88,7 +102,10 @@ class _PrivatePromptsPanelState extends State<PrivatePromptsPanel> {
         builder: (BuildContext context, PrivateViewState value, Widget? child) {
           return PrivatePromptListView(
             scrollController: _scrollController,
-            prompts: promptsState.prompts,  deleteIndex: promptsState.onPromptDelete, updatePrompt: promptsState.onPromptUpdate, returnPrompt: widget.returnPrompt,
+            prompts: promptsState.prompts,
+            deleteIndex: promptsState.onPromptDelete,
+            updatePrompt: promptsState.onPromptUpdate,
+            returnPrompt: widget.returnPrompt,
           );
         },
       );
@@ -122,7 +139,7 @@ class _PrivatePromptsPanelState extends State<PrivatePromptsPanel> {
     );
 
     if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 200 &&
+            _scrollController.position.maxScrollExtent - 200 &&
         !promptsState.isFetchingMore &&
         promptsState.hasMore) {
       promptsState.fetchPrompts(

@@ -68,7 +68,7 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
           borderRadius: BorderRadius.only(
               topRight: Radius.circular(10), bottomRight: Radius.circular(10),),
         ),
-        backgroundColor: TColor.northEastSnow.withOpacity(0.5),
+        backgroundColor: TColor.northEastSnow.withOpacity(0.7),
         child: Column(
           children: [
             //Logo and App Name
@@ -101,7 +101,7 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
               ),
               child: Column(
                 children: [
-                  const Center(child: AppNameWidget()),
+                  Center(child: AppNameWidget()),
                   VSpacing.sm,
                   // Search Bar
                   CustomSearchBar(onChanged: (_) {}),

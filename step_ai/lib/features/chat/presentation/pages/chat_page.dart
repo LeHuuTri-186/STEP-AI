@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/config/routes/routes.dart';
 import 'package:step_ai/features/chat/presentation/notifier/chat_bar_notifier.dart';
 import 'package:step_ai/features/chat/presentation/notifier/prompt_list_notifier.dart';
+import 'package:step_ai/features/prompt/data/models/prompt_model.dart';
 import 'package:step_ai/shared/widgets/message_tile.dart';
 
 import '../../../../shared/widgets/chat_bar.dart';
@@ -14,6 +16,7 @@ import 'package:step_ai/shared/widgets/dropdown_ai.dart';
 import 'package:step_ai/shared/widgets/image_by_text_widget.dart';
 
 import '../../../../shared/styles/colors.dart';
+import '../../../../shared/widgets/use_prompt_bottom_sheet.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key, this.chatName = "Chat"});
@@ -31,16 +34,13 @@ class _ChatPageState extends State<ChatPage> {
   late ChatNotifier _chatNotifier;
   final ScrollController _scrollController = ScrollController();
 
-
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
 
-    if(_promptListOverlay.mounted){
+    if (_promptListOverlay.mounted) {
       _promptListOverlay.remove();
     }
-
   }
 
   @override
@@ -55,7 +55,6 @@ class _ChatPageState extends State<ChatPage> {
     });
   }
 
-
   void _scrollToBottom() {
     if (_scrollController.hasClients) {
       _scrollController.animateTo(
@@ -66,35 +65,32 @@ class _ChatPageState extends State<ChatPage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     _chatBarNotifier = Provider.of<ChatBarNotifier>(context);
     _promptListNotifier = Provider.of<PromptListNotifier>(context);
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async{
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       //Overlay insert:--------
       OverlayState o = Overlay.of(context);
-      if (_chatBarNotifier.showOverlay){
-        if (!_promptListOverlay.mounted){
+      if (_chatBarNotifier.showOverlay) {
+        if (!_promptListOverlay.mounted) {
           o.insert(_promptListOverlay);
         }
         _chatBarNotifier.cancelPrompt();
-      }
-      else {
-        if (_promptListOverlay.mounted){
+      } else {
+        if (_promptListOverlay.mounted) {
           _promptListOverlay.remove();
         }
       }
 
       //OverlayEntry rebuild:--------
-      if (_promptListNotifier.needRebuildCounter>0) {
+      if (_promptListNotifier.needRebuildCounter > 0) {
         _promptListOverlay.markNeedsBuild();
       }
 
       //Logout listener:-------------
-      if(_chatBarNotifier.isUnauthorized) {
-        //TODO: Handle logout
+      if (_chatBarNotifier.isUnauthorized) {
         _chatBarNotifier.reset();
         _promptListNotifier.reset();
         Navigator.of(context).pushReplacementNamed(Routes.authenticate);
@@ -103,7 +99,6 @@ class _ChatPageState extends State<ChatPage> {
       }
 
       //Prompt trigger:--------------
-
     });
     final messages =
         Provider.of<ChatNotifier>(context, listen: true).historyMessages;
@@ -152,7 +147,6 @@ class _ChatPageState extends State<ChatPage> {
         ],
         iconTheme: IconThemeData(color: TColor.petRock),
       ),
-
       body: SafeArea(
         child: Padding(
             padding: const EdgeInsets.all(10),
@@ -161,22 +155,24 @@ class _ChatPageState extends State<ChatPage> {
                 //Messages or Loading
                 _chatNotifier.isLoadingDetailedConversation
                     ? const Expanded(
-                      child:  Center(
+                        child: Center(
                           child: CircularProgressIndicator(),
                         ),
-                    )
+                      )
                     : Expanded(
-                         child: ListView.builder(
-                    controller: _scrollController,
-                    itemCount: messages.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4.0),
-                        child: MessageTile(currentMessage: messages[index]),
-                      );
-                    },
-                  ),
-                ),
+                        child: ListView.builder(
+                          controller: _scrollController,
+                          itemCount: messages.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 4.0),
+                              child:
+                                  MessageTile(currentMessage: messages[index]),
+                            );
+                          },
+                        ),
+                      ),
 
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -191,16 +187,20 @@ class _ChatPageState extends State<ChatPage> {
                       ],
                     ),
                     const SizedBox(height: 2),
-                    ChatBar(onSendMessage: _promptListNotifier.isChangingKey,),
+                    ChatBar(
+                      onSendMessage: _promptListNotifier.isChangingKey,
+                    ),
                     const SizedBox(
                       height: 2,
                     ),
                     Row(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: ImageByText(imagePath: "lib/core/assets/imgs/flame.png", text: _chatNotifier.numberRestToken.toString())
-                        ),
+                            padding: const EdgeInsets.only(left: 10),
+                            child: ImageByText(
+                                imagePath: "lib/core/assets/imgs/flame.png",
+                                text:
+                                    _chatNotifier.numberRestToken.toString())),
                       ],
                     ),
                   ],
@@ -211,93 +211,117 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  void _initOverlay(BuildContext context){
-    _promptListOverlay = OverlayEntry(
-        builder: (context) {
-          return _buildOverlayWidget();
-        });
+  void _initOverlay(BuildContext context) {
+    _promptListOverlay = OverlayEntry(builder: (context) {
+      return _buildOverlayWidget();
+    });
   }
 
-  Widget _buildOverlayWidget(){
-    return Stack(
-      children: [
-        Positioned(
-            bottom: 80,
-            left: 65,
-            right: 18,
-            child: GestureDetector(
-              behavior: HitTestBehavior.translucent,
-              onTap: () {
-              },
-              child: Material(
-                  color: Colors.transparent,
-                  child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.blue,
-                      ),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment
-                                  .spaceBetween,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(left: 20),
-                                  child: Text('Prompt List'),
-                                ),
-                                IconButton(
-                                    onPressed: () {
-                                      if (_promptListOverlay.mounted) {
-                                        _promptListOverlay.remove();
-                                      }
-                                    },
-                                    icon: const Icon(Icons.close))
-                              ],
-                            ),
-                            _promptListNotifier.isFetching?
-                            _buildProgressIndicator():
-                            ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: _promptListNotifier.list
-                                  .prompts.length,
-                              itemBuilder: (context, index) {
-                                return ListTile(
-                                  title: Text(
-                                    _promptListNotifier
-                                        .list
-                                        .prompts[index].title,
-                                    style: const TextStyle(
-                                        color: Colors.white),
-                                  ),
-                                  onTap: () {
-                                    _chatBarNotifier.setContent(
-                                      _promptListNotifier.list.prompts[index]
-                                          .content
-                                    );
-                                    _chatBarNotifier.triggerPrompt();
-                                  },
-                                );
-                              },
-                            ),
-                          ],
+  Widget _buildOverlayWidget() {
+    return SafeArea(
+      child: Stack(
+        children: [
+          Positioned(
+              bottom: MediaQuery.of(context).size.width * 0.5,
+              left: MediaQuery.of(context).size.width * 0.2,
+              right: MediaQuery.of(context).size.width * 0.2,
+              child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () {},
+                child: Material(
+                    color: Colors.transparent,
+                    child: Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [BoxShadow(
+                            blurRadius: 4,
+                            color: TColor.petRock.withOpacity(0.5),
+                          )],
+                          borderRadius: BorderRadius.circular(10),
+                          color: TColor.doctorWhite,
                         ),
-                      )
-                  )
-              ),
-            )
-        )
-      ],
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.only(left: 20),
+                                    child: Text('Prompt List'),
+                                  ),
+                                  IconButton(
+                                      onPressed: () {
+                                        if (_promptListOverlay.mounted) {
+                                          _chatBarNotifier.setShowOverlay(false);
+                                          _promptListOverlay.remove();
+                                        }
+                                      },
+                                      icon: const Icon(Icons.close))
+                                ],
+                              ),
+                              _promptListNotifier.isFetching
+                                  ? _buildProgressIndicator()
+                                  : ListView.builder(
+                                      shrinkWrap: true,
+                                      itemCount:
+                                          _promptListNotifier.list.prompts.length,
+                                      itemBuilder: (context, index) {
+                                        return ListTile(
+                                          title: Text(
+                                            _promptListNotifier
+                                                .list.prompts[index].title,
+                                            style: TextStyle(
+                                                color: TColor.petRock),
+                                          ),
+                                          onTap: () async {
+                                            _chatBarNotifier.setShowOverlay(false);
+                                            await _buildUsePrompt(context, _chatNotifier, PromptModel.fromSlash(_promptListNotifier
+                                                .list.prompts[index]), index);
+                                            // _chatBarNotifier.setContent(
+                                            //     _promptListNotifier
+                                            //         .list.prompts[index].content);
+                                          },
+                                        );
+                                      },
+                                    ),
+                            ],
+                          ),
+                        ))),
+              ))
+        ],
+      ),
     );
   }
 
-  Widget _buildProgressIndicator(){
-    return Container(
-      color: Colors.black.withOpacity(0.5),
-      child: const Center(
-        child: CircularProgressIndicator(),
+  Widget _buildProgressIndicator() {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: SizedBox(
+        width: 200,
+        child: Center(
+          child: LoadingAnimationWidget.twistingDots(
+            size: 50,
+            leftDotColor: TColor.tamarama,
+            rightDotColor: TColor.daJuice,
+          ),
+        ),
       ),
+    );
+  }
+
+  Future<void> _buildUsePrompt(BuildContext context, ChatNotifier notifier,
+      PromptModel prompt, int index) async {
+    await showModalBottomSheet(
+      context: context,
+      builder: (_) {
+        return PromptEditor(
+          promptModel: prompt,
+          returnPrompt: (value) async {
+            Navigator.of(context).pop();
+            await notifier.sendMessage(value);
+          },
+        );
+      },
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/config/routes/routes.dart';
 import 'package:step_ai/core/di/service_locator.dart';
@@ -8,6 +9,10 @@ import 'package:step_ai/features/authentication/notifier/register_notifier.dart'
 import 'package:step_ai/features/authentication/notifier/ui_notifier.dart';
 import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
 import 'package:step_ai/features/chat/notifier/history_conversation_list_notifier.dart';
+import 'package:step_ai/shared/styles/vertical_spacing.dart';
+import 'package:step_ai/shared/widgets/app_name_widget.dart';
+
+import '../../../../shared/styles/colors.dart';
 
 class AuthenticateScreen extends StatefulWidget {
   AuthenticateScreen({super.key});
@@ -48,14 +53,8 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
   AppBar _buildAppBar() {
     return AppBar(
       automaticallyImplyLeading: false,
-      title: const Center(
-        child: Text(
-          'STEP AI',
-          style: TextStyle(
-            color: Colors.blueAccent,
-            fontSize: 20,
-          ),
-        ),
+      title: Center(
+        child: AppNameWidget(color: TColor.tamarama,),
       ),
     );
   }
@@ -81,8 +80,12 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
   Widget _buildProgressIndicator() {
     return Container(
       color: Colors.black.withOpacity(0.5),
-      child: const Center(
-        child: CircularProgressIndicator(),
+      child: Center(
+        child: LoadingAnimationWidget.twistingDots(
+          size: 50,
+          leftDotColor: TColor.tamarama,
+          rightDotColor: TColor.daJuice,
+        ),
       ),
     );
   }
@@ -92,9 +95,9 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
         builder: (context, constraints) => ToggleButtons(
               constraints: BoxConstraints.expand(
                   width: (constraints.maxWidth - 16) / 2, height: 40),
-              fillColor: Colors.blueAccent,
-              color: Colors.black,
-              selectedColor: Colors.white,
+              fillColor: TColor.tamarama,
+              color: TColor.squidInk,
+              selectedColor: TColor.northEastSnow,
               borderRadius: BorderRadius.circular(8.0),
               isSelected: [_authUINotifier.isLogin, !_authUINotifier.isLogin],
               onPressed: (index) {
@@ -104,67 +107,107 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
                 });
               },
               children: <Widget>[
-                _buildToggleText('Login'),
-                _buildToggleText('Register'),
+                _buildToggleText('Login', _authUINotifier.isLogin),
+                _buildToggleText('Register', !_authUINotifier.isLogin),
               ],
             ));
   }
 
-  Widget _buildToggleText(String text) {
-    return Text(text);
+  Widget _buildToggleText(String text, bool selected) {
+    return Text(text, style: Theme.of(context).textTheme.displayLarge?.copyWith(
+      fontSize: 15,
+      color: selected ? TColor.doctorWhite : TColor.squidInk,
+    ));
   }
 
   Widget _buildLoginView() {
-    return Column(children: [
-      _buildTextFieldView('Email', 'Enter your email address',
-          _loginNotifier.emailError, _emailController, false),
-      SizedBox(height: 15),
-      _buildPasswordTypeField(
-        'Password',
-        'Enter your password',
-        _loginNotifier.passwordError,
-        _passwordController,
-        _authUINotifier.isPasswordShowing,
-        setStatePassword,
-      ),
-      SizedBox(height: 10),
-      Align(
-        alignment: Alignment.centerRight,
-        child: TextButton(
-          onPressed: forgotPasswordPress,
-          child: const Text('Forgot password'),
+    return Column(
+      children: [
+        _buildTextFieldView('Email', 'Enter your email address',
+            _loginNotifier.emailError, _emailController, false),
+        const SizedBox(height: 15),
+        _buildPasswordTypeField(
+          'Password',
+          'Enter your password',
+          _loginNotifier.passwordError,
+          _passwordController,
+          _authUINotifier.isPasswordShowing,
+          setStatePassword,
         ),
-      ),
-      ElevatedButton(
-          onPressed: loginValidateSubmit,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blueAccent,
+        VSpacing.sm,
+        Align(
+          alignment: Alignment.centerRight,
+          child: GestureDetector(
+            onTap: forgotPasswordPress,
+            child: Text(
+              'Forgot password',
+              style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                    fontSize: 15,
+                    color: TColor.tamarama,
+                  ),
+            ),
           ),
-          child: Container(
-            height: 50,
-            child: Center(
-              child: Text(
-                'Login',
-                style: TextStyle(color: Colors.white),
+        ),
+        VSpacing.sm,
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(10),
+            onTap: loginValidateSubmit,
+            child: Ink(
+              decoration: BoxDecoration(
+                color: TColor.tamarama,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              height: 50,
+              child: Center(
+                child: Text(
+                  'Login',
+                  style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800,
+                        color: TColor.doctorWhite,
+                      ),
+                ),
               ),
             ),
-          )),
-      SizedBox(height: 10),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('Do not have account?'),
-          TextButton(
-              onPressed: () {
-                setState(() {
-                  _authUINotifier.setToRegister();
-                  resetTextFieldValue();
-                });
-              },
-              child: Text('Register')),
-        ],
-      )
-    ]);
+          ),
+        ),
+        const SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Don\'t have an account? ',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontSize: 15,
+                  ),
+            ),
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                highlightColor: Colors.transparent,
+                focusColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                onTap: () {
+                  setState(() {
+                    _authUINotifier.setToRegister();
+                    resetTextFieldValue();
+                  });
+                },
+                child: Text(
+                  'Register',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.copyWith(fontSize: 15, color: TColor.tamarama),
+                ),
+              ),
+            ),
+          ],
+        )
+      ],
+    );
   }
 
   Widget _buildRegisterView() {
@@ -194,32 +237,60 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
           setStateConfirmPw,
         ),
         const SizedBox(height: 15),
-        ElevatedButton(
-            onPressed: registerValidateSubmit,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blueAccent,
-            ),
-            child: Container(
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(10),
+            onTap: registerValidateSubmit,
+            child: Ink(
               height: 50,
+              decoration: BoxDecoration(
+                color: TColor.tamarama,
+                borderRadius: BorderRadius.circular(10),
+              ),
               child: Center(
                 child: Text(
                   'Register',
-                  style: TextStyle(color: Colors.white),
+                  style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w800,
+                      color: TColor.doctorWhite),
                 ),
               ),
-            )),
+            ),
+          ),
+        ),
+        VSpacing.md,
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Already have account?'),
-            TextButton(
-                onPressed: () {
+            Text(
+              'Already have account? ',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontSize: 15,
+                  ),
+            ),
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                highlightColor: Colors.transparent,
+                focusColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                onTap: () {
                   setState(() {
                     _authUINotifier.setToLogin();
                     resetTextFieldValue();
                   });
                 },
-                child: Text('Login')),
+                child: Text(
+                  'Login',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: TColor.tamarama,
+                        fontSize: 15,
+                      ),
+                ),
+              ),
+            ),
           ],
         )
       ],
@@ -234,12 +305,24 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
         labelText: label,
         errorText: error,
         hintText: hint,
-        hintStyle: const TextStyle(
-          color: Colors.grey,
-        ),
-        labelStyle: const TextStyle(color: Colors.grey),
+        hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              color: TColor.petRock.withOpacity(0.7),
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
+            ),
+        labelStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              color: TColor.petRock.withOpacity(0.7),
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
+            ),
         filled: true,
-        fillColor: Colors.white,
+        fillColor: TColor.northEastSnow,
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: BorderSide(
+            color: TColor.tamarama,
+          ),
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.0),
           borderSide: BorderSide.none,
@@ -253,16 +336,29 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     return TextField(
       controller: controller,
       obscureText: !isShowing,
+      cursorColor: TColor.petRock,
       decoration: InputDecoration(
         labelText: label,
+        labelStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              color: TColor.petRock.withOpacity(0.7),
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
+            ),
         hintText: hint,
         errorText: error,
-        hintStyle: const TextStyle(
-          color: Colors.grey,
-        ),
-        labelStyle: const TextStyle(color: Colors.grey),
+        hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              color: TColor.petRock.withOpacity(0.7),
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
+            ),
         filled: true,
-        fillColor: Colors.white,
+        fillColor: TColor.northEastSnow,
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: BorderSide(
+            color: TColor.tamarama,
+          ),
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.0),
           borderSide: BorderSide.none,

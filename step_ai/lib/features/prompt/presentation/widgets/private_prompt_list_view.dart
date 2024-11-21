@@ -7,6 +7,7 @@ import 'package:step_ai/features/prompt/presentation/widgets/prompt_update_dialo
 import 'package:step_ai/shared/styles/horizontal_spacing.dart';
 import 'package:step_ai/shared/styles/vertical_spacing.dart';
 
+import '../../../../config/routes/routes.dart';
 import '../../../../shared/styles/colors.dart';
 import '../../../../shared/styles/varela_round_style.dart';
 import '../../../../shared/widgets/use_prompt_bottom_sheet.dart';
@@ -36,22 +37,22 @@ class PrivatePromptListView extends StatelessWidget {
         itemBuilder: (_, int index) {
           return PrivatePromptTile(prompt: prompts[index], index: index,
             onTap: () async {
-              await showModalBottomSheet(
-                  context: context,
-                  builder: (_) {
-                    return PromptEditor(
-                      promptModel: prompts[index],
-                      returnPrompt: (value) {
-                        returnPrompt(value);
-                        Navigator.of(context).pop();
-                      },
-                    );
-                  });},
+              await _buildUsePrompt(context, index);},
             onEdit: () {
               showUpdateDialog(context: context, prompt: prompts[index], onUpdatePrompt: updatePrompt);
             },
             onDelete: () {
-              showPromptDialog(context: context, index: index, deleteIndex: deleteIndex);
+              try {
+                showPromptDialog(context: context, index: index, deleteIndex: deleteIndex);
+              }
+              catch (e) {
+                print("e is 401 and return to login screen");
+                print(e);
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  Routes.authenticate,
+                      (Route<dynamic> route) => false,
+                );
+              }
             },);
         },
         separatorBuilder: (_, int index) {
@@ -59,6 +60,20 @@ class PrivatePromptListView extends StatelessWidget {
         },
       ),
     );
+  }
+
+  Future<void> _buildUsePrompt(BuildContext context, int index) async {
+    await showModalBottomSheet(
+        context: context,
+        builder: (_) {
+          return PromptEditor(
+            promptModel: prompts[index],
+            returnPrompt: (value) {
+              returnPrompt(value);
+              Navigator.of(context).pop();
+            },
+          );
+        });
   }
 
   void showPromptDialog(

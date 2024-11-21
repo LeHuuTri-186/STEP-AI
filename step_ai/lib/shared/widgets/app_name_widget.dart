@@ -2,33 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppNameWidget extends StatelessWidget {
-  const AppNameWidget({
+  AppNameWidget({
     super.key,
+    this.color = Colors.white
   });
+
+  late Color color;
 
   @override
   Widget build(BuildContext context) {
     return Text.rich(TextSpan(
         style: GoogleFonts.varelaRound(
-            color: Colors.black,
+            color: color,
             fontWeight: FontWeight.w800,
-            fontSize: 20),
+            fontSize: 25),
         children: [
           TextSpan(
               text: "STEP",
               style: GoogleFonts.varelaRound(
-                color: Colors.white,
+                color: color,
               )),
           TextSpan(
             text: " ",
             style: GoogleFonts.jetBrainsMono(
-                color: Colors.black,
+                color: color,
                 fontWeight: FontWeight.w800,
                 fontSize: 15),
           ),
           TextSpan(text: "AI",
               style: GoogleFonts.aBeeZee(
-                  color: Colors.white,
+                  color: color,
                   fontStyle: FontStyle.italic,
                   fontSize: 30)
           ),
