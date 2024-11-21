@@ -8,32 +8,32 @@ class AssistantNotifier with ChangeNotifier{
         name: 'Claude 3 Haiku',
         id: 'claude-3-haiku-20240307',
         model: "dify",
-        logoPath: "lib/core/assets/imgs/ai1.png"),
+        logoPath: "lib/core/assets/imgs/claude-ai.png"),
     Assistant(
         name: 'Claude 3 Sonnet',
         id: 'claude-3-sonnet-20240229',
         model: "dify",
-        logoPath: "lib/core/assets/imgs/ai2.png"),
+        logoPath: "lib/core/assets/imgs/claude.png"),
     Assistant(
         name: 'Gemini',
         id: 'gemini-1.5-flash-latest',
         model: "dify",
         logoPath: "lib/core/assets/imgs/gemini.png"),
     Assistant(
-        name: 'ChatGPT 1.5 pro',
+        name: 'Gemini 1.5 pro',
         id: 'gemini-1.5-pro-latest',
         model: "dify",
-        logoPath: "lib/core/assets/imgs/gpt.png"),
+        logoPath: "lib/core/assets/imgs/gemini-1.png"),
     Assistant(
         name: 'GPT 4o',
         id: 'gpt-4o',
         model: "dify",
-        logoPath: "lib/core/assets/imgs/ai5.png"),
+        logoPath: "lib/core/assets/imgs/gpt-4.png"),
     Assistant(
         name: 'GPT 4o Mini',
         id: 'gpt-4o-mini',
         model: "dify",
-        logoPath: "lib/core/assets/imgs/ai6.png"),
+        logoPath: "lib/core/assets/imgs/gpt.png"),
   ];
   late String _currentAssistantId;
   AssistantNotifier() {

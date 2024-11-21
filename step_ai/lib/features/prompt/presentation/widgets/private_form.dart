@@ -93,7 +93,7 @@ class _PrivateFormState extends State<PrivateForm> {
               ),
             ),
           ),
-
+          VSpacing.sm,
           Align(
             alignment: Alignment.centerLeft,
             child: Text.rich(

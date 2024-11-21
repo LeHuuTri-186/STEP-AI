@@ -143,8 +143,10 @@ class _PublicPromptsPanelState extends State<PublicPromptsPanel> {
     }
 
     return Expanded(
-      child: Center(
-        child: _buildNoPromptPanel(),
+      child: SingleChildScrollView(
+        child: Center(
+          child: _buildNoPromptPanel(),
+        ),
       ),
     );
   }
