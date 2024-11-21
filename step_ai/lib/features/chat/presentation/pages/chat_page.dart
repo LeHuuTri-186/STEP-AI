@@ -317,8 +317,10 @@ class _ChatPageState extends State<ChatPage> {
         return PromptEditor(
           promptModel: prompt,
           returnPrompt: (value) async {
-            Navigator.of(context).pop();
             await notifier.sendMessage(value);
+            if (context.mounted) {
+              Navigator.of(context).pop();
+            }
           },
         );
       },
