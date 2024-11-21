@@ -9,14 +9,14 @@ class AppNameWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text.rich(TextSpan(
-        style: GoogleFonts.jetBrainsMono(
+        style: GoogleFonts.varelaRound(
             color: Colors.black,
             fontWeight: FontWeight.w800,
             fontSize: 20),
         children: [
           TextSpan(
               text: "STEP",
-              style: GoogleFonts.jetBrainsMono(
+              style: GoogleFonts.varelaRound(
                 color: Colors.white,
               )),
           TextSpan(
@@ -27,10 +27,10 @@ class AppNameWidget extends StatelessWidget {
                 fontSize: 15),
           ),
           TextSpan(text: "AI",
-              style: GoogleFonts.jetBrainsMono(
+              style: GoogleFonts.aBeeZee(
                   color: Colors.white,
                   fontStyle: FontStyle.italic,
-                  fontSize: 20)
+                  fontSize: 30)
           ),
         ]));
   }

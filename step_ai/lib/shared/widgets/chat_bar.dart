@@ -1,19 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/features/chat/presentation/notifier/chat_bar_notifier.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:step_ai/config/routes/routes.dart';
+import 'package:step_ai/core/di/service_locator.dart';
+import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
+import 'package:step_ai/shared/widgets/popup_attachment_options.dart';
+
+import '../../features/prompt/presentation/pages/prompt_bottom_sheet.dart';
+import '../styles/colors.dart';
 
 class ChatBar extends StatefulWidget {
-  void Function(String) onSendMessage;
-  ChatBar({super.key, required this.onSendMessage});
+  ChatBar({super.key});
 
   @override
   _ChatBarState createState() => _ChatBarState();
 }
 
 class _ChatBarState extends State<ChatBar> {
-  bool _showIcons = false;
   bool _showIconSend = false;
   final TextEditingController _controller = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
@@ -23,6 +31,7 @@ class _ChatBarState extends State<ChatBar> {
 
   @override
   void dispose() {
+    _focusNode.dispose();
     _controller.removeListener(onTextChanged);
     _controller.dispose();
     super.dispose();
@@ -30,10 +39,25 @@ class _ChatBarState extends State<ChatBar> {
 
   //Event to display/hide the accessibility icons
   void onTextChanged() {
+    bool isLoadingResponse = false;
+    if ((Provider.of<ChatNotifier>(context, listen: false)
+            .historyMessages
+            .isNotEmpty &&
+        Provider.of<ChatNotifier>(context, listen: false)
+                .historyMessages
+                .last
+                .content ==
+            null)) {
+      isLoadingResponse = true;
+    }
     if (_controller.text.isNotEmpty) {
-      if (_showIcons) {
+      if (isLoadingResponse) {
         setState(() {
-          _showIcons = false;
+          _showIconSend = false;
+        });
+      } else {
+        setState(() {
+          _showIconSend = true;
         });
       }
       setState(() {
@@ -50,108 +74,148 @@ class _ChatBarState extends State<ChatBar> {
     }
   }
 
-  void _toggleIcons() {
-    setState(() {
-      _showIcons = !_showIcons;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: Colors.white54,
-        border: Border.all(color: Colors.grey, width: 0.8),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        children: [
-          //show icon "add" to display the other accessibility icons
-          if (!_showIcons)
-            IconButton(
-              padding: const EdgeInsets.all(2),
-              icon: const Icon(
-                Icons.add,
-                color: Colors.black,
+    return Focus(
+      focusNode: _focusNode,
+      child: GestureDetector(
+        onTap: () {
+          _focusNode.requestFocus(); // Focus when tapped
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: _focusNode.hasFocus
+                  ? TColor.doctorWhite
+                  : TColor.northEastSnow.withOpacity(0.8),
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(
+                color:
+                    _focusNode.hasFocus ? TColor.tamarama : Colors.transparent,
+                width: 2,
               ),
-              onPressed: _toggleIcons,
             ),
-          //show the other accessibility icons
-          if (_showIcons) ...[
-            //Icon camera
-            IconButton(
-              icon: const Icon(
-                Icons.camera_alt_rounded,
-                size: 20,
-                color: Colors.black,
-              ),
-              onPressed: () {},
-            ),
-            //Icon photo
-            IconButton(
-              icon: const Icon(
-                Icons.photo,
-                size: 20,
-                color: Colors.black,
-              ),
-              onPressed: () {},
-            ),
-            //Icon file
-            IconButton(
-              icon: const Icon(
-                Icons.attach_file,
-                size: 20,
-                color: Colors.black,
-              ),
-              onPressed: () {},
-            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                //TextField to chat
+                SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      top: 3.0,
+                      left: 10.0,
+                      right: 10.0,
+                    ),
+                    child: TextField(
+                      autocorrect: false,
+                      cursorColor: TColor.squidInk,
+                      controller: _controller,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontSize: 16,
+                            color: TColor.squidInk,
+                          ),
+                      keyboardType: TextInputType.multiline,
+                      maxLines: 4,
+                      textCapitalization: TextCapitalization.sentences,
+                      decoration: InputDecoration(
+                        focusedBorder: InputBorder.none,
+                        hintText: 'Enter your question',
+                        hintStyle:
+                            Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  fontSize: 15,
+                                  color: TColor.petRock.withOpacity(0.5),
+                                ),
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        showModalBottomSheet(
+                          backgroundColor: TColor.doctorWhite,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          context: context,
+                          builder: (_) {
+                            return ClipRRect(
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(30),
+                                topRight: Radius.circular(30),
+                              ),
+                              child: PromptBottomSheet(
+                                returnPrompt: (value) async{
+                                  _controller.clear();
+                                  try {
+                                    await Provider.of<ChatNotifier>(context,
+                                            listen: false)
+                                        .sendMessage(value);
+                                  } catch (e) {
+                                    //e is 401 and return to login screen
+                                    print("e is 401 and return to login screen");
+                                    print(e);
+                                    Navigator.of(context)
+                                        .pushNamedAndRemoveUntil(
+                                      Routes.authenticate,
+                                      (Route<dynamic> route) => false,
+                                    );
+                                  }
+                                },
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      icon: Icon(
+                        FontAwesomeIcons.wandMagicSparkles,
+                        color: TColor.petRock,
+                        size: 20,
+                      ),
+                    ),
+                    _showIconSend
+                        ? IconButton(
+                            padding: const EdgeInsets.all(2),
+                            icon: Icon(
+                              Icons.send,
+                              size: 20,
+                              color: TColor.tamarama,
+                            ),
+                            onPressed: () async {
+                              // Hide keyboard
+                              FocusScope.of(context).unfocus();
+                              try {
+                                await Provider.of<ChatNotifier>(context,
+                                        listen: false)
+                                    .sendMessage(_controller.text);
+                              } catch (e) {
+                                Navigator.of(context).pushNamedAndRemoveUntil(
+                                  Routes.authenticate,
+                                  (Route<dynamic> route) => false,
+                                );
+                              }
 
-            IconButton(
-              icon: const Icon(
-                Icons.arrow_left,
-                size: 20,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                setState(() {
-                  _toggleIcons();
-                });
-              },
-            ),
-          ],
-
-          const SizedBox(width: 4),
-          //TextField to chat
-          Expanded(
-            child: TextField(
-              controller: _controller,
-              style: const TextStyle(color: Colors.black),
-              decoration: const InputDecoration(
-                hintText: 'Enter your question',
-                hintStyle: TextStyle(color: Colors.white),
-                border: InputBorder.none,
-              ),
+                              _controller.clear();
+                            })
+                        : IconButton(
+                            padding: const EdgeInsets.all(2),
+                            icon: Icon(
+                              Icons.send,
+                              size: 20,
+                              color: TColor.petRock,
+                            ),
+                            onPressed: () {}),
+                  ],
+                )
+              ],
             ),
           ),
-          const SizedBox(width: 4),
-          //Icon send
-          if (_showIconSend)
-            IconButton(
-                padding: const EdgeInsets.all(2),
-                icon: const Icon(
-                  Icons.send,
-                  color: Colors.black,
-                ),
-                onPressed: () {
-                  widget.onSendMessage(_controller.text);
-                  _controller.clear();
-                  setState(() {
-                    _showIconSend = false;
-                  });
-                })
-        ],
+        ),
       ),
     );
   }

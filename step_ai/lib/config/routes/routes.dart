@@ -10,6 +10,8 @@ import 'package:step_ai/features/authentication/presentation/pages/authenticate.
 import 'package:step_ai/features/chat/domain/usecase/get_prompt_list_usecase.dart';
 import 'package:step_ai/features/chat/presentation/notifier/chat_bar_notifier.dart';
 import 'package:step_ai/features/chat/presentation/notifier/prompt_list_notifier.dart';
+import 'package:step_ai/features/chat/notifier/assistant_notifier.dart';
+import 'package:step_ai/features/chat/notifier/history_conversation_list_notifier.dart';
 
 import 'package:step_ai/features/chat/presentation/pages/chat_page.dart';
 
@@ -19,6 +21,7 @@ import 'package:step_ai/features/authentication/presentation/pages/forgot_passwo
 import 'package:step_ai/features/plan/presentation/pages/planPricingPage.dart';
 import 'package:step_ai/features/prompt/presentation/pages/prompt_list.dart';
 
+import '../../features/chat/notifier/chat_notifier.dart';
 import '../../features/personal/presentation/pages/personal_page.dart';
 
 class Routes {
@@ -36,6 +39,7 @@ class Routes {
 
   static final routes = <String, WidgetBuilder>{
     personal: (BuildContext context) => PersonalPage(),
+
     chat: (BuildContext context) =>
         Builder(
           builder: (context) {
@@ -43,6 +47,9 @@ class Routes {
               providers: [
                 ChangeNotifierProvider.value(value: getIt<ChatBarNotifier>()),
                 ChangeNotifierProvider.value(value: getIt<PromptListNotifier>()),
+                ChangeNotifierProvider.value(value: getIt<AssistantNotifier>()),
+                ChangeNotifierProvider.value(value: getIt<ChatNotifier>()),
+                ChangeNotifierProvider.value(value: getIt<HistoryConversationListNotifier>()),
               ],
               child: ChatPage(),
             );
