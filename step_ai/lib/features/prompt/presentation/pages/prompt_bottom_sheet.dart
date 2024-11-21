@@ -1,121 +1,112 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:step_ai/features/prompt/presentation/pages/private_prompts.dart';
-import 'package:step_ai/shared/styles/a_bee_zee_style.dart';
+import 'package:step_ai/features/prompt/presentation/pages/public_prompts.dart';
+import 'package:step_ai/features/prompt/presentation/state/form_model/form_provider.dart';
+import 'package:step_ai/features/prompt/presentation/state/public_prompt/public_filter_provider.dart';
+import 'package:step_ai/features/prompt/presentation/widgets/buttons_pair.dart';
+import 'package:step_ai/features/prompt/presentation/widgets/prompt_create_dialog.dart';
 import 'package:step_ai/shared/styles/colors.dart';
-import 'package:step_ai/shared/styles/varela_round_style.dart';
+import 'package:step_ai/shared/styles/vertical_spacing.dart';
+
+import '../state/prompt_view_provider.dart';
 
 class PromptBottomSheet extends StatefulWidget {
-  const PromptBottomSheet({super.key});
+  const PromptBottomSheet({super.key, required this.returnPrompt});
+  final Function(String) returnPrompt;
 
   @override
   State<PromptBottomSheet> createState() => _PromptBottomSheetState();
 }
 
 class _PromptBottomSheetState extends State<PromptBottomSheet> {
-  bool _isPrivate = true;
-
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-        ),
-        child: Scaffold(
-          appBar: AppBar(
-            title: const Text("Prompt Library"),
-            titleTextStyle: Theme.of(context).textTheme.titleLarge,
-            centerTitle: false,
-            actions: [
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.add_outlined,
-                ),
+
+    final promptState = context.watch<PromptViewState>();
+
+    return Container(
+      decoration: BoxDecoration(
+        color: TColor.doctorWhite,
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: Scaffold(
+        appBar: _buildAppBar(context, promptState),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ButtonsPair(
+                isFirstSelected: promptState.isPrivate,
+                firstOnTap: () => promptState.togglePrivate(true),
+                secondOnTap: () => promptState.togglePrivate(false),
+                firstButtonText: 'My prompts',
+                secondButtonText: 'Public prompts',
               ),
-              const CloseButton(),
+              VSpacing.sm,
+              Expanded(
+                child: promptState.isPrivate
+                    ? PrivatePromptsPanel(returnPrompt: widget.returnPrompt,)
+                    : PublicPromptsPanel(returnPrompt:  widget.returnPrompt,),
+              )
             ],
           ),
-          body: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color:
-                        TColor.grahamHair, //Background color for the container
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // My Prompts Button
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _isPrivate = true;
-                          });
-                        },
-                        child: AnimatedContainer(
-                          curve: Curves.decelerate,
-                          duration: const Duration(milliseconds: 300),
-                          decoration: BoxDecoration(
-                            color:
-                                _isPrivate ? TColor.mcFanning : Colors.transparent,
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
-                          child: Text(
-                            'My Prompts',
-                            style: VarelaRoundStyle.basicW600.copyWith(
-                              color: _isPrivate ? TColor.doctorWhite : TColor.squidInk,
-                            ),
-                          ),
-                        ),
-                      ),
+        ),
+      ),
+    );
+  }
 
-                      // Public Prompts Button
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _isPrivate = false;
-                          });
-                        },
-                        child: AnimatedContainer(
-                          curve: Curves.decelerate,
-                          duration: const Duration(milliseconds: 300),
-                          decoration: BoxDecoration(
-                            color:
-                                !_isPrivate ? TColor.mcFanning : Colors.transparent,
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
-                          child: Text(
-                            'Public Prompts',
-                            style: VarelaRoundStyle.basicW600.copyWith(
-                              color: !_isPrivate ? TColor.doctorWhite : TColor.squidInk,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+  AppBar _buildAppBar(BuildContext context, PromptViewState promptState) {
+    return AppBar(
+      automaticallyImplyLeading: false,
+      title: const Text("Prompt Library"),
+      titleTextStyle: Theme.of(context).textTheme.titleLarge,
+      centerTitle: false,
+      actions: [
+        Material(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(30),
+          child: InkWell(
+            onTap: () {
+              showPromptDialog(context: context, promptState: promptState);
+            },
+            splashColor: TColor.daJuice.withOpacity(0.4),
+            highlightColor: Colors.white.withOpacity(0.2),
+            borderRadius: BorderRadius.circular(50),
+            child: Ink(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    TColor.tamarama, // Starting color
+                    TColor.daJuice, // Ending color
+                  ],
+                  begin: Alignment.topLeft, // Gradient starts from top left
+                  end: Alignment.bottomRight, // Gradient ends at bottom right
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Expanded(
-                  child:
-                      _isPrivate ? const PrivatePromptsPanel() : Placeholder(),
-                )
-              ],
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(6.0),
+                child: Icon(Icons.add, color: TColor.doctorWhite),
+              ),
             ),
           ),
         ),
+        const CloseButton(),
+      ],
+    );
+  }
+
+  void showPromptDialog({
+    required BuildContext context,
+    required PromptViewState promptState,
+  }) {
+    showDialog(
+      context: context,
+      builder: (context) => PromptCreateDialog(
+        onCreatePrompt: promptState.onPromptCreate,
       ),
     );
   }
