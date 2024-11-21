@@ -55,7 +55,6 @@ class Routes {
             );
           },
         ),
-    email: (BuildContext context) => EmailPage(),
     planAndPricing: (BuildContext context) => PlanPricingPage(),
 
     // signIn: (BuildContext context) => SignInPage(),

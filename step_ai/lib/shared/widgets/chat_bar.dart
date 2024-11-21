@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/features/chat/presentation/notifier/chat_bar_notifier.dart';
@@ -8,11 +10,14 @@ import 'package:step_ai/core/di/service_locator.dart';
 import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
 import 'package:step_ai/shared/widgets/popup_attachment_options.dart';
 
+import '../../config/enum/task_status.dart';
+import '../../features/chat/presentation/notifier/prompt_list_notifier.dart';
 import '../../features/prompt/presentation/pages/prompt_bottom_sheet.dart';
 import '../styles/colors.dart';
 
 class ChatBar extends StatefulWidget {
-  ChatBar({super.key});
+  const ChatBar({super.key, required this.onSendMessage});
+  final Function(String) onSendMessage;
 
   @override
   _ChatBarState createState() => _ChatBarState();
@@ -22,11 +27,15 @@ class _ChatBarState extends State<ChatBar> {
   bool _showIconSend = false;
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
+  late ChatBarNotifier _chatBarNotifier;
+  late PromptListNotifier _listNotifier;
+  Timer? _debounce;
 
   @override
   void initState() {
     super.initState();
     _controller.addListener(onTextChanged);
+
   }
 
   @override
@@ -34,6 +43,7 @@ class _ChatBarState extends State<ChatBar> {
     _focusNode.dispose();
     _controller.removeListener(onTextChanged);
     _controller.dispose();
+    _debounce?.cancel();
     super.dispose();
   }
 
@@ -60,19 +70,30 @@ class _ChatBarState extends State<ChatBar> {
           _showIconSend = true;
         });
       }
-      setState(() {
-        _showIconSend = true;
-      });
+
 
       if (_controller.text.startsWith('/')){
 
+        if (_debounce?.isActive ?? false){
+          _debounce?.cancel();
+        }
+        _debounce = Timer(const Duration(milliseconds: 800), () async{
+          _chatBarNotifier.setShowOverlay(true);
+          TaskStatus status = await _listNotifier.getPrompts(_controller.text);
+          if (status == TaskStatus.UNAUTHORIZED) {
+            _chatBarNotifier.setLogout(true);
+          }
+        });
       }
-    } else{
-      setState(() {
-        _showIconSend = false;
-      });
+      else {
+        _chatBarNotifier.setShowOverlay(false);
+      }
     }
-  }
+    else {
+      _chatBarNotifier.setShowIconSend(false);
+      _chatBarNotifier.setShowOverlay(false);
+    }
+}
 
   @override
   Widget build(BuildContext context) {

@@ -35,7 +35,6 @@ class RepositoryModule {
       SlashPromptRepositoryImpl(
         getIt<SecureStorageHelper>(),
       ) as SlashPromptRepository);
-        LogoutRepositoryImpl(getIt<SecureStorageHelper>()) as LogoutRepository);
     //Chat:---------------------------------------------------------------------
     getIt.registerSingleton<ConversationRepository>(
         ConversationRepositoryImpl(getIt<ApiClientChat>())
