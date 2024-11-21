@@ -40,7 +40,7 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
               _scrollController.position.maxScrollExtent &&
           Provider.of<HistoryConversationListNotifier>(context, listen: false)
               .hasMore) {
-        print("Scroll to bottom");
+        //print("Scroll to bottom");
         Provider.of<HistoryConversationListNotifier>(context, listen: false)
             .getHistoryConversationList();
       }

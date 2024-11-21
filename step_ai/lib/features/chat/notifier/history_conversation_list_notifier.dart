@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_history_conversation_list_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_messages_by_conversation_id_usecase.dart';
@@ -35,7 +36,12 @@ class HistoryConversationListNotifier extends ChangeNotifier {
       _historyConversationList = [];
       _limitConversation = 0;
       _hasMore = false;
-      print(e);
+      if (e is DioException) {
+        print(
+            "Error in getHistoryConversationList in history conversation list notifier with status code: ${e.response?.statusCode}");
+      } else {
+        print("Error in getHistoryConversationList in history conversation list notifier");
+      }
     } finally {
       notifyListeners();
     }
@@ -55,7 +61,13 @@ class HistoryConversationListNotifier extends ChangeNotifier {
             ),
           );
     } catch (e) {
-      print(e);
+      if (e is DioException) {
+        print(
+            "Error in getNewestConversationWhenAfterSendMessage in history conversation list notifier with status code: ${e.response?.statusCode}");
+      } else {
+        print(
+            "Error in getNewestConversationWhenAfterSendMessage in history conversation list notifier with  error: $e");
+      }
     } finally {
       notifyListeners();
     }

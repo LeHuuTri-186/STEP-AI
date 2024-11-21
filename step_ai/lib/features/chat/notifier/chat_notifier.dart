@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:step_ai/features/chat/domain/entity/message.dart';
 import 'package:step_ai/features/chat/domain/params/send_message_param.dart';
@@ -42,7 +43,13 @@ class ChatNotifier with ChangeNotifier {
             content: element.answer));
       });
     } catch (e) {
-      print(e);
+      if (e is DioException) {
+        print(
+            "Error in getMessagesByConversationId in chat notifier with status code: ${e.response?.statusCode}");
+      } else {
+        print(
+            "Error in getMessagesByConversationId in chat notifier with  error: $e");
+      }
     } finally {
       _isLoadingDetailedConversation = false;
       notifyListeners();
@@ -62,7 +69,12 @@ class ChatNotifier with ChangeNotifier {
       final usageTokenModel = await _getUsageTokenUsecase.call(params: null);
       numberRestToken = usageTokenModel.availableTokens;
     } catch (e) {
-      print(e);
+      if (e is DioException) {
+        print(
+            "Error in getNumberRestToken in chat notifier with status code: ${e.response?.statusCode}");
+      } else {
+        print("Error in getNumberRestToken in chat notifier with  error: $e");
+      }
     }
   }
 
@@ -118,7 +130,21 @@ class ChatNotifier with ChangeNotifier {
         }
       }
     } catch (error) {
-      updateLastMessage("Server not response. Try again!");
+      if (error is DioException) {
+        print(
+            "Error in sendMessage in chat notifier with status code: ${error.response?.statusCode}");
+        if (error.response?.statusCode == 401) {
+          this._historyMessages.clear();
+          this._idCurrentConversation=null;
+          this._numberRestToken = 0;
+          this._isLoadingDetailedConversation = false;
+          throw 401;
+        } else {
+          updateLastMessage("Server not response. Try again!");
+        }
+      } else {
+        print("Error in sendMessage in chat notifier with  error: $error");
+      }
     } finally {
       notifyListeners();
     }
