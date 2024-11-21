@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="d36423b6-326c-41d1-9fba-ad3516026006" name="Changes" comment="Refactor to Feature-based clean Architecture">
+      <change afterPath="$PROJECT_DIR$/step_ai/lib/config/theme/app_theme.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/step_ai/lib/config/theme/bottom_nav_theme.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/step_ai/lib/config/theme/light_theme.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/step_ai/lib/features/prompt/presentation/pages/private_prompts.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/step_ai/lib/features/prompt/presentation/pages/prompt_bottom_sheet.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/step_ai/lib/features/prompt/presentation/pages/public_prompts.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/step_ai/lib/shared/styles/a_bee_zee_style.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/step_ai/lib/shared/styles/colors.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/step_ai/lib/shared/styles/horizontal_spacing.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/step_ai/lib/shared/styles/varela_round_style.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/step_ai/lib/shared/styles/vertical_spacing.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/step_ai/lib/shared/widgets/search_bar.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/lib/config/app_theme.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/config/theme/app_bar_theme.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/lib/config/routes/routes.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/config/routes/routes.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/step_ai/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/pubspec.yaml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Dart File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="basic-feature" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;LeHuuTri-186&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/LeHuuTri-186/STEP-AI.git",
+    "accountId": "62d97789-2552-40bd-9fca-043bb35448e7"
+  },
+  "recentNewPullRequestHead": {
+    "server": {
+      "useHttp": false,
+      "host": "github.com",
+      "port": null,
+      "suffix": null
+    },
+    "owner": "LeHuuTri-186",
+    "repository": "STEP-AI"
+  }
+}]]></component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="2n8xYLYUlMeQFNmQv51UvaX1rqL" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Flutter.main.dart.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "com.google.services.firebase.aqiPopupShown": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "basic-feature-prompt-feature",
+    "io.flutter.reload.alreadyRun": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/lehuutri/AndroidStudioProjects/STEP-AI/step_ai/lib/config/theme",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "dart.settings",
+    "show.migrate.to.gradle.popup": "false"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/step_ai/lib/config/theme" />
+      <recent name="$PROJECT_DIR$/step_ai/lib/features/personal" />
+      <recent name="$PROJECT_DIR$/step_ai/lib/features/prompt" />
+      <recent name="$PROJECT_DIR$/step_ai/lib/features/plan" />
+      <recent name="$PROJECT_DIR$/step_ai/lib/features/knowledge_base" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/step_ai/lib/config/routes" />
+      <recent name="$PROJECT_DIR$/step_ai/lib/shared/widgets" />
+      <recent name="$PROJECT_DIR$/step_ai/lib/core/utils" />
+      <recent name="$PROJECT_DIR$/step_ai/lib/features/authentication/presentation/pages" />
+      <recent name="$PROJECT_DIR$/step_ai/lib/features/prompt/presentation/pages" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="main.dart" type="FlutterRunConfigurationType" factoryName="Flutter">
+      <option name="filePath" value="$PROJECT_DIR$/step_ai/lib/main.dart" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SwiftWorkspaceSettings">
+    <option name="detectedToolchain" value="true" />
+    <option name="toolchainPathValue" value="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d36423b6-326c-41d1-9fba-ad3516026006" name="Changes" comment="" />
+      <created>1728368564200</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1728368564200</updated>
+    </task>
+    <task id="LOCAL-00001" summary="Test ui for prompt library">
+      <option name="closed" value="true" />
+      <created>1729702617410</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1729702617410</updated>
+    </task>
+    <task id="LOCAL-00002" summary="restructure code merge pages and create basic navigation">
+      <option name="closed" value="true" />
+      <created>1729805162862</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1729805162862</updated>
+    </task>
+    <task id="LOCAL-00003" summary="restructure code merge pages and create basic navigation">
+      <option name="closed" value="true" />
+      <created>1729805294251</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1729805294251</updated>
+    </task>
+    <task id="LOCAL-00004" summary="merge flow and UI pages">
+      <option name="closed" value="true" />
+      <created>1729872623228</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1729872623228</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Merge remote-tracking branch 'origin/nths_lht' into nths_lht">
+      <option name="closed" value="true" />
+      <created>1729873318561</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1729873318561</updated>
+    </task>
+    <task id="LOCAL-00006" summary="create new branch">
+      <option name="closed" value="true" />
+      <created>1731684301187</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1731684301187</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Refactor to Feature-based clean Architecture">
+      <option name="closed" value="true" />
+      <created>1731751014909</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1731751014909</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="Test ui for prompt library" />
+    <MESSAGE value="restructure code merge pages and create basic navigation" />
+    <MESSAGE value="merge flow and UI pages" />
+    <MESSAGE value="update demo Video" />
+    <MESSAGE value="Merge remote-tracking branch 'origin/nths_lht' into nths_lht" />
+    <MESSAGE value="create new branch" />
+    <MESSAGE value="Refactor to Feature-based clean Architecture" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor to Feature-based clean Architecture" />
+  </component>
+</project>
