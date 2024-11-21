@@ -9,50 +9,55 @@ import 'package:step_ai/shared/styles/colors.dart';
 
 class CodeBlockHighlightBuilder extends MarkdownElementBuilder {
   final bool isAi;
+
   CodeBlockHighlightBuilder({required this.isAi});
 
   @override
   Widget? visitElementAfter(md.Element element, TextStyle? preferredStyle) {
-    // Extract code content as a string
-    final code = element.textContent;
     final isBlockCode = element.tag == 'code' && element.attributes['class'] != null;
+    final code = element.textContent;
+
+    // Extract language from the class attribute, e.g., "language-python"
+    final language = isBlockCode
+        ? (element.attributes['class']?.replaceFirst('language-', '') ?? 'plaintext')
+        : null;
 
     final customTheme = Map<String, TextStyle>.from(atelierForestDarkTheme)
       ..addAll({
         'root': TextStyle(
-          backgroundColor: Colors.transparent, // Remove background color
+          backgroundColor: Colors.transparent,
           color: TColor.squidInk, // Default text color
         ),
       });
 
-    if (isBlockCode) {
-      if (isAi) {
-        // AI-styled code block (with copy button and special styles)
-        return Stack(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: TColor.northEastSnow.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: HighlightView(
-                    code.replaceAll(RegExp(r'[\r\n]+$'), ''),
-                    language: 'python',
-                    theme: customTheme,
-                    textStyle: GoogleFonts.jetBrainsMono(
-                      fontSize: 15.0,
-                    ),
-                  ),
-                ),
-              ),
+    return Container(
+      margin: isBlockCode
+          ? const EdgeInsets.symmetric(vertical: 4.0) // For block code
+          : const EdgeInsets.symmetric(horizontal: 4.0), // For inline code
+      padding: isBlockCode
+          ? const EdgeInsets.all(8.0)
+          : const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
+      decoration: BoxDecoration(
+        color: isBlockCode
+            ? TColor.northEastSnow.withOpacity(0.2) // Background for block code
+            : TColor.northEastSnow.withOpacity(0.5), // Background for inline code
+        borderRadius: BorderRadius.circular(isBlockCode ? 8.0 : 4.0),
+      ),
+      child: isBlockCode
+          ? Stack(
+        children: [
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: HighlightView(
+              code.replaceAll(RegExp(r'[\r\n]+$'), ''), // Trim trailing lines
+              language: language, // Use extracted language
+              theme: customTheme,
+              textStyle: GoogleFonts.jetBrainsMono(fontSize: 15.0),
             ),
+          ),
+          if (isAi)
             Positioned(
-              top: 8.0,
-              right: 8.0,
+              right: 0.0,
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
@@ -68,48 +73,18 @@ class CodeBlockHighlightBuilder extends MarkdownElementBuilder {
                 ),
               ),
             ),
-          ],
-        );
-      } else {
-        // Plain code block for non-AI (scrollable, without syntax highlighting)
-        return Container(
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: HighlightView(
-                code,
-                language: 'python',
-                theme: customTheme,
-                textStyle: GoogleFonts.jetBrainsMono(
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-          ),
-        );
-      }
-    } else {
-      // Inline code (without copy button)
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
-        decoration: BoxDecoration(
-          color: TColor.northEastSnow.withOpacity(0.5),
-          borderRadius: BorderRadius.circular(4.0),
+        ],
+      )
+          : Text(
+        code.replaceAll('\n', ' '), // Prevent unintended line breaks
+        style: GoogleFonts.jetBrainsMono(
+          fontSize: 14.0,
+          fontWeight: FontWeight.w500,
+          color: TColor.squidInk,
         ),
-        child: Text(
-          code,
-          style: GoogleFonts.jetBrainsMono(
-            fontSize: 14.0,
-            fontWeight: FontWeight.w500,
-            color: TColor.squidInk,
-          ),
-        ),
-      );
-    }
+        softWrap: true,
+        overflow: TextOverflow.ellipsis,
+      ),
+    );
   }
 }

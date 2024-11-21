@@ -100,6 +100,7 @@ class _ChatBarState extends State<ChatBar> {
                       right: 10.0,
                     ),
                     child: TextField(
+                      autocorrect: false,
                       cursorColor: TColor.squidInk,
                       controller: _controller,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -142,14 +143,10 @@ class _ChatBarState extends State<ChatBar> {
                               child: PromptBottomSheet(
                                 returnPrompt: (value) async{
                                   _controller.clear();
-                                  _controller.text = value;
-                                  _controller.selection =
-                                      TextSelection.fromPosition(TextPosition(
-                                          offset: _controller.text.length));
                                   try {
                                     await Provider.of<ChatNotifier>(context,
                                             listen: false)
-                                        .sendMessage(_controller.text);
+                                        .sendMessage(value);
                                   } catch (e) {
                                     //e is 401 and return to login screen
                                     print("e is 401 and return to login screen");
@@ -160,11 +157,6 @@ class _ChatBarState extends State<ChatBar> {
                                       (Route<dynamic> route) => false,
                                     );
                                   }
-
-                                  _controller.clear();
-                                  setState(() {
-                                    _showIconSend = true;
-                                  });
                                 },
                               ),
                             );

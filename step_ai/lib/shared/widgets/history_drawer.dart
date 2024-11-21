@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/config/routes/routes.dart';
 import 'package:step_ai/core/di/service_locator.dart';
@@ -61,267 +62,302 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
   Widget build(BuildContext context) {
     final historyConversationListNotifier =
         Provider.of<HistoryConversationListNotifier>(context);
-    return Drawer(
-      backgroundColor: TColor.doctorWhite,
-        child: Column(children: [
-      //Logo and App Name
-      DrawerHeader(
-        decoration: BoxDecoration(
-          color: TColor.snorlax,
+    return SafeArea(
+      child: Drawer(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topRight: Radius.circular(10), bottomRight: Radius.circular(10),),
         ),
+        backgroundColor: TColor.northEastSnow.withOpacity(0.5),
         child: Column(
           children: [
-            const Row(
-              children: [
-                Icon(
-                  Icons.deblur,
-                  color: Colors.white,
-                  size: 50,
+            //Logo and App Name
+            Container(
+              margin: const EdgeInsets.only(right: 10, top: 10),
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                boxShadow: [BoxShadow(
+                    offset: const Offset(-3, 3),
+                    color: TColor.slate.withOpacity(0.5),
+                    blurRadius: 3.0)],
+                border: const Border(
+                  bottom: BorderSide.none, // Remove the line
                 ),
-                SizedBox(width: 10),
-                AppNameWidget(),
-              ],
-            ),
-            const SizedBox(
-              height: 25,
-            ),
-            // Search Bar
-            CustomSearchBar(onChanged: (_) {}),
-          ],
-        ),
-      ),
-
-      // Expanded ListView for Bots and Histories
-      Expanded(
-        child: SingleChildScrollView(
-          controller: _scrollController,
-          child: Column(
-            children: [
-              Column(
+                borderRadius: const BorderRadius.only(
+                    topRight: Radius.circular(10),
+                    bottomRight: Radius.circular(10)),
+                gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      TColor.tamarama,
+                      TColor.daJuice,
+                    ],
+                    stops: const [
+                      0.2,
+                      1,
+                    ],
+                    tileMode: TileMode.mirror),
+              ),
+              child: Column(
                 children: [
-                  VSpacing.md,
-                  Row(
-                    children: [
-                      Expanded(
-                          child: TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const PersonalPage()));
-                        },
-                        child: Text("Personal",
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium
-                                ?.copyWith(
-                                    fontSize: 16, fontWeight: FontWeight.w600)),
-                      )),
-                    ],
-                  ),
+                  const Center(child: AppNameWidget()),
                   VSpacing.sm,
-                  Row(
-                    children: [
-                      Expanded(
-                          child: TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const PlanPricingPage()));
-                        },
-                        child: Text(
-                          "Plan pricing",
-                          style: Theme.of(context)
-                              .textTheme
-                              .displayMedium
-                              ?.copyWith(
-                                  fontSize: 16, fontWeight: FontWeight.w600),
-                        ),
-                      )),
-                    ],
-                  ),
-                  VSpacing.sm,
+                  // Search Bar
+                  CustomSearchBar(onChanged: (_) {}),
                 ],
               ),
-              // List of BOTs
-              ExpansionTile(
-                expandedCrossAxisAlignment: CrossAxisAlignment.center,
-                expandedAlignment: Alignment.center,
-                shape: const RoundedRectangleBorder(side: BorderSide.none),
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      FontAwesomeIcons.robot,
-                      color: Colors.black,
+            ),
+
+            // Expanded List
+            // View for Bots and Histories
+            Container(
+              margin: const EdgeInsets.only(top: 10, bottom: 10, right: 10),
+              decoration: BoxDecoration(
+                color: TColor.doctorWhite,
+                boxShadow: [BoxShadow(
+                offset: const Offset(-3, 3),
+                color: TColor.slate.withOpacity(0.5),
+                blurRadius: 3.0)],
+                border: const Border(
+                  bottom: BorderSide.none, // Remove the line
+                ),
+                borderRadius: const BorderRadius.only(
+                  topRight: Radius.circular(10),
+                  bottomRight: Radius.circular(10),
+                ),
+              ),
+              child: Column(
+                children: [
+                  Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                              child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              borderRadius: const BorderRadius.only(
+                                  topRight: Radius.circular(10)),
+                              splashColor: TColor.petRock.withOpacity(0.3),
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const PersonalPage()));
+                              },
+                              child: Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text("Personal",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displayMedium
+                                          ?.copyWith(
+                                        color: TColor.petRock,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600),),
+                                ),
+                              ),
+                            ),
+                          )),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                borderRadius: const BorderRadius.only(
+                                    bottomRight: Radius.circular(10)),
+                                splashColor: TColor.petRock.withOpacity(0.3),
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const PlanPricingPage()));
+                                },
+                                child: Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      "Plan pricing",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displayMedium
+                                          ?.copyWith(
+                                          color: TColor.petRock,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          VSpacing.sm,
+                        ],
+                      ),
+                    ],
+                  ),
+                  // List of BOTs
+                ],
+              ),
+            ),
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                    color: TColor.doctorWhite,
+                    boxShadow: [BoxShadow(
+                        offset: const Offset(-3, 3),
+                        color: TColor.slate.withOpacity(0.5),
+                        blurRadius: 3.0)],
+                    border: const Border(
+                      bottom: BorderSide.none, // Remove the line
                     ),
-                    HSpacing.md,
+                    borderRadius: const BorderRadius.only(
+                        topRight: Radius.circular(10),
+                        bottomRight: Radius.circular(10))),
+                padding: const EdgeInsets.only(right: 10, top: 10, bottom: 10),
+                margin: const EdgeInsets.only(bottom: 10, right: 10),
+                child: Column(
+                  children: [
                     Text(
-                      "BOTs",
-                      style: Theme.of(context)
-                          .textTheme
-                          .displayMedium
-                          ?.copyWith(fontSize: 16, fontWeight: FontWeight.w600),
+                      'HISTORY',
+                      style: GoogleFonts.aBeeZee(
+                          color: TColor.royalBlue,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 25),
+                    ),
+                    Expanded(
+                      child: ListView.separated(
+                        padding: EdgeInsets.zero,
+                        shrinkWrap: true,
+                        itemCount: historyConversationListNotifier
+                                .historyConversationList.length +
+                            (historyConversationListNotifier.hasMore ? 1 : 0),
+                        itemBuilder: (context, index) {
+                          if (index ==
+                                  historyConversationListNotifier
+                                      .historyConversationList.length &&
+                              historyConversationListNotifier.hasMore) {
+                            return Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(3.0),
+                                child: LoadingAnimationWidget.twistingDots(
+                                  size: 50,
+                                  leftDotColor: TColor.tamarama,
+                                  rightDotColor: TColor.daJuice,
+                                ),
+                              ),
+                            );
+                          }
+                          return ListTile(
+                            leading: Icon(Icons.access_time, color: TColor.petRock.withOpacity(0.5),),
+                              title: Text(
+                                  "${historyConversationListNotifier.historyConversationList[index].title}", style:
+                                Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  color: TColor.petRock.withOpacity(0.5),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w800
+                                ),),
+                              onTap: () async {
+                                if (Provider.of<ChatNotifier>(context,
+                                            listen: false)
+                                        .idCurrentConversation ==
+                                    historyConversationListNotifier
+                                        .historyConversationList[index].id) {
+                                  Navigator.pop(context);
+                                  return;
+                                }
+                      
+                                await Provider.of<ChatNotifier>(context,
+                                        listen: false)
+                                    .resetChatNotifier();
+                                //set id current conversation
+                                Provider.of<ChatNotifier>(context, listen: false)
+                                        .idCurrentConversation =
+                                    historyConversationListNotifier
+                                        .historyConversationList[index].id;
+                      
+                                Navigator.of(context).pushNamedAndRemoveUntil(
+                                  Routes.chat,
+                                  (Route<dynamic> route) => false,
+                                );
+                              });
+                        }, separatorBuilder: (BuildContext context, int index) {
+                          return const Padding(
+                            padding: EdgeInsets.only(left: 10.0),
+                            child: Divider(),
+                          );
+                      },
+                      ),
                     ),
                   ],
                 ),
-                children: <Widget>[
-                  ListTile(
-                      title: Text('Math BOT',
-                          style: GoogleFonts.jetBrainsMono(
-                            color: Colors.black,
-                          )),
-                      onTap: () {
-                        Navigator.pop(context);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const ChatPage(
-                                    chatName: "Math BOT",
-                                  )),
-                        );
-                      }),
-                  ListTile(
-                      title: Text('English BOT',
-                          style: GoogleFonts.jetBrainsMono(
-                            color: Colors.black,
-                          )),
-                      onTap: () {
-                        Navigator.pop(context);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const ChatPage(
-                                    chatName: "English BOT",
-                                  )),
-                        );
-                      }),
-                  ListTile(
-                      title: Text('Email BOT',
-                          style: GoogleFonts.jetBrainsMono(
-                            color: Colors.black,
-                          )),
-                      onTap: () {
-                        // Navigator.pop(context);
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //       builder: (context) => const EmailPage()),
-                        // );
-                      }),
-                ],
-              ),
-
-              const SizedBox(
-                height: 10,
-              ),
-              const Padding(
-                padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                child: Divider(),
-              ),
-              // Histories
-              Text(
-                'Histories',
-                style: GoogleFonts.jetBrainsMono(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 18),
-              ),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: historyConversationListNotifier
-                        .historyConversationList.length +
-                    (historyConversationListNotifier.hasMore ? 1 : 0),
-                itemBuilder: (context, index) {
-                  if (index ==
-                          historyConversationListNotifier
-                              .historyConversationList.length &&
-                      historyConversationListNotifier.hasMore) {
-                    return const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(3.0),
-                        child: CircularProgressIndicator(),
-                      ),
-                    );
-                  }
-                  return ListTile(
-                      title: Text(
-                          "${historyConversationListNotifier.historyConversationList[index].title}"),
-                      onTap: () async {
-                        if (Provider.of<ChatNotifier>(context, listen: false)
-                                .idCurrentConversation ==
-                            historyConversationListNotifier
-                                .historyConversationList[index].id) {
-                          Navigator.pop(context);
-                          return;
-                        }
-
-                        await Provider.of<ChatNotifier>(context, listen: false)
-                            .resetChatNotifier();
-                        //set id current conversation
-                        Provider.of<ChatNotifier>(context, listen: false)
-                                .idCurrentConversation =
-                            historyConversationListNotifier
-                                .historyConversationList[index].id;
-
-                        Navigator.of(context).pushNamedAndRemoveUntil(
-                          Routes.chat,
-                          (Route<dynamic> route) => false,
-                        );
-                      });
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-      Row(
-        children: [
-          Expanded(
-              child: TextButton(
-            onPressed: () {
-              try {
-                _logoutUseCase.call(params: null);
-                Navigator.of(context).pushReplacementNamed(Routes.authenticate);
-              } catch (e) {
-                print(e);
-              }
-            },
-            style: ButtonStyle(
-                shape: WidgetStateProperty.resolveWith(
-                    (states) => ContinuousRectangleBorder()),
-                overlayColor: WidgetStateProperty.resolveWith(
-                    (states) => Colors.blue.withOpacity(0.5)),
-                surfaceTintColor: WidgetStatePropertyAll(Colors.blueAccent)),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.logout_outlined,
-                    color: Colors.black,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    "Log out",
-                    style: GoogleFonts.jetBrainsMono(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 15),
-                  ),
-                ],
               ),
             ),
-          )),
-        ],
-      )
-    ]));
+            Container(
+              decoration: BoxDecoration(
+                  color: TColor.doctorWhite,
+                  boxShadow: [BoxShadow(
+                      offset: const Offset(-3, 3),
+                      color: TColor.slate.withOpacity(0.5),
+                      blurRadius: 3.0)],
+                  border: const Border(
+                    bottom: BorderSide.none, // Remove the line
+                  ),
+                  borderRadius: const BorderRadius.only(
+                      topRight: Radius.circular(10),
+                      bottomRight: Radius.circular(10))),
+              padding: const EdgeInsets.only(right: 10, top: 10, bottom: 10),
+              margin: const EdgeInsets.only(bottom: 10, right: 10),
+              child: Row(
+                children: [
+                  Expanded(
+                      child: InkWell(
+                    onTap: () {
+                      try {
+                        _logoutUseCase.call(params: null);
+                        Navigator.of(context)
+                            .pushReplacementNamed(Routes.authenticate);
+                      } catch (e) {
+                        print(e);
+                      }
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.logout_outlined,
+                            color: TColor.poppySurprise,
+                            size: 20,
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            "Log out",
+                            style: GoogleFonts.aBeeZee(
+                                color: TColor.poppySurprise,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 18),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }
