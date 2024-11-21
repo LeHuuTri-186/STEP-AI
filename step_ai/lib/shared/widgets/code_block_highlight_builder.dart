@@ -15,11 +15,8 @@ class CodeBlockHighlightBuilder extends MarkdownElementBuilder {
   Widget? visitElementAfter(md.Element element, TextStyle? preferredStyle) {
     // Extract code content as a string
     final code = element.textContent;
-
-    // Check if the code is a block or inline
     final isBlockCode = element.tag == 'code' && element.attributes['class'] != null;
 
-    // Define custom theme for AI-styled code blocks
     final customTheme = Map<String, TextStyle>.from(atelierForestDarkTheme)
       ..addAll({
         'root': TextStyle(
@@ -39,15 +36,15 @@ class CodeBlockHighlightBuilder extends MarkdownElementBuilder {
                 borderRadius: BorderRadius.circular(8.0),
               ),
               child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal, // Allow horizontal scrolling
+                scrollDirection: Axis.horizontal,
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: HighlightView(
                     code.replaceAll(RegExp(r'[\r\n]+$'), ''),
                     language: 'python',
-                    theme: customTheme, // Use the modified theme
+                    theme: customTheme,
                     textStyle: GoogleFonts.jetBrainsMono(
-                      fontSize: 15.0, // Consistent font
+                      fontSize: 15.0,
                     ),
                   ),
                 ),
@@ -61,14 +58,10 @@ class CodeBlockHighlightBuilder extends MarkdownElementBuilder {
                 child: InkWell(
                   borderRadius: BorderRadius.circular(8),
                   splashColor: TColor.petRock.withOpacity(0.5),
-                  child: Ink(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Padding(
+                  child: Padding(
                     padding: const EdgeInsets.all(3.0),
                     child: Icon(Icons.copy, size: 16.0, color: TColor.squidInk),
-                  )),
+                  ),
                   onTap: () {
                     Clipboard.setData(ClipboardData(text: code));
                   },
@@ -78,7 +71,7 @@ class CodeBlockHighlightBuilder extends MarkdownElementBuilder {
           ],
         );
       } else {
-        // Standard code block (only scrolling, no styles)
+        // Plain code block for non-AI (scrollable, without syntax highlighting)
         return Container(
           decoration: BoxDecoration(
             color: Colors.transparent,
@@ -88,11 +81,12 @@ class CodeBlockHighlightBuilder extends MarkdownElementBuilder {
             scrollDirection: Axis.horizontal,
             child: Padding(
               padding: const EdgeInsets.all(10.0),
-              child: Text(
+              child: HighlightView(
                 code,
-                style: GoogleFonts.jetBrainsMono(
+                language: 'python',
+                theme: customTheme,
+                textStyle: GoogleFonts.jetBrainsMono(
                   fontSize: 15.0,
-                  color: Colors.black, // Standard text color
                 ),
               ),
             ),
@@ -100,9 +94,8 @@ class CodeBlockHighlightBuilder extends MarkdownElementBuilder {
         );
       }
     } else {
-      // Inline code (render without copy button)
-      if (isAi) {
-        return Container(
+      // Inline code (without copy button)
+      return Container(
         padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
         decoration: BoxDecoration(
           color: TColor.northEastSnow.withOpacity(0.5),
@@ -113,20 +106,10 @@ class CodeBlockHighlightBuilder extends MarkdownElementBuilder {
           style: GoogleFonts.jetBrainsMono(
             fontSize: 14.0,
             fontWeight: FontWeight.w500,
-            color: TColor.squidInk, // Adjust the text color as needed
+            color: TColor.squidInk,
           ),
         ),
       );
-      } else {
-        return Text(
-          code,
-          style: GoogleFonts.jetBrainsMono(
-            fontSize: 14.0,
-            fontWeight: FontWeight.w500,
-            color: TColor.squidInk, // Adjust the text color as needed
-          ),
-        );
-      }
     }
   }
 }

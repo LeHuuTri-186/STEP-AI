@@ -96,7 +96,10 @@ class _ChatPageState extends State<ChatPage> {
                     controller: _scrollController,
                     itemCount: messages.length,
                     itemBuilder: (context, index) {
-                      return MessageTile(currentMessage: messages[index]);
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4.0),
+                        child: MessageTile(currentMessage: messages[index]),
+                      );
                     },
                   ),
                 ),
