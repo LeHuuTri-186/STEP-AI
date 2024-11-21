@@ -6,6 +6,8 @@ import 'package:step_ai/features/chat/domain/usecase/send_message_usecase.dart';
 import 'package:step_ai/features/chat/notifier/assistant_notifier.dart';
 import 'package:step_ai/features/chat/notifier/history_conversation_list_notifier.dart';
 
+import '../domain/usecase/get_messages_by_conversation_id_usecase.dart';
+
 class ChatNotifier with ChangeNotifier {
   //number of rest token
   int _numberRestToken = 0;
@@ -13,6 +15,38 @@ class ChatNotifier with ChangeNotifier {
   set numberRestToken(int numberRestToken) {
     _numberRestToken = numberRestToken;
     notifyListeners();
+  }
+
+  //isLoading detailed conversation
+  GetMessagesByConversationIdUsecase _getMessagesByConversationIdUsecase;
+  bool _isLoadingDetailedConversation = false;
+  bool get isLoadingDetailedConversation => _isLoadingDetailedConversation;
+
+  Future<void> getMessagesByConversationId() async {
+    _isLoadingDetailedConversation = true;
+    notifyListeners();
+    try {
+      print("Get messages by conversation id in chat notifier");
+      final detailMessagesModel = await _getMessagesByConversationIdUsecase
+          .call(params: _idCurrentConversation!);
+      clearHistoryMessages();
+      detailMessagesModel.items.forEach((element) {
+        addMessage(Message(
+            assistant: _assistantNotifier.currentAssistant,
+            role: "user",
+            content: element.query));
+        //Add message model to history with content null
+        addMessage(Message(
+            assistant: _assistantNotifier.currentAssistant,
+            role: "model",
+            content: element.answer));
+      });
+    } catch (e) {
+      print(e);
+    } finally {
+      _isLoadingDetailedConversation = false;
+      notifyListeners();
+    }
   }
 
   //current conversation id
@@ -43,8 +77,12 @@ class ChatNotifier with ChangeNotifier {
   //usecase -----------------------------
   SendMessageUsecase _sendMessageUsecase;
   GetUsageTokenUsecase _getUsageTokenUsecase;
-  ChatNotifier(this._sendMessageUsecase, this._assistantNotifier,
-      this._historyConversationListNotifier, this._getUsageTokenUsecase);
+  ChatNotifier(
+      this._sendMessageUsecase,
+      this._assistantNotifier,
+      this._historyConversationListNotifier,
+      this._getUsageTokenUsecase,
+      this._getMessagesByConversationIdUsecase);
 
   Future<void> sendMessage(String contentSend) async {
     //Add message send to history
@@ -72,6 +110,12 @@ class ChatNotifier with ChangeNotifier {
         _idCurrentConversation = messageModel.conversationId;
         await _historyConversationListNotifier
             .getNewestConversationWhenAfterSendMessage();
+      } else {
+        //update historyConversationList when send message at old conversation
+        if (_idCurrentConversation !=
+            _historyConversationListNotifier.historyConversationList.first.id) {
+          await _historyConversationListNotifier.getHistoryConversationList();
+        }
       }
     } catch (error) {
       updateLastMessage("Server not response. Try again!");
@@ -94,6 +138,7 @@ class ChatNotifier with ChangeNotifier {
 
   Future<void> resetChatNotifier() async {
     this._idCurrentConversation = null;
+    _isLoadingDetailedConversation = false;
     clearHistoryMessages();
     notifyListeners();
   }

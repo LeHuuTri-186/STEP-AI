@@ -322,8 +322,6 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
                             historyConversationListNotifier
                                 .historyConversationList[index].id;
 
-                        //update detail conversation in here
-
                         Navigator.of(context).pushNamedAndRemoveUntil(
                           Routes.chat,
                           (Route<dynamic> route) => false,

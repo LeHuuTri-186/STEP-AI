@@ -14,10 +14,8 @@ class HistoryConversationListNotifier extends ChangeNotifier {
   List<Conversation> get historyConversationList => _historyConversationList;
 
   //usecase -----------------------------
-  GetMessagesByConversationIdUsecase _getMessagesByConversationIdUsecase;
   GetHistoryConversationListUsecase _getHistoryConversationListUsecase;
-  HistoryConversationListNotifier(this._getMessagesByConversationIdUsecase,
-      this._getHistoryConversationListUsecase);
+  HistoryConversationListNotifier(this._getHistoryConversationListUsecase);
 
   Future<void> getHistoryConversationList() async {
     try {
@@ -62,11 +60,4 @@ class HistoryConversationListNotifier extends ChangeNotifier {
       notifyListeners();
     }
   }
-
-  // //conversation id
-  // String? _idCurrentConversation;
-  // String? get idCurrentConversation => _idCurrentConversation;
-  // set idCurrentConversation(String? setIdConversation) {
-  //   _idCurrentConversation = setIdConversation;
-  // }
 }

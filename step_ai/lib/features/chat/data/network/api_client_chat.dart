@@ -113,6 +113,7 @@ import 'package:step_ai/core/api/api_service.dart';
 import 'package:step_ai/core/data/local/securestorage/secure_storage_helper.dart';
 import 'package:step_ai/core/data/model/token_model.dart';
 import 'package:step_ai/core/di/service_locator.dart';
+import 'package:step_ai/features/chat/domain/usecase/get_messages_by_conversation_id_usecase.dart';
 
 class ApiClientChat {
   final Dio _dio = Dio();
@@ -149,7 +150,7 @@ class ApiClientChat {
       onResponse: (response, handler) {
         print(
             "-----------------------------OnResponse--------------------------------2");
-            print("Response: ${response.data}");
+        print("Response: ${response.data}");
         return handler.next(response);
       },
       onError: (DioException error, handler) async {
@@ -197,7 +198,7 @@ class ApiClientChat {
         //lưu để gọi lại sau
         accessToken = await secureStorageHelper.accessToken;
         //_dio.options.headers['Authorization'] = 'Bearer $accessToken';
-      }else{
+      } else {
         print("*****************Làm mới token thất bại");
         throw Exception('Không thể làm mới token');
       }
@@ -246,5 +247,14 @@ class ApiClientChat {
 
   Future<Response> getUsageToken(String path) {
     return _dio.get(path);
+  }
+
+  Future<Response> getMessagesByConversationId(String path,
+      {Map<String, dynamic>? queryParams}) {
+        print("getMessagesByConversationId in ChatApiClient");
+    return _dio.get(
+      path,
+      queryParameters: queryParams,
+    );
   }
 }
