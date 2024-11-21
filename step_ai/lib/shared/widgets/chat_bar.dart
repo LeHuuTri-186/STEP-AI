@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:step_ai/config/routes/routes.dart';
 import 'package:step_ai/core/di/service_locator.dart';
 import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
 import 'package:step_ai/shared/widgets/popup_attachment_options.dart';
@@ -19,7 +20,6 @@ class _ChatBarState extends State<ChatBar> {
   bool _showIconSend = false;
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
-
 
   @override
   void initState() {
@@ -139,19 +139,34 @@ class _ChatBarState extends State<ChatBar> {
                                 topLeft: Radius.circular(30),
                                 topRight: Radius.circular(30),
                               ),
-                              child: PromptBottomSheet(returnPrompt: (value) {
-                                _controller.clear();
-                                _controller.text = value;
-                                _controller.selection = TextSelection.fromPosition(
-                                  TextPosition(offset: _controller.text.length)
-                                );
-                                Provider.of<ChatNotifier>(context, listen: false)
-                                    .sendMessage(_controller.text);
-                                _controller.clear();
-                                setState(() {
-                                  _showIconSend = true;
-                                });
-                              },),
+                              child: PromptBottomSheet(
+                                returnPrompt: (value) async{
+                                  _controller.clear();
+                                  _controller.text = value;
+                                  _controller.selection =
+                                      TextSelection.fromPosition(TextPosition(
+                                          offset: _controller.text.length));
+                                  try {
+                                    await Provider.of<ChatNotifier>(context,
+                                            listen: false)
+                                        .sendMessage(_controller.text);
+                                  } catch (e) {
+                                    //e is 401 and return to login screen
+                                    print("e is 401 and return to login screen");
+                                    print(e);
+                                    Navigator.of(context)
+                                        .pushNamedAndRemoveUntil(
+                                      Routes.authenticate,
+                                      (Route<dynamic> route) => false,
+                                    );
+                                  }
+
+                                  _controller.clear();
+                                  setState(() {
+                                    _showIconSend = true;
+                                  });
+                                },
+                              ),
                             );
                           },
                         );
@@ -170,11 +185,20 @@ class _ChatBarState extends State<ChatBar> {
                               size: 20,
                               color: TColor.tamarama,
                             ),
-                            onPressed: () {
+                            onPressed: () async {
                               // Hide keyboard
                               FocusScope.of(context).unfocus();
-                              Provider.of<ChatNotifier>(context, listen: false)
-                                  .sendMessage(_controller.text);
+                              try {
+                                await Provider.of<ChatNotifier>(context,
+                                        listen: false)
+                                    .sendMessage(_controller.text);
+                              } catch (e) {
+                                Navigator.of(context).pushNamedAndRemoveUntil(
+                                  Routes.authenticate,
+                                  (Route<dynamic> route) => false,
+                                );
+                              }
+
                               _controller.clear();
                             })
                         : IconButton(

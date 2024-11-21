@@ -1,14 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/features/authentication/domain/usecase/is_logged_in_usecase.dart';
-import 'package:step_ai/features/authentication/presentation/pages/authenticate.dart';
-import 'package:step_ai/features/chat/domain/usecase/get_usage_token_usecase.dart';
 import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
 import 'package:step_ai/features/chat/notifier/history_conversation_list_notifier.dart';
-import 'package:step_ai/features/chat/presentation/pages/chat_page.dart';
-import 'package:step_ai/features/plan/presentation/pages/planPricingPage.dart';
-import 'package:step_ai/features/prompt/presentation/pages/prompt_bottom_sheet.dart';
 import 'package:step_ai/features/prompt/presentation/state/prompt_view_provider.dart';
 
 import 'config/routes/routes.dart';
@@ -36,7 +30,7 @@ Future<void> main() async {
     await chatNotifier.getNumberRestToken();
     final HistoryConversationListNotifier historyConversationListNotifier =
         getIt<HistoryConversationListNotifier>();
-    await historyConversationListNotifier.getHistoryConversationList(100);
+    await historyConversationListNotifier.getHistoryConversationList();
   }
 
   runApp(MyApp(initialRoute: initialRoute));

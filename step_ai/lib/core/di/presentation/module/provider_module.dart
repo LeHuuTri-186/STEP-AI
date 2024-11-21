@@ -42,15 +42,17 @@ class ProviderModule {
     //HistoryConversationListNotifier:-----------------------------------------------------
     getIt.registerSingleton<HistoryConversationListNotifier>(
       HistoryConversationListNotifier(
-          getIt<GetMessagesByConversationIdUsecase>(),getIt<GetHistoryConversationListUsecase>()),
+          getIt<GetHistoryConversationListUsecase>()),
     );
     //ChatNotifier:---------------------------------------------------------------------
     getIt.registerSingleton<ChatNotifier>(
       ChatNotifier(
-          getIt<SendMessageUsecase>(),
-          getIt<AssistantNotifier>(),
-          getIt<HistoryConversationListNotifier>(),
-          getIt<GetUsageTokenUsecase>()),
+        getIt<SendMessageUsecase>(),
+        getIt<AssistantNotifier>(),
+        getIt<HistoryConversationListNotifier>(),
+        getIt<GetUsageTokenUsecase>(),
+        getIt<GetMessagesByConversationIdUsecase>(),
+      ),
     );
   }
 }

@@ -27,6 +27,18 @@ class _ChatPageState extends State<ChatPage> {
   late List<Message> messages;
   final ScrollController _scrollController = ScrollController();
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final chatNotifier = Provider.of<ChatNotifier>(context, listen: false);
+      if (chatNotifier.idCurrentConversation != null) {
+        chatNotifier.getMessagesByConversationId();
+      }
+    });
+  }
+
+
   void _scrollToBottom() {
     if (_scrollController.hasClients) {
       _scrollController.animateTo(
@@ -36,6 +48,15 @@ class _ChatPageState extends State<ChatPage> {
       );
     }
   }
+
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   _chatNotifier = Provider.of<ChatNotifier>(context, listen: false);
+  //   if (_chatNotifier.idCurrentConversation != null) {
+  //     _chatNotifier.getMessagesByConversationId();
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -62,9 +83,9 @@ class _ChatPageState extends State<ChatPage> {
               Text(
                 _chatNotifier.getTitleCurrentConversation(),
                 style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                  color: TColor.petRock,
-                  fontSize: 25,
-                ),
+                      color: TColor.petRock,
+                      fontSize: 25,
+                    ),
               ),
             ],
           ),
@@ -91,8 +112,15 @@ class _ChatPageState extends State<ChatPage> {
             padding: const EdgeInsets.all(10),
             child: Column(
               children: [
-                Expanded(
-                  child: ListView.builder(
+                //Messages or Loading
+                _chatNotifier.isLoadingDetailedConversation
+                    ? const Expanded(
+                      child:  Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                    )
+                    : Expanded(
+                         child: ListView.builder(
                     controller: _scrollController,
                     itemCount: messages.length,
                     itemBuilder: (context, index) {
@@ -103,6 +131,7 @@ class _ChatPageState extends State<ChatPage> {
                     },
                   ),
                 ),
+
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
