@@ -91,7 +91,6 @@ class _ChatBarState extends State<ChatBar> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     _chatBarNotifier = Provider.of<ChatBarNotifier>(context);
@@ -102,7 +101,6 @@ class _ChatBarState extends State<ChatBar> {
         _controller.text = _chatBarNotifier.content;
         _chatBarNotifier.cancelPrompt();
       });
-
     }
     return Focus(
       focusNode: _focusNode,
@@ -190,11 +188,13 @@ class _ChatBarState extends State<ChatBar> {
                                     print(
                                         "e is 401 and return to login screen");
                                     print(e);
-                                    Navigator.of(context)
-                                        .pushNamedAndRemoveUntil(
-                                      Routes.authenticate,
-                                      (Route<dynamic> route) => false,
-                                    );
+                                    if (context.mounted) {
+                                      Navigator.of(context)
+                                          .pushNamedAndRemoveUntil(
+                                        Routes.authenticate,
+                                        (Route<dynamic> route) => false,
+                                      );
+                                    }
                                   }
                                 },
                               ),
@@ -240,9 +240,7 @@ class _ChatBarState extends State<ChatBar> {
                               size: 20,
                               color: TColor.petRock,
                             ),
-                            onPressed: () {
-
-                            }),
+                            onPressed: () {}),
                   ],
                 )
               ],
