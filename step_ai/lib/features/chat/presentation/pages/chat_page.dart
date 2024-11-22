@@ -135,10 +135,13 @@ class _ChatPageState extends State<ChatPage> {
           IconButton(
               onPressed: () async {
                 await _chatNotifier.resetChatNotifier();
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  Routes.chat,
-                  (Route<dynamic> route) => false,
-                );
+
+                if (context.mounted) {
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    Routes.chat,
+                    (Route<dynamic> route) => false,
+                  );
+                }
               },
               icon: Icon(
                 Icons.add,
@@ -154,9 +157,13 @@ class _ChatPageState extends State<ChatPage> {
               children: [
                 //Messages or Loading
                 _chatNotifier.isLoadingDetailedConversation
-                    ? const Expanded(
+                    ? Expanded(
                         child: Center(
-                          child: CircularProgressIndicator(),
+                          child: LoadingAnimationWidget.twistingDots(
+                            size: 50,
+                            leftDotColor: TColor.tamarama,
+                            rightDotColor: TColor.daJuice,
+                          ),
                         ),
                       )
                     : Expanded(
@@ -232,10 +239,12 @@ class _ChatPageState extends State<ChatPage> {
                     color: Colors.transparent,
                     child: Container(
                         decoration: BoxDecoration(
-                          boxShadow: [BoxShadow(
-                            blurRadius: 4,
-                            color: TColor.petRock.withOpacity(0.5),
-                          )],
+                          boxShadow: [
+                            BoxShadow(
+                              blurRadius: 4,
+                              color: TColor.petRock.withOpacity(0.5),
+                            )
+                          ],
                           borderRadius: BorderRadius.circular(10),
                           color: TColor.doctorWhite,
                         ),
@@ -243,7 +252,8 @@ class _ChatPageState extends State<ChatPage> {
                           child: Column(
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   const Padding(
                                     padding: EdgeInsets.only(left: 20),
@@ -252,7 +262,8 @@ class _ChatPageState extends State<ChatPage> {
                                   IconButton(
                                       onPressed: () {
                                         if (_promptListOverlay.mounted) {
-                                          _chatBarNotifier.setShowOverlay(false);
+                                          _chatBarNotifier
+                                              .setShowOverlay(false);
                                           _promptListOverlay.remove();
                                         }
                                       },
@@ -263,8 +274,8 @@ class _ChatPageState extends State<ChatPage> {
                                   ? _buildProgressIndicator()
                                   : ListView.builder(
                                       shrinkWrap: true,
-                                      itemCount:
-                                          _promptListNotifier.list.prompts.length,
+                                      itemCount: _promptListNotifier
+                                          .list.prompts.length,
                                       itemBuilder: (context, index) {
                                         return ListTile(
                                           title: Text(
@@ -274,9 +285,15 @@ class _ChatPageState extends State<ChatPage> {
                                                 color: TColor.petRock),
                                           ),
                                           onTap: () async {
-                                            _chatBarNotifier.setShowOverlay(false);
-                                            await _buildUsePrompt(context, _chatNotifier, PromptModel.fromSlash(_promptListNotifier
-                                                .list.prompts[index]), index);
+                                            _chatBarNotifier
+                                                .setShowOverlay(false);
+                                            await _buildUsePrompt(
+                                                context,
+                                                _chatNotifier,
+                                                PromptModel.fromSlash(
+                                                    _promptListNotifier
+                                                        .list.prompts[index]),
+                                                index);
                                             // _chatBarNotifier.setContent(
                                             //     _promptListNotifier
                                             //         .list.prompts[index].content);
@@ -317,8 +334,10 @@ class _ChatPageState extends State<ChatPage> {
         return PromptEditor(
           promptModel: prompt,
           returnPrompt: (value) async {
-            Navigator.of(context).pop();
             await notifier.sendMessage(value);
+            if (context.mounted) {
+              Navigator.of(context).pop();
+            }
           },
         );
       },
