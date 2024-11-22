@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_history_conversation_list_usecase.dart';
-import 'package:step_ai/features/chat/domain/usecase/get_messages_by_conversation_id_usecase.dart';
 
 import '../domain/entity/conversation.dart';
 
 class HistoryConversationListNotifier extends ChangeNotifier {
+  bool isLoading = false;
   int _limitConversation = 0;
   bool _hasMore = false;
   get hasMore => _hasMore;
@@ -19,6 +19,8 @@ class HistoryConversationListNotifier extends ChangeNotifier {
   HistoryConversationListNotifier(this._getHistoryConversationListUsecase);
 
   Future<void> getHistoryConversationList() async {
+    isLoading = true;
+    notifyListeners();
     try {
       _limitConversation = _limitConversation + 10;
       final conversationModel = await _getHistoryConversationListUsecase.call(
@@ -43,6 +45,7 @@ class HistoryConversationListNotifier extends ChangeNotifier {
         print("Error in getHistoryConversationList in history conversation list notifier");
       }
     } finally {
+      isLoading = false;
       notifyListeners();
     }
   }

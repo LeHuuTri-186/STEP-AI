@@ -10,6 +10,7 @@ import 'package:step_ai/features/chat/notifier/history_conversation_list_notifie
 import '../domain/usecase/get_messages_by_conversation_id_usecase.dart';
 
 class ChatNotifier with ChangeNotifier {
+  bool isLoading = false;
   //number of rest token
   int _numberRestToken = 0;
   int get numberRestToken => _numberRestToken;
@@ -65,9 +66,16 @@ class ChatNotifier with ChangeNotifier {
 
   //run first time when open chat
   Future<void> getNumberRestToken() async {
+    isLoading = true;
+    notifyListeners();
+
     try {
       final usageTokenModel = await _getUsageTokenUsecase.call(params: null);
       numberRestToken = usageTokenModel.availableTokens;
+
+      isLoading = false;
+      notifyListeners();
+
     } catch (e) {
       if (e is DioException) {
         print(
@@ -75,6 +83,9 @@ class ChatNotifier with ChangeNotifier {
       } else {
         print("Error in getNumberRestToken in chat notifier with  error: $e");
       }
+
+      isLoading = false;
+      notifyListeners();
     }
   }
 
