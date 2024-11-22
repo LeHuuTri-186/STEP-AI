@@ -124,6 +124,7 @@ class RegisterNotifier extends ChangeNotifier{
               email: email, password: password, username: username));
       if (returnStatus == 422){
         _emailError = 'Email already exists';
+
         return false;
       }
       if (returnStatus == 200) {
@@ -134,9 +135,11 @@ class RegisterNotifier extends ChangeNotifier{
     catch (e){
       if (e == '422'){
         _emailError = 'Email or password invalid';
+        _isLoading = false;
       }
       return false;
     } finally {
+      print('Done');
       _isLoading = false;
       notifyListeners();
     }
