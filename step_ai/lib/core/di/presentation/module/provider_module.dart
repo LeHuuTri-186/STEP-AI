@@ -18,6 +18,8 @@ import 'package:step_ai/features/chat/domain/usecase/send_message_usecase.dart';
 import 'package:step_ai/features/chat/notifier/assistant_notifier.dart';
 import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
 import 'package:step_ai/features/chat/notifier/history_conversation_list_notifier.dart';
+import 'package:step_ai/features/knowledge_base/domain/usecase/get_knowledge_list_usecase.dart';
+import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart';
 
 class ProviderModule {
   static Future<void> configureStoreModuleInjection() async {
@@ -60,16 +62,16 @@ class ProviderModule {
     );
 
     //Slash prompts:------------------------------------------------------------
-    getIt.registerSingleton<PromptListNotifier>(
-      PromptListNotifier(
-        getIt<GetPromptListUseCase>(),
-      )
-    );
+    getIt.registerSingleton<PromptListNotifier>(PromptListNotifier(
+      getIt<GetPromptListUseCase>(),
+    ));
     //Chat page:----------------------------------------------------------------
-    getIt.registerSingleton<ChatBarNotifier>(
-      ChatBarNotifier(
-        getIt<LogoutUseCase>(),
-      )
-    );
+    getIt.registerSingleton<ChatBarNotifier>(ChatBarNotifier(
+      getIt<LogoutUseCase>(),
+    ));
+
+    //Knowledge base:------------------------------------------------------------
+    getIt.registerSingleton<KnowledgeNotifier>(
+        KnowledgeNotifier(getIt<GetKnowledgeListUsecase>()));
   }
 }

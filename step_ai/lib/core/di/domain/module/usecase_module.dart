@@ -16,6 +16,9 @@ import 'package:step_ai/features/chat/domain/usecase/get_history_conversation_li
 import 'package:step_ai/features/chat/domain/usecase/get_messages_by_conversation_id_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_usage_token_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/send_message_usecase.dart';
+import 'package:step_ai/features/knowledge_base/domain/entity/knowledge.dart';
+import 'package:step_ai/features/knowledge_base/domain/repository/knowledge_repository.dart';
+import 'package:step_ai/features/knowledge_base/domain/usecase/get_knowledge_list_usecase.dart';
 import 'package:step_ai/shared/usecase/refresh_token_usecase.dart';
 
 import '../../../../features/authentication/domain/repository/register_repository.dart';
@@ -37,18 +40,14 @@ class UseCaseModule {
       ),
     );
 
-
-    getIt.registerSingleton<SaveLoginStatusUseCase>(
-        SaveLoginStatusUseCase(
-          getIt<LoginRepository>(),
-        )
-    );
+    getIt.registerSingleton<SaveLoginStatusUseCase>(SaveLoginStatusUseCase(
+      getIt<LoginRepository>(),
+    ));
 
     //Register:-----------------------------------------------------------------
     getIt.registerSingleton<RegisterUseCase>(
       RegisterUseCase(getIt<RegisterRepository>(), getIt<LoginUseCase>()),
     );
-
 
     //Refresh token:------------------------------------------------------------
     getIt.registerSingleton<RefreshTokenUseCase>(
@@ -65,13 +64,11 @@ class UseCaseModule {
     ));
 
     //Slash command:------------------------------------------------------------
-    getIt.registerSingleton<GetPromptListUseCase>(
-      GetPromptListUseCase(
-        getIt<SlashPromptRepository>(),
-        getIt<RefreshTokenUseCase>(),
-        getIt<LogoutUseCase>(),
-      )
-    );
+    getIt.registerSingleton<GetPromptListUseCase>(GetPromptListUseCase(
+      getIt<SlashPromptRepository>(),
+      getIt<RefreshTokenUseCase>(),
+      getIt<LogoutUseCase>(),
+    ));
 
     //Chat:---------------------------------------------------------------------
     getIt.registerSingleton<SendMessageUsecase>(
@@ -92,6 +89,13 @@ class UseCaseModule {
     getIt.registerSingleton<GetUsageTokenUsecase>(
       GetUsageTokenUsecase(
         getIt<ConversationRepository>(),
+      ),
+    );
+
+    ///Knowledge base:-----------------------------------------------------------
+    getIt.registerSingleton<GetKnowledgeListUsecase>(
+      GetKnowledgeListUsecase(
+        getIt<KnowledgeRepository>(),
       ),
     );
   }

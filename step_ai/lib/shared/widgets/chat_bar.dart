@@ -221,9 +221,11 @@ class _ChatBarState extends State<ChatBar> {
                               FocusScope.of(context).unfocus();
                               try {
                                 _chatBarNotifier.setShowOverlay(false);
+                                String message = _controller.text;
+                                _controller.clear();
                                 await Provider.of<ChatNotifier>(context,
                                         listen: false)
-                                    .sendMessage(_controller.text);
+                                    .sendMessage(message);
                               } catch (e) {
                                 Navigator.of(context).pushNamedAndRemoveUntil(
                                   Routes.authenticate,

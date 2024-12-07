@@ -12,7 +12,7 @@ class NoKnowledgePanel extends StatelessWidget {
       children: [
         Image(
           image: AssetImage('lib/core/assets/imgs/file.png'),
-          width: 300,
+          width: 100,
         ),
         Text(
           "No data",

@@ -13,6 +13,9 @@ import 'package:step_ai/features/chat/domain/repository/slash_prompt_repository.
 import 'package:step_ai/features/chat/data/network/api_client_chat.dart';
 import 'package:step_ai/features/chat/data/repository/conversation_repository_impl.dart';
 import 'package:step_ai/features/chat/domain/repository/conversation_repository.dart';
+import 'package:step_ai/features/knowledge_base/data/network/knowledge_api.dart';
+import 'package:step_ai/features/knowledge_base/data/repository/knowledge_repository_impl.dart';
+import 'package:step_ai/features/knowledge_base/domain/repository/knowledge_repository.dart';
 
 import '../../service_locator.dart';
 
@@ -28,16 +31,17 @@ class RepositoryModule {
         RegisterRepositoryImpl() as RegisterRepository);
 
     getIt.registerSingleton<LogoutRepository>(
-      LogoutRepositoryImpl(
-          getIt<SecureStorageHelper>()) as LogoutRepository);
+        LogoutRepositoryImpl(getIt<SecureStorageHelper>()) as LogoutRepository);
     //Slash command:------------------------------------------------------------
-    getIt.registerSingleton<SlashPromptRepository>(
-      SlashPromptRepositoryImpl(
-        getIt<SecureStorageHelper>(),
-      ) as SlashPromptRepository);
+    getIt.registerSingleton<SlashPromptRepository>(SlashPromptRepositoryImpl(
+      getIt<SecureStorageHelper>(),
+    ) as SlashPromptRepository);
     //Chat:---------------------------------------------------------------------
     getIt.registerSingleton<ConversationRepository>(
         ConversationRepositoryImpl(getIt<ApiClientChat>())
             as ConversationRepository);
+    //Knowledge:----------------------------------------------------------------
+    getIt.registerSingleton<KnowledgeRepository>(
+        KnowledgeRepositoryImpl(getIt<KnowledgeApi>()) as KnowledgeRepository);
   }
 }

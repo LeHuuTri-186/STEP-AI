@@ -17,6 +17,8 @@ import 'package:step_ai/features/chat/presentation/pages/chat_page.dart';
 
 import 'package:step_ai/features/authentication/presentation/pages/email_page.dart';
 import 'package:step_ai/features/authentication/presentation/pages/forgot_password_page.dart';
+import 'package:step_ai/features/knowledge_base/domain/entity/knowledge.dart';
+import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart';
 
 import 'package:step_ai/features/plan/presentation/pages/planPricingPage.dart';
 import 'package:step_ai/features/prompt/presentation/pages/prompt_list.dart';
@@ -38,28 +40,36 @@ class Routes {
   static const String forgotPassword = "/resetPassword";
 
   static final routes = <String, WidgetBuilder>{
-    personal: (BuildContext context) => PersonalPage(),
+    personal: (BuildContext context) => Builder(builder: (context) {
+          return MultiProvider(providers: [
+            ChangeNotifierProvider.value(
+                value: getIt<HistoryConversationListNotifier>()),
+            ChangeNotifierProvider.value(
+              value: getIt<KnowledgeNotifier>(),
+            )
+          ], child: const PersonalPage());
+        }),
 
-    chat: (BuildContext context) =>
-        Builder(
+    chat: (BuildContext context) => Builder(
           builder: (context) {
             return MultiProvider(
               providers: [
                 ChangeNotifierProvider.value(value: getIt<ChatBarNotifier>()),
-                ChangeNotifierProvider.value(value: getIt<PromptListNotifier>()),
+                ChangeNotifierProvider.value(
+                    value: getIt<PromptListNotifier>()),
                 ChangeNotifierProvider.value(value: getIt<AssistantNotifier>()),
                 ChangeNotifierProvider.value(value: getIt<ChatNotifier>()),
-                ChangeNotifierProvider.value(value: getIt<HistoryConversationListNotifier>()),
+                ChangeNotifierProvider.value(
+                    value: getIt<HistoryConversationListNotifier>()),
               ],
-              child: ChatPage(),
+              child: const ChatPage(),
             );
           },
         ),
     planAndPricing: (BuildContext context) => PlanPricingPage(),
 
     // signIn: (BuildContext context) => SignInPage(),
-    authenticate: (BuildContext context) =>
-        Builder(
+    authenticate: (BuildContext context) => Builder(
           builder: (context) {
             return MultiProvider(
               providers: [

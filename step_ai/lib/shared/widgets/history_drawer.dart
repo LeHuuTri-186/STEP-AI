@@ -66,7 +66,9 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
       child: Drawer(
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
-              topRight: Radius.circular(10), bottomRight: Radius.circular(10),),
+            topRight: Radius.circular(10),
+            bottomRight: Radius.circular(10),
+          ),
         ),
         backgroundColor: TColor.northEastSnow.withOpacity(0.7),
         child: Column(
@@ -76,10 +78,12 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
               margin: const EdgeInsets.only(right: 10, top: 10),
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                boxShadow: [BoxShadow(
-                    offset: const Offset(-3, 3),
-                    color: TColor.slate.withOpacity(0.5),
-                    blurRadius: 3.0)],
+                boxShadow: [
+                  BoxShadow(
+                      offset: const Offset(-3, 3),
+                      color: TColor.slate.withOpacity(0.5),
+                      blurRadius: 3.0)
+                ],
                 border: const Border(
                   bottom: BorderSide.none, // Remove the line
                 ),
@@ -115,10 +119,12 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
               margin: const EdgeInsets.only(top: 10, bottom: 10, right: 10),
               decoration: BoxDecoration(
                 color: TColor.doctorWhite,
-                boxShadow: [BoxShadow(
-                offset: const Offset(-3, 3),
-                color: TColor.slate.withOpacity(0.5),
-                blurRadius: 3.0)],
+                boxShadow: [
+                  BoxShadow(
+                      offset: const Offset(-3, 3),
+                      color: TColor.slate.withOpacity(0.5),
+                      blurRadius: 3.0)
+                ],
                 border: const Border(
                   bottom: BorderSide.none, // Remove the line
                 ),
@@ -141,23 +147,24 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
                                   topRight: Radius.circular(10)),
                               splashColor: TColor.petRock.withOpacity(0.3),
                               onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const PersonalPage()));
+                                Navigator.of(context).pushNamedAndRemoveUntil(
+                                  Routes.personal,
+                                  (Route<dynamic> route) => false,
+                                );
                               },
                               child: Center(
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Text("Personal",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .displayMedium
-                                          ?.copyWith(
-                                        color: TColor.petRock,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600),),
+                                  child: Text(
+                                    "Personal",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displayMedium
+                                        ?.copyWith(
+                                            color: TColor.petRock,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600),
+                                  ),
                                 ),
                               ),
                             ),
@@ -189,7 +196,7 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
                                           .textTheme
                                           .displayMedium
                                           ?.copyWith(
-                                          color: TColor.petRock,
+                                              color: TColor.petRock,
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600),
                                     ),
@@ -211,10 +218,12 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
               child: Container(
                 decoration: BoxDecoration(
                     color: TColor.doctorWhite,
-                    boxShadow: [BoxShadow(
-                        offset: const Offset(-3, 3),
-                        color: TColor.slate.withOpacity(0.5),
-                        blurRadius: 3.0)],
+                    boxShadow: [
+                      BoxShadow(
+                          offset: const Offset(-3, 3),
+                          color: TColor.slate.withOpacity(0.5),
+                          blurRadius: 3.0)
+                    ],
                     border: const Border(
                       bottom: BorderSide.none, // Remove the line
                     ),
@@ -257,14 +266,20 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
                             );
                           }
                           return ListTile(
-                            leading: Icon(Icons.access_time, color: TColor.petRock.withOpacity(0.5),),
+                              leading: Icon(
+                                Icons.access_time,
+                                color: TColor.petRock.withOpacity(0.5),
+                              ),
                               title: Text(
-                                  "${historyConversationListNotifier.historyConversationList[index].title}", style:
-                                Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: TColor.petRock.withOpacity(0.5),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w800
-                                ),),
+                                "${historyConversationListNotifier.historyConversationList[index].title}",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                        color: TColor.petRock.withOpacity(0.5),
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w800),
+                              ),
                               onTap: () async {
                                 if (Provider.of<ChatNotifier>(context,
                                             listen: false)
@@ -274,27 +289,29 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
                                   Navigator.pop(context);
                                   return;
                                 }
-                      
+
                                 await Provider.of<ChatNotifier>(context,
                                         listen: false)
                                     .resetChatNotifier();
                                 //set id current conversation
-                                Provider.of<ChatNotifier>(context, listen: false)
+                                Provider.of<ChatNotifier>(context,
+                                            listen: false)
                                         .idCurrentConversation =
                                     historyConversationListNotifier
                                         .historyConversationList[index].id;
-                      
+
                                 Navigator.of(context).pushNamedAndRemoveUntil(
                                   Routes.chat,
                                   (Route<dynamic> route) => false,
                                 );
                               });
-                        }, separatorBuilder: (BuildContext context, int index) {
+                        },
+                        separatorBuilder: (BuildContext context, int index) {
                           return const Padding(
                             padding: EdgeInsets.only(left: 10.0),
                             child: Divider(),
                           );
-                      },
+                        },
                       ),
                     ),
                   ],
@@ -304,10 +321,12 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
             Container(
               decoration: BoxDecoration(
                   color: TColor.doctorWhite,
-                  boxShadow: [BoxShadow(
-                      offset: const Offset(-3, 3),
-                      color: TColor.slate.withOpacity(0.5),
-                      blurRadius: 3.0)],
+                  boxShadow: [
+                    BoxShadow(
+                        offset: const Offset(-3, 3),
+                        color: TColor.slate.withOpacity(0.5),
+                        blurRadius: 3.0)
+                  ],
                   border: const Border(
                     bottom: BorderSide.none, // Remove the line
                   ),
