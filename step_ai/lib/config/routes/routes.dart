@@ -41,29 +41,12 @@ class Routes {
 
   static final routes = <String, WidgetBuilder>{
     personal: (BuildContext context) => Builder(builder: (context) {
-          return MultiProvider(providers: [
-            ChangeNotifierProvider.value(
-                value: getIt<HistoryConversationListNotifier>()),
-            ChangeNotifierProvider.value(
-              value: getIt<KnowledgeNotifier>(),
-            )
-          ], child: const PersonalPage());
+          return const PersonalPage();
         }),
 
     chat: (BuildContext context) => Builder(
           builder: (context) {
-            return MultiProvider(
-              providers: [
-                ChangeNotifierProvider.value(value: getIt<ChatBarNotifier>()),
-                ChangeNotifierProvider.value(
-                    value: getIt<PromptListNotifier>()),
-                ChangeNotifierProvider.value(value: getIt<AssistantNotifier>()),
-                ChangeNotifierProvider.value(value: getIt<ChatNotifier>()),
-                ChangeNotifierProvider.value(
-                    value: getIt<HistoryConversationListNotifier>()),
-              ],
-              child: const ChatPage(),
-            );
+            return const ChatPage();
           },
         ),
     planAndPricing: (BuildContext context) => PlanPricingPage(),

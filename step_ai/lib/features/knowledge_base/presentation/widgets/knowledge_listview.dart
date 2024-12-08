@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
@@ -44,7 +43,8 @@ class _KnowledgeListviewState extends State<KnowledgeListview> {
       );
     }
 
-    if (_knowledgeNotifier.knowledgeList == null) {
+    if (_knowledgeNotifier.errorString.isNotEmpty ||
+        _knowledgeNotifier.knowledgeList == null) {
       return const Center(child: Text("Have error. Try again later"));
     }
     if (_knowledgeNotifier.knowledgeList!.knowledgeList.isEmpty) {

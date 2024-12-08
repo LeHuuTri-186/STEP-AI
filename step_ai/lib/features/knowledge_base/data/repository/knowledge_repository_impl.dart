@@ -2,6 +2,7 @@ import 'package:step_ai/features/knowledge_base/data/model/knowledge_list_model.
 import 'package:step_ai/features/knowledge_base/data/network/knowledge_api.dart';
 import 'package:step_ai/features/knowledge_base/domain/entity/knowledge.dart';
 import 'package:step_ai/features/knowledge_base/domain/entity/knowledge_list.dart';
+import 'package:step_ai/features/knowledge_base/domain/params/add_knowledge_param.dart';
 import 'package:step_ai/features/knowledge_base/domain/repository/knowledge_repository.dart';
 
 class KnowledgeRepositoryImpl extends KnowledgeRepository {
@@ -65,5 +66,10 @@ class KnowledgeRepositoryImpl extends KnowledgeRepository {
     // ];
     // await Future.delayed(const Duration(seconds: 3));
     // return KnowledgeList(knowledgeList: knowledgeList);
+  }
+
+  @override
+  Future<void> addKnowledge(AddKnowledgeParam params) {
+    return _knowledgeApi.post("/kb-core/v1/knowledge", data: params.toJson());
   }
 }

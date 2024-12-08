@@ -60,7 +60,7 @@ class KnowledgeApi {
     // accessKnowledgeToken = await secureStorageHelper.accessToken;
     // refreshKnowledgeToken = await secureStorageHelper.refreshToken;
     accessKnowledgeToken =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImJlZjgxMDA4LTg4MTktNGM5NS1iNzZjLWQwODA3YzU0MTNiNSIsImVtYWlsIjoibmd1eWVuYm9jaGFAZ21haWwuY29tIiwiaWF0IjoxNzMzNTYwOTc5LCJleHAiOjE3MzM2NDczNzl9.o2OKhw4pGkrQZXSMTguF6imMgjZ3MpaeWEQvYR9fLHk";
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImJlZjgxMDA4LTg4MTktNGM5NS1iNzZjLWQwODA3YzU0MTNiNSIsImVtYWlsIjoibmd1eWVuYm9jaGFAZ21haWwuY29tIiwiaWF0IjoxNzMzNjY3NzIwLCJleHAiOjE3MzM3NTQxMjB9.HOzsuWdaacpKevilVneWtrU02f3KdK4uLs31T4GOH_M";
     refreshKnowledgeToken =
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImJlZjgxMDA4LTg4MTktNGM5NS1iNzZjLWQwODA3YzU0MTNiNSIsImVtYWlsIjoibmd1eWVuYm9jaGFAZ21haWwuY29tIiwiaWF0IjoxNzMzNTYwOTc5LCJleHAiOjE3MzM2NDczNzl9.o2OKhw4pGkrQZXSMTguF6imMgjZ3MpaeWEQvYR9fLHk";
   }

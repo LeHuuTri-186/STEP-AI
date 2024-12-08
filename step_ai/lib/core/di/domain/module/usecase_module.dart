@@ -18,6 +18,7 @@ import 'package:step_ai/features/chat/domain/usecase/get_usage_token_usecase.dar
 import 'package:step_ai/features/chat/domain/usecase/send_message_usecase.dart';
 import 'package:step_ai/features/knowledge_base/domain/entity/knowledge.dart';
 import 'package:step_ai/features/knowledge_base/domain/repository/knowledge_repository.dart';
+import 'package:step_ai/features/knowledge_base/domain/usecase/add_knowledge_usecase.dart';
 import 'package:step_ai/features/knowledge_base/domain/usecase/get_knowledge_list_usecase.dart';
 import 'package:step_ai/shared/usecase/refresh_token_usecase.dart';
 
@@ -95,6 +96,11 @@ class UseCaseModule {
     ///Knowledge base:-----------------------------------------------------------
     getIt.registerSingleton<GetKnowledgeListUsecase>(
       GetKnowledgeListUsecase(
+        getIt<KnowledgeRepository>(),
+      ),
+    );
+    getIt.registerSingleton<AddKnowledgeUsecase>(
+      AddKnowledgeUsecase(
         getIt<KnowledgeRepository>(),
       ),
     );

@@ -18,7 +18,9 @@ import 'package:step_ai/features/chat/domain/usecase/send_message_usecase.dart';
 import 'package:step_ai/features/chat/notifier/assistant_notifier.dart';
 import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
 import 'package:step_ai/features/chat/notifier/history_conversation_list_notifier.dart';
+import 'package:step_ai/features/knowledge_base/domain/usecase/add_knowledge_usecase.dart';
 import 'package:step_ai/features/knowledge_base/domain/usecase/get_knowledge_list_usecase.dart';
+import 'package:step_ai/features/knowledge_base/notifier/add_knowledge_dialog_notifier.dart';
 import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart';
 
 class ProviderModule {
@@ -71,7 +73,9 @@ class ProviderModule {
     ));
 
     //Knowledge base:------------------------------------------------------------
-    getIt.registerSingleton<KnowledgeNotifier>(
-        KnowledgeNotifier(getIt<GetKnowledgeListUsecase>()));
+    getIt.registerSingleton<KnowledgeNotifier>(KnowledgeNotifier(
+        getIt<GetKnowledgeListUsecase>(), getIt<AddKnowledgeUsecase>()));
+    getIt.registerSingleton<AddKnowledgeDialogNotifier>(
+        AddKnowledgeDialogNotifier());
   }
 }
