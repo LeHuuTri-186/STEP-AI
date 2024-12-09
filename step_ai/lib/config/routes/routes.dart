@@ -22,6 +22,7 @@ import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart
 
 import 'package:step_ai/features/plan/presentation/pages/planPricingPage.dart';
 import 'package:step_ai/features/prompt/presentation/pages/prompt_list.dart';
+import 'package:step_ai/features/units_in_knowledge/presentation/pages/units_page.dart';
 
 import '../../features/chat/notifier/chat_notifier.dart';
 import '../../features/personal/presentation/pages/personal_page.dart';
@@ -38,6 +39,7 @@ class Routes {
   static const String authenticate = "/signIn";
   static const String promptList = "/promptList";
   static const String forgotPassword = "/resetPassword";
+  static const String unitsPage = "/unitsPage";
 
   static final routes = <String, WidgetBuilder>{
     personal: (BuildContext context) => Builder(builder: (context) {
@@ -50,7 +52,7 @@ class Routes {
           },
         ),
     planAndPricing: (BuildContext context) => PlanPricingPage(),
-
+    unitsPage: (BuildContext context) => UnitsPage(),
     // signIn: (BuildContext context) => SignInPage(),
     authenticate: (BuildContext context) => Builder(
           builder: (context) {

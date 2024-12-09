@@ -1,13 +1,7 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:step_ai/config/constants.dart';
-import 'package:step_ai/core/api/api_service.dart';
-import 'package:step_ai/core/data/local/securestorage/secure_storage_helper.dart';
-import 'package:step_ai/core/data/model/token_model.dart';
-import 'package:step_ai/core/di/service_locator.dart';
 
-class KnowledgeApi {
+class UnitApi {
   final Dio _dio = Dio();
   // final secureStorageHelper = getIt<SecureStorageHelper>();
   // final ApiService _apiService = ApiService(Constant.apiBaseUrl);
@@ -15,7 +9,7 @@ class KnowledgeApi {
   String? accessKnowledgeToken;
   String? refreshKnowledgeToken;
 
-  KnowledgeApi() {
+  UnitApi() {
     _dio.options.baseUrl = 'https://knowledge-api.jarvis.cx'; // Base URL API
 
     _dio.interceptors.add(InterceptorsWrapper(
@@ -61,7 +55,6 @@ class KnowledgeApi {
     // refreshKnowledgeToken = await secureStorageHelper.refreshToken;
     accessKnowledgeToken =
         Constant.KB_accessToken;
-    refreshKnowledgeToken =
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImJlZjgxMDA4LTg4MTktNGM5NS1iNzZjLWQwODA3YzU0MTNiNSIsImVtYWlsIjoibmd1eWVuYm9jaGFAZ21haWwuY29tIiwiaWF0IjoxNzMzNTYwOTc5LCJleHAiOjE3MzM2NDczNzl9.o2OKhw4pGkrQZXSMTguF6imMgjZ3MpaeWEQvYR9fLHk";
   }
 

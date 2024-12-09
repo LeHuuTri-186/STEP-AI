@@ -19,7 +19,11 @@ import 'package:step_ai/features/chat/domain/usecase/send_message_usecase.dart';
 import 'package:step_ai/features/knowledge_base/domain/entity/knowledge.dart';
 import 'package:step_ai/features/knowledge_base/domain/repository/knowledge_repository.dart';
 import 'package:step_ai/features/knowledge_base/domain/usecase/add_knowledge_usecase.dart';
+import 'package:step_ai/features/knowledge_base/domain/usecase/delete_knowledge_usecase.dart';
 import 'package:step_ai/features/knowledge_base/domain/usecase/get_knowledge_list_usecase.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/repository/unit_repository.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/usecase/delete_unit_usecase.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/usecase/get_unit_list_usecase.dart';
 import 'package:step_ai/shared/usecase/refresh_token_usecase.dart';
 
 import '../../../../features/authentication/domain/repository/register_repository.dart';
@@ -102,6 +106,21 @@ class UseCaseModule {
     getIt.registerSingleton<AddKnowledgeUsecase>(
       AddKnowledgeUsecase(
         getIt<KnowledgeRepository>(),
+      ),
+    );
+    getIt.registerSingleton<DeleteKnowledgeUsecase>(
+      DeleteKnowledgeUsecase(
+        getIt<KnowledgeRepository>(),
+      ),
+    );
+    getIt.registerSingleton<GetUnitListUsecase>(
+      GetUnitListUsecase(
+        getIt<UnitRepository>(),
+      ),
+    );
+    getIt.registerSingleton<DeleteUnitUsecase>(
+      DeleteUnitUsecase(
+        getIt<UnitRepository>(),
       ),
     );
   }

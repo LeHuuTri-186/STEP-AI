@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:step_ai/features/knowledge_base/domain/entity/knowledge_list.dart';
 import 'package:step_ai/features/knowledge_base/domain/params/add_knowledge_param.dart';
 import 'package:step_ai/features/knowledge_base/domain/usecase/add_knowledge_usecase.dart';
+import 'package:step_ai/features/knowledge_base/domain/usecase/delete_knowledge_usecase.dart';
 import 'package:step_ai/features/knowledge_base/domain/usecase/get_knowledge_list_usecase.dart';
 
 class KnowledgeNotifier with ChangeNotifier {
   GetKnowledgeListUsecase _getKnowledgeListUsecase;
   AddKnowledgeUsecase _addKnowledgeUsecase;
-  KnowledgeNotifier(this._getKnowledgeListUsecase, this._addKnowledgeUsecase);
+  DeleteKnowledgeUsecase _deleteKnowledgeUsecase;
+  KnowledgeNotifier(this._getKnowledgeListUsecase, this._addKnowledgeUsecase,
+      this._deleteKnowledgeUsecase);
   String errorString = "";
   bool isLoadingKnowledgeList = false;
   KnowledgeList? knowledgeList;
@@ -31,8 +34,6 @@ class KnowledgeNotifier with ChangeNotifier {
 
   Future<void> addNewKnowledge(
       String knowledgeName, String? knowledgeDescription) async {
-    isLoadingKnowledgeList = true;
-    notifyListeners();
     try {
       await _addKnowledgeUsecase.call(
           params: AddKnowledgeParam(
@@ -44,9 +45,15 @@ class KnowledgeNotifier with ChangeNotifier {
       }
       errorString = "Có lỗi xảy ra. Thử lại sau addNewKnowledge";
       print("Error in addNewKnowledge in knowledge notifier with error: $e");
-    } finally {
-      isLoadingKnowledgeList = false;
-      notifyListeners();
+    }
+  }
+
+  Future<void> deleteKnowledge(String id) async {
+    try {
+      await _deleteKnowledgeUsecase.call(params: id);
+    } catch (e) {
+      errorString = "Có lỗi xảy ra. Thử lại sau addNewKnowledge";
+      print("Error in deleteKnowledge in knowledge notifier with error: $e");
     }
   }
 }

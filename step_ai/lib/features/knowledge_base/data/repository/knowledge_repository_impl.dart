@@ -72,4 +72,9 @@ class KnowledgeRepositoryImpl extends KnowledgeRepository {
   Future<void> addKnowledge(AddKnowledgeParam params) {
     return _knowledgeApi.post("/kb-core/v1/knowledge", data: params.toJson());
   }
+
+  @override
+  Future<void> deleteKnowledge(String id) {
+    return _knowledgeApi.delete("/kb-core/v1/knowledge/$id");
+  }
 }

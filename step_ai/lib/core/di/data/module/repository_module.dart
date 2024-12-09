@@ -16,6 +16,9 @@ import 'package:step_ai/features/chat/domain/repository/conversation_repository.
 import 'package:step_ai/features/knowledge_base/data/network/knowledge_api.dart';
 import 'package:step_ai/features/knowledge_base/data/repository/knowledge_repository_impl.dart';
 import 'package:step_ai/features/knowledge_base/domain/repository/knowledge_repository.dart';
+import 'package:step_ai/features/units_in_knowledge/data/network/unit_api.dart';
+import 'package:step_ai/features/units_in_knowledge/data/repository/unit_repository_impl.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/repository/unit_repository.dart';
 
 import '../../service_locator.dart';
 
@@ -43,5 +46,7 @@ class RepositoryModule {
     //Knowledge:----------------------------------------------------------------
     getIt.registerSingleton<KnowledgeRepository>(
         KnowledgeRepositoryImpl(getIt<KnowledgeApi>()) as KnowledgeRepository);
+    getIt.registerSingleton<UnitRepository>(
+        UnitRepositoryImpl(getIt<UnitApi>()) as UnitRepository);
   }
 }

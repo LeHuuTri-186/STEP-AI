@@ -4,4 +4,5 @@ import 'package:step_ai/features/knowledge_base/domain/params/add_knowledge_para
 abstract class KnowledgeRepository {
   Future<KnowledgeList> getKnowledgeList();
   Future<void> addKnowledge(AddKnowledgeParam params);
+  Future<void> deleteKnowledge(String id);
 }
