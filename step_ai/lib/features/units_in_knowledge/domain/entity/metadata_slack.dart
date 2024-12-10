@@ -1,3 +1,4 @@
+import 'package:step_ai/config/constants.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/entity/metadata_in_unit.dart';
 
 class MetadataSlack extends MetadataInUnit {
@@ -25,12 +26,11 @@ class MetadataSlack extends MetadataInUnit {
 
   @override
   String getTypeName() {
-    // TODO: implement getTypeName
     return "Slack";
   }
   
   @override
   String getIconPath() {
-    return "lib/core/assets/source_unit_images/slack.png";
+    return Constant.slackImagePath;
   }
 }

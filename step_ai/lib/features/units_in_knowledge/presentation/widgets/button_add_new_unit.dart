@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:step_ai/features/units_in_knowledge/presentation/widgets/add_option_unit_dialog.dart';
 
 class ButtonAddNewUnit extends StatelessWidget {
   const ButtonAddNewUnit({super.key});
-  void _showAddDialog(BuildContext context) {
+  void showAddUnitOptions(BuildContext context) {
     showDialog(
-      context: context,
-      builder: (context) => const Text("Add unit dialog"),
-    );
+        context: context,
+        builder: (context) {
+          return AddOptionUnitDialog();
+        });
   }
 
   @override
@@ -23,7 +25,7 @@ class ButtonAddNewUnit extends StatelessWidget {
           color: Colors.blueAccent,
         ),
         child: TextButton(
-          onPressed: () => _showAddDialog(context),
+          onPressed: () => showAddUnitOptions(context),
           child: SizedBox(
             width: 80,
             child: Row(

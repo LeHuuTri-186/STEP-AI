@@ -3,7 +3,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart';
 import 'package:step_ai/features/knowledge_base/presentation/widgets/knowledge_item.dart';
-import 'package:step_ai/features/knowledge_base/presentation/widgets/no_knowledge_panel.dart';
+import 'package:step_ai/shared/widgets/no_data_panel.dart';
 import 'package:step_ai/shared/styles/colors.dart';
 
 class KnowledgeListview extends StatefulWidget {
@@ -48,7 +48,7 @@ class _KnowledgeListviewState extends State<KnowledgeListview> {
       return const Center(child: Text("Have error. Try again later"));
     }
     if (_knowledgeNotifier.knowledgeList!.knowledgeList.isEmpty) {
-      return const NoKnowledgePanel();
+      return const NoDataPannel(contentNoData: "Create a knowledge base to store your data",);
     }
 
     return ListView.builder(

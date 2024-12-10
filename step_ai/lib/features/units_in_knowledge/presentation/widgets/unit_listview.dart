@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/unit_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/presentation/widgets/unit_item.dart';
 import 'package:step_ai/shared/styles/colors.dart';
+import 'package:step_ai/shared/widgets/no_data_panel.dart';
 
 class UnitListview extends StatefulWidget {
   UnitListview({super.key});
@@ -45,6 +46,11 @@ class _UnitListviewState extends State<UnitListview> {
     if (_unitNotifier.errorString.isNotEmpty ||
         _unitNotifier.unitList == null) {
       return const Center(child: Text("Have error. Try again later"));
+    }
+    if (_unitNotifier.unitList!.units.isEmpty) {
+      return const NoDataPannel(
+        contentNoData: "Create a unit in your knowledge",
+      );
     }
     return ListView.separated(
       itemCount: _unitNotifier.unitList!.units.length,

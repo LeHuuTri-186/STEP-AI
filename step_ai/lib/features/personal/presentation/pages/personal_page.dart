@@ -5,8 +5,6 @@ import 'package:step_ai/features/knowledge_base/presentation/pages/knowledge_pag
 import 'package:step_ai/shared/widgets/history_drawer.dart';
 import 'package:step_ai/features/personal/presentation/widgets/search_bar_widget.dart';
 import 'package:step_ai/features/personal/presentation/widgets/dropdown_widget.dart';
-import 'package:step_ai/features/knowledge_base/presentation/widgets/no_knowledge_panel.dart';
-import 'package:step_ai/shared/widgets/search_bar.dart';
 
 import '../widgets/no_bot_panel.dart';
 

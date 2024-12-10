@@ -1,3 +1,4 @@
+import 'package:step_ai/config/constants.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/entity/metadata_in_unit.dart';
 
 class MetadataFile extends MetadataInUnit {
@@ -31,7 +32,6 @@ class MetadataFile extends MetadataInUnit {
   
   @override
   String getIconPath() {
-    // TODO: implement getIconPath
-    return 'lib/core/assets/source_unit_images/file.jpg';
+    return Constant.localFileImagePath;
   }
 }

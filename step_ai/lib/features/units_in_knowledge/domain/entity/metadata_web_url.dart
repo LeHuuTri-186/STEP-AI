@@ -1,3 +1,4 @@
+import 'package:step_ai/config/constants.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/entity/metadata_in_unit.dart';
 
 class MetadataWebUrl extends MetadataInUnit {
@@ -25,6 +26,6 @@ class MetadataWebUrl extends MetadataInUnit {
   }
     @override
   String getIconPath() {
-    return "lib/core/assets/source_unit_images/web.png";
+    return Constant.webImagePath;
   }
 }

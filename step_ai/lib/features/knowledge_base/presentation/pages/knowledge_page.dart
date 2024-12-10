@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:step_ai/features/knowledge_base/presentation/widgets/button_add_new_knowledge.dart';
 import 'package:step_ai/features/knowledge_base/presentation/widgets/knowledge_listview.dart';
-import 'package:step_ai/features/knowledge_base/presentation/widgets/no_knowledge_panel.dart';
 import 'package:step_ai/shared/widgets/search_bar.dart';
 
 class KnowledgePage extends StatelessWidget {

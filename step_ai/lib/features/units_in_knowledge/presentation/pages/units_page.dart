@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:step_ai/features/knowledge_base/domain/entity/knowledge.dart';
-import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/unit_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/presentation/widgets/button_add_new_unit.dart';
 import 'package:step_ai/features/units_in_knowledge/presentation/widgets/unit_listview.dart';

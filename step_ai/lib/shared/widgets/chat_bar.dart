@@ -4,11 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/features/chat/presentation/notifier/chat_bar_notifier.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:step_ai/config/routes/routes.dart';
-import 'package:step_ai/core/di/service_locator.dart';
 import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
-import 'package:step_ai/shared/widgets/popup_attachment_options.dart';
 
 import '../../config/enum/task_status.dart';
 import '../../features/chat/presentation/notifier/prompt_list_notifier.dart';

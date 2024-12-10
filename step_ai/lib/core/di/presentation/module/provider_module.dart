@@ -26,6 +26,7 @@ import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart
 import 'package:step_ai/features/units_in_knowledge/domain/entity/unit.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/usecase/delete_unit_usecase.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/usecase/get_unit_list_usecase.dart';
+import 'package:step_ai/features/units_in_knowledge/notifier/add_option_unit_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/unit_notifier.dart';
 
 class ProviderModule {
@@ -86,5 +87,6 @@ class ProviderModule {
         AddKnowledgeDialogNotifier());
     getIt.registerSingleton<UnitNotifier>(
         UnitNotifier(getIt<GetUnitListUsecase>(), getIt<DeleteUnitUsecase>()));
+    getIt.registerSingleton<AddOptionUnitNotifier>(AddOptionUnitNotifier());
   }
 }
