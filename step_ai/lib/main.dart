@@ -11,6 +11,7 @@ import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart
 import 'package:step_ai/features/knowledge_base/presentation/widgets/add_knowledge_dialog.dart';
 import 'package:step_ai/features/prompt/presentation/state/prompt_view_provider.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/add_option_unit_notifier.dart';
+import 'package:step_ai/features/units_in_knowledge/notifier/edit_knowledge_dialog_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/unit_notifier.dart';
 
 import 'config/routes/routes.dart';
@@ -77,6 +78,7 @@ class MyApp extends StatelessWidget {
             value: getIt<AddKnowledgeDialogNotifier>()),
         ChangeNotifierProvider.value(value: getIt<UnitNotifier>()),
         ChangeNotifierProvider.value(value: getIt<AddOptionUnitNotifier>()),
+        ChangeNotifierProvider.value(value: getIt<EditKnowledgeDialogNotifier>()),
       ],
       child: MaterialApp(
         title: 'Step AI',

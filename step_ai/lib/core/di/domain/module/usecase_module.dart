@@ -20,6 +20,7 @@ import 'package:step_ai/features/knowledge_base/domain/entity/knowledge.dart';
 import 'package:step_ai/features/knowledge_base/domain/repository/knowledge_repository.dart';
 import 'package:step_ai/features/knowledge_base/domain/usecase/add_knowledge_usecase.dart';
 import 'package:step_ai/features/knowledge_base/domain/usecase/delete_knowledge_usecase.dart';
+import 'package:step_ai/features/knowledge_base/domain/usecase/edit_knowledge_usecase.dart';
 import 'package:step_ai/features/knowledge_base/domain/usecase/get_knowledge_list_usecase.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/repository/unit_repository.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/usecase/delete_unit_usecase.dart';
@@ -113,6 +114,13 @@ class UseCaseModule {
         getIt<KnowledgeRepository>(),
       ),
     );
+    getIt.registerSingleton<EditKnowledgeUsecase>(
+      EditKnowledgeUsecase(
+        getIt<KnowledgeRepository>(),
+      ),
+    );
+
+    ///Units:--------------------------------------------------------------------
     getIt.registerSingleton<GetUnitListUsecase>(
       GetUnitListUsecase(
         getIt<UnitRepository>(),

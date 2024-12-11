@@ -1,7 +1,7 @@
-class AddKnowledgeParam {
+class KnowledgeParam {
   String knowledgeName;
   String? description;
-  AddKnowledgeParam({
+  KnowledgeParam({
     required this.knowledgeName,
     this.description,
   });

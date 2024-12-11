@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/unit_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/presentation/widgets/button_add_new_unit.dart';
+import 'package:step_ai/features/units_in_knowledge/presentation/widgets/edit_knowledge_dialog.dart';
 import 'package:step_ai/features/units_in_knowledge/presentation/widgets/unit_listview.dart';
 
 class UnitsPage extends StatelessWidget {
@@ -17,7 +18,13 @@ class UnitsPage extends StatelessWidget {
           actions: [
             IconButton(
               icon: const Icon(Icons.edit),
-              onPressed: () {},
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return const EditKnowledgeDialog();
+                    });
+              },
             )
           ],
         ),

@@ -46,6 +46,8 @@ class RepositoryModule {
     //Knowledge:----------------------------------------------------------------
     getIt.registerSingleton<KnowledgeRepository>(
         KnowledgeRepositoryImpl(getIt<KnowledgeApi>()) as KnowledgeRepository);
+
+    //Units:--------------------------------------------------------------------
     getIt.registerSingleton<UnitRepository>(
         UnitRepositoryImpl(getIt<UnitApi>()) as UnitRepository);
   }

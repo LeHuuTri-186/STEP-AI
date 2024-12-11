@@ -100,8 +100,11 @@ class UnitItem extends StatelessWidget {
                                 Navigator.of(context).pop();
                                 await unitNotifier.deleteUnit(unit.id);
                                 await unitNotifier.getUnitList();
+
+                                unitNotifier.setIsLoading(true);
                                 await knowledgeNotifier.getKnowledgeList();
                                 findAndUpdateCurrentKnowledge();
+                                unitNotifier.setIsLoading(false);
                               },
                               child: const Text('Delete'),
                             ),

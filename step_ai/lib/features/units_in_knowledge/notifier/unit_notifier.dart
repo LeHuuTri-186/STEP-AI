@@ -39,8 +39,14 @@ class UnitNotifier extends ChangeNotifier {
       print("Error in deleteUnit in unit notifier with error: $e");
     }
   }
+
   void updateCurrentKnowledge(Knowledge knowledge) {
     currentKnowledge = knowledge;
+    notifyListeners();
+  }
+
+  void setIsLoading(bool value) {
+    isLoading = value;
     notifyListeners();
   }
 }
