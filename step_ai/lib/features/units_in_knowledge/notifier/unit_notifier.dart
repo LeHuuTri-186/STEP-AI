@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:step_ai/features/knowledge_base/domain/entity/knowledge.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/entity/unit_list.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/params/delete_unit_param.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/params/update_status_unit_param.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/usecase/delete_unit_usecase.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/usecase/get_unit_list_usecase.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/usecase/update_status_unit_usecase.dart';
 
 class UnitNotifier extends ChangeNotifier {
   GetUnitListUsecase _getUnitListUsecase;
   DeleteUnitUsecase _deleteUnitUsecase;
-  UnitNotifier(this._getUnitListUsecase, this._deleteUnitUsecase);
+  UpdateStatusUnitUsecase _updateStatusUnitUsecase;
+  UnitNotifier(this._getUnitListUsecase, this._deleteUnitUsecase,
+      this._updateStatusUnitUsecase);
   bool isLoading = false;
   String errorString = "";
   UnitList? unitList;
@@ -37,6 +41,16 @@ class UnitNotifier extends ChangeNotifier {
     } catch (e) {
       errorString = "Có lỗi xảy ra. Thử lại sau deleteUnit";
       print("Error in deleteUnit in unit notifier with error: $e");
+    }
+  }
+
+  Future<void> updateStatusUnit(String unitId, bool status) async {
+    try {
+      await _updateStatusUnitUsecase.call(
+          params: UpdateStatusUnitParam(id: unitId, status: status));
+    } catch (e) {
+      errorString = "Có lỗi xảy ra. Thử lại sau updateStatusUnit";
+      print("Error in updateStatusUnit in unit notifier with error: $e");
     }
   }
 

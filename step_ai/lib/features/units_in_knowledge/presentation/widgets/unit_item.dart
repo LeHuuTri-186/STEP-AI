@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/entity/unit.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/unit_notifier.dart';
+import 'package:step_ai/features/units_in_knowledge/presentation/widgets/custom_cupertino.dart';
 
 class UnitItem extends StatelessWidget {
   final Unit unit;
@@ -74,9 +75,7 @@ class UnitItem extends StatelessWidget {
           Expanded(
               flex: 1,
               child: Transform.scale(
-                  scale: 0.7,
-                  child: CupertinoSwitch(
-                      value: unit.status, onChanged: (value) {}))),
+                  scale: 0.7, child: CustomCupertino(unit: unit))),
           Expanded(
             flex: 1,
             child: IconButton(

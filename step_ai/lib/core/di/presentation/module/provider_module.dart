@@ -27,7 +27,9 @@ import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart
 import 'package:step_ai/features/units_in_knowledge/domain/entity/unit.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/usecase/delete_unit_usecase.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/usecase/get_unit_list_usecase.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/usecase/update_status_unit_usecase.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/add_option_unit_notifier.dart';
+import 'package:step_ai/features/units_in_knowledge/notifier/cupertino_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/edit_knowledge_dialog_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/unit_notifier.dart';
 
@@ -89,10 +91,13 @@ class ProviderModule {
     getIt.registerSingleton<AddKnowledgeDialogNotifier>(
         AddKnowledgeDialogNotifier());
     //Units in knowledge:-------------------------------------------------------
-    getIt.registerSingleton<UnitNotifier>(
-        UnitNotifier(getIt<GetUnitListUsecase>(), getIt<DeleteUnitUsecase>()));
+    getIt.registerSingleton<UnitNotifier>(UnitNotifier(
+        getIt<GetUnitListUsecase>(),
+        getIt<DeleteUnitUsecase>(),
+        getIt<UpdateStatusUnitUsecase>()));
     getIt.registerSingleton<AddOptionUnitNotifier>(AddOptionUnitNotifier());
     getIt.registerSingleton<EditKnowledgeDialogNotifier>(
         EditKnowledgeDialogNotifier());
+    getIt.registerFactory<CupertinoNotifier>(() => CupertinoNotifier());
   }
 }
