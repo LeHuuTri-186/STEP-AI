@@ -10,8 +10,6 @@ class AddOptionUnitDialog extends StatelessWidget {
   AddOptionUnitDialog({super.key});
   late AddOptionUnitNotifier addOptionUnitNotifier;
   String goToDetailAddUnitPage(BuildContext context) {
-        addOptionUnitNotifier =
-        Provider.of<AddOptionUnitNotifier>(context, listen: false);
     String selectedOption = addOptionUnitNotifier.selectedOption;
     if (selectedOption == "web") {
       return Routes.webPage;
@@ -30,6 +28,8 @@ class AddOptionUnitDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    addOptionUnitNotifier =
+        Provider.of<AddOptionUnitNotifier>(context, listen: false);
     return AlertDialog(
       content: SizedBox(
         height: MediaQuery.of(context).size.height * 0.5,
@@ -59,7 +59,7 @@ class AddOptionUnitDialog extends StatelessWidget {
                     ),
                     OptionUnitItem(
                       imagePath: Constant.driveImagePath,
-                      title: "Google drive",
+                      title: "Drive",
                       subtitle: "Connect Google drive to get data",
                       value: "drive",
                     ),
@@ -82,6 +82,7 @@ class AddOptionUnitDialog extends StatelessWidget {
                   padding: const EdgeInsets.all(4.0),
                   child: ElevatedButton(
                     onPressed: () {
+                      addOptionUnitNotifier.setSelectedOption("local_file");
                       Navigator.of(context).pop();
                     },
                     style:
@@ -96,9 +97,12 @@ class AddOptionUnitDialog extends StatelessWidget {
                     onPressed: () {
                       //print("Selected option:");
                       //Pop up the dialog
+
                       Navigator.of(context).pop();
 
-                      Navigator.of(context).pushNamed(goToDetailAddUnitPage(context));
+                      Navigator.of(context)
+                          .pushNamed(goToDetailAddUnitPage(context));
+                      addOptionUnitNotifier.setSelectedOption("local_file");
                     },
                     style:
                         ElevatedButton.styleFrom(backgroundColor: Colors.blue),

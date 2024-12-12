@@ -85,6 +85,7 @@ class OptionUnitItem extends StatelessWidget {
               onChanged: (String? newValue) {
                 addOptionUnitNotifier.selectedOption = newValue!;
               },
+              activeColor: Colors.blue,
             ),
           ],
         ),
