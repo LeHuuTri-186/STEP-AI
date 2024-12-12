@@ -7,26 +7,39 @@ import 'package:step_ai/features/knowledge_base/domain/entity/knowledge.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/entity/unit_list.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/params/delete_unit_param.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/params/update_status_unit_param.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/params/upload_confluence_param.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/params/upload_local_file_param.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/params/upload_slack_param.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/params/upload_web_param.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/usecase/delete_unit_usecase.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/usecase/get_unit_list_usecase.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/usecase/update_status_unit_usecase.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/usecase/upload_confluence_usecase.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/usecase/upload_drive_usecae.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/usecase/upload_local_file_usecase.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/usecase/upload_slack_usecase.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/usecase/upload_web_usecase.dart';
 
 class UnitNotifier extends ChangeNotifier {
   GetUnitListUsecase _getUnitListUsecase;
   DeleteUnitUsecase _deleteUnitUsecase;
   UpdateStatusUnitUsecase _updateStatusUnitUsecase;
+
   UploadLocalFileUsecase _uploadLocalFileUsecase;
   UploadWebUsecase _uploadWebUsecase;
+  UploadSlackUsecase _uploadSlackUsecase;
+  UploadDriveUsecae _uploadDriveUsecae;
+  UploadConfluenceUsecase _uploadConfluenceUsecase;
+
   UnitNotifier(
       this._getUnitListUsecase,
       this._deleteUnitUsecase,
       this._updateStatusUnitUsecase,
       this._uploadLocalFileUsecase,
-      this._uploadWebUsecase);
+      this._uploadWebUsecase,
+      this._uploadSlackUsecase,
+      this._uploadDriveUsecae,
+      this._uploadConfluenceUsecase);
   bool isLoading = false;
   String errorString = "";
   UnitList? unitList;
@@ -82,9 +95,6 @@ class UnitNotifier extends ChangeNotifier {
   }
 
   Future<void> uploadWeb(String webUrl, String unitName) async {
-    print("uploadWeb in unit notifier");
-    print("webUrl: $webUrl");
-    print("unitName: $unitName");
     try {
       await _uploadWebUsecase.call(
           params: UploadWebParam(
@@ -100,6 +110,27 @@ class UnitNotifier extends ChangeNotifier {
     }
   }
 
+  Future<void> uploadSlack(
+      String nameSlack, String slackWorkspace, String slackBotToken) async {
+    try {
+      await _uploadSlackUsecase.call(
+          params: UploadSlackParam(
+              knowledgeId: currentKnowledge!.id,
+              unitName: nameSlack,
+              slackBotToken: slackBotToken,
+              slackWorkspace: slackWorkspace));
+    } catch (e) {
+      print("Error in upload Slack in unit notifier with error: $e");
+      if (e is DioException && e.response!.statusCode == 500) {
+        throw "Url is not valid";
+      }
+      throw e.toString();
+    }
+  }
+
+  Future<void> uploadDrive() async {}
+  Future<void> uploadConfluence() async {}
+//------------------------------
   void updateCurrentKnowledge(Knowledge knowledge) {
     currentKnowledge = knowledge;
     notifyListeners();

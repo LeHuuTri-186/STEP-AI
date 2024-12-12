@@ -7,8 +7,11 @@ import 'package:step_ai/features/knowledge_base/notifier/add_knowledge_dialog_no
 import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart';
 import 'package:step_ai/features/prompt/presentation/state/prompt_view_provider.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/add_option_unit_notifier.dart';
+import 'package:step_ai/features/units_in_knowledge/notifier/confluence_notifier.dart';
+import 'package:step_ai/features/units_in_knowledge/notifier/drive_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/edit_knowledge_dialog_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/local_file_notifier.dart';
+import 'package:step_ai/features/units_in_knowledge/notifier/slack_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/unit_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/web_notifier.dart';
 
@@ -75,8 +78,12 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: getIt<UnitNotifier>()),
         ChangeNotifierProvider.value(value: getIt<AddOptionUnitNotifier>()),
         ChangeNotifierProvider.value(value: getIt<EditKnowledgeDialogNotifier>()),
+        
         ChangeNotifierProvider.value(value: getIt<LocalFileNotifier>()),
         ChangeNotifierProvider.value(value: getIt<WebNotifier>()),
+        ChangeNotifierProvider.value(value: getIt<SlackNotifier>()),
+        ChangeNotifierProvider.value(value: getIt<DriveNotifier>()),
+        ChangeNotifierProvider.value(value: getIt<ConfluenceNotifier>()),
       ],
       child: MaterialApp(
         title: 'Step AI',

@@ -3,7 +3,10 @@ import 'package:step_ai/features/units_in_knowledge/data/network/unit_api.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/entity/unit_list.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/params/delete_unit_param.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/params/update_status_unit_param.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/params/upload_confluence_param.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/params/upload_drive_param.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/params/upload_local_file_param.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/params/upload_slack_param.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/params/upload_web_param.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/repository/unit_repository.dart';
 
@@ -40,6 +43,8 @@ class UnitRepositoryImpl extends UnitRepository {
         data: {'status': updateStatusUnitParam.status});
   }
 
+  //Upload Unit--------------
+
   @override
   Future<void> uploadLocalFile(
       UploadLocalFileParam uploadLocalFileParam) async {
@@ -64,5 +69,29 @@ class UnitRepositoryImpl extends UnitRepository {
       "unitName": uploadWebParam.unitName,
       "webUrl": uploadWebParam.webUrl
     });
+  }
+
+  @override
+  Future<void> uploadConfluence(UploadConfluenceParam uploadConfluenceParam) {
+    // TODO: implement uploadConfluence
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> uploadDrive(UploadDriveParam uploadDriveParam) {
+    // TODO: implement uploadDrive
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> uploadSlack(UploadSlackParam uploadSlackParam) {
+    // TODO: implement uploadSlack
+    return _unitApi.post(
+        "/kb-core/v1/knowledge/${uploadSlackParam.knowledgeId}/slack",
+        data: {
+          "unitName": uploadSlackParam.unitName,
+          "slackWorkspace": uploadSlackParam.slackWorkspace,
+          "slackBotToken": uploadSlackParam.slackBotToken
+        });
   }
 }

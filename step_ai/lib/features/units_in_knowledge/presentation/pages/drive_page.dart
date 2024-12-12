@@ -8,7 +8,7 @@ class DrivePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Local Files'),
+        title: const Text('Drive'),
       ),
       body: Center(
         child: Container(

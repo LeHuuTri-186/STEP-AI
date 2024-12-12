@@ -8,7 +8,7 @@ class ConfluencePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Local Files'),
+        title: const Text('Confluence'),
       ),
       body: Center(
         child: Container(
@@ -28,7 +28,7 @@ class ConfluencePage extends StatelessWidget {
                   Image.asset(Constant.confluenceImagePath,
                       width: 50, height: 50),
                   const SizedBox(width: 10),
-                  const Text('Local Files'),
+                  const Text('Confluence'),
                 ],
               ),
               const SizedBox(height: 4),

@@ -27,12 +27,18 @@ import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart
 import 'package:step_ai/features/units_in_knowledge/domain/usecase/delete_unit_usecase.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/usecase/get_unit_list_usecase.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/usecase/update_status_unit_usecase.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/usecase/upload_confluence_usecase.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/usecase/upload_drive_usecae.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/usecase/upload_local_file_usecase.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/usecase/upload_slack_usecase.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/usecase/upload_web_usecase.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/add_option_unit_notifier.dart';
+import 'package:step_ai/features/units_in_knowledge/notifier/confluence_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/cupertino_notifier.dart';
+import 'package:step_ai/features/units_in_knowledge/notifier/drive_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/edit_knowledge_dialog_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/local_file_notifier.dart';
+import 'package:step_ai/features/units_in_knowledge/notifier/slack_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/unit_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/web_notifier.dart';
 
@@ -99,7 +105,10 @@ class ProviderModule {
         getIt<DeleteUnitUsecase>(),
         getIt<UpdateStatusUnitUsecase>(),
         getIt<UploadLocalFileUsecase>(),
-        getIt<UploadWebUsecase>()));
+        getIt<UploadWebUsecase>(),
+        getIt<UploadSlackUsecase>(),
+        getIt<UploadDriveUsecae>(),
+        getIt<UploadConfluenceUsecase>()));
     getIt.registerSingleton<AddOptionUnitNotifier>(AddOptionUnitNotifier());
     getIt.registerSingleton<EditKnowledgeDialogNotifier>(
         EditKnowledgeDialogNotifier());
@@ -107,5 +116,8 @@ class ProviderModule {
     //Unit options:-------------------------------------------------------------
     getIt.registerSingleton<LocalFileNotifier>(LocalFileNotifier());
     getIt.registerSingleton<WebNotifier>(WebNotifier());
+    getIt.registerSingleton<DriveNotifier>(DriveNotifier());
+    getIt.registerSingleton<ConfluenceNotifier>(ConfluenceNotifier());
+    getIt.registerSingleton<SlackNotifier>(SlackNotifier());
   }
 }
