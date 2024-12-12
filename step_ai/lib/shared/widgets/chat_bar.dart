@@ -229,8 +229,11 @@ class _ChatBarState extends State<ChatBar> {
                                   (Route<dynamic> route) => false,
                                 );
                               }
-
-                              _controller.clear();
+                              setState(() {
+                                //print("set state ABCDDDDDE");
+                                _showIconSend = true;
+                              });
+                              // _controller.clear();
                             })
                         : IconButton(
                             padding: const EdgeInsets.all(2),

@@ -22,6 +22,7 @@ class HistoryConversationListNotifier extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
     try {
+      print("=============getHistoryConversationList");
       _limitConversation = _limitConversation + 10;
       final conversationModel = await _getHistoryConversationListUsecase.call(
           params: _limitConversation);
@@ -34,6 +35,7 @@ class HistoryConversationListNotifier extends ChangeNotifier {
         );
       }).toList();
       _hasMore = conversationModel.hasMore;
+      print("=============getHistoryConversationList success");
     } catch (e) {
       _historyConversationList = [];
       _limitConversation = 0;

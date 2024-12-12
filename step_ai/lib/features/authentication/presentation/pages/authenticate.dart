@@ -403,7 +403,7 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
       if (isLogged) {
         if (mounted) {
 
-          _getNecessaryData();
+          await _getNecessaryData();
           Navigator.of(context).pushReplacementNamed(Routes.chat);
         }
       }
@@ -429,7 +429,7 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
         print('Logging in');
         //Switch screen
         if (mounted) {
-          _getNecessaryData();
+          await _getNecessaryData();
           Navigator.of(context).pushReplacementNamed(Routes.chat);
         }
       }
@@ -448,7 +448,7 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     _usernameController.text = '';
   }
 
-  void _getNecessaryData() async{
+  Future _getNecessaryData() async{
     await _chatNotifier.getNumberRestToken();
     await _historyConversationListNotifier.getHistoryConversationList();
   }
