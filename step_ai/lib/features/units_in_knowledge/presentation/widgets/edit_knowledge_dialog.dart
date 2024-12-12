@@ -35,10 +35,11 @@ class _EditKnowledgeDialogState extends State<EditKnowledgeDialog> {
   }
 
   void findAndUpdateCurrentKnowledge() {
-    //to update size and numbers units when delete or add unit
+    //to update name when edit knowledge
     _knowledgeNotifier.knowledgeList!.knowledgeList.forEach((knowledge) {
       if (knowledge.id == _unitNotifier.currentKnowledge!.id) {
         _unitNotifier.updateCurrentKnowledge(knowledge);
+        return;
       }
     });
   }

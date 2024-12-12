@@ -28,6 +28,7 @@ import 'package:step_ai/features/units_in_knowledge/domain/usecase/delete_unit_u
 import 'package:step_ai/features/units_in_knowledge/domain/usecase/get_unit_list_usecase.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/usecase/update_status_unit_usecase.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/usecase/upload_local_file_usecase.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/usecase/upload_web_usecase.dart';
 import 'package:step_ai/shared/usecase/refresh_token_usecase.dart';
 
 import '../../../../features/authentication/domain/repository/register_repository.dart';
@@ -138,5 +139,7 @@ class UseCaseModule {
         UpdateStatusUnitUsecase(getIt<UnitRepository>()));
     getIt.registerSingleton<UploadLocalFileUsecase>(
         UploadLocalFileUsecase(getIt<UnitRepository>()));
+    getIt.registerSingleton<UploadWebUsecase>(
+        UploadWebUsecase(getIt<UnitRepository>()));
   }
 }

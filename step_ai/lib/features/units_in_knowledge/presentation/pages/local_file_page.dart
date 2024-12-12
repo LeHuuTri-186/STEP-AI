@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:http_parser/http_parser.dart';
 
 import 'package:file_picker/file_picker.dart';
@@ -16,6 +17,16 @@ class LocalFilePage extends StatelessWidget {
   late UnitNotifier unitNotifier;
   FilePickerResult? result;
   File? file;
+  void findAndUpdateCurrentKnowledge() {
+    //to update size and numbers units when add unit
+    knowledgeNotifier.knowledgeList!.knowledgeList.forEach((knowledge) {
+      if (knowledge.id == unitNotifier.currentKnowledge!.id) {
+        unitNotifier.updateCurrentKnowledge(knowledge);
+        return;
+      }
+    });
+  }
+
   Future<void> selectFile() async {
     // Pick a file using file_picker
     result = await FilePicker.platform.pickFiles(
@@ -38,6 +49,14 @@ class LocalFilePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Local Files'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: localFileNotifier.isUploadLoading
+              ? null
+              : () {
+                  Navigator.pop(context);
+                },
+        ),
       ),
       body: Center(
         child: Container(
@@ -139,9 +158,9 @@ class LocalFilePage extends StatelessWidget {
                             file!,
                             MediaType.parse(
                                 localFileNotifier.getMimeType(extension)));
-                        await unitNotifier.getUnitList();
                         await knowledgeNotifier.getKnowledgeList();
-
+                        await unitNotifier.getUnitList();
+                        findAndUpdateCurrentKnowledge();
                         // Clear temporary files
                         await FilePicker.platform.clearTemporaryFiles();
                         localFileNotifier.changeFileName("");
@@ -151,7 +170,15 @@ class LocalFilePage extends StatelessWidget {
                         Navigator.pop(context);
                       },
                 child: (localFileNotifier.isUploadLoading)
-                    ? const Text("Uploading...")
+                    ? const Stack(alignment: Alignment.center, children: [
+                        Text("Uploading..."),
+                        Positioned(
+                          child: CupertinoActivityIndicator(
+                            radius: 10,
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ])
                     : const Text('Connect',
                         style: TextStyle(color: Colors.white)),
               ),

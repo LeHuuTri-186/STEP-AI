@@ -4,6 +4,7 @@ import 'package:step_ai/features/units_in_knowledge/domain/entity/unit_list.dart
 import 'package:step_ai/features/units_in_knowledge/domain/params/delete_unit_param.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/params/update_status_unit_param.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/params/upload_local_file_param.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/params/upload_web_param.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/repository/unit_repository.dart';
 
 class UnitRepositoryImpl extends UnitRepository {
@@ -54,5 +55,14 @@ class UnitRepositoryImpl extends UnitRepository {
     await _unitApi.postFile(
         "/kb-core/v1/knowledge/${uploadLocalFileParam.knowledgeId}/local-file",
         data: formData);
+  }
+
+  @override
+  Future<void> uploadWeb(UploadWebParam uploadWebParam) {
+    return _unitApi
+        .post("/kb-core/v1/knowledge/${uploadWebParam.knowledgeId}/web", data: {
+      "unitName": uploadWebParam.unitName,
+      "webUrl": uploadWebParam.webUrl
+    });
   }
 }

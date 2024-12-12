@@ -10,6 +10,7 @@ import 'package:step_ai/features/units_in_knowledge/notifier/add_option_unit_not
 import 'package:step_ai/features/units_in_knowledge/notifier/edit_knowledge_dialog_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/local_file_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/unit_notifier.dart';
+import 'package:step_ai/features/units_in_knowledge/notifier/web_notifier.dart';
 
 import 'config/routes/routes.dart';
 import 'config/theme/app_theme.dart';
@@ -75,6 +76,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: getIt<AddOptionUnitNotifier>()),
         ChangeNotifierProvider.value(value: getIt<EditKnowledgeDialogNotifier>()),
         ChangeNotifierProvider.value(value: getIt<LocalFileNotifier>()),
+        ChangeNotifierProvider.value(value: getIt<WebNotifier>()),
       ],
       child: MaterialApp(
         title: 'Step AI',

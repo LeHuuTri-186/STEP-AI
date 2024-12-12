@@ -16,6 +16,7 @@ class UnitItem extends StatelessWidget {
     knowledgeNotifier.knowledgeList!.knowledgeList.forEach((knowledge) {
       if (knowledge.id == unitNotifier.currentKnowledge!.id) {
         unitNotifier.updateCurrentKnowledge(knowledge);
+        return;
       }
     });
   }
