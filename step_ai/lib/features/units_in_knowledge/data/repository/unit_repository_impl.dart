@@ -1,7 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:step_ai/features/units_in_knowledge/data/network/unit_api.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/entity/unit_list.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/params/delete_unit_param.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/params/update_status_unit_param.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/params/upload_local_file_param.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/repository/unit_repository.dart';
 
 class UnitRepositoryImpl extends UnitRepository {
@@ -35,5 +37,22 @@ class UnitRepositoryImpl extends UnitRepository {
     return _unitApi.patch(
         "/kb-core/v1/knowledge/units/${updateStatusUnitParam.id}/status",
         data: {'status': updateStatusUnitParam.status});
+  }
+
+  @override
+  Future<void> uploadLocalFile(
+      UploadLocalFileParam uploadLocalFileParam) async {
+    final formData = FormData();
+    formData.files.add(
+      MapEntry(
+        'file',
+        await MultipartFile.fromFile(uploadLocalFileParam.file.path,
+            filename: uploadLocalFileParam.file.path.split('/').last,
+            contentType: uploadLocalFileParam.mediaType),
+      ),
+    );
+    await _unitApi.postFile(
+        "/kb-core/v1/knowledge/${uploadLocalFileParam.knowledgeId}/local-file",
+        data: formData);
   }
 }

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:step_ai/features/knowledge_base/notifier/add_knowledge_dialog_notifier.dart';
 import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart';
-import 'package:step_ai/features/units_in_knowledge/domain/entity/unit.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/edit_knowledge_dialog_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/unit_notifier.dart';
 

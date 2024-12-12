@@ -112,6 +112,15 @@ class UnitApi {
       ),
     );
   }
+    Future<Response> postFile(String path, {dynamic data}) async {
+    return _dio.post(
+      path,
+      data: data,
+      options: Options(
+        headers: {'Content-Type': 'multipart/form-data'},
+      ),
+    );
+  }
 
   /// Sends a GET request to the API with optional query parameters.
   Future<Response> get(String path, {Map<String, dynamic>? queryParams}) async {

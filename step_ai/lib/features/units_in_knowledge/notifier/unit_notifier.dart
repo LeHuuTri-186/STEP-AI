@@ -1,18 +1,24 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:http_parser/src/media_type.dart';
 import 'package:step_ai/features/knowledge_base/domain/entity/knowledge.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/entity/unit_list.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/params/delete_unit_param.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/params/update_status_unit_param.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/params/upload_local_file_param.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/usecase/delete_unit_usecase.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/usecase/get_unit_list_usecase.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/usecase/update_status_unit_usecase.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/usecase/upload_local_file_usecase.dart';
 
 class UnitNotifier extends ChangeNotifier {
   GetUnitListUsecase _getUnitListUsecase;
   DeleteUnitUsecase _deleteUnitUsecase;
   UpdateStatusUnitUsecase _updateStatusUnitUsecase;
+  UploadLocalFileUsecase _uploadLocalFileUsecase;
   UnitNotifier(this._getUnitListUsecase, this._deleteUnitUsecase,
-      this._updateStatusUnitUsecase);
+      this._updateStatusUnitUsecase, this._uploadLocalFileUsecase);
   bool isLoading = false;
   String errorString = "";
   UnitList? unitList;
@@ -51,6 +57,19 @@ class UnitNotifier extends ChangeNotifier {
     } catch (e) {
       errorString = "Có lỗi xảy ra. Thử lại sau updateStatusUnit";
       print("Error in updateStatusUnit in unit notifier with error: $e");
+    }
+  }
+
+  Future<void> uploadLocalFile(File file, MediaType mediaType) async {
+    try {
+      await _uploadLocalFileUsecase.call(
+          params: UploadLocalFileParam(
+              file: file,
+              knowledgeId: currentKnowledge!.id,
+              mediaType: mediaType));
+    } catch (e) {
+      errorString = "Có lỗi xảy ra. Thử lại sau uploadLocalFile";
+      print("Error in uploadLocalFile in unit notifier with error: $e");
     }
   }
 

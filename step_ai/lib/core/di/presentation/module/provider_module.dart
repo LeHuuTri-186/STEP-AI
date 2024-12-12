@@ -24,13 +24,14 @@ import 'package:step_ai/features/knowledge_base/domain/usecase/edit_knowledge_us
 import 'package:step_ai/features/knowledge_base/domain/usecase/get_knowledge_list_usecase.dart';
 import 'package:step_ai/features/knowledge_base/notifier/add_knowledge_dialog_notifier.dart';
 import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart';
-import 'package:step_ai/features/units_in_knowledge/domain/entity/unit.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/usecase/delete_unit_usecase.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/usecase/get_unit_list_usecase.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/usecase/update_status_unit_usecase.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/usecase/upload_local_file_usecase.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/add_option_unit_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/cupertino_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/edit_knowledge_dialog_notifier.dart';
+import 'package:step_ai/features/units_in_knowledge/notifier/local_file_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/unit_notifier.dart';
 
 class ProviderModule {
@@ -94,10 +95,13 @@ class ProviderModule {
     getIt.registerSingleton<UnitNotifier>(UnitNotifier(
         getIt<GetUnitListUsecase>(),
         getIt<DeleteUnitUsecase>(),
-        getIt<UpdateStatusUnitUsecase>()));
+        getIt<UpdateStatusUnitUsecase>(),
+        getIt<UploadLocalFileUsecase>()));
     getIt.registerSingleton<AddOptionUnitNotifier>(AddOptionUnitNotifier());
     getIt.registerSingleton<EditKnowledgeDialogNotifier>(
         EditKnowledgeDialogNotifier());
     getIt.registerFactory<CupertinoNotifier>(() => CupertinoNotifier());
+    //Unit options:-------------------------------------------------------------
+    getIt.registerSingleton<LocalFileNotifier>(LocalFileNotifier());
   }
 }

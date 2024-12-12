@@ -1,23 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:provider/provider.dart';
-import 'package:step_ai/core/data/local/securestorage/secure_storage_helper.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/features/authentication/domain/usecase/is_logged_in_usecase.dart';
 import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
 import 'package:step_ai/features/chat/notifier/history_conversation_list_notifier.dart';
 import 'package:step_ai/features/knowledge_base/notifier/add_knowledge_dialog_notifier.dart';
 import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart';
-import 'package:step_ai/features/knowledge_base/presentation/widgets/add_knowledge_dialog.dart';
 import 'package:step_ai/features/prompt/presentation/state/prompt_view_provider.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/add_option_unit_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/edit_knowledge_dialog_notifier.dart';
+import 'package:step_ai/features/units_in_knowledge/notifier/local_file_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/unit_notifier.dart';
 
 import 'config/routes/routes.dart';
 import 'config/theme/app_theme.dart';
 import 'core/di/service_locator.dart';
-import 'features/chat/domain/usecase/get_prompt_list_usecase.dart';
 import 'features/chat/notifier/assistant_notifier.dart';
 import 'features/chat/presentation/notifier/chat_bar_notifier.dart';
 import 'features/chat/presentation/notifier/prompt_list_notifier.dart';
@@ -36,7 +32,6 @@ Future<void> main() async {
   final IsLoggedInUseCase isLoggedInUseCase = getIt<IsLoggedInUseCase>();
   final isLoggedIn = await isLoggedInUseCase.call(params: null);
   final initialRoute = isLoggedIn ? Routes.chat : Routes.authenticate;
-  final initialRoute1 = Routes.chat; //to test chat page
 
   if (isLoggedIn) {
     final ChatNotifier chatNotifier = getIt<ChatNotifier>();
@@ -79,6 +74,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: getIt<UnitNotifier>()),
         ChangeNotifierProvider.value(value: getIt<AddOptionUnitNotifier>()),
         ChangeNotifierProvider.value(value: getIt<EditKnowledgeDialogNotifier>()),
+        ChangeNotifierProvider.value(value: getIt<LocalFileNotifier>()),
       ],
       child: MaterialApp(
         title: 'Step AI',

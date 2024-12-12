@@ -1,9 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:step_ai/config/constants.dart';
+import 'package:step_ai/config/routes/routes.dart';
+import 'package:step_ai/features/units_in_knowledge/notifier/add_option_unit_notifier.dart';
+import 'package:step_ai/features/units_in_knowledge/presentation/pages/local_file_page.dart';
 import 'package:step_ai/features/units_in_knowledge/presentation/widgets/option_unit_item.dart';
 
 class AddOptionUnitDialog extends StatelessWidget {
   AddOptionUnitDialog({super.key});
+  late AddOptionUnitNotifier addOptionUnitNotifier;
+  String goToDetailAddUnitPage(BuildContext context) {
+        addOptionUnitNotifier =
+        Provider.of<AddOptionUnitNotifier>(context, listen: false);
+    String selectedOption = addOptionUnitNotifier.selectedOption;
+    if (selectedOption == "web") {
+      return Routes.webPage;
+    }
+    if (selectedOption == "confluence") {
+      return Routes.confluencePage;
+    }
+    if (selectedOption == "drive") {
+      return Routes.drivePage;
+    }
+    if (selectedOption == "slack") {
+      return Routes.slackPage;
+    }
+    return Routes.localFilePage;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,19 +84,26 @@ class AddOptionUnitDialog extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.grey),
-                    child: const Text("Cancel", style: TextStyle(color: Colors.white)),
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: Colors.grey),
+                    child: const Text("Cancel",
+                        style: TextStyle(color: Colors.white)),
                   ),
                 ),
-              
                 Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: ElevatedButton(
                     onPressed: () {
-                      print("Selected option:");
+                      //print("Selected option:");
+                      //Pop up the dialog
+                      Navigator.of(context).pop();
+
+                      Navigator.of(context).pushNamed(goToDetailAddUnitPage(context));
                     },
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-                    child: const Text("Continue", style: TextStyle(color: Colors.white)),
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+                    child: const Text("Continue",
+                        style: TextStyle(color: Colors.white)),
                   ),
                 ),
               ],
