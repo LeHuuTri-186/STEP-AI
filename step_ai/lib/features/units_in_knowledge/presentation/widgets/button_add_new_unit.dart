@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:step_ai/core/di/service_locator.dart';
+import 'package:step_ai/features/units_in_knowledge/notifier/unit_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/presentation/widgets/add_option_unit_dialog.dart';
 
 class ButtonAddNewUnit extends StatelessWidget {
-  const ButtonAddNewUnit({super.key});
+  late UnitNotifier _unitNotifier;
+  ButtonAddNewUnit({super.key});
   void showAddUnitOptions(BuildContext context) {
     showDialog(
         context: context,
@@ -14,6 +18,7 @@ class ButtonAddNewUnit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    _unitNotifier = Provider.of<UnitNotifier>(context, listen: true);
     return Container(
       alignment: Alignment.centerRight,
       margin: const EdgeInsets.only(right: 6),
@@ -25,7 +30,9 @@ class ButtonAddNewUnit extends StatelessWidget {
           color: Colors.blueAccent,
         ),
         child: TextButton(
-          onPressed: () => showAddUnitOptions(context),
+          onPressed: _unitNotifier.numberLoadingItemSwitchCounter != 0
+              ? null
+              : () => showAddUnitOptions(context),
           child: SizedBox(
             width: 80,
             child: Row(

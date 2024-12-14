@@ -37,12 +37,14 @@ class CustomCupertino extends StatelessWidget {
                       ? null
                       : (value) async {
                           cupertinoNotifier.changeIsLoading(true);
+                          unitNotifier.incrementCupertinoSwitch();
 
                           await unitNotifier.updateStatusUnit(unit.id, value);
                           await knowledgeNotifier.getKnowledgeList();
 
                           cupertinoNotifier.changeSwitchValue(value);
                           cupertinoNotifier.changeIsLoading(false);
+                          unitNotifier.decrementCupertinoSwitch();
                         },
                 ),
               ),

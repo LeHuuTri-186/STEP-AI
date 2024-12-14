@@ -129,7 +129,29 @@ class UnitNotifier extends ChangeNotifier {
   }
 
   Future<void> uploadDrive() async {}
-  Future<void> uploadConfluence() async {}
+  Future<void> uploadConfluence(
+    String unitName,
+    String wikiPageUrl,
+    String confluenceUsername,
+    String confluenceAccessToken,
+  ) async {
+    try {
+      await _uploadConfluenceUsecase.call(
+          params: UploadConfluenceParam(
+              knowledgeId: currentKnowledge!.id,
+              unitName: unitName,
+              wikiPageUrl: wikiPageUrl,
+              confluenceUsername: confluenceUsername,
+              confluenceAccessToken: confluenceAccessToken));
+    } catch (e) {
+      print("Error in upload Confluence in unit notifier with error: $e");
+      if (e is DioException && e.response!.statusCode == 500) {
+        throw "Url is not valid";
+      }
+      throw e.toString();
+    }
+  }
+
 //------------------------------
   void updateCurrentKnowledge(Knowledge knowledge) {
     currentKnowledge = knowledge;
@@ -139,5 +161,19 @@ class UnitNotifier extends ChangeNotifier {
   void setIsLoading(bool value) {
     isLoading = value;
     notifyListeners();
+  }
+
+  //Using for loading indicator when switch disable/enable item in cupertino custom
+  int numberLoadingItemSwitchCounter = 0;
+  void incrementCupertinoSwitch() {
+    numberLoadingItemSwitchCounter++;
+    notifyListeners();
+  }
+
+  void decrementCupertinoSwitch() {
+    if (numberLoadingItemSwitchCounter > 0) {
+      numberLoadingItemSwitchCounter--;
+      notifyListeners();
+    }
   }
 }

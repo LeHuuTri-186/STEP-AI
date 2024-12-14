@@ -80,38 +80,41 @@ class UnitItem extends StatelessWidget {
           Expanded(
             flex: 1,
             child: IconButton(
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: const Text('Delete Unit'),
-                          content: Text(
-                              'Are you sure you want to delete "${unit.name}"?'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('Cancel'),
-                            ),
-                            TextButton(
-                              onPressed: () async {
-                                Navigator.of(context).pop();
-                                await unitNotifier.deleteUnit(unit.id);
-                                await unitNotifier.getUnitList();
+                onPressed: unitNotifier.numberLoadingItemSwitchCounter != 0
+                    ? null
+                    : () {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text('Delete Unit'),
+                                content: Text(
+                                    'Are you sure you want to delete "${unit.name}"?'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () async {
+                                      Navigator.of(context).pop();
+                                      await unitNotifier.deleteUnit(unit.id);
+                                      await unitNotifier.getUnitList();
 
-                                unitNotifier.setIsLoading(true);
-                                await knowledgeNotifier.getKnowledgeList();
-                                findAndUpdateCurrentKnowledge();
-                                unitNotifier.setIsLoading(false);
-                              },
-                              child: const Text('Delete'),
-                            ),
-                          ],
-                        );
-                      });
-                },
+                                      unitNotifier.setIsLoading(true);
+                                      await knowledgeNotifier
+                                          .getKnowledgeList();
+                                      findAndUpdateCurrentKnowledge();
+                                      unitNotifier.setIsLoading(false);
+                                    },
+                                    child: const Text('Delete'),
+                                  ),
+                                ],
+                              );
+                            });
+                      },
                 icon: const Icon(Icons.delete, color: Colors.red)),
           ),
         ],

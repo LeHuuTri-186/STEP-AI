@@ -2,18 +2,24 @@ import 'package:flutter/material.dart';
 
 class ConfluenceNotifier extends ChangeNotifier {
   String unitName = '';
-  String slackWorkspace = '';
-  String slackBotToken = '';
+  String wikiPageUrl = '';
+  String confluenceUsername = '';
+  String confluenceAccessToken = '';
+
   void setUnitName(String value) {
     unitName = value;
   }
 
-  void setSlackWorkspace(String value) {
-    slackWorkspace = value;
+  void setWikiPageUrl(String value) {
+    wikiPageUrl = value;
   }
 
-  void setSlackBotToken(String value) {
-    slackBotToken = value;
+  void setConfluenceUsername(String value) {
+    confluenceUsername = value;
+  }
+
+  void setConfluenceAccessToken(String value) {
+    confluenceAccessToken = value;
   }
 
   bool isUploadLoading = false;

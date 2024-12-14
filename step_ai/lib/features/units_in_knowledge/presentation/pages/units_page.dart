@@ -15,16 +15,26 @@ class UnitsPage extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text(_unitNotifier.currentKnowledge!.knowledgeName),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: (_unitNotifier.numberLoadingItemSwitchCounter != 0)
+                ? null
+                : () {
+                    Navigator.pop(context);
+                  },
+          ),
           actions: [
             IconButton(
               icon: const Icon(Icons.edit),
-              onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return const EditKnowledgeDialog();
-                    });
-              },
+              onPressed: (_unitNotifier.numberLoadingItemSwitchCounter != 0)
+                  ? null
+                  : () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return const EditKnowledgeDialog();
+                          });
+                    },
             )
           ],
         ),
@@ -37,7 +47,7 @@ class UnitsPage extends StatelessWidget {
                     "Size: ${_unitNotifier.currentKnowledge!.totalSize} bytes"),
                 const SizedBox(width: 20),
                 Text("Units: ${_unitNotifier.currentKnowledge!.numberUnits}"),
-                const Expanded(child: ButtonAddNewUnit()),
+                Expanded(child: ButtonAddNewUnit()),
               ],
             ),
             const SizedBox(height: 10),

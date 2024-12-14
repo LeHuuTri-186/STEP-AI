@@ -2,18 +2,8 @@ import 'package:flutter/material.dart';
 
 class DriveNotifier extends ChangeNotifier {
   String unitName = '';
-  String slackWorkspace = '';
-  String slackBotToken = '';
   void setUnitName(String value) {
     unitName = value;
-  }
-
-  void setSlackWorkspace(String value) {
-    slackWorkspace = value;
-  }
-
-  void setSlackBotToken(String value) {
-    slackBotToken = value;
   }
 
   bool isUploadLoading = false;

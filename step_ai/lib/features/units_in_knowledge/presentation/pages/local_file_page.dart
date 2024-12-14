@@ -142,7 +142,7 @@ class LocalFilePage extends StatelessWidget {
               const SizedBox(height: 10),
               //Button to connect
               ElevatedButton(
-                onPressed: (localFileNotifier.isUploadLoading)
+                onPressed: (localFileNotifier.isUploadLoading || file == null)
                     ? null
                     : () async {
                         if (file == null) {
