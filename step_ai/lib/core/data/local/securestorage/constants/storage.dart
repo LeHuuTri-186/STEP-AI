@@ -3,4 +3,7 @@ class Storage{
 
   static String accessToken = 'AccessToken';
   static String refreshToken = 'RefreshToken';
+
+  static String kbAccessToken = 'kbAccessToken';
+  static String kbRefreshToken = 'kbRefreshToken';
 }

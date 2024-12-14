@@ -11,9 +11,8 @@ import 'package:step_ai/features/prompt/presentation/state/prompt_view_provider.
 import 'config/routes/routes.dart';
 import 'config/theme/app_theme.dart';
 import 'core/di/service_locator.dart';
-import 'features/chat/domain/usecase/get_prompt_list_usecase.dart';
-import 'features/chat/presentation/notifier/chat_bar_notifier.dart';
-import 'features/chat/presentation/notifier/prompt_list_notifier.dart';
+
+import 'features/personal/presentation/notifier/bot_list_notifier.dart';
 import 'features/prompt/presentation/state/form_model/form_provider.dart';
 import 'features/prompt/presentation/state/private_prompt/private_filter_provider.dart';
 import 'features/prompt/presentation/state/private_prompt/private_view_provider.dart';
@@ -59,7 +58,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => getIt<PublicViewState>()),
         ChangeNotifierProvider(create: (_) => getIt<PrivateViewState>()),
         ChangeNotifierProvider(create: (_) => getIt<FormModel>()),
+        ChangeNotifierProvider(create: (_) => getIt<BotListNotifier>()),
         ChangeNotifierProvider(create: (_) => getIt<PromptViewState>())
+
       ],
       child: MaterialApp(
         title: 'Step AI',

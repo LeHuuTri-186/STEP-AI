@@ -124,7 +124,7 @@ class ApiClientChat {
   String? refreshToken;
 
   ApiClientChat() {
-    _dio.options.baseUrl = 'https://api.jarvis.cx'; // Base URL API
+    _dio.options.baseUrl = Constant.apiBaseUrl; // Base URL API
 
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {

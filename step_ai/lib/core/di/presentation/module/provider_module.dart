@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:step_ai/core/di/service_locator.dart';
+import 'package:step_ai/features/authentication/domain/usecase/login_kb_usecase.dart';
 import 'package:step_ai/features/authentication/domain/usecase/login_usecase.dart';
 import 'package:step_ai/features/authentication/domain/usecase/logout_usecase.dart';
 import 'package:step_ai/features/authentication/domain/usecase/register_usecase.dart';
@@ -18,6 +19,11 @@ import 'package:step_ai/features/chat/domain/usecase/send_message_usecase.dart';
 import 'package:step_ai/features/chat/notifier/assistant_notifier.dart';
 import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
 import 'package:step_ai/features/chat/notifier/history_conversation_list_notifier.dart';
+import 'package:step_ai/features/personal/domain/usecase/create_bot_usecase.dart';
+import 'package:step_ai/features/personal/domain/usecase/delete_bot_usecase.dart';
+import 'package:step_ai/features/personal/domain/usecase/get_bot_list_usecase.dart';
+import 'package:step_ai/features/personal/domain/usecase/update_bot_usecase.dart';
+import 'package:step_ai/features/personal/presentation/notifier/bot_list_notifier.dart';
 
 class ProviderModule {
   static Future<void> configureStoreModuleInjection() async {
@@ -42,6 +48,16 @@ class ProviderModule {
     //Note: It must be registered before chatNotifier
     getIt.registerSingleton<AssistantNotifier>(
       AssistantNotifier(),
+    );
+
+    getIt.registerSingleton<BotListNotifier>(
+      BotListNotifier(
+        getIt<CreateBotUseCase>(),
+        getIt<LogoutUseCase>(),
+        getIt<GetBotListUseCase>(),
+        getIt<DeleteBotUseCase>(),
+        getIt<UpdateBotUseCase>(),
+      )
     );
     //HistoryConversationListNotifier:-----------------------------------------------------
     getIt.registerSingleton<HistoryConversationListNotifier>(

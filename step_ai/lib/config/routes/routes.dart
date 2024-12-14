@@ -17,6 +17,7 @@ import 'package:step_ai/features/chat/presentation/pages/chat_page.dart';
 
 import 'package:step_ai/features/authentication/presentation/pages/email_page.dart';
 import 'package:step_ai/features/authentication/presentation/pages/forgot_password_page.dart';
+import 'package:step_ai/features/personal/presentation/notifier/bot_list_notifier.dart';
 
 import 'package:step_ai/features/plan/presentation/pages/planPricingPage.dart';
 import 'package:step_ai/features/prompt/presentation/pages/prompt_list.dart';
@@ -38,8 +39,7 @@ class Routes {
   static const String forgotPassword = "/resetPassword";
 
   static final routes = <String, WidgetBuilder>{
-    personal: (BuildContext context) => PersonalPage(),
-
+    personal: (BuildContext context) =>const PersonalPage(),
     chat: (BuildContext context) =>
         Builder(
           builder: (context) {

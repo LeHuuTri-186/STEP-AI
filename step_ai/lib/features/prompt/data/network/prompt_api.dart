@@ -15,7 +15,7 @@ class PromptApi {
   String? refreshToken;
 
   PromptApi() {
-    _dio.options.baseUrl = 'https://api.jarvis.cx'; // Base URL for API
+    _dio.options.baseUrl = Constant.apiBaseUrl; // Base URL for API
 
     _dio.interceptors.add(
       InterceptorsWrapper(

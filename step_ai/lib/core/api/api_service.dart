@@ -53,6 +53,19 @@ class ApiService{
     return response;
   }
 
+  ///PATCH
+  Future<http.StreamedResponse> patch(String endpoint,
+      {Map<String, String>? headers, Map<String, dynamic>? body}) async {
+
+    var request = http.Request('PATCH', Uri.parse('$baseUrl$endpoint'));
+    if (headers != null) {
+      request.headers.addAll(headers);
+    }
+    request.body = jsonEncode(body);
+    final http.StreamedResponse response = await request.send();
+    return response;
+  }
+
   /// Xử lý Response
   Future<Map<String, dynamic>> _processResponse(
       http.StreamedResponse response) async{
