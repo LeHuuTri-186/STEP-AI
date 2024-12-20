@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:step_ai/config/enum/task_status.dart';
 import 'package:step_ai/config/routes/routes.dart';
 import 'package:step_ai/features/chat/presentation/notifier/chat_bar_notifier.dart';
 import 'package:step_ai/features/chat/presentation/notifier/prompt_list_notifier.dart';
@@ -334,7 +335,21 @@ class _ChatPageState extends State<ChatPage> {
         return PromptEditor(
           promptModel: prompt,
           returnPrompt: (value) async {
-            await notifier.sendMessage(value);
+            try {
+              await notifier.sendMessage(value);
+            } catch (e) {
+              //e is 401 and return to login screen
+
+              print(e);
+              if (context.mounted &&
+                  e is TaskStatus &&
+                  e == TaskStatus.UNAUTHORIZED) {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  Routes.authenticate,
+                  (Route<dynamic> route) => false,
+                );
+              }
+            }
             if (context.mounted) {
               Navigator.of(context).pop();
             }

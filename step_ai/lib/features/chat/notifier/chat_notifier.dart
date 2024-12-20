@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:step_ai/config/enum/task_status.dart';
 import 'package:step_ai/features/chat/domain/entity/message.dart';
 import 'package:step_ai/features/chat/domain/params/send_message_param.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_usage_token_usecase.dart';
@@ -75,7 +76,6 @@ class ChatNotifier with ChangeNotifier {
 
       isLoading = false;
       notifyListeners();
-
     } catch (e) {
       if (e is DioException) {
         print(
@@ -142,14 +142,18 @@ class ChatNotifier with ChangeNotifier {
       }
     } catch (error) {
       if (error is DioException) {
+        if (error.type == DioExceptionType.connectionError) {
+          updateLastMessage("No internet connection. Try again!");
+          throw TaskStatus.NO_INTERNET; 
+        }
         print(
             "Error in sendMessage in chat notifier with status code: ${error.response?.statusCode}");
         if (error.response?.statusCode == 401) {
           this._historyMessages.clear();
-          this._idCurrentConversation=null;
+          this._idCurrentConversation = null;
           this._numberRestToken = 0;
           this._isLoadingDetailedConversation = false;
-          throw 401;
+          throw TaskStatus.UNAUTHORIZED;
         } else {
           updateLastMessage("Server not response. Try again!");
         }

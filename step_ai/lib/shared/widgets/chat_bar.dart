@@ -182,10 +182,11 @@ class _ChatBarState extends State<ChatBar> {
                                         .sendMessage(value);
                                   } catch (e) {
                                     //e is 401 and return to login screen
-                                    print(
-                                        "e is 401 and return to login screen");
+
                                     print(e);
-                                    if (context.mounted) {
+                                    if (context.mounted &&
+                                        e is TaskStatus &&
+                                        e == TaskStatus.UNAUTHORIZED) {
                                       Navigator.of(context)
                                           .pushNamedAndRemoveUntil(
                                         Routes.authenticate,
@@ -224,10 +225,17 @@ class _ChatBarState extends State<ChatBar> {
                                         listen: false)
                                     .sendMessage(message);
                               } catch (e) {
-                                Navigator.of(context).pushNamedAndRemoveUntil(
-                                  Routes.authenticate,
-                                  (Route<dynamic> route) => false,
-                                );
+                                //e is 401 and return to login screen
+
+                                print(e);
+                                if (context.mounted &&
+                                    e is TaskStatus &&
+                                    e == TaskStatus.UNAUTHORIZED) {
+                                  Navigator.of(context).pushNamedAndRemoveUntil(
+                                    Routes.authenticate,
+                                    (Route<dynamic> route) => false,
+                                  );
+                                }
                               }
                               setState(() {
                                 //print("set state ABCDDDDDE");
