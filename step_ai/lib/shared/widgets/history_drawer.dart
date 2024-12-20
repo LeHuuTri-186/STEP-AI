@@ -48,8 +48,12 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
           Provider.of<HistoryConversationListNotifier>(context, listen: false)
               .hasMore) {
         //print("Scroll to bottom");
-        Provider.of<HistoryConversationListNotifier>(context, listen: false)
-            .getHistoryConversationList();
+        try {
+          Provider.of<HistoryConversationListNotifier>(context, listen: false)
+              .getHistoryConversationList();
+        } catch (e) {
+          print(e);
+        }
       }
     });
   }

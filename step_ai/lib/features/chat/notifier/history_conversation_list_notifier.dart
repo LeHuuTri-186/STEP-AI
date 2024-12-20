@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:step_ai/config/enum/task_status.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_history_conversation_list_usecase.dart';
 
 import '../domain/entity/conversation.dart';
@@ -41,10 +42,17 @@ class HistoryConversationListNotifier extends ChangeNotifier {
       _limitConversation = 0;
       _hasMore = false;
       if (e is DioException) {
+        if (e.type == DioExceptionType.connectionError) {
+          throw TaskStatus.NO_INTERNET;
+        }
+        if (e.response?.statusCode == 401) {
+          throw TaskStatus.UNAUTHORIZED;
+        }
         print(
             "Error in getHistoryConversationList in history conversation list notifier with status code: ${e.response?.statusCode}");
       } else {
-        print("Error in getHistoryConversationList in history conversation list notifier");
+        print(
+            "Error in getHistoryConversationList in history conversation list notifier");
       }
     } finally {
       isLoading = false;

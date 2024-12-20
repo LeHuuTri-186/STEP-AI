@@ -31,9 +31,8 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
   final TextEditingController _confirmPwController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
 
-  final HistoryConversationListNotifier
-  _historyConversationListNotifier =
-  getIt<HistoryConversationListNotifier>();
+  final HistoryConversationListNotifier _historyConversationListNotifier =
+      getIt<HistoryConversationListNotifier>();
   final ChatNotifier _chatNotifier = getIt<ChatNotifier>();
 
   @override
@@ -48,8 +47,10 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
           appBar: _buildAppBar(),
           body: _buildBody(),
         ),
-        if (_loginNotifier.isLoading || _registerNotifier.isLoading ||
-          _chatNotifier.isLoading || _historyConversationListNotifier.isLoading)
+        if (_loginNotifier.isLoading ||
+            _registerNotifier.isLoading ||
+            _chatNotifier.isLoading ||
+            _historyConversationListNotifier.isLoading)
           Positioned.fill(child: _buildProgressIndicator()),
       ],
     );
@@ -60,7 +61,9 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     return AppBar(
       automaticallyImplyLeading: false,
       title: Center(
-        child: AppNameWidget(color: TColor.tamarama,),
+        child: AppNameWidget(
+          color: TColor.tamarama,
+        ),
       ),
     );
   }
@@ -120,10 +123,11 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
   }
 
   Widget _buildToggleText(String text, bool selected) {
-    return Text(text, style: Theme.of(context).textTheme.displayLarge?.copyWith(
-      fontSize: 15,
-      color: selected ? TColor.doctorWhite : TColor.squidInk,
-    ));
+    return Text(text,
+        style: Theme.of(context).textTheme.displayLarge?.copyWith(
+              fontSize: 15,
+              color: selected ? TColor.doctorWhite : TColor.squidInk,
+            ));
   }
 
   Widget _buildLoginView() {
@@ -402,7 +406,6 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
           _emailController.text, _passwordController.text);
       if (isLogged) {
         if (mounted) {
-
           await _getNecessaryData();
           Navigator.of(context).pushReplacementNamed(Routes.chat);
         }
@@ -448,8 +451,12 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     _usernameController.text = '';
   }
 
-  Future _getNecessaryData() async{
-    await _chatNotifier.getNumberRestToken();
-    await _historyConversationListNotifier.getHistoryConversationList();
+  Future _getNecessaryData() async {
+    try {
+      await _chatNotifier.getNumberRestToken();
+      await _historyConversationListNotifier.getHistoryConversationList();
+    } catch (e) {
+      print('Error in get necessary data: $e');
+    }
   }
 }

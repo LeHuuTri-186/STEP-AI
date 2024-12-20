@@ -78,6 +78,12 @@ class ChatNotifier with ChangeNotifier {
       notifyListeners();
     } catch (e) {
       if (e is DioException) {
+        if (e.type == DioExceptionType.connectionError) {
+          throw TaskStatus.NO_INTERNET;
+        }
+        if (e.response?.statusCode == 401) {
+          throw TaskStatus.UNAUTHORIZED;
+        }
         print(
             "Error in getNumberRestToken in chat notifier with status code: ${e.response?.statusCode}");
       } else {
@@ -135,6 +141,7 @@ class ChatNotifier with ChangeNotifier {
             .getNewestConversationWhenAfterSendMessage();
       } else {
         //update historyConversationList when send message at old conversation
+        //must check to render many times when send many message in one conversation
         if (_idCurrentConversation !=
             _historyConversationListNotifier.historyConversationList.first.id) {
           await _historyConversationListNotifier.getHistoryConversationList();
@@ -144,7 +151,7 @@ class ChatNotifier with ChangeNotifier {
       if (error is DioException) {
         if (error.type == DioExceptionType.connectionError) {
           updateLastMessage("No internet connection. Try again!");
-          throw TaskStatus.NO_INTERNET; 
+          throw TaskStatus.NO_INTERNET;
         }
         print(
             "Error in sendMessage in chat notifier with status code: ${error.response?.statusCode}");

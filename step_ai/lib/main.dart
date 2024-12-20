@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:step_ai/config/enum/task_status.dart';
 import 'package:step_ai/features/authentication/domain/usecase/is_logged_in_usecase.dart';
+import 'package:step_ai/features/authentication/domain/usecase/save_login_status_usecase.dart';
 import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
 import 'package:step_ai/features/chat/notifier/history_conversation_list_notifier.dart';
 import 'package:step_ai/features/knowledge_base/notifier/add_knowledge_dialog_notifier.dart';
@@ -34,17 +36,28 @@ Future<void> main() async {
 
   //Define first page:
   final IsLoggedInUseCase isLoggedInUseCase = getIt<IsLoggedInUseCase>();
-  final isLoggedIn = await isLoggedInUseCase.call(params: null);
-  final initialRoute = isLoggedIn ? Routes.chat : Routes.authenticate;
-
+  final SaveLoginStatusUseCase saveLoginStatusUseCase =
+      getIt<SaveLoginStatusUseCase>();
+  var isLoggedIn = await isLoggedInUseCase.call(params: null);
+  final ChatNotifier chatNotifier = getIt<ChatNotifier>();
+  final HistoryConversationListNotifier historyConversationListNotifier =
+      getIt<HistoryConversationListNotifier>();
   if (isLoggedIn) {
-    final ChatNotifier chatNotifier = getIt<ChatNotifier>();
-    await chatNotifier.getNumberRestToken();
-    final HistoryConversationListNotifier historyConversationListNotifier =
-        getIt<HistoryConversationListNotifier>();
-    await historyConversationListNotifier.getHistoryConversationList();
+    try {
+      await chatNotifier.getNumberRestToken();
+      await historyConversationListNotifier.getHistoryConversationList();
+    } catch (e) {
+      print(e);
+      if (e is TaskStatus && e == TaskStatus.UNAUTHORIZED) {
+        isLoggedIn = false;
+        saveLoginStatusUseCase.call(params: false);
+      }
+      if (e is TaskStatus && e == TaskStatus.NO_INTERNET) {
+        print("------------------------------->No internet in main");
+      }
+    }
   }
-
+  final initialRoute = isLoggedIn ? Routes.chat : Routes.authenticate;
   // final helper = getIt<SecureStorageHelper>();
   // if(isLoggedIn) print(await helper.accessToken);
 
@@ -77,8 +90,8 @@ class MyApp extends StatelessWidget {
             value: getIt<AddKnowledgeDialogNotifier>()),
         ChangeNotifierProvider.value(value: getIt<UnitNotifier>()),
         ChangeNotifierProvider.value(value: getIt<AddOptionUnitNotifier>()),
-        ChangeNotifierProvider.value(value: getIt<EditKnowledgeDialogNotifier>()),
-        
+        ChangeNotifierProvider.value(
+            value: getIt<EditKnowledgeDialogNotifier>()),
         ChangeNotifierProvider.value(value: getIt<LocalFileNotifier>()),
         ChangeNotifierProvider.value(value: getIt<WebNotifier>()),
         ChangeNotifierProvider.value(value: getIt<SlackNotifier>()),
