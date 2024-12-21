@@ -1,11 +1,5 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:step_ai/config/constants.dart';
-import 'package:step_ai/core/api/api_service.dart';
-import 'package:step_ai/core/data/local/securestorage/secure_storage_helper.dart';
-import 'package:step_ai/core/data/model/token_model.dart';
-import 'package:step_ai/core/di/service_locator.dart';
 
 class KnowledgeApi {
   final Dio _dio = Dio();

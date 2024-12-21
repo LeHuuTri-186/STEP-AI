@@ -32,6 +32,7 @@ class KnowledgeItem extends StatelessWidget {
               child: GestureDetector(
                 onTap: () {
                   unitNotifier.currentKnowledge = knowledge;
+                  knowledgeNotifier.reset();
                   Navigator.pushNamed(
                     context,
                     Routes.unitsPage,

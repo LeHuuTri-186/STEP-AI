@@ -8,6 +8,8 @@ import 'package:step_ai/features/knowledge_base/domain/usecase/delete_knowledge_
 import 'package:step_ai/features/knowledge_base/domain/usecase/edit_knowledge_usecase.dart';
 import 'package:step_ai/features/knowledge_base/domain/usecase/get_knowledge_list_usecase.dart';
 
+import '../domain/params/get_knowledges_param.dart';
+
 class KnowledgeNotifier with ChangeNotifier {
   GetKnowledgeListUsecase _getKnowledgeListUsecase;
   AddKnowledgeUsecase _addKnowledgeUsecase;
@@ -18,15 +20,27 @@ class KnowledgeNotifier with ChangeNotifier {
   String errorString = "";
   bool isLoadingKnowledgeList = false;
   KnowledgeList? knowledgeList;
+  int limit = 0;
+  bool hasNext = false;
+  void reset(){
+    limit = 0;
+    hasNext = false;
+  }
 
   Future<void> getKnowledgeList() async {
     isLoadingKnowledgeList = true;
     notifyListeners();
     try {
-      knowledgeList = await _getKnowledgeListUsecase.call(params: null);
+      limit += 5;
+      final knowledgeListModel = await _getKnowledgeListUsecase.call(
+          params: GetKnowledgesParam(limit: 50));
+      knowledgeList = KnowledgeList.fromModel(knowledgeListModel);
+      hasNext = knowledgeListModel.meta.hasNext;
       errorString = "";
     } catch (e) {
       knowledgeList = null;
+      limit = 0;
+      hasNext = false;
       errorString = "Có lỗi xảy ra. Thử lại sau getKnowledgeList";
       print("Error in getKnowledgeList in knowledge notifier with error: $e");
     } finally {

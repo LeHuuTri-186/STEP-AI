@@ -2,6 +2,7 @@ import 'package:step_ai/features/knowledge_base/data/model/knowledge_list_model.
 import 'package:step_ai/features/knowledge_base/data/network/knowledge_api.dart';
 import 'package:step_ai/features/knowledge_base/domain/entity/knowledge_list.dart';
 import 'package:step_ai/features/knowledge_base/domain/params/edit_knowledge_param.dart';
+import 'package:step_ai/features/knowledge_base/domain/params/get_knowledges_param.dart';
 import 'package:step_ai/features/knowledge_base/domain/params/knowledge_param.dart';
 import 'package:step_ai/features/knowledge_base/domain/repository/knowledge_repository.dart';
 
@@ -9,18 +10,18 @@ class KnowledgeRepositoryImpl extends KnowledgeRepository {
   KnowledgeApi _knowledgeApi;
   KnowledgeRepositoryImpl(this._knowledgeApi);
   @override
-  Future<KnowledgeList> getKnowledgeList() async {
+  Future<KnowledgeListModel> getKnowledgeList(GetKnowledgesParam params) async {
     //get knowledge list from api
     try {
       Map<String, dynamic> queryParams = {
-        "limit": 10,
+        "limit": params.limit,
       };
 
       final response = await _knowledgeApi.get("/kb-core/v1/knowledge",
           queryParams: queryParams);
       KnowledgeListModel knowledgeListModel =
           KnowledgeListModel.fromJson(response.data);
-      return KnowledgeList.fromModel(knowledgeListModel);
+      return knowledgeListModel;
     } catch (e) {
       print(e);
       rethrow;

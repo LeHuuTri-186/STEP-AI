@@ -9,6 +9,7 @@ import 'package:step_ai/config/constants.dart';
 import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/local_file_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/unit_notifier.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LocalFilePage extends StatelessWidget {
   LocalFilePage({super.key});
@@ -54,6 +55,7 @@ class LocalFilePage extends StatelessWidget {
           onPressed: localFileNotifier.isUploadLoading
               ? null
               : () {
+                  localFileNotifier.changeFileName("");
                   Navigator.pop(context);
                 },
         ),
@@ -73,12 +75,34 @@ class LocalFilePage extends StatelessWidget {
             children: [
               //Title of the page + Image
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Image.asset(Constant.localFileImagePath,
-                      width: 50, height: 50),
-                  const SizedBox(width: 10),
-                  const Text('Local Files'),
+                  Row(children: [
+                    Image.asset(Constant.localFileImagePath,
+                        width: 50, height: 50),
+                    const SizedBox(width: 10),
+                    const Text('Local Files'),
+                  ]),
+                  IconButton(
+                      onPressed: () async {
+                        final Uri url = Uri.parse(
+                            'https://jarvis.cx/help/knowledge-base/connectors/file/');
+                        try {
+                          if (!await canLaunchUrl(url)) {
+                            throw 'URL không hợp lệ hoặc không thể mở: $url';
+                          }
+
+                          await launchUrl(url,
+                              mode: LaunchMode.externalApplication);
+                        } catch (e) {
+                          // Xử lý lỗi, có thể hiển thị thông báo cho người dùng
+                          print('Lỗi khi mở URL: $e');
+                        }
+                      },
+                      icon: const Icon(
+                        Icons.link,
+                        color: Colors.blue,
+                      ))
                 ],
               ),
               const SizedBox(height: 4),

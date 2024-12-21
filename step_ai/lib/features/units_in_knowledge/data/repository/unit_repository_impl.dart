@@ -73,8 +73,14 @@ class UnitRepositoryImpl extends UnitRepository {
 
   @override
   Future<void> uploadConfluence(UploadConfluenceParam uploadConfluenceParam) {
-    // TODO: implement uploadConfluence
-    throw UnimplementedError();
+    return _unitApi.post(
+        "/kb-core/v1/knowledge/${uploadConfluenceParam.knowledgeId}/confluence",
+        data: {
+          "unitName": uploadConfluenceParam.unitName,
+          "wikiPageUrl": uploadConfluenceParam.wikiPageUrl,
+          "confluenceUsername": uploadConfluenceParam.confluenceUsername,
+          "confluenceAccessToken": uploadConfluenceParam.confluenceAccessToken
+        });
   }
 
   @override

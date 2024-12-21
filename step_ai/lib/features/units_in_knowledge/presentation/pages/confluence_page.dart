@@ -6,6 +6,7 @@ import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart
 import 'package:step_ai/features/units_in_knowledge/notifier/confluence_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/slack_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/unit_notifier.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ConfluencePage extends StatelessWidget {
   ConfluencePage({super.key});
@@ -59,12 +60,36 @@ class ConfluencePage extends StatelessWidget {
                 children: [
                   //Title of the page + Image
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Image.asset(Constant.confluenceImagePath,
-                          width: 50, height: 50),
-                      const SizedBox(width: 10),
-                      const Text('Confluence'),
+                      Row(
+                        children: [
+                          Image.asset(Constant.confluenceImagePath,
+                              width: 50, height: 50),
+                          const SizedBox(width: 10),
+                          const Text('Confluence'),
+                        ],
+                      ),
+                      IconButton(
+                          onPressed: () async {
+                            final Uri url = Uri.parse(
+                                'https://jarvis.cx/help/knowledge-base/connectors/confluence');
+                            try {
+                              if (!await canLaunchUrl(url)) {
+                                throw 'URL không hợp lệ hoặc không thể mở: $url';
+                              }
+
+                              await launchUrl(url,
+                                  mode: LaunchMode.externalApplication);
+                            } catch (e) {
+                              // Xử lý lỗi, có thể hiển thị thông báo cho người dùng
+                              print('Lỗi khi mở URL: $e');
+                            }
+                          },
+                          icon: const Icon(
+                            Icons.link,
+                            color: Colors.blue,
+                          ))
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -79,7 +104,8 @@ class ConfluencePage extends StatelessWidget {
                         labelText: 'Name',
                         hintText: 'Enter Name',
                         border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10))),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -102,7 +128,8 @@ class ConfluencePage extends StatelessWidget {
                         labelText: 'Wiki Page URL',
                         hintText: 'Enter Wiki Page URL',
                         border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10))),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -125,7 +152,8 @@ class ConfluencePage extends StatelessWidget {
                         labelText: 'Confluence Username',
                         hintText: 'Enter Confluence Username',
                         border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10))),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -148,7 +176,8 @@ class ConfluencePage extends StatelessWidget {
                         labelText: 'Confluence Access Token',
                         hintText: 'Enter Confluence Access Token',
                         border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10))),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -193,7 +222,7 @@ class ConfluencePage extends StatelessWidget {
                               confluenceNotifier.setUploadLoading(false);
                               return;
                             }
-              
+
                             //hide indicator
                             confluenceNotifier.setUploadLoading(false);
                             Navigator.pop(context);

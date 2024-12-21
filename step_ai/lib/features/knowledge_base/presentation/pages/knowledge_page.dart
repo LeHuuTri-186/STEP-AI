@@ -29,12 +29,14 @@ class KnowledgePage extends StatelessWidget {
             ],
           ),
         ),
-
+    
         //Button add knowledge
         const ButtonAddNewKnowledge(),
-
+    
         //Knowledge list view
-        Expanded(child: KnowledgeListview()),
+        Expanded(
+          child: KnowledgeListview(),
+        ),
       ],
     );
   }
