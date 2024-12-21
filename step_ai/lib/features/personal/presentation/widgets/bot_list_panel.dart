@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/config/enum/request_response.dart';
+import 'package:step_ai/config/routes/routes.dart';
 import 'package:step_ai/features/chat/domain/entity/assistant.dart';
 import 'package:step_ai/features/chat/notifier/personal_assistant_notifier.dart';
 
 import 'package:step_ai/features/personal/data/models/bot_res_dto.dart';
 import 'package:step_ai/features/personal/presentation/notifier/bot_list_notifier.dart';
 import 'package:step_ai/features/personal/presentation/widgets/update_bot_dialog.dart';
+import 'package:step_ai/features/preview/presentation/pages/preview_chat_page.dart';
 import 'bot_tile.dart';
 
 class BotListView extends StatelessWidget {
@@ -37,7 +39,7 @@ class BotListView extends StatelessWidget {
           index: index,
           onTap: () {
             //Load assistant chat view.
-            print("To chat!");
+            Navigator.of(context).pushNamed(Routes.previewChat);
           },
           onToggleDelete: () async{
             RequestResponse res = await botListNotifier.deleteBot(bots[index]);

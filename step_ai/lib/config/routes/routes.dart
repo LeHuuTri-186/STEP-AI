@@ -20,6 +20,7 @@ import 'package:step_ai/features/authentication/presentation/pages/forgot_passwo
 import 'package:step_ai/features/personal/presentation/notifier/bot_list_notifier.dart';
 
 import 'package:step_ai/features/plan/presentation/pages/planPricingPage.dart';
+import 'package:step_ai/features/preview/presentation/pages/preview_chat_page.dart';
 import 'package:step_ai/features/prompt/presentation/pages/prompt_list.dart';
 
 import '../../features/chat/notifier/chat_notifier.dart';
@@ -37,6 +38,7 @@ class Routes {
   static const String authenticate = "/signIn";
   static const String promptList = "/promptList";
   static const String forgotPassword = "/resetPassword";
+  static const String previewChat = "/previewChat";
 
   static final routes = <String, WidgetBuilder>{
     personal: (BuildContext context) =>const PersonalPage(),
@@ -73,5 +75,6 @@ class Routes {
         ),
     promptList: (BuildContext context) => PromptApp(),
     forgotPassword: (BuildContext context) => ForgotPasswordPage(),
+    previewChat:(BuildContext context) => const PreviewChatPage(),
   };
 }

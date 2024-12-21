@@ -27,6 +27,7 @@ import 'package:step_ai/features/personal/domain/usecase/delete_bot_usecase.dart
 import 'package:step_ai/features/personal/domain/usecase/get_bot_list_usecase.dart';
 import 'package:step_ai/features/personal/domain/usecase/update_bot_usecase.dart';
 import 'package:step_ai/features/personal/presentation/notifier/bot_list_notifier.dart';
+import 'package:step_ai/features/preview/presentation/notifier/preview_chat_notifier.dart';
 
 class ProviderModule {
   static Future<void> configureStoreModuleInjection() async {
@@ -58,13 +59,13 @@ class ProviderModule {
     );
 
     getIt.registerSingleton<BotListNotifier>(
-      BotListNotifier(
-        getIt<CreateBotUseCase>(),
-        getIt<LogoutUseCase>(),
-        getIt<GetBotListUseCase>(),
-        getIt<DeleteBotUseCase>(),
-        getIt<UpdateBotUseCase>(),
-      )
+        BotListNotifier(
+          getIt<CreateBotUseCase>(),
+          getIt<LogoutUseCase>(),
+          getIt<GetBotListUseCase>(),
+          getIt<DeleteBotUseCase>(),
+          getIt<UpdateBotUseCase>(),
+        )
     );
     //HistoryConversationListNotifier:-----------------------------------------------------
     getIt.registerSingleton<HistoryConversationListNotifier>(
@@ -88,15 +89,25 @@ class ProviderModule {
 
     //Slash prompts:------------------------------------------------------------
     getIt.registerSingleton<PromptListNotifier>(
-      PromptListNotifier(
-        getIt<GetPromptListUseCase>(),
-      )
+        PromptListNotifier(
+          getIt<GetPromptListUseCase>(),
+        )
     );
     //Chat page:----------------------------------------------------------------
     getIt.registerSingleton<ChatBarNotifier>(
-      ChatBarNotifier(
-        getIt<LogoutUseCase>(),
-      )
+        ChatBarNotifier(
+          getIt<LogoutUseCase>(),
+        )
+    );
+
+    //Preview page:-------------------------------------------------------------
+    getIt.registerSingleton<PreviewChatNotifier>(
+      PreviewChatNotifier(
+          getIt<PersonalAssistantNotifier>(),
+          getIt<AskBotUseCase>(),
+          getIt<CreateThreadUseCase>(),
+          getIt<LogoutUseCase>()
+      ),
     );
   }
 }
