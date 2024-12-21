@@ -31,7 +31,7 @@ class Constant{
   static String botOffset = '&offset=';
   static String botLimit = '&limit=10';
   static String botPublished = '&isPublished';
-
-
+  static String createThreadEndpoint = '/kb-core/v1/ai-assistant/thread';
+  static String askBotInThreadEndpoint = '/kb-core/v1/ai-assistant';
 
 }

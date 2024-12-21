@@ -8,7 +8,9 @@ import 'package:step_ai/features/authentication/data/repository/register_reposit
 import 'package:step_ai/features/authentication/domain/repository/login_repository.dart';
 import 'package:step_ai/features/authentication/domain/repository/logout_repository.dart';
 import 'package:step_ai/features/authentication/domain/repository/register_repository.dart';
+import 'package:step_ai/features/chat/data/repository/bot_thread_repository_impl.dart';
 import 'package:step_ai/features/chat/data/repository/slash_prompt_repository_impl.dart';
+import 'package:step_ai/features/chat/domain/repository/bot_thread_repository.dart';
 import 'package:step_ai/features/chat/domain/repository/slash_prompt_repository.dart';
 import 'package:step_ai/features/chat/data/network/api_client_chat.dart';
 import 'package:step_ai/features/chat/data/repository/conversation_repository_impl.dart';
@@ -46,6 +48,11 @@ class RepositoryModule {
       BotListRepositoryImpl(
         getIt<SecureStorageHelper>(),
       ) as BotListRepository
+    );
+    getIt.registerSingleton<BotThreadRepository>(
+      BotThreadRepositoryImpl(
+        getIt<SecureStorageHelper>(),
+      ) as BotThreadRepository
     );
   }
 }

@@ -13,6 +13,7 @@ class BotTile extends StatelessWidget {
     required this.onTap,
     required this.onToggleDelete,
     required this.onToggleUpdate,
+    required this.onToggleAddBot,
   });
 
   final BotResDto bot;
@@ -20,6 +21,7 @@ class BotTile extends StatelessWidget {
   final Function() onTap;
   final Function() onToggleDelete;
   final Function() onToggleUpdate;
+  final Function() onToggleAddBot;
 
 
   @override
@@ -99,6 +101,16 @@ class BotTile extends StatelessWidget {
           child: const Padding(
             padding: EdgeInsets.all(3.0),
             child: Icon(Icons.update_outlined),
+          ),
+        ),
+        HSpacing.sm,
+        InkWell(
+          onTap: onToggleAddBot,
+          borderRadius: BorderRadius.circular(5.0),
+          hoverColor: TColor.northEastSnow,
+          child: const Padding(
+            padding: EdgeInsets.all(3.0),
+            child: Icon(Icons.add),
           ),
         ),
       ],

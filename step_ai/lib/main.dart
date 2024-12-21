@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:step_ai/features/authentication/domain/usecase/is_logged_in_usecase.dart';
 import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
 import 'package:step_ai/features/chat/notifier/history_conversation_list_notifier.dart';
+import 'package:step_ai/features/chat/notifier/personal_assistant_notifier.dart';
 import 'package:step_ai/features/prompt/presentation/state/prompt_view_provider.dart';
 
 import 'config/routes/routes.dart';
@@ -59,8 +60,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => getIt<PrivateViewState>()),
         ChangeNotifierProvider(create: (_) => getIt<FormModel>()),
         ChangeNotifierProvider(create: (_) => getIt<BotListNotifier>()),
-        ChangeNotifierProvider(create: (_) => getIt<PromptViewState>())
-
+        ChangeNotifierProvider(create: (_) => getIt<PromptViewState>()),
+        ChangeNotifierProvider(create: (_) => getIt<PersonalAssistantNotifier>())
       ],
       child: MaterialApp(
         title: 'Step AI',

@@ -10,7 +10,11 @@ import 'package:step_ai/features/authentication/domain/repository/logout_reposit
 import 'package:step_ai/features/authentication/domain/usecase/login_usecase.dart';
 import 'package:step_ai/features/authentication/domain/usecase/logout_usecase.dart';
 import 'package:step_ai/features/authentication/domain/usecase/register_usecase.dart';
+import 'package:step_ai/features/chat/data/repository/bot_thread_repository_impl.dart';
+import 'package:step_ai/features/chat/domain/repository/bot_thread_repository.dart';
 import 'package:step_ai/features/chat/domain/repository/slash_prompt_repository.dart';
+import 'package:step_ai/features/chat/domain/usecase/ask_bot_usecase.dart';
+import 'package:step_ai/features/chat/domain/usecase/create_thread_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_prompt_list_usecase.dart';
 import 'package:step_ai/features/chat/domain/repository/conversation_repository.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_history_conversation_list_usecase.dart';
@@ -137,6 +141,14 @@ class UseCaseModule {
     getIt.registerSingleton<UpdateBotUseCase>(
         UpdateBotUseCase(getIt<BotListRepository>(), getIt<RefreshKbTokenUseCase>()
         )
+    );
+
+    getIt.registerSingleton<CreateThreadUseCase>(
+      CreateThreadUseCase(getIt<RefreshKbTokenUseCase>(), getIt<BotThreadRepository>())
+    );
+
+    getIt.registerSingleton<AskBotUseCase>(
+      AskBotUseCase(getIt<RefreshKbTokenUseCase>(), getIt<BotThreadRepository>())
     );
   }
 }

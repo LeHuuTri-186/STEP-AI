@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/config/enum/request_response.dart';
+import 'package:step_ai/features/chat/domain/entity/assistant.dart';
+import 'package:step_ai/features/chat/notifier/personal_assistant_notifier.dart';
 
 import 'package:step_ai/features/personal/data/models/bot_res_dto.dart';
 import 'package:step_ai/features/personal/presentation/notifier/bot_list_notifier.dart';
@@ -22,6 +24,8 @@ class BotListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final BotListNotifier botListNotifier = context.watch<BotListNotifier>();
+    final PersonalAssistantNotifier personalAssistantNotifier
+      = Provider.of<PersonalAssistantNotifier>(context);
     return ListView.separated(
       controller: _scrollController,
       primary: false,
@@ -76,6 +80,15 @@ class BotListView extends StatelessWidget {
                       },
                       oldBot: bots[index],
                     )
+            );
+          },
+          onToggleAddBot: () {
+            personalAssistantNotifier.addAssistant(
+                Assistant(
+                  id: bots[index].id,
+                  model: 'personal',
+                  name: bots[index].assistantName,
+                )
             );
           },
         );

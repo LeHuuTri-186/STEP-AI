@@ -8,6 +8,7 @@ import 'package:step_ai/core/di/service_locator.dart';
 import 'package:step_ai/features/authentication/domain/usecase/logout_usecase.dart';
 import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
 import 'package:step_ai/features/chat/notifier/history_conversation_list_notifier.dart';
+import 'package:step_ai/features/chat/notifier/personal_assistant_notifier.dart';
 import 'package:step_ai/shared/styles/horizontal_spacing.dart';
 import 'package:step_ai/shared/styles/vertical_spacing.dart';
 import 'package:step_ai/shared/widgets/app_name_widget.dart';
@@ -32,6 +33,9 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
   final TextEditingController searchController = TextEditingController();
 
   final LogoutUseCase _logoutUseCase = getIt<LogoutUseCase>();
+  final PersonalAssistantNotifier _personalAssistantNotifier
+      = getIt<PersonalAssistantNotifier>();
+  final ChatNotifier _chatNotifier = getIt<ChatNotifier>();
 
   final ScrollController _scrollController = ScrollController();
 
@@ -323,8 +327,13 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
                     onTap: () {
                       try {
                         _logoutUseCase.call(params: null);
+                        _personalAssistantNotifier.reset();
+                        _chatNotifier.reset();
                         Navigator.of(context)
-                            .pushReplacementNamed(Routes.authenticate);
+                            .pushNamedAndRemoveUntil(
+                            Routes.authenticate,
+                                (Route<dynamic> route) => false
+                        );
                       } catch (e) {
                         print(e);
                       }

@@ -24,7 +24,7 @@ class BotListRepositoryImpl extends BotListRepository {
       'x-jarvis-guid': '',
       'Authorization': 'Bearer $kbAccessToken'
     };
-    print("${Constant.botGetEndpoint}${Constant.botGetOrderSet}${Constant.botOffset}0${Constant.botLimit}");
+
     String finalQuery = query??"";
     var request = await _restClient.get(
       "${Constant.botGetEndpoint}=$finalQuery${Constant.botGetOrderSet}${Constant.botOffset}${Constant.botLimit}",

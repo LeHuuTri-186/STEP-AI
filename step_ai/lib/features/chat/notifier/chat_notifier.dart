@@ -1,11 +1,17 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:step_ai/features/authentication/domain/usecase/logout_usecase.dart';
 import 'package:step_ai/features/chat/domain/entity/message.dart';
+import 'package:step_ai/features/chat/domain/entity/thread_dto.dart';
 import 'package:step_ai/features/chat/domain/params/send_message_param.dart';
+import 'package:step_ai/features/chat/domain/params/thread_chat_param.dart';
+import 'package:step_ai/features/chat/domain/usecase/ask_bot_usecase.dart';
+import 'package:step_ai/features/chat/domain/usecase/create_thread_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_usage_token_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/send_message_usecase.dart';
 import 'package:step_ai/features/chat/notifier/assistant_notifier.dart';
 import 'package:step_ai/features/chat/notifier/history_conversation_list_notifier.dart';
+import 'package:step_ai/features/chat/notifier/personal_assistant_notifier.dart';
 
 import '../domain/usecase/get_messages_by_conversation_id_usecase.dart';
 
@@ -78,8 +84,12 @@ class ChatNotifier with ChangeNotifier {
     }
   }
 
+  //Thread for chatting with bot:
+  ThreadDto? currentThread;
+
   //Notifier
   AssistantNotifier _assistantNotifier;
+  final PersonalAssistantNotifier _personalAssistantNotifier;
   HistoryConversationListNotifier _historyConversationListNotifier;
 
   ///history messages
@@ -89,12 +99,21 @@ class ChatNotifier with ChangeNotifier {
   //usecase -----------------------------
   SendMessageUsecase _sendMessageUsecase;
   GetUsageTokenUsecase _getUsageTokenUsecase;
+  CreateThreadUseCase _createThreadUseCase;
+  AskBotUseCase _askBotUseCase;
+  LogoutUseCase _logoutUseCase;
+
   ChatNotifier(
       this._sendMessageUsecase,
       this._assistantNotifier,
       this._historyConversationListNotifier,
       this._getUsageTokenUsecase,
-      this._getMessagesByConversationIdUsecase);
+      this._getMessagesByConversationIdUsecase,
+      this._personalAssistantNotifier,
+      this._createThreadUseCase,
+      this._askBotUseCase,
+      this._logoutUseCase
+      );
 
   Future<void> sendMessage(String contentSend) async {
     //Add message send to history
@@ -177,5 +196,61 @@ class ChatNotifier with ChangeNotifier {
           .firstWhere((element) => element.id == _idCurrentConversation)
           .title!;
     }
+  }
+
+  //Added:
+  Future<void> sendMessageForPersonalBot(String contentSend) async {
+    //Add message send to history
+    addMessage(Message(
+        assistant: _personalAssistantNotifier.currentAssistant!,
+        role: "user",
+        content: contentSend));
+    //Add message model to history with content null
+    addMessage(Message(
+        assistant: _personalAssistantNotifier.currentAssistant!,
+        role: "model",
+        content: null));
+    notifyListeners();
+
+    try {
+      print("Reach top");
+      ThreadDto? thread = await _createThreadUseCase.call(
+          params: _personalAssistantNotifier.currentAssistant!.id!);
+      if (thread != null) {
+        currentThread = thread;
+        String response = await _askBotUseCase.call(
+            params: ThreadChatParam(
+                message: contentSend,
+                openAiThreadId: currentThread!.openAiThreadId,
+                assistantId: currentThread!.assistantId,
+                additionalInstruction: "")
+        );
+        updateLastMessage(response);
+        notifyListeners();
+      }
+    } catch (e) {
+      if (e == 401) {
+        clearPersonalAssistantData();
+        await _logoutUseCase.call(params: null);
+      } else {
+        updateLastMessage("Server not response. Try again!");
+      }
+    }
+  }
+
+  void clearPersonalAssistantData(){
+    _historyMessages.clear();
+    _idCurrentConversation = null;
+    _numberRestToken = 0;
+    _isLoadingDetailedConversation = false;
+    currentThread = null;
+
+    _personalAssistantNotifier.reset();
+  }
+
+  void reset(){
+    clearHistoryMessages();
+    clearPersonalAssistantData();
+    notifyListeners();
   }
 }

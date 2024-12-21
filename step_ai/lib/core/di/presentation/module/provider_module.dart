@@ -9,7 +9,10 @@ import 'package:step_ai/features/authentication/domain/usecase/save_login_status
 import 'package:step_ai/features/authentication/notifier/login_notifier.dart';
 import 'package:step_ai/features/authentication/notifier/register_notifier.dart';
 import 'package:step_ai/features/authentication/notifier/ui_notifier.dart';
+import 'package:step_ai/features/chat/domain/usecase/ask_bot_usecase.dart';
+import 'package:step_ai/features/chat/domain/usecase/create_thread_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_prompt_list_usecase.dart';
+import 'package:step_ai/features/chat/notifier/personal_assistant_notifier.dart';
 import 'package:step_ai/features/chat/presentation/notifier/chat_bar_notifier.dart';
 import 'package:step_ai/features/chat/presentation/notifier/prompt_list_notifier.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_history_conversation_list_usecase.dart';
@@ -50,6 +53,10 @@ class ProviderModule {
       AssistantNotifier(),
     );
 
+    getIt.registerSingleton<PersonalAssistantNotifier>(
+      PersonalAssistantNotifier(),
+    );
+
     getIt.registerSingleton<BotListNotifier>(
       BotListNotifier(
         getIt<CreateBotUseCase>(),
@@ -72,6 +79,10 @@ class ProviderModule {
         getIt<HistoryConversationListNotifier>(),
         getIt<GetUsageTokenUsecase>(),
         getIt<GetMessagesByConversationIdUsecase>(),
+        getIt<PersonalAssistantNotifier>(),
+        getIt<CreateThreadUseCase>(),
+        getIt<AskBotUseCase>(),
+        getIt<LogoutUseCase>(),
       ),
     );
 
