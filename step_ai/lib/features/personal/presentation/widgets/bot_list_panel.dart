@@ -8,6 +8,7 @@ import 'package:step_ai/features/chat/notifier/personal_assistant_notifier.dart'
 import 'package:step_ai/features/personal/data/models/bot_res_dto.dart';
 import 'package:step_ai/features/personal/presentation/notifier/bot_list_notifier.dart';
 import 'package:step_ai/features/personal/presentation/widgets/update_bot_dialog.dart';
+import 'package:step_ai/features/preview/presentation/notifier/preview_chat_notifier.dart';
 import 'package:step_ai/features/preview/presentation/pages/preview_chat_page.dart';
 import 'bot_tile.dart';
 
@@ -38,6 +39,13 @@ class BotListView extends StatelessWidget {
           bot: bots[index],
           index: index,
           onTap: () {
+            Provider.of<PreviewChatNotifier>(context, listen: false).updateCurrentAssistant(
+                Assistant(
+                  name: bots[index].assistantName,
+                  id: bots[index].id,
+                  model: 'personal',
+                )
+            );
             //Load assistant chat view.
             Navigator.of(context).pushNamed(Routes.previewChat);
           },

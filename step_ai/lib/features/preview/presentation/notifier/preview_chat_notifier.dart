@@ -15,7 +15,7 @@ class PreviewChatNotifier extends ChangeNotifier{
   final PersonalAssistantNotifier _assistantNotifier;
 
   final List<Message> _historyMessages = [];
-
+  bool isCreatingThread = false;
   get historyMessages => _historyMessages;
 
   //UseCases:-------------------------------------------------------------------
@@ -44,15 +44,18 @@ class PreviewChatNotifier extends ChangeNotifier{
   //Methods:--------------------------------------------------------------------
 //Added:
   Future<void> sendMessageInPreviewMode(String contentSend) async {
-    if (currentThread == null) return;
+    if (currentThread == null) {
+      print("null here");
+      return;
+    }
     //Add message send to history
     addMessage(Message(
-        assistant: _assistantNotifier.currentAssistant!,
+        assistant: currentAssistant!,
         role: "user",
         content: contentSend));
     //Add message model to history with content null
     addMessage(Message(
-        assistant: _assistantNotifier.currentAssistant!,
+        assistant: currentAssistant!,
         role: "model",
         content: null));
     notifyListeners();
@@ -62,17 +65,17 @@ class PreviewChatNotifier extends ChangeNotifier{
           params: ThreadChatParam(
               message: contentSend,
               openAiThreadId: currentThread!.openAiThreadId,
-              assistantId: currentThread!.assistantId,
+              assistantId: currentAssistant!.id!,
               additionalInstruction: "")
       );
       updateLastMessage(response);
       notifyListeners();
-
     } catch (e) {
       if (e == 401) {
         clearPersonalAssistantData();
         await _logoutUseCase.call(params: null);
       } else {
+        print(e);
         updateLastMessage("Server not response. Try again!");
       }
       rethrow; //Rethrowing e
@@ -81,6 +84,9 @@ class PreviewChatNotifier extends ChangeNotifier{
 
   //Create chat thread:
   Future<void> createThread(String assistantId) async{
+    isCreatingThread = true;
+    notifyListeners();
+
     try {
       ThreadDto? thread = await _createThreadUseCase.call(params: assistantId);
       if (thread != null) updateCurrentThread(thread);
@@ -93,6 +99,9 @@ class PreviewChatNotifier extends ChangeNotifier{
         updateLastMessage("Server not response. Try again!");
       }
       rethrow; //Rethrowing e
+    } finally {
+      isCreatingThread = false;
+      notifyListeners();
     }
 
   }

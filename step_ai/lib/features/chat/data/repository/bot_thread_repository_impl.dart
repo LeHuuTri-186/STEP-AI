@@ -74,12 +74,13 @@ class BotThreadRepositoryImpl extends BotThreadRepository{
       "openAiThreadId": params.openAiThreadId,
       "additionalInstruction": params.additionalInstruction ?? "",
     };
-
     var request = await _restClient.post(
         '${Constant.askBotInThreadEndpoint}/${params.assistantId}/ask',
         headers: headers,
         body: body
     );
-    return await request.stream.bytesToString();
+    String res = await request.stream.bytesToString();
+    print("Response: $res");
+    return res;
   }
 }

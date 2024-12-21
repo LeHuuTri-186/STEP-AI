@@ -93,7 +93,8 @@ class _PreviewChatBarState extends State<PreviewChatBar> {
   @override
   Widget build(BuildContext context) {
     _chatBarNotifier = Provider.of<ChatBarNotifier>(context);
-    _personalAssistantNotifier = Provider.of<PersonalAssistantNotifier>(context);
+    _personalAssistantNotifier =
+        Provider.of<PersonalAssistantNotifier>(context);
     _previewChatNotifier = Provider.of<PreviewChatNotifier>(context);
 
     // if (_chatBarNotifier.triggeredPrompt) {
@@ -140,7 +141,11 @@ class _PreviewChatBarState extends State<PreviewChatBar> {
                       autocorrect: false,
                       cursorColor: TColor.squidInk,
                       controller: _controller,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(
                         fontSize: 16,
                         color: TColor.squidInk,
                       ),
@@ -151,7 +156,11 @@ class _PreviewChatBarState extends State<PreviewChatBar> {
                         focusedBorder: InputBorder.none,
                         hintText: 'Enter your question to the assistant.',
                         hintStyle:
-                        Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        Theme
+                            .of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(
                           fontSize: 15,
                           color: TColor.petRock.withOpacity(0.5),
                         ),
@@ -161,7 +170,7 @@ class _PreviewChatBarState extends State<PreviewChatBar> {
                   ),
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
 
                     //Button for prompt
@@ -220,8 +229,8 @@ class _PreviewChatBarState extends State<PreviewChatBar> {
                     //   ),
                     // ),
 
-                    _showIconSend
-                        ? IconButton(
+
+                    IconButton(
                         padding: const EdgeInsets.all(2),
                         icon: Icon(
                           Icons.send,
@@ -233,27 +242,22 @@ class _PreviewChatBarState extends State<PreviewChatBar> {
                           FocusScope.of(context).unfocus();
                           try {
                             if (_previewChatNotifier.currentAssistant != null) {
+                              String content = _controller.text;
+                              _controller.clear();
+                              print(content);
                               //On send:
-                              _previewChatNotifier.sendMessageInPreviewMode(
-                                _controller.text
-                              );
+                              await _previewChatNotifier
+                                  .sendMessageInPreviewMode(content);
                             }
                           } catch (e) {
+                            if (e != 401) {
+                              print(e);
+                            }
                             Navigator.of(context).pushNamedAndRemoveUntil(
                               Routes.authenticate,
                                   (Route<dynamic> route) => false,
                             );
                           }
-                          _controller.clear();
-                        })
-                        : IconButton(
-                        padding: const EdgeInsets.all(2),
-                        icon: Icon(
-                          Icons.send,
-                          size: 20,
-                          color: TColor.petRock,
-                        ),
-                        onPressed: () {
 
                         }),
                   ],

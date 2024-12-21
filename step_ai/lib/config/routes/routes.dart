@@ -8,6 +8,7 @@ import 'package:step_ai/features/authentication/notifier/ui_notifier.dart';
 
 import 'package:step_ai/features/authentication/presentation/pages/authenticate.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_prompt_list_usecase.dart';
+import 'package:step_ai/features/chat/notifier/personal_assistant_notifier.dart';
 import 'package:step_ai/features/chat/presentation/notifier/chat_bar_notifier.dart';
 import 'package:step_ai/features/chat/presentation/notifier/prompt_list_notifier.dart';
 import 'package:step_ai/features/chat/notifier/assistant_notifier.dart';
@@ -20,6 +21,7 @@ import 'package:step_ai/features/authentication/presentation/pages/forgot_passwo
 import 'package:step_ai/features/personal/presentation/notifier/bot_list_notifier.dart';
 
 import 'package:step_ai/features/plan/presentation/pages/planPricingPage.dart';
+import 'package:step_ai/features/preview/presentation/notifier/preview_chat_notifier.dart';
 import 'package:step_ai/features/preview/presentation/pages/preview_chat_page.dart';
 import 'package:step_ai/features/prompt/presentation/pages/prompt_list.dart';
 
@@ -75,6 +77,17 @@ class Routes {
         ),
     promptList: (BuildContext context) => PromptApp(),
     forgotPassword: (BuildContext context) => ForgotPasswordPage(),
-    previewChat:(BuildContext context) => const PreviewChatPage(),
+    previewChat:(BuildContext context) => Builder(
+      builder: (context) {
+        return MultiProvider(
+          providers: [
+            ChangeNotifierProvider.value(value: getIt<ChatBarNotifier>()),
+            ChangeNotifierProvider.value(value: getIt<PersonalAssistantNotifier>()),
+            ChangeNotifierProvider.value(value: getIt<PreviewChatNotifier>()),
+          ],
+          child: const PreviewChatPage(),
+        );
+      },
+    ),
   };
 }

@@ -8,6 +8,7 @@ import 'package:step_ai/features/chat/domain/entity/assistant.dart';
 import 'package:step_ai/features/chat/presentation/notifier/chat_bar_notifier.dart';
 import 'package:step_ai/features/chat/presentation/notifier/prompt_list_notifier.dart';
 import 'package:step_ai/features/preview/presentation/notifier/preview_chat_notifier.dart';
+import 'package:step_ai/features/preview/presentation/widgets/preview_chat_bar.dart';
 import 'package:step_ai/features/prompt/data/models/prompt_model.dart';
 import 'package:step_ai/shared/widgets/message_tile.dart';
 
@@ -45,10 +46,10 @@ class _PreviewChatPageState extends State<PreviewChatPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final previewChatNotifier = Provider.of<PreviewChatNotifier>(context, listen: false);
+      _previewChatNotifier = Provider.of<PreviewChatNotifier>(context, listen: false);
       assistant = _previewChatNotifier.currentAssistant!;
-      if (previewChatNotifier.currentThread == null) {
-        previewChatNotifier.createThread(assistant.id!);
+      if (_previewChatNotifier.currentThread == null) {
+        _previewChatNotifier.createThread(assistant.id!);
       }
     });
   }
@@ -116,7 +117,7 @@ class _PreviewChatPageState extends State<PreviewChatPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                _previewChatNotifier.currentAssistant!.name!,
+                '${_previewChatNotifier.currentAssistant!.name!} (Preview)',
                 style: Theme.of(context).textTheme.displayLarge?.copyWith(
                   color: TColor.petRock,
                   fontSize: 25,
@@ -147,14 +148,14 @@ class _PreviewChatPageState extends State<PreviewChatPage> {
             padding: const EdgeInsets.all(10),
             child: Column(
               children: [
-                // //Messages or Loading
-                // _previewChatNotifier.isLoadingDetailedConversation
-                //     ? const Expanded(
-                //   child: Center(
-                //     child: CircularProgressIndicator(),
-                //   ),
-                // )
-                //     :
+                //Messages or Loading
+                _previewChatNotifier.isCreatingThread
+                    ? const Expanded(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                )
+                    :
               Expanded(
                   child: ListView.builder(
                     controller: _scrollController,
@@ -170,11 +171,11 @@ class _PreviewChatPageState extends State<PreviewChatPage> {
                   ),
                 ),
 
-                Column(
+                const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
 
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     //Dropdown AI?
                     // const Row(
                     //   children: [
@@ -184,13 +185,9 @@ class _PreviewChatPageState extends State<PreviewChatPage> {
                     //     ),
                     //   ],
                     // ),
-                    const SizedBox(height: 2),
-                    ChatBar(
-                      onSendMessage: onMessageSent,
-                    ),
-                    const SizedBox(
-                      height: 2,
-                    ),
+                    SizedBox(height: 2),
+                    PreviewChatBar(),
+                    SizedBox(height: 2),
                     // Row(
                     //   children: [
                     //     Padding(

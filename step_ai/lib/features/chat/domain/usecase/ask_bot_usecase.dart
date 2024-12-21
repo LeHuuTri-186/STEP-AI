@@ -16,7 +16,6 @@ class AskBotUseCase extends UseCase<String, ThreadChatParam>{
     // TODO: implement call
     try {
       String? response = await _botThreadRepositoryImpl.askBotInThread(params);
-      print(response);
       return response;
 
     } catch (e){
@@ -30,6 +29,7 @@ class AskBotUseCase extends UseCase<String, ThreadChatParam>{
           rethrow;
         }
       } else {
+
         rethrow;
       }
     }
