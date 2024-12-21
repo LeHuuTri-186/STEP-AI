@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/features/knowledge_base/notifier/add_knowledge_dialog_notifier.dart';
@@ -120,7 +121,21 @@ class _AddKnowledgeDialogState extends State<AddKnowledgeDialog> {
                   }
                 },
           child: _addKnowledgeDialogNotifier.isLoadingWhenCreateNewKnowledge
-              ? const Text("Is Loading")
+              ? Stack(alignment: Alignment.center, children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14),
+                        color: Colors.grey,
+                      ),
+                      child: const Text("Loading...")),
+                  const Positioned(
+                    child: CupertinoActivityIndicator(
+                      radius: 10,
+                      color: Colors.blue,
+                    ),
+                  ),
+                ])
               : Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(

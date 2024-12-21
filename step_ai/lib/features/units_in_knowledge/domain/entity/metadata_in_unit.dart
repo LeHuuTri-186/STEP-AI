@@ -1,3 +1,4 @@
+import 'package:step_ai/features/units_in_knowledge/domain/entity/metadata_confluence.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/entity/metadata_file.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/entity/metadata_slack.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/entity/metadata_web_url.dart';
@@ -15,6 +16,8 @@ abstract class MetadataInUnit {
         return MetadataFile.fromJson(json);
       case 'slack':
         return MetadataSlack.fromJson(json);
+      case 'confluence':
+        return MetadataConfluence.fromJson(json);
       default:
         throw Exception('Unknown metadata type: $type');
     }

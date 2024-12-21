@@ -50,11 +50,18 @@ class UnitNotifier extends ChangeNotifier {
     notifyListeners();
     try {
       unitList = await _getUnitListUsecase.call(params: currentKnowledge!.id);
+      unitList!.units
+          .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
       errorString = "";
     } catch (e) {
       errorString = e.toString();
       unitList = null;
       print("Error in getUnitList in UnitNotifier: $errorString");
+      if (e is DioException) {
+        if (e.type == DioExceptionType.connectionError) {
+          errorString = "Please check your internet connection";
+        }
+      }
     }
     isLoading = false;
     notifyListeners();
@@ -66,8 +73,13 @@ class UnitNotifier extends ChangeNotifier {
           params: DeleteUnitParam(
               idKnowledge: currentKnowledge!.id, idUnit: idUnit));
     } catch (e) {
-      errorString = "Có lỗi xảy ra. Thử lại sau deleteUnit";
+      if (e is DioException) {
+        if (e.type == DioExceptionType.connectionError) {
+          throw "Please check your internet connection";
+        }
+      }
       print("Error in deleteUnit in unit notifier with error: $e");
+      throw "Delete unit failed. Try again later";
     }
   }
 
@@ -76,8 +88,13 @@ class UnitNotifier extends ChangeNotifier {
       await _updateStatusUnitUsecase.call(
           params: UpdateStatusUnitParam(id: unitId, status: status));
     } catch (e) {
-      errorString = "Có lỗi xảy ra. Thử lại sau updateStatusUnit";
+      if (e is DioException) {
+        if (e.type == DioExceptionType.connectionError) {
+          throw "Please check your internet connection";
+        }
+      }
       print("Error in updateStatusUnit in unit notifier with error: $e");
+      throw "Update status unit failed. Try again later";
     }
   }
 
@@ -90,7 +107,13 @@ class UnitNotifier extends ChangeNotifier {
               knowledgeId: currentKnowledge!.id,
               mediaType: mediaType));
     } catch (e) {
+      if (e is DioException) {
+        if (e.type == DioExceptionType.connectionError) {
+          throw "Please check your internet connection";
+        }
+      }
       print("Error in uploadLocalFile in unit notifier with error: $e");
+      throw e.toString();
     }
   }
 
@@ -102,10 +125,15 @@ class UnitNotifier extends ChangeNotifier {
               unitName: unitName,
               webUrl: webUrl));
     } catch (e) {
-      print("Error in uploadWeb in unit notifier with error: $e");
-      if (e is DioException && e.response!.statusCode == 500) {
-        throw "Url is not valid";
+      if (e is DioException) {
+        if (e.type == DioExceptionType.connectionError) {
+          throw "Please check your internet connection";
+        }
+        if (e.response!.statusCode == 500) {
+          throw "Url is not valid";
+        }
       }
+      print("Error in uploadweb in unit notifier with error: $e");
       throw e.toString();
     }
   }
@@ -121,8 +149,14 @@ class UnitNotifier extends ChangeNotifier {
               slackWorkspace: slackWorkspace));
     } catch (e) {
       print("Error in upload Slack in unit notifier with error: $e");
-      if (e is DioException && e.response!.statusCode == 400) {
-        throw e.response!.data["details"][0]["issue"];
+
+      if (e is DioException) {
+        if (e.type == DioExceptionType.connectionError) {
+          throw "Please check your internet connection";
+        }
+        if (e.response!.statusCode == 400) {
+          throw e.response!.data["details"][0]["issue"];
+        }
       }
       throw e.toString();
     }
@@ -145,8 +179,13 @@ class UnitNotifier extends ChangeNotifier {
               confluenceAccessToken: confluenceAccessToken));
     } catch (e) {
       print("Error in upload Confluence in unit notifier with error: $e");
-      if (e is DioException && e.response!.statusCode == 400) {
-        throw e.response!.data["details"][0]["issue"];
+      if (e is DioException) {
+        if (e.type == DioExceptionType.connectionError) {
+          throw "Please check your internet connection";
+        }
+        if (e.response!.statusCode == 400) {
+          throw e.response!.data["details"][0]["issue"];
+        }
       }
       throw e.toString();
     }
@@ -175,5 +214,17 @@ class UnitNotifier extends ChangeNotifier {
       numberLoadingItemSwitchCounter--;
       notifyListeners();
     }
+  }
+
+  //Utils
+  void changeDisplayUnitsWhenSearching(String searchText) {
+    unitList!.units.forEach((element) {
+      if (element.name.toLowerCase().contains(searchText.toLowerCase())) {
+        element.isDisplay = true;
+      } else {
+        element.isDisplay = false;
+      }
+    });
+    notifyListeners();
   }
 }

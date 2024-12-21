@@ -5,6 +5,8 @@ import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart
 import 'package:step_ai/features/units_in_knowledge/domain/entity/unit.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/unit_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/presentation/widgets/custom_cupertino.dart';
+import 'package:step_ai/shared/helpers/convert_date_time.dart';
+import 'package:step_ai/shared/helpers/convert_size.dart';
 
 class UnitItem extends StatelessWidget {
   final Unit unit;
@@ -41,7 +43,7 @@ class UnitItem extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  "${unit.size.toString()} bytes",
+                  ConvertSize.bytesToSize(unit.size),
                   style: const TextStyle(fontSize: 8),
                 ),
                 const SizedBox(height: 4),
@@ -64,10 +66,11 @@ class UnitItem extends StatelessWidget {
                   style: const TextStyle(fontSize: 16),
                 ),
                 Text(
-                  "Create: ${unit.createdAt}",
+                  "Create: ${ConvertDateTime.convertDateTime(unit.createdAt)}",
                   style: const TextStyle(fontSize: 10),
                 ),
-                Text("Update: ${unit.updatedAt}",
+                Text(
+                    "Update: ${ConvertDateTime.convertDateTime(unit.updatedAt)}",
                     style: const TextStyle(fontSize: 10)),
               ],
             ),
@@ -99,17 +102,36 @@ class UnitItem extends StatelessWidget {
                                   ),
                                   TextButton(
                                     onPressed: () async {
+                                      final scaffoldContext =
+                                          ScaffoldMessenger.of(context);
                                       Navigator.of(context).pop();
-                                      await unitNotifier.deleteUnit(unit.id);
-                                      await unitNotifier.getUnitList();
+                                      try {
+                                        await unitNotifier.deleteUnit(unit.id);
+                                        await unitNotifier.getUnitList();
 
-                                      unitNotifier.setIsLoading(true);
-                                      await knowledgeNotifier
-                                          .getKnowledgeList();
-                                      findAndUpdateCurrentKnowledge();
-                                      unitNotifier.setIsLoading(false);
+                                        unitNotifier.setIsLoading(true);
+                                        await knowledgeNotifier
+                                            .getKnowledgeList();
+                                        findAndUpdateCurrentKnowledge();
+                                        unitNotifier.setIsLoading(false);
+                                      } catch (e) {
+                                        unitNotifier.setIsLoading(false);
+                                        scaffoldContext.showSnackBar(SnackBar(
+                                          content: Text(
+                                            e.toString(),
+                                          ),
+                                        ));
+                                      }
                                     },
-                                    child: const Text('Delete'),
+                                    child: Container(
+                                        padding: const EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                            color: Colors.red,
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
+                                        child: const Text('Delete',
+                                            style: TextStyle(
+                                                color: Colors.white))),
                                   ),
                                 ],
                               );

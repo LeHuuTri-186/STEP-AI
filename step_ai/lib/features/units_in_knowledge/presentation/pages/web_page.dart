@@ -155,7 +155,12 @@ class WebPage extends StatelessWidget {
                             await knowledgeNotifier.getKnowledgeList();
                             await unitNotifier.getUnitList();
                             findAndUpdateCurrentKnowledge();
+                            //hide indicator
+                            webNotifier.setUploadLoading(false);
+                            Navigator.pop(context);
                           } catch (e) {
+                            //hide indicator
+                            webNotifier.setUploadLoading(false);
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(e.toString()),
@@ -165,10 +170,6 @@ class WebPage extends StatelessWidget {
                             webNotifier.setUploadLoading(false);
                             return;
                           }
-
-                          //hide indicator
-                          webNotifier.setUploadLoading(false);
-                          Navigator.pop(context);
                         },
                   child: (webNotifier.isUploadLoading)
                       ? const Stack(alignment: Alignment.center, children: [

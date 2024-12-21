@@ -36,15 +36,27 @@ class CustomCupertino extends StatelessWidget {
                   onChanged: cupertinoNotifier.isLoading
                       ? null
                       : (value) async {
-                          cupertinoNotifier.changeIsLoading(true);
-                          unitNotifier.incrementCupertinoSwitch();
+                          try {
+                            cupertinoNotifier.changeIsLoading(true);
+                            unitNotifier.incrementCupertinoSwitch();
 
-                          await unitNotifier.updateStatusUnit(unit.id, value);
-                          await knowledgeNotifier.getKnowledgeList();
+                            await unitNotifier.updateStatusUnit(unit.id, value);
+                            await knowledgeNotifier.getKnowledgeList();
 
-                          cupertinoNotifier.changeSwitchValue(value);
-                          cupertinoNotifier.changeIsLoading(false);
-                          unitNotifier.decrementCupertinoSwitch();
+                            cupertinoNotifier.changeSwitchValue(value);
+                            cupertinoNotifier.changeIsLoading(false);
+                            unitNotifier.decrementCupertinoSwitch();
+                          } catch (e) {
+                            cupertinoNotifier.changeIsLoading(false);
+                            unitNotifier.decrementCupertinoSwitch();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  e.toString(),
+                                ),
+                              ),
+                            );
+                          }
                         },
                 ),
               ),

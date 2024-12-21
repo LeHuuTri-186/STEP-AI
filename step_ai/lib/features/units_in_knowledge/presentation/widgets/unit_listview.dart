@@ -45,7 +45,7 @@ class _UnitListviewState extends State<UnitListview> {
     }
     if (_unitNotifier.errorString.isNotEmpty ||
         _unitNotifier.unitList == null) {
-      return const Center(child: Text("Have error. Try again later"));
+      return Center(child: Text(_unitNotifier.errorString));
     }
     if (_unitNotifier.unitList!.units.isEmpty) {
       return const NoDataPannel(
@@ -54,11 +54,19 @@ class _UnitListviewState extends State<UnitListview> {
     }
     return ListView.separated(
       itemCount: _unitNotifier.unitList!.units.length,
-      separatorBuilder: (context, index) => const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 12.0),
-        child: Divider(),
-      ),
+      separatorBuilder: (context, index) {
+        if (_unitNotifier.unitList!.units[index].isDisplay == false) {
+          return const SizedBox.shrink();
+        }
+        return const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 12.0),
+          child: Divider(),
+        );
+      },
       itemBuilder: (context, index) {
+        if (_unitNotifier.unitList!.units[index].isDisplay == false) {
+          return const SizedBox.shrink();
+        }
         return UnitItem(unit: _unitNotifier.unitList!.units[index]);
       },
     );

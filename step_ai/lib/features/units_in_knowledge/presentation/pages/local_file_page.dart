@@ -174,24 +174,35 @@ class LocalFilePage extends StatelessWidget {
                         }
                         //show indicator
                         localFileNotifier.changeUploadLoading(true);
-
-                        // Upload file
-                        String extension =
-                            file!.path.split('.').last.toLowerCase();
-                        await unitNotifier.uploadLocalFile(
-                            file!,
-                            MediaType.parse(
-                                localFileNotifier.getMimeType(extension)));
-                        await knowledgeNotifier.getKnowledgeList();
-                        await unitNotifier.getUnitList();
-                        findAndUpdateCurrentKnowledge();
-                        // Clear temporary files
-                        await FilePicker.platform.clearTemporaryFiles();
-                        localFileNotifier.changeFileName("");
-
-                        //hide indicator
-                        localFileNotifier.changeUploadLoading(false);
-                        Navigator.pop(context);
+                        try {
+                          // Upload file
+                          String extension =
+                              file!.path.split('.').last.toLowerCase();
+                          await unitNotifier.uploadLocalFile(
+                              file!,
+                              MediaType.parse(
+                                  localFileNotifier.getMimeType(extension)));
+                          await knowledgeNotifier.getKnowledgeList();
+                          await unitNotifier.getUnitList();
+                          findAndUpdateCurrentKnowledge();
+                          // Clear temporary files
+                          await FilePicker.platform.clearTemporaryFiles();
+                          localFileNotifier.changeFileName("");
+                          //hide indicator
+                          localFileNotifier.changeUploadLoading(false);
+                          localFileNotifier.changeFileName("");
+                          Navigator.pop(context);
+                        } catch (e) {
+                          //hide indicator
+                          localFileNotifier.changeUploadLoading(false);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                e.toString(),
+                              ),
+                            ),
+                          );
+                        }
                       },
                 child: (localFileNotifier.isUploadLoading)
                     ? const Stack(alignment: Alignment.center, children: [

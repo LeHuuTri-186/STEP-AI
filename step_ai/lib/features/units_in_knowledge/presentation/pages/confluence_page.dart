@@ -212,7 +212,12 @@ class ConfluencePage extends StatelessWidget {
                               await knowledgeNotifier.getKnowledgeList();
                               await unitNotifier.getUnitList();
                               findAndUpdateCurrentKnowledge();
+                              //hide indicator
+                              confluenceNotifier.setUploadLoading(false);
+                              Navigator.pop(context);
                             } catch (e) {
+                              //hide indicator
+                              confluenceNotifier.setUploadLoading(false);
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(e.toString()),
@@ -222,10 +227,6 @@ class ConfluencePage extends StatelessWidget {
                               confluenceNotifier.setUploadLoading(false);
                               return;
                             }
-
-                            //hide indicator
-                            confluenceNotifier.setUploadLoading(false);
-                            Navigator.pop(context);
                           },
                     child: (confluenceNotifier.isUploadLoading)
                         ? const Stack(alignment: Alignment.center, children: [

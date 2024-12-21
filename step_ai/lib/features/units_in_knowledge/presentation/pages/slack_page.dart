@@ -180,7 +180,11 @@ class SlackPage extends StatelessWidget {
                             await knowledgeNotifier.getKnowledgeList();
                             await unitNotifier.getUnitList();
                             findAndUpdateCurrentKnowledge();
+                            //hide indicator
+                            slackNotifier.setUploadLoading(false);
+                            Navigator.pop(context);
                           } catch (e) {
+                            slackNotifier.setUploadLoading(false);
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(e.toString()),
@@ -190,10 +194,6 @@ class SlackPage extends StatelessWidget {
                             slackNotifier.setUploadLoading(false);
                             return;
                           }
-
-                          //hide indicator
-                          slackNotifier.setUploadLoading(false);
-                          Navigator.pop(context);
                         },
                   child: (slackNotifier.isUploadLoading)
                       ? const Stack(alignment: Alignment.center, children: [

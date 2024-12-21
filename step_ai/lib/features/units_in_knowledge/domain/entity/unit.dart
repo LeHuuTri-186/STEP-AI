@@ -14,9 +14,10 @@ class Unit {
   final String userId;
   final String knowledgeId;
   final List<String> openAiFileIds;
+  bool isDisplay = true;
   final MetadataInUnit metadata;
 
-  const Unit({
+  Unit({
     required this.createdAt,
     required this.updatedAt,
     required this.createdBy,

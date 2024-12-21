@@ -4,6 +4,8 @@ import 'package:step_ai/config/routes/routes.dart';
 import 'package:step_ai/features/knowledge_base/domain/entity/knowledge.dart';
 import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/unit_notifier.dart';
+import 'package:step_ai/shared/helpers/convert_date_time.dart';
+import 'package:step_ai/shared/helpers/convert_size.dart';
 
 class KnowledgeItem extends StatelessWidget {
   final Knowledge knowledge;
@@ -50,13 +52,12 @@ class KnowledgeItem extends StatelessWidget {
                     Text(
                       "${knowledge.numberUnits} "
                       "${knowledge.numberUnits > 1 ? 'units' : 'unit'} "
-                      "- ${knowledge.totalSize} "
-                      "${knowledge.totalSize > 1 ? 'bytes' : 'byte'}",
+                      "${ConvertSize.bytesToSize(knowledge.totalSize)}",
                       style: const TextStyle(fontSize: 14),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      knowledge.updatedAt.toString(),
+                      "Update at: ${ConvertDateTime.convertDateTime(knowledge.updatedAt)}",
                       style: const TextStyle(fontSize: 10),
                     ),
                   ],
@@ -83,12 +84,30 @@ class KnowledgeItem extends StatelessWidget {
                           ),
                           TextButton(
                             onPressed: () async {
+                              final scaffoldContext =
+                                  ScaffoldMessenger.of(context);
                               Navigator.of(context).pop();
-                              await knowledgeNotifier
-                                  .deleteKnowledge(knowledge.id);
-                              await knowledgeNotifier.getKnowledgeList();
+                              try {
+                                await knowledgeNotifier
+                                    .deleteKnowledge(knowledge.id);
+                                await knowledgeNotifier.getKnowledgeList();
+                              } catch (e) {
+                                scaffoldContext.showSnackBar(
+                                  SnackBar(
+                                    content: Text(e.toString()),
+                                  ),
+                                );
+                              }
                             },
-                            child: const Text('Delete'),
+                            child: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(5)),
+                                child: const Text(
+                                  'Delete',
+                                  style: TextStyle(color: Colors.white),
+                                )),
                           ),
                         ],
                       );

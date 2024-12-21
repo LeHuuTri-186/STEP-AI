@@ -22,7 +22,7 @@ class KnowledgeNotifier with ChangeNotifier {
   KnowledgeList? knowledgeList;
   int limit = 0;
   bool hasNext = false;
-  void reset(){
+  void reset() {
     limit = 0;
     hasNext = false;
   }
@@ -31,18 +31,27 @@ class KnowledgeNotifier with ChangeNotifier {
     isLoadingKnowledgeList = true;
     notifyListeners();
     try {
-      limit += 5;
+      // limit += 5;
       final knowledgeListModel = await _getKnowledgeListUsecase.call(
           params: GetKnowledgesParam(limit: 50));
       knowledgeList = KnowledgeList.fromModel(knowledgeListModel);
+      knowledgeList!.knowledgeList.sort((a, b) => a.knowledgeName
+          .toLowerCase()
+          .compareTo(b.knowledgeName.toLowerCase()));
+
       hasNext = knowledgeListModel.meta.hasNext;
       errorString = "";
     } catch (e) {
       knowledgeList = null;
       limit = 0;
       hasNext = false;
-      errorString = "Có lỗi xảy ra. Thử lại sau getKnowledgeList";
+      errorString = "Have error. Try again  Get Knowledge";
       print("Error in getKnowledgeList in knowledge notifier with error: $e");
+      if (e is DioException) {
+        if (e.type == DioExceptionType.connectionError) {
+          errorString = "Please check your internet connection";
+        }
+      }
     } finally {
       isLoadingKnowledgeList = false;
       notifyListeners();
@@ -57,11 +66,17 @@ class KnowledgeNotifier with ChangeNotifier {
               knowledgeName: knowledgeName, description: knowledgeDescription));
     } catch (e) {
       if (e is DioException) {
-        throw e.response?.data["details"][0]['issue'] ??
-            "Có lỗi xảy ra. Thử lại sau addNewKnowledge";
+        if (e.response?.statusCode == 400) {
+          throw e.response?.data["details"][0]['issue'] ??
+              "Have error. Try again addNewKnowledge";
+        }
+        if (e.type == DioExceptionType.connectionError) {
+          throw "Please check your internet connection";
+        }
       }
-      errorString = "Có lỗi xảy ra. Thử lại sau addNewKnowledge";
       print("Error in addNewKnowledge in knowledge notifier with error: $e");
+      throw "Have error. Try again later: Add Knowledge";
+      // notifyListeners();
     }
   }
 
@@ -82,8 +97,13 @@ class KnowledgeNotifier with ChangeNotifier {
                   knowledgeName: knowledgeName,
                   description: knowledgeDescription)));
     } catch (e) {
-      errorString = "Có lỗi xảy ra. Thử lại sau addNewKnowledge";
-      print("Error in addNewKnowledge in knowledge notifier with error: $e");
+      if (e is DioException) {
+        if (e.type == DioExceptionType.connectionError) {
+          throw "Please check your internet connection";
+        }
+      }
+      print("Error in EditKnowledge in knowledge notifier with error: $e");
+      throw "Have error. Try again later: Edit Knowledge";
     }
   }
 
@@ -91,8 +111,13 @@ class KnowledgeNotifier with ChangeNotifier {
     try {
       await _deleteKnowledgeUsecase.call(params: id);
     } catch (e) {
-      errorString = "Có lỗi xảy ra. Thử lại sau addNewKnowledge";
+      if (e is DioException) {
+        if (e.type == DioExceptionType.connectionError) {
+          throw "Please check your internet connection";
+        }
+      }
       print("Error in deleteKnowledge in knowledge notifier with error: $e");
+      throw "Have error Delete Knowledge. Try again";
     }
   }
 

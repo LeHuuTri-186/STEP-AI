@@ -26,5 +26,5 @@ class Constant{
   static String slackImagePath = 'lib/core/assets/source_unit_images/slack.png';
 
   //Test
-  static String KB_accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImJlZjgxMDA4LTg4MTktNGM5NS1iNzZjLWQwODA3YzU0MTNiNSIsImVtYWlsIjoibmd1eWVuYm9jaGFAZ21haWwuY29tIiwiaWF0IjoxNzM0NzY0NjYzLCJleHAiOjE3MzQ4NTEwNjN9.MAROndyesMtQJtptwfpquFzvlfeTXUwN-FOurEDE5pI';
+  static String KB_accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImJlZjgxMDA4LTg4MTktNGM5NS1iNzZjLWQwODA3YzU0MTNiNSIsImVtYWlsIjoibmd1eWVuYm9jaGFAZ21haWwuY29tIiwiaWF0IjoxNzM0ODEwMjc4LCJleHAiOjE3MzQ4OTY2Nzh9.1PZVTHp6DpDkcBrvsSBjwxyNF7_TtVJeF-BXJrls4N0';
 }
