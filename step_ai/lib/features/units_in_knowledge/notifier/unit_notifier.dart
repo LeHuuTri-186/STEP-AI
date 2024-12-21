@@ -121,8 +121,8 @@ class UnitNotifier extends ChangeNotifier {
               slackWorkspace: slackWorkspace));
     } catch (e) {
       print("Error in upload Slack in unit notifier with error: $e");
-      if (e is DioException && e.response!.statusCode == 500) {
-        throw "Url is not valid";
+      if (e is DioException && e.response!.statusCode == 400) {
+        throw e.response!.data["details"][0]["issue"];
       }
       throw e.toString();
     }
@@ -145,8 +145,8 @@ class UnitNotifier extends ChangeNotifier {
               confluenceAccessToken: confluenceAccessToken));
     } catch (e) {
       print("Error in upload Confluence in unit notifier with error: $e");
-      if (e is DioException && e.response!.statusCode == 500) {
-        throw "Url is not valid";
+      if (e is DioException && e.response!.statusCode == 400) {
+        throw e.response!.data["details"][0]["issue"];
       }
       throw e.toString();
     }

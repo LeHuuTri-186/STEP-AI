@@ -81,4 +81,17 @@ class KnowledgeNotifier with ChangeNotifier {
       print("Error in deleteKnowledge in knowledge notifier with error: $e");
     }
   }
+
+  void changeDisplayKnowledgeWhenSearching(String searchText) {
+    knowledgeList!.knowledgeList.forEach((element) {
+      if (element.knowledgeName
+          .toLowerCase()
+          .contains(searchText.toLowerCase())) {
+        element.isDisplay = true;
+      } else {
+        element.isDisplay = false;
+      }
+    });
+    notifyListeners();
+  }
 }

@@ -48,7 +48,9 @@ class _KnowledgeListviewState extends State<KnowledgeListview> {
       return const Center(child: Text("Have error. Try again later"));
     }
     if (_knowledgeNotifier.knowledgeList!.knowledgeList.isEmpty) {
-      return const NoDataPannel(contentNoData: "Create a knowledge base to store your data",);
+      return const NoDataPannel(
+        contentNoData: "Create a knowledge base to store your data",
+      );
     }
 
     return ListView.builder(
@@ -56,6 +58,9 @@ class _KnowledgeListviewState extends State<KnowledgeListview> {
       itemBuilder: (context, index) {
         final knowledge =
             _knowledgeNotifier.knowledgeList!.knowledgeList[index];
+        if (knowledge.isDisplay == false) {
+          return const SizedBox.shrink();
+        }
         return KnowledgeItem(knowledge: knowledge);
       },
     );

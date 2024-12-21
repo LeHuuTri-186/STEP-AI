@@ -11,6 +11,7 @@ class Knowledge {
   String id;
   int numberUnits;
   int totalSize;
+  bool isDisplay = true;
   Knowledge(
       {required this.createdAt,
       required this.updatedAt,

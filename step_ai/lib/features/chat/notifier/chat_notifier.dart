@@ -131,7 +131,7 @@ class ChatNotifier with ChangeNotifier {
           params: SendMessageParam(
               historyMessages: _historyMessages,
               conversationId: _idCurrentConversation));
-
+      print("============================> ${messageModel.message}");
       updateLastMessage(messageModel.message);
       _numberRestToken = messageModel.remainingUsage;
       if (_idCurrentConversation == null) {
