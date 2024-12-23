@@ -217,7 +217,7 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Text(
-                                      "Plan pricing",
+                                      "Plan & pricing",
                                       style: Theme.of(context)
                                           .textTheme
                                           .displayMedium

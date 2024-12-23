@@ -129,8 +129,6 @@ class _PlanPricingPageState extends State<PlanPricingPage> {
           return IconButton(
             icon: const Icon(Icons.menu),
             onPressed: () async {
-              Plan plan = await getIt<GetSubscriptionUsecase>().call();
-              print(plan.name);
               if (context.mounted) {
                 Scaffold.of(context).openDrawer();
               }
@@ -145,15 +143,17 @@ class _PlanPricingPageState extends State<PlanPricingPage> {
   }
 
   Widget _buildProgressIndicator() {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: SizedBox(
-        width: 200,
-        child: Center(
-          child: LoadingAnimationWidget.twistingDots(
-            size: 50,
-            leftDotColor: TColor.tamarama,
-            rightDotColor: TColor.daJuice,
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: SizedBox(
+          width: 200,
+          child: Center(
+            child: LoadingAnimationWidget.twistingDots(
+              size: 50,
+              leftDotColor: TColor.tamarama,
+              rightDotColor: TColor.daJuice,
+            ),
           ),
         ),
       ),

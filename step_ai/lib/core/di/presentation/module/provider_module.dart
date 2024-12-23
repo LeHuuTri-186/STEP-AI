@@ -85,10 +85,6 @@ class ProviderModule {
       ),
     );
 
-    //Slash prompts:------------------------------------------------------------
-    getIt.registerSingleton<PromptListNotifier>(PromptListNotifier(
-      getIt<GetPromptListUseCase>(),
-    ));
     //Chat page:----------------------------------------------------------------
     getIt.registerSingleton<ChatBarNotifier>(ChatBarNotifier(
       getIt<LogoutUseCase>(),
@@ -128,11 +124,6 @@ class ProviderModule {
       )
     );
     //Chat page:----------------------------------------------------------------
-    getIt.registerSingleton<ChatBarNotifier>(
-      ChatBarNotifier(
-        getIt<LogoutUseCase>(),
-      )
-    );
 
     getIt.registerSingleton<SubscriptionNotifier>(
         SubscriptionNotifier(

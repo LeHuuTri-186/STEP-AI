@@ -279,70 +279,6 @@ class _ChatBarState extends State<ChatBar> {
                           _buildImageUploadButton(context),
                         ],
                       ),
-                      _showIconSend && !_isUploading
-                          ? IconButton(
-                              padding: const EdgeInsets.all(2),
-                              icon: Icon(
-                                Icons.send,
-                                size: 20,
-                                color: TColor.tamarama,
-                              ),
-                              child: PromptBottomSheet(
-                                returnPrompt: (value) async {
-                                  _controller.clear();
-                                  try {
-                                    await Provider.of<ChatNotifier>(context,
-                                            listen: false)
-                                        .sendMessage(value);
-                                  } catch (e) {
-                                    //e is 401 and return to login screen
-
-                                    print(e);
-                                    if (context.mounted &&
-                                        e is TaskStatus &&
-                                        e == TaskStatus.UNAUTHORIZED) {
-                                      Navigator.of(context)
-                                          .pushNamedAndRemoveUntil(
-                                        Routes.authenticate,
-                                        (Route<dynamic> route) => false,
-                                      );
-                                    }
-                              onPressed: () async {
-                                // Hide keyboard
-                                FocusScope.of(context).unfocus();
-                                String content = _controller.text;
-                                _controller.clear();
-                                try {
-                                  _chatBarNotifier.setShowOverlay(false);
-                                  await Provider.of<ChatNotifier>(context,
-                                          listen: false)
-                                      .sendMessage(content, files: _images);
-                                } catch (e) {
-                                  if (context.mounted) {
-                                    Navigator.of(context).pushNamedAndRemoveUntil(
-                                      Routes.authenticate,
-                                      (Route<dynamic> route) => false,
-                                    );
-                                  }
-                                }
-                              })
-                          : IconButton(
-                              padding: const EdgeInsets.all(2),
-                              icon: Icon(
-                                Icons.send,
-                                size: 20,
-                                color: TColor.petRock,
-                              ),
-                            );
-                          },
-                        );
-                      },
-                      icon: Icon(
-                        FontAwesomeIcons.wandMagicSparkles,
-                        color: TColor.petRock,
-                        size: 20,
-                      ),
-                    ),
                     _showIconSend
                         ? IconButton(
                             padding: const EdgeInsets.all(2),
@@ -385,7 +321,8 @@ class _ChatBarState extends State<ChatBar> {
                             icon: Icon(
                               Icons.send,
                               size: 20,
-                              color: TColor.petRock,
+                              color: TColor.petRock
+                            ),
                               onPressed: () {},
                             ),
                     ],

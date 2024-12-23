@@ -33,7 +33,6 @@ import 'package:step_ai/features/units_in_knowledge/domain/usecase/upload_drive_
 import 'package:step_ai/features/units_in_knowledge/domain/usecase/upload_local_file_usecase.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/usecase/upload_slack_usecase.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/usecase/upload_web_usecase.dart';
-import 'package:step_ai/shared/usecase/refresh_token_usecase.dart';
 import 'package:step_ai/features/plan/domain/repository/subscription_repository.dart';
 import 'package:step_ai/features/plan/domain/usecases/get_subscription_usecase.dart';
 import 'package:step_ai/shared/usecases/refresh_token_usecase.dart';

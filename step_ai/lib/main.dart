@@ -61,7 +61,6 @@ Future<void> main() async {
     } catch (e) {
       print(e);
       if (e is TaskStatus && e == TaskStatus.UNAUTHORIZED) {
-        isLoggedIn = false;
         saveLoginStatusUseCase.call(params: false);
       }
       if (e is TaskStatus && e == TaskStatus.NO_INTERNET) {

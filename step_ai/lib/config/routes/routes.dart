@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/core/di/service_locator.dart';
-
-import 'package:step_ai/features/authentication/notifier/login_notifier.dart';
-import 'package:step_ai/features/authentication/notifier/register_notifier.dart';
-import 'package:step_ai/features/authentication/notifier/ui_notifier.dart';
+import 'package:step_ai/lib/features/chat/notifier/history_conversation_list_notifier.dart';
 
 import 'package:step_ai/features/authentication/presentation/pages/authenticate.dart';
 
 import 'package:step_ai/features/chat/presentation/pages/chat_page.dart';
 
-import 'package:step_ai/features/authentication/presentation/pages/forgot_password_page.dart';
 import 'package:step_ai/features/plan/presentation/notifier/subscription_notifier.dart';
 
 import 'package:step_ai/features/plan/presentation/pages/plan_pricing_page.dart';
-import 'package:step_ai/features/prompt/presentation/pages/prompt_list.dart';
 import 'package:step_ai/features/units_in_knowledge/presentation/pages/confluence_page.dart';
 import 'package:step_ai/features/units_in_knowledge/presentation/pages/drive_page.dart';
 import 'package:step_ai/features/units_in_knowledge/presentation/pages/local_file_page.dart';
@@ -22,6 +17,14 @@ import 'package:step_ai/features/units_in_knowledge/presentation/pages/slack_pag
 import 'package:step_ai/features/units_in_knowledge/presentation/pages/units_page.dart';
 import 'package:step_ai/features/units_in_knowledge/presentation/pages/web_page.dart';
 
+import '../../features/authentication/notifier/login_notifier.dart';
+import '../../features/authentication/notifier/register_notifier.dart';
+import '../../features/authentication/notifier/ui_notifier.dart';
+import '../../features/chat/notifier/assistant_notifier.dart';
+import '../../features/chat/notifier/chat_notifier.dart';
+import '../../features/chat/notifier/history_conversation_list_notifier.dart';
+import '../../features/chat/presentation/notifier/chat_bar_notifier.dart';
+import '../../features/chat/presentation/notifier/prompt_list_notifier.dart';
 import '../../features/personal/presentation/pages/personal_page.dart';
 
 class Routes {
@@ -38,43 +41,34 @@ class Routes {
   static const String forgotPassword = "/resetPassword";
   static const String unitsPage = "/unitsPage";
   //Page in unit
-  static const String localFilePage="/localFilePage";
-  static const String webPage="/webPage";
-  static const String confluencePage="/confluencePage";
-  static const String drivePage="/drivePage";
-  static const String slackPage="/slackPage";
+  static const String localFilePage = "/localFilePage";
+  static const String webPage = "/webPage";
+  static const String confluencePage = "/confluencePage";
+  static const String drivePage = "/drivePage";
+  static const String slackPage = "/slackPage";
 
   static final routes = <String, WidgetBuilder>{
     personal: (BuildContext context) => Builder(builder: (context) {
           return const PersonalPage();
         }),
 
-    chat: (BuildContext context) => Builder(
-          builder: (context) {
-            return const ChatPage();
-          },
-        ),
+    chat: (BuildContext context) => MultiProvider(providers: [
+          ChangeNotifierProvider.value(value: getIt<ChatBarNotifier>()),
+          ChangeNotifierProvider.value(value: getIt<PromptListNotifier>()),
+          ChangeNotifierProvider.value(value: getIt<AssistantNotifier>()),
+          ChangeNotifierProvider.value(value: getIt<ChatNotifier>()),
+          ChangeNotifierProvider.value(
+              value: getIt<HistoryConversationListNotifier>()),
+        ], child: const ChatPage()),
     unitsPage: (BuildContext context) => UnitsPage(),
-            return MultiProvider(
-              providers: [
-                ChangeNotifierProvider.value(value: getIt<ChatBarNotifier>()),
-                ChangeNotifierProvider.value(value: getIt<PromptListNotifier>()),
-                ChangeNotifierProvider.value(value: getIt<AssistantNotifier>()),
-                ChangeNotifierProvider.value(value: getIt<ChatNotifier>()),
-                ChangeNotifierProvider.value(value: getIt<HistoryConversationListNotifier>()),
-              ],
-              child: const ChatPage(),
-            );
-          },
-        ),
     planAndPricing: (BuildContext context) => Builder(builder: (context) {
-      return MultiProvider(providers: [
-        ChangeNotifierProvider.value(value: getIt<HistoryConversationListNotifier>()),
-        ChangeNotifierProvider.value(value: getIt<ChatNotifier>()),
-        ChangeNotifierProvider.value(value: getIt<SubscriptionNotifier>()),
-      ],
-      child: const PlanPricingPage());
-    }),
+          return MultiProvider(providers: [
+            ChangeNotifierProvider.value(
+                value: getIt<HistoryConversationListNotifier>()),
+            ChangeNotifierProvider.value(value: getIt<ChatNotifier>()),
+            ChangeNotifierProvider.value(value: getIt<SubscriptionNotifier>()),
+          ], child: const PlanPricingPage());
+        }),
 
     // signIn: (BuildContext context) => SignInPage(),
     authenticate: (BuildContext context) => Builder(
@@ -89,8 +83,6 @@ class Routes {
             );
           },
         ),
-    promptList: (BuildContext context) => PromptApp(),
-    forgotPassword: (BuildContext context) => ForgotPasswordPage(),
     localFilePage: (BuildContext context) => LocalFilePage(),
     webPage: (BuildContext context) => WebPage(),
     slackPage: (BuildContext context) => SlackPage(),
