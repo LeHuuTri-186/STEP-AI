@@ -10,3 +10,4 @@ class GetUsageTokenUsecase extends UseCase<UsageTokenModel, void> {
     return _conversationRepository.getUsageToken();
   }
 }
+

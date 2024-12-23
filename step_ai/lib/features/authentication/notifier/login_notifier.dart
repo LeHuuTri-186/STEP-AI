@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:step_ai/features/authentication/domain/param/login_param.dart';
-import 'package:step_ai/features/authentication/domain/usecase/is_logged_in_usecase.dart';
 import 'package:step_ai/features/authentication/domain/usecase/save_login_status_usecase.dart';
 
 import '../domain/usecase/login_usecase.dart';

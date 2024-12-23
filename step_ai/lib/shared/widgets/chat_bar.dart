@@ -287,6 +287,26 @@ class _ChatBarState extends State<ChatBar> {
                                 size: 20,
                                 color: TColor.tamarama,
                               ),
+                              child: PromptBottomSheet(
+                                returnPrompt: (value) async {
+                                  _controller.clear();
+                                  try {
+                                    await Provider.of<ChatNotifier>(context,
+                                            listen: false)
+                                        .sendMessage(value);
+                                  } catch (e) {
+                                    //e is 401 and return to login screen
+
+                                    print(e);
+                                    if (context.mounted &&
+                                        e is TaskStatus &&
+                                        e == TaskStatus.UNAUTHORIZED) {
+                                      Navigator.of(context)
+                                          .pushNamedAndRemoveUntil(
+                                        Routes.authenticate,
+                                        (Route<dynamic> route) => false,
+                                      );
+                                    }
                               onPressed: () async {
                                 // Hide keyboard
                                 FocusScope.of(context).unfocus();
@@ -313,6 +333,59 @@ class _ChatBarState extends State<ChatBar> {
                                 size: 20,
                                 color: TColor.petRock,
                               ),
+                            );
+                          },
+                        );
+                      },
+                      icon: Icon(
+                        FontAwesomeIcons.wandMagicSparkles,
+                        color: TColor.petRock,
+                        size: 20,
+                      ),
+                    ),
+                    _showIconSend
+                        ? IconButton(
+                            padding: const EdgeInsets.all(2),
+                            icon: Icon(
+                              Icons.send,
+                              size: 20,
+                              color: TColor.tamarama,
+                            ),
+                            onPressed: () async {
+                              // Hide keyboard
+                              FocusScope.of(context).unfocus();
+                              try {
+                                _chatBarNotifier.setShowOverlay(false);
+                                String message = _controller.text;
+                                _controller.clear();
+                                await Provider.of<ChatNotifier>(context,
+                                        listen: false)
+                                    .sendMessage(message);
+                              } catch (e) {
+                                //e is 401 and return to login screen
+
+                                print(e);
+                                if (context.mounted &&
+                                    e is TaskStatus &&
+                                    e == TaskStatus.UNAUTHORIZED) {
+                                  Navigator.of(context).pushNamedAndRemoveUntil(
+                                    Routes.authenticate,
+                                    (Route<dynamic> route) => false,
+                                  );
+                                }
+                              }
+                              setState(() {
+                                //print("set state ABCDDDDDE");
+                                _showIconSend = true;
+                              });
+                              // _controller.clear();
+                            })
+                        : IconButton(
+                            padding: const EdgeInsets.all(2),
+                            icon: Icon(
+                              Icons.send,
+                              size: 20,
+                              color: TColor.petRock,
                               onPressed: () {},
                             ),
                     ],

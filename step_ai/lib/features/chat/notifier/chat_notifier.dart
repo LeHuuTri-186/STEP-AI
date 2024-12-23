@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:step_ai/config/enum/task_status.dart';
 import 'package:step_ai/features/chat/domain/entity/message.dart';
 import 'package:step_ai/features/chat/domain/params/send_message_param.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_usage_token_usecase.dart';
@@ -12,6 +13,7 @@ import 'package:step_ai/features/chat/notifier/history_conversation_list_notifie
 import '../domain/usecase/get_messages_by_conversation_id_usecase.dart';
 
 class ChatNotifier with ChangeNotifier {
+  bool isLoading = false;
   //number of rest token
   int _numberRestToken = 0;
   int get numberRestToken => _numberRestToken;
@@ -67,16 +69,31 @@ class ChatNotifier with ChangeNotifier {
 
   //run first time when open chat
   Future<void> getNumberRestToken() async {
+    isLoading = true;
+    notifyListeners();
+
     try {
       final usageTokenModel = await _getUsageTokenUsecase.call(params: null);
       numberRestToken = usageTokenModel.availableTokens;
+
+      isLoading = false;
+      notifyListeners();
     } catch (e) {
       if (e is DioException) {
+        if (e.type == DioExceptionType.connectionError) {
+          throw TaskStatus.NO_INTERNET;
+        }
+        if (e.response?.statusCode == 401) {
+          throw TaskStatus.UNAUTHORIZED;
+        }
         print(
             "Error in getNumberRestToken in chat notifier with status code: ${e.response?.statusCode}");
       } else {
         print("Error in getNumberRestToken in chat notifier with  error: $e");
       }
+
+      isLoading = false;
+      notifyListeners();
     }
   }
 
@@ -129,6 +146,7 @@ class ChatNotifier with ChangeNotifier {
             .getNewestConversationWhenAfterSendMessage();
       } else {
         //update historyConversationList when send message at old conversation
+        //must check to render many times when send many message in one conversation
         if (_idCurrentConversation !=
             _historyConversationListNotifier.historyConversationList.first.id) {
           await _historyConversationListNotifier.getHistoryConversationList();
@@ -136,14 +154,18 @@ class ChatNotifier with ChangeNotifier {
       }
     } catch (error) {
       if (error is DioException) {
+        if (error.type == DioExceptionType.connectionError) {
+          updateLastMessage("No internet connection. Try again!");
+          throw TaskStatus.NO_INTERNET;
+        }
         print(
             "Error in sendMessage in chat notifier with status code: ${error.response?.statusCode}");
         if (error.response?.statusCode == 401) {
           this._historyMessages.clear();
-          this._idCurrentConversation=null;
+          this._idCurrentConversation = null;
           this._numberRestToken = 0;
           this._isLoadingDetailedConversation = false;
-          throw 401;
+          throw TaskStatus.UNAUTHORIZED;
         } else {
           updateLastMessage("Server not response. Try again!");
         }

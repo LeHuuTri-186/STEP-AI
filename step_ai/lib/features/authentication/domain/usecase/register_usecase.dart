@@ -21,7 +21,7 @@ class RegisterUseCase extends UseCase<int, RegisterParam>{
      if (registerStatus == 201) {
        print('Register done');
        try{
-         _loginUseCase.call(
+         await _loginUseCase.call(
              params: LoginParam(email: params.email, password: params.password));
          return 200;
        } catch (e){

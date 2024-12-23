@@ -17,9 +17,27 @@ import 'package:step_ai/features/chat/domain/usecase/get_history_conversation_li
 import 'package:step_ai/features/chat/domain/usecase/get_messages_by_conversation_id_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_usage_token_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/send_message_usecase.dart';
+import 'package:step_ai/features/knowledge_base/domain/entity/knowledge.dart';
+import 'package:step_ai/features/knowledge_base/domain/repository/knowledge_repository.dart';
+import 'package:step_ai/features/knowledge_base/domain/usecase/add_knowledge_usecase.dart';
+import 'package:step_ai/features/knowledge_base/domain/usecase/delete_knowledge_usecase.dart';
+import 'package:step_ai/features/knowledge_base/domain/usecase/edit_knowledge_usecase.dart';
+import 'package:step_ai/features/knowledge_base/domain/usecase/get_knowledge_list_usecase.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/params/update_status_unit_param.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/repository/unit_repository.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/usecase/delete_unit_usecase.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/usecase/get_unit_list_usecase.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/usecase/update_status_unit_usecase.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/usecase/upload_confluence_usecase.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/usecase/upload_drive_usecae.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/usecase/upload_local_file_usecase.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/usecase/upload_slack_usecase.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/usecase/upload_web_usecase.dart';
+import 'package:step_ai/shared/usecase/refresh_token_usecase.dart';
 import 'package:step_ai/features/plan/domain/repository/subscription_repository.dart';
 import 'package:step_ai/features/plan/domain/usecases/get_subscription_usecase.dart';
 import 'package:step_ai/shared/usecases/refresh_token_usecase.dart';
+
 
 import '../../../../features/authentication/domain/repository/register_repository.dart';
 import '../../../di/service_locator.dart';
@@ -40,19 +58,15 @@ class UseCaseModule {
       ),
     );
 
-
-    getIt.registerSingleton<SaveLoginStatusUseCase>(
-        SaveLoginStatusUseCase(
-          getIt<LoginRepository>(),
-        )
-    );
+    getIt.registerSingleton<SaveLoginStatusUseCase>(SaveLoginStatusUseCase(
+      getIt<LoginRepository>(),
+    ));
 
 
     //Register:-----------------------------------------------------------------
     getIt.registerSingleton<RegisterUseCase>(
       RegisterUseCase(getIt<RegisterRepository>(), getIt<LoginUseCase>()),
     );
-
 
     //Refresh token:------------------------------------------------------------
     getIt.registerSingleton<RefreshTokenUseCase>(
@@ -69,13 +83,11 @@ class UseCaseModule {
     ));
 
     //Slash command:------------------------------------------------------------
-    getIt.registerSingleton<GetPromptListUseCase>(
-      GetPromptListUseCase(
-        getIt<SlashPromptRepository>(),
-        getIt<RefreshTokenUseCase>(),
-        getIt<LogoutUseCase>(),
-      )
-    );
+    getIt.registerSingleton<GetPromptListUseCase>(GetPromptListUseCase(
+      getIt<SlashPromptRepository>(),
+      getIt<RefreshTokenUseCase>(),
+      getIt<LogoutUseCase>(),
+    ));
 
     getIt.registerSingleton<GetFeaturedPromptUseCase>(
         GetFeaturedPromptUseCase(getIt<SlashPromptRepository>(), getIt<RefreshTokenUseCase>(), getIt<LogoutUseCase>())
@@ -103,6 +115,53 @@ class UseCaseModule {
       ),
     );
 
+
+    ///Knowledge base:-----------------------------------------------------------
+    getIt.registerSingleton<GetKnowledgeListUsecase>(
+      GetKnowledgeListUsecase(
+        getIt<KnowledgeRepository>(),
+      ),
+    );
+    getIt.registerSingleton<AddKnowledgeUsecase>(
+      AddKnowledgeUsecase(
+        getIt<KnowledgeRepository>(),
+      ),
+    );
+    getIt.registerSingleton<DeleteKnowledgeUsecase>(
+      DeleteKnowledgeUsecase(
+        getIt<KnowledgeRepository>(),
+      ),
+    );
+    getIt.registerSingleton<EditKnowledgeUsecase>(
+      EditKnowledgeUsecase(
+        getIt<KnowledgeRepository>(),
+      ),
+    );
+
+    ///Units:--------------------------------------------------------------------
+    getIt.registerSingleton<GetUnitListUsecase>(
+      GetUnitListUsecase(
+        getIt<UnitRepository>(),
+      ),
+    );
+    getIt.registerSingleton<DeleteUnitUsecase>(
+      DeleteUnitUsecase(
+        getIt<UnitRepository>(),
+      ),
+    );
+    getIt.registerSingleton<UpdateStatusUnitUsecase>(
+        UpdateStatusUnitUsecase(getIt<UnitRepository>()));
+    //Upload:-------------------------------------------------------------------
+    getIt.registerSingleton<UploadLocalFileUsecase>(
+        UploadLocalFileUsecase(getIt<UnitRepository>()));
+    getIt.registerSingleton<UploadWebUsecase>(
+        UploadWebUsecase(getIt<UnitRepository>()));
+    getIt.registerSingleton<UploadSlackUsecase>(
+        UploadSlackUsecase(getIt<UnitRepository>()));
+    getIt.registerSingleton<UploadDriveUsecae>(
+        UploadDriveUsecae(getIt<UnitRepository>()));
+    getIt.registerSingleton<UploadConfluenceUsecase>(
+        UploadConfluenceUsecase(getIt<UnitRepository>()));
     getIt.registerSingleton<GetSubscriptionUsecase>(
         GetSubscriptionUsecase(
           getIt<SubscriptionRepository>(),

@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -40,8 +42,12 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
           Provider.of<HistoryConversationListNotifier>(context, listen: false)
               .hasMore) {
         //print("Scroll to bottom");
-        Provider.of<HistoryConversationListNotifier>(context, listen: false)
-            .getHistoryConversationList();
+        try {
+          Provider.of<HistoryConversationListNotifier>(context, listen: false)
+              .getHistoryConversationList();
+        } catch (e) {
+          print(e);
+        }
       }
     });
   }
@@ -166,11 +172,10 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
                             child: InkWell(
                               splashColor: TColor.petRock.withOpacity(0.3),
                               onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const PersonalPage()));
+                                Navigator.of(context).pushNamedAndRemoveUntil(
+                                  Routes.personal,
+                                  (Route<dynamic> route) => false,
+                                );
                               },
                               child: Center(
                                 child: Padding(

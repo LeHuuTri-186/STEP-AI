@@ -32,6 +32,10 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
   final TextEditingController _confirmPwController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
 
+  final HistoryConversationListNotifier _historyConversationListNotifier =
+      getIt<HistoryConversationListNotifier>();
+  final ChatNotifier _chatNotifier = getIt<ChatNotifier>();
+
   @override
   Widget build(BuildContext context) {
     _authUINotifier = Provider.of<AuthenticateUINotifier>(context);
@@ -44,7 +48,10 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
           appBar: _buildAppBar(),
           body: _buildBody(),
         ),
-        if (_loginNotifier.isLoading || _registerNotifier.isLoading)
+        if (_loginNotifier.isLoading ||
+            _registerNotifier.isLoading ||
+            _chatNotifier.isLoading ||
+            _historyConversationListNotifier.isLoading)
           Positioned.fill(child: _buildProgressIndicator()),
       ],
     );
@@ -406,12 +413,7 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
           _emailController.text, _passwordController.text);
       if (isLogged) {
         if (mounted) {
-          final ChatNotifier chatNotifier = getIt<ChatNotifier>();
-          await chatNotifier.getNumberRestToken();
-          final HistoryConversationListNotifier
-              historyConversationListNotifier =
-              getIt<HistoryConversationListNotifier>();
-          await historyConversationListNotifier.getHistoryConversationList();
+          await _getNecessaryData();
           Navigator.of(context).pushReplacementNamed(Routes.chat);
         }
       }
@@ -437,12 +439,7 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
         print('Logging in');
         //Switch screen
         if (mounted) {
-          final ChatNotifier chatNotifier = getIt<ChatNotifier>();
-          await chatNotifier.getNumberRestToken();
-          final HistoryConversationListNotifier
-              historyConversationListNotifier =
-              getIt<HistoryConversationListNotifier>();
-          await historyConversationListNotifier.getHistoryConversationList();
+          await _getNecessaryData();
           Navigator.of(context).pushReplacementNamed(Routes.chat);
         }
       }
@@ -459,5 +456,14 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     _passwordController.text = '';
     _confirmPwController.text = '';
     _usernameController.text = '';
+  }
+
+  Future _getNecessaryData() async {
+    try {
+      await _chatNotifier.getNumberRestToken();
+      await _historyConversationListNotifier.getHistoryConversationList();
+    } catch (e) {
+      print('Error in get necessary data: $e');
+    }
   }
 }

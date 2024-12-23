@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:step_ai/features/chat/notifier/assistant_notifier.dart';
 import 'package:step_ai/shared/styles/horizontal_spacing.dart';
 
-import '../../core/di/service_locator.dart';
 import '../styles/colors.dart';
 
 class DropdownAI extends StatefulWidget {

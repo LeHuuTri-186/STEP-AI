@@ -11,6 +11,7 @@ import flutter_secure_storage_macos
 import path_provider_foundation
 import shared_preferences_foundation
 import url_launcher_macos
+
 import webview_flutter_wkwebview
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {

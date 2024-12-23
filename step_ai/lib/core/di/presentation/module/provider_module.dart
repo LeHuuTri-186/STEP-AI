@@ -19,6 +19,29 @@ import 'package:step_ai/features/chat/domain/usecase/send_message_usecase.dart';
 import 'package:step_ai/features/chat/notifier/assistant_notifier.dart';
 import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
 import 'package:step_ai/features/chat/notifier/history_conversation_list_notifier.dart';
+import 'package:step_ai/features/knowledge_base/domain/usecase/add_knowledge_usecase.dart';
+import 'package:step_ai/features/knowledge_base/domain/usecase/delete_knowledge_usecase.dart';
+import 'package:step_ai/features/knowledge_base/domain/usecase/edit_knowledge_usecase.dart';
+import 'package:step_ai/features/knowledge_base/domain/usecase/get_knowledge_list_usecase.dart';
+import 'package:step_ai/features/knowledge_base/notifier/add_knowledge_dialog_notifier.dart';
+import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/usecase/delete_unit_usecase.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/usecase/get_unit_list_usecase.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/usecase/update_status_unit_usecase.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/usecase/upload_confluence_usecase.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/usecase/upload_drive_usecae.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/usecase/upload_local_file_usecase.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/usecase/upload_slack_usecase.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/usecase/upload_web_usecase.dart';
+import 'package:step_ai/features/units_in_knowledge/notifier/add_option_unit_notifier.dart';
+import 'package:step_ai/features/units_in_knowledge/notifier/confluence_notifier.dart';
+import 'package:step_ai/features/units_in_knowledge/notifier/cupertino_notifier.dart';
+import 'package:step_ai/features/units_in_knowledge/notifier/drive_notifier.dart';
+import 'package:step_ai/features/units_in_knowledge/notifier/edit_knowledge_dialog_notifier.dart';
+import 'package:step_ai/features/units_in_knowledge/notifier/local_file_notifier.dart';
+import 'package:step_ai/features/units_in_knowledge/notifier/slack_notifier.dart';
+import 'package:step_ai/features/units_in_knowledge/notifier/unit_notifier.dart';
+import 'package:step_ai/features/units_in_knowledge/notifier/web_notifier.dart';
 import 'package:step_ai/features/plan/domain/usecases/get_subscription_usecase.dart';
 import 'package:step_ai/features/plan/presentation/notifier/subscription_notifier.dart';
 
@@ -63,6 +86,42 @@ class ProviderModule {
     );
 
     //Slash prompts:------------------------------------------------------------
+    getIt.registerSingleton<PromptListNotifier>(PromptListNotifier(
+      getIt<GetPromptListUseCase>(),
+    ));
+    //Chat page:----------------------------------------------------------------
+    getIt.registerSingleton<ChatBarNotifier>(ChatBarNotifier(
+      getIt<LogoutUseCase>(),
+    ));
+
+    //Knowledge base:------------------------------------------------------------
+    getIt.registerSingleton<KnowledgeNotifier>(KnowledgeNotifier(
+        getIt<GetKnowledgeListUsecase>(),
+        getIt<AddKnowledgeUsecase>(),
+        getIt<DeleteKnowledgeUsecase>(),
+        getIt<EditKnowledgeUsecase>()));
+    getIt.registerSingleton<AddKnowledgeDialogNotifier>(
+        AddKnowledgeDialogNotifier());
+    //Units in knowledge:-------------------------------------------------------
+    getIt.registerSingleton<UnitNotifier>(UnitNotifier(
+        getIt<GetUnitListUsecase>(),
+        getIt<DeleteUnitUsecase>(),
+        getIt<UpdateStatusUnitUsecase>(),
+        getIt<UploadLocalFileUsecase>(),
+        getIt<UploadWebUsecase>(),
+        getIt<UploadSlackUsecase>(),
+        getIt<UploadDriveUsecae>(),
+        getIt<UploadConfluenceUsecase>()));
+    getIt.registerSingleton<AddOptionUnitNotifier>(AddOptionUnitNotifier());
+    getIt.registerSingleton<EditKnowledgeDialogNotifier>(
+        EditKnowledgeDialogNotifier());
+    getIt.registerFactory<CupertinoNotifier>(() => CupertinoNotifier());
+    //Unit options:-------------------------------------------------------------
+    getIt.registerSingleton<LocalFileNotifier>(LocalFileNotifier());
+    getIt.registerSingleton<WebNotifier>(WebNotifier());
+    getIt.registerSingleton<DriveNotifier>(DriveNotifier());
+    getIt.registerSingleton<ConfluenceNotifier>(ConfluenceNotifier());
+    getIt.registerSingleton<SlackNotifier>(SlackNotifier());
     getIt.registerSingleton<PromptListNotifier>(
       PromptListNotifier(
         getIt<GetPromptListUseCase>(), getIt<GetFeaturedPromptUseCase>()
