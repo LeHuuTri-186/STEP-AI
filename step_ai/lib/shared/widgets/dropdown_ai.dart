@@ -7,7 +7,6 @@ import 'package:step_ai/features/chat/notifier/personal_assistant_notifier.dart'
 import 'package:step_ai/features/personal/presentation/pages/personal_page.dart';
 import 'package:step_ai/shared/styles/horizontal_spacing.dart';
 
-import '../../core/di/service_locator.dart';
 import '../styles/colors.dart';
 
 class DropdownAI extends StatefulWidget {
@@ -27,16 +26,16 @@ class _DropdownAIState extends State<DropdownAI> {
     return Center(
       child: PopupMenuButton(
         onOpened: () => setState(() {
+          FocusScope.of(context).unfocus();
           _isExpanded = true;
         }),
         onCanceled: () => setState(() {
+          FocusScope.of(context).unfocus();
           _isExpanded = false;
         }),
-        popUpAnimationStyle: AnimationStyle(
-          duration: const Duration()
-        ),
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        popUpAnimationStyle: AnimationStyle(duration: const Duration()),
         color: TColor.doctorWhite,
-        offset: Offset(0, -(_assistantNotifier.assistants.length * 48.0) - 10.0),
         position: PopupMenuPosition.over,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
@@ -62,21 +61,29 @@ class _DropdownAIState extends State<DropdownAI> {
                           child: Ink(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
-                              color: TColor.daJuice.withOpacity(0.3),
+                              color: TColor.tamarama,
                             ),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 20.0, vertical: 4.0),
-                              child: Text(
-                                "Your Assistants",
-                                style: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyLarge
-                                    ?.copyWith(
-                                  color: TColor.petRock,
-                                  fontSize: 12,
-                                ),
+                                  horizontal: 20.0, vertical: 8.0),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.add,
+                                    color: TColor.doctorWhite,
+                                  ),
+                                  HSpacing.sm,
+                                  Text(
+                                    "Create Assistant",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge
+                                        ?.copyWith(
+                                          color: TColor.doctorWhite,
+                                          fontSize: 12,
+                                        ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -140,7 +147,6 @@ class _DropdownAIState extends State<DropdownAI> {
                 ],
               ),
             ),
-            // Add the list of assistants
             ..._assistantNotifier.assistants.map((model) {
               return PopupMenuItem(
                 value: model,

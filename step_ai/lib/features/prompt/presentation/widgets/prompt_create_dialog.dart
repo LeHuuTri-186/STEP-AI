@@ -172,7 +172,10 @@ class _PromptCreateDialogState extends State<PromptCreateDialog> {
                             try {
                               await widget.onCreatePrompt(_prompt);
                               await Future.delayed(const Duration(milliseconds: 500));
-                              Navigator.of(context).pop();
+
+                              if (context.mounted) {
+                                Navigator.of(context).pop();
+                              }
                             } finally {
                               setState(() {
                                 _isAdding = true;

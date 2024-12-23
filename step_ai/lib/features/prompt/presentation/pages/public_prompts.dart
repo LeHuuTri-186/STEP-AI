@@ -45,8 +45,11 @@ class _PublicPromptsPanelState extends State<PublicPromptsPanel> {
     final PublicViewState promptsState = context.watch<PublicViewState>();
     final PublicFilterState filterState = context.watch<PublicFilterState>();
 
-    return Scaffold(
-      body: _buildBody(promptsState, filterState),
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        body: _buildBody(promptsState, filterState),
+      ),
     );
   }
 

@@ -1,11 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:step_ai/config/enum/task_status.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_history_conversation_list_usecase.dart';
-import 'package:step_ai/features/chat/domain/usecase/get_messages_by_conversation_id_usecase.dart';
 
 import '../domain/entity/conversation.dart';
 
 class HistoryConversationListNotifier extends ChangeNotifier {
+  bool isLoading = false;
   int _limitConversation = 0;
   bool _hasMore = false;
   get hasMore => _hasMore;
@@ -19,7 +20,10 @@ class HistoryConversationListNotifier extends ChangeNotifier {
   HistoryConversationListNotifier(this._getHistoryConversationListUsecase);
 
   Future<void> getHistoryConversationList() async {
+    isLoading = true;
+    notifyListeners();
     try {
+      print("=============getHistoryConversationList");
       _limitConversation = _limitConversation + 10;
       final conversationModel = await _getHistoryConversationListUsecase.call(
           params: _limitConversation);
@@ -32,17 +36,26 @@ class HistoryConversationListNotifier extends ChangeNotifier {
         );
       }).toList();
       _hasMore = conversationModel.hasMore;
+      print("=============getHistoryConversationList success");
     } catch (e) {
       _historyConversationList = [];
       _limitConversation = 0;
       _hasMore = false;
       if (e is DioException) {
+        if (e.type == DioExceptionType.connectionError) {
+          throw TaskStatus.NO_INTERNET;
+        }
+        if (e.response?.statusCode == 401) {
+          throw TaskStatus.UNAUTHORIZED;
+        }
         print(
             "Error in getHistoryConversationList in history conversation list notifier with status code: ${e.response?.statusCode}");
       } else {
-        print("Error in getHistoryConversationList in history conversation list notifier");
+        print(
+            "Error in getHistoryConversationList in history conversation list notifier");
       }
     } finally {
+      isLoading = false;
       notifyListeners();
     }
   }

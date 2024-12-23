@@ -2,6 +2,6 @@ enum TaskStatus{
   OK,
   SIMILAR,
   UNAUTHORIZED,
-  ERROR
+  ERROR,
+  NO_INTERNET,
 }
-

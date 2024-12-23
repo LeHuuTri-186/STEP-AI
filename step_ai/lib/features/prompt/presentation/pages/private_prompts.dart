@@ -58,6 +58,7 @@ class _PrivatePromptsPanelState extends State<PrivatePromptsPanel> {
     final PrivateFilterState filterState = context.watch<PrivateFilterState>();
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: _buildBody(promptsState, filterState),
     );
   }

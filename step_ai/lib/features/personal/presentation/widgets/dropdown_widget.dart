@@ -38,48 +38,51 @@ class _DropdownWidgetState extends State<DropdownWidget> {
       ),
       child: Padding(
         padding: const EdgeInsets.all(1.0),
-        child: Row(
-          children: [
-            const SizedBox(width: 10,),
-            Text(widget.display, style: GoogleFonts.jetBrainsMono(
-                color: Colors.black45,
-                fontWeight: FontWeight.w700
-            )),
-            SizedBox(
-              width: min(MediaQuery.of(context).size.width * .3, 130),
-              child: DropdownButtonFormField<String>(
-                value: _selectedType,
-                style: GoogleFonts.jetBrainsMono(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w700
-                ),
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide.none
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              // Text(widget.display, style: GoogleFonts.jetBrainsMono(
+              //     color: Colors.black45,
+              //     fontWeight: FontWeight.w700
+              // )),
+              SizedBox(
+                // width: min(MediaQuery.of(context).size.width * .2, 400),
+                width: 200,
+                child: DropdownButtonFormField<String>(
+                  value: _selectedType,
+                  style: GoogleFonts.jetBrainsMono(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w700
                   ),
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide.none
+                    ),
+                  ),
+                  // Use the types passed through the constructor (widget.types)
+                  items: widget.types.map((type) {
+                    return DropdownMenuItem(
+                      value: type,
+                      child: Text(type, style: GoogleFonts.jetBrainsMono(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w700
+                      ),),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedType = value;
+          
+                      print(_selectedType);
+                    });
+                    widget.onSelect(_selectedType);
+                  },
+                  hint: Text(_display),
                 ),
-                // Use the types passed through the constructor (widget.types)
-                items: widget.types.map((type) {
-                  return DropdownMenuItem(
-                    value: type,
-                    child: Text(type, style: GoogleFonts.jetBrainsMono(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w700
-                    ),),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedType = value;
-
-                    print(_selectedType);
-                  });
-                  widget.onSelect(_selectedType);
-                },
-                hint: Text(_display),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

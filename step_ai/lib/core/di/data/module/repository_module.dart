@@ -17,7 +17,16 @@ import 'package:step_ai/features/chat/data/repository/conversation_repository_im
 import 'package:step_ai/features/chat/domain/repository/conversation_repository.dart';
 import 'package:step_ai/features/personal/data/repository/bot_list_repository_impl.dart';
 import 'package:step_ai/features/personal/domain/repository/bot_list_repository.dart';
+import 'package:step_ai/features/knowledge_base/data/network/knowledge_api.dart';
+import 'package:step_ai/features/knowledge_base/data/repository/knowledge_repository_impl.dart';
+import 'package:step_ai/features/knowledge_base/domain/repository/knowledge_repository.dart';
+import 'package:step_ai/features/units_in_knowledge/data/network/unit_api.dart';
+import 'package:step_ai/features/units_in_knowledge/data/repository/unit_repository_impl.dart';
+import 'package:step_ai/features/units_in_knowledge/domain/repository/unit_repository.dart';
+import 'package:step_ai/features/plan/data/network/api_subscription.dart';
+import 'package:step_ai/features/plan/domain/repository/subscription_repository.dart';
 
+import '../../../../features/plan/data/repository/subscription_repository_impl.dart';
 import '../../service_locator.dart';
 
 class RepositoryModule {
@@ -32,13 +41,11 @@ class RepositoryModule {
         RegisterRepositoryImpl() as RegisterRepository);
 
     getIt.registerSingleton<LogoutRepository>(
-      LogoutRepositoryImpl(
-          getIt<SecureStorageHelper>()) as LogoutRepository);
+        LogoutRepositoryImpl(getIt<SecureStorageHelper>()) as LogoutRepository);
     //Slash command:------------------------------------------------------------
-    getIt.registerSingleton<SlashPromptRepository>(
-      SlashPromptRepositoryImpl(
-        getIt<SecureStorageHelper>(),
-      ) as SlashPromptRepository);
+    getIt.registerSingleton<SlashPromptRepository>(SlashPromptRepositoryImpl(
+      getIt<SecureStorageHelper>(),
+    ) as SlashPromptRepository);
     //Chat:---------------------------------------------------------------------
     getIt.registerSingleton<ConversationRepository>(
         ConversationRepositoryImpl(getIt<ApiClientChat>())
@@ -54,5 +61,16 @@ class RepositoryModule {
         getIt<SecureStorageHelper>(),
       ) as BotThreadRepository
     );
+    //Knowledge:----------------------------------------------------------------
+    getIt.registerSingleton<KnowledgeRepository>(
+        KnowledgeRepositoryImpl(getIt<KnowledgeApi>()) as KnowledgeRepository);
+
+    //Units:--------------------------------------------------------------------
+    getIt.registerSingleton<UnitRepository>(
+        UnitRepositoryImpl(getIt<UnitApi>()) as UnitRepository);
+
+    getIt.registerSingleton<SubscriptionRepository>(
+        SubscriptionRepositoryImpl(getIt<ApiSubscription>())
+        as SubscriptionRepository);
   }
 }

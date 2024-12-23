@@ -9,10 +9,12 @@ import 'package:step_ai/features/personal/data/models/bot_res_dto.dart';
 import 'package:step_ai/features/personal/presentation/notifier/bot_list_notifier.dart';
 import 'package:step_ai/features/personal/presentation/widgets/bot_list_panel.dart';
 import 'package:step_ai/shared/styles/colors.dart';
+
+import 'package:step_ai/features/knowledge_base/presentation/pages/knowledge_page.dart';
+
 import 'package:step_ai/shared/widgets/history_drawer.dart';
 import 'package:step_ai/features/personal/presentation/widgets/search_bar_widget.dart';
 import 'package:step_ai/features/personal/presentation/widgets/dropdown_widget.dart';
-import 'package:step_ai/features/personal/presentation/widgets/no_knowledge_panel.dart';
 
 import '../../data/models/bot_model.dart';
 import '../widgets/create_bot_dialog.dart';
@@ -101,58 +103,7 @@ class _PersonalPageState extends State<PersonalPage>
           Flexible(
             child: TabBarView(controller: _tabController, children: [
               buildBotTab(context),
-              Column(
-                children: [
-                  SizedBox(height: MediaQuery
-                      .of(context)
-                      .size
-                      .height * 0.02),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        Expanded(child: SearchBarWidget(
-                            onSearch: (value) async => {
-
-                            }, controller: _textController,
-                            )
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.centerRight,
-                    child: Container(
-                      margin: const EdgeInsets.only(right: 8.0),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: Colors.blueAccent),
-                      child: TextButton(
-                          onPressed: () => {},
-                          child: SizedBox(
-                            width: 200,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                const Icon(
-                                  Icons.add_outlined,
-                                  color: Colors.white,
-                                  size: 25,
-                                ),
-                                Text(
-                                    style: GoogleFonts.jetBrainsMono(
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.white,
-                                        fontSize: 16),
-                                    "Create knowledge"),
-                              ],
-                            ),
-                          )),
-                    ),
-                  ),
-                  const Expanded(child: NoKnowledgePanel())
-                ],
-              )
+              buildKnowledgeBaseTab(context),
             ]),
           )
         ],
@@ -166,10 +117,17 @@ class _PersonalPageState extends State<PersonalPage>
       children: [
         SizedBox(height: MediaQuery.of(context).size.height * 0.02),
         Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Padding(
-              padding: EdgeInsets.all(8.0),
-              child: DropdownWidget(display: "Type:" ,types: ["All", "Published", "Favorites"], onSelect: (m) => {},),
+            Expanded(
+              child: Container(
+                  margin: const EdgeInsets.only(left: 8.0),
+                  padding: const EdgeInsets.all(8.0),
+                  child: DropdownWidget(
+                    display: "Type:",
+                    types: ["All", "Published", "Favorites"],
+                    onSelect: (m) => {},
+                  )),
             ),
             Expanded(child: SearchBarWidget(
               onSubmit: (searchVal) async {
@@ -262,6 +220,9 @@ class _PersonalPageState extends State<PersonalPage>
         ),
       ),
     );
+    
+  Widget buildKnowledgeBaseTab(BuildContext context) {
+    return const KnowledgePage();
   }
 
   AppBar _buildAppBar() {
@@ -269,14 +230,14 @@ class _PersonalPageState extends State<PersonalPage>
       centerTitle: false,
       leading: Builder(
         builder: (context) {
-      return IconButton(
-        icon: const Icon(Icons.menu),
-        onPressed: () {
-          Scaffold.of(context).openDrawer();
+          return IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+          );
         },
-      );
-    },
-    ),
+      ),
       title: Text("Personal",
           style: GoogleFonts.jetBrainsMono(fontWeight: FontWeight.w800)),
     );
