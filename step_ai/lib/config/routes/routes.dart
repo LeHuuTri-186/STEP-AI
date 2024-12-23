@@ -5,6 +5,23 @@ import 'package:step_ai/features/email_composer/presentation/pages/email_compose
 import 'package:step_ai/lib/features/chat/notifier/history_conversation_list_notifier.dart';
 
 import 'package:step_ai/features/authentication/presentation/pages/authenticate.dart';
+import 'package:step_ai/features/chat/domain/usecase/get_prompt_list_usecase.dart';
+import 'package:step_ai/features/chat/notifier/personal_assistant_notifier.dart';
+import 'package:step_ai/features/chat/presentation/notifier/chat_bar_notifier.dart';
+import 'package:step_ai/features/chat/presentation/notifier/prompt_list_notifier.dart';
+import 'package:step_ai/features/chat/notifier/assistant_notifier.dart';
+import 'package:step_ai/features/chat/notifier/history_conversation_list_notifier.dart';
+
+import 'package:step_ai/features/chat/presentation/pages/chat_page.dart';
+
+import 'package:step_ai/features/authentication/presentation/pages/email_page.dart';
+import 'package:step_ai/features/authentication/presentation/pages/forgot_password_page.dart';
+import 'package:step_ai/features/personal/presentation/notifier/bot_list_notifier.dart';
+
+import 'package:step_ai/features/plan/presentation/pages/planPricingPage.dart';
+import 'package:step_ai/features/preview/presentation/notifier/preview_chat_notifier.dart';
+import 'package:step_ai/features/preview/presentation/pages/preview_chat_page.dart';
+import 'package:step_ai/features/prompt/presentation/pages/prompt_list.dart';
 
 import 'package:step_ai/features/chat/presentation/pages/chat_page.dart';
 
@@ -40,6 +57,7 @@ class Routes {
   static const String authenticate = "/signIn";
   static const String promptList = "/promptList";
   static const String forgotPassword = "/resetPassword";
+  static const String previewChat = "/previewChat";
   static const String unitsPage = "/unitsPage";
   //Page in unit
   static const String localFilePage = "/localFilePage";
@@ -84,6 +102,20 @@ class Routes {
             );
           },
         ),
+    promptList: (BuildContext context) => PromptApp(),
+    forgotPassword: (BuildContext context) => ForgotPasswordPage(),
+    previewChat:(BuildContext context) => Builder(
+      builder: (context) {
+        return MultiProvider(
+          providers: [
+            ChangeNotifierProvider.value(value: getIt<ChatBarNotifier>()),
+            ChangeNotifierProvider.value(value: getIt<PersonalAssistantNotifier>()),
+            ChangeNotifierProvider.value(value: getIt<PreviewChatNotifier>()),
+          ],
+          child: const PreviewChatPage(),
+        );
+      },
+    ),
     localFilePage: (BuildContext context) => LocalFilePage(),
     webPage: (BuildContext context) => WebPage(),
     slackPage: (BuildContext context) => SlackPage(),

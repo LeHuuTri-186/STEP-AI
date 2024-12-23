@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:step_ai/core/di/service_locator.dart';
+import 'package:step_ai/features/authentication/domain/usecase/login_kb_usecase.dart';
 import 'package:step_ai/features/authentication/domain/usecase/login_usecase.dart';
 import 'package:step_ai/features/authentication/domain/usecase/logout_usecase.dart';
 import 'package:step_ai/features/authentication/domain/usecase/register_usecase.dart';
@@ -8,8 +9,12 @@ import 'package:step_ai/features/authentication/domain/usecase/save_login_status
 import 'package:step_ai/features/authentication/notifier/login_notifier.dart';
 import 'package:step_ai/features/authentication/notifier/register_notifier.dart';
 import 'package:step_ai/features/authentication/notifier/ui_notifier.dart';
+import 'package:step_ai/features/chat/domain/usecase/ask_bot_usecase.dart';
+import 'package:step_ai/features/chat/domain/usecase/create_thread_usecase.dart';
+
 import 'package:step_ai/features/chat/domain/usecase/get_featured_prompts_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_prompt_list_usecase.dart';
+import 'package:step_ai/features/chat/notifier/personal_assistant_notifier.dart';
 import 'package:step_ai/features/chat/presentation/notifier/chat_bar_notifier.dart';
 import 'package:step_ai/features/chat/presentation/notifier/prompt_list_notifier.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_history_conversation_list_usecase.dart';
@@ -19,6 +24,12 @@ import 'package:step_ai/features/chat/domain/usecase/send_message_usecase.dart';
 import 'package:step_ai/features/chat/notifier/assistant_notifier.dart';
 import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
 import 'package:step_ai/features/chat/notifier/history_conversation_list_notifier.dart';
+import 'package:step_ai/features/personal/domain/usecase/create_bot_usecase.dart';
+import 'package:step_ai/features/personal/domain/usecase/delete_bot_usecase.dart';
+import 'package:step_ai/features/personal/domain/usecase/get_bot_list_usecase.dart';
+import 'package:step_ai/features/personal/domain/usecase/update_bot_usecase.dart';
+import 'package:step_ai/features/personal/presentation/notifier/bot_list_notifier.dart';
+import 'package:step_ai/features/preview/presentation/notifier/preview_chat_notifier.dart';
 import 'package:step_ai/features/knowledge_base/domain/usecase/add_knowledge_usecase.dart';
 import 'package:step_ai/features/knowledge_base/domain/usecase/delete_knowledge_usecase.dart';
 import 'package:step_ai/features/knowledge_base/domain/usecase/edit_knowledge_usecase.dart';
@@ -69,6 +80,20 @@ class ProviderModule {
     getIt.registerSingleton<AssistantNotifier>(
       AssistantNotifier(),
     );
+
+    getIt.registerSingleton<PersonalAssistantNotifier>(
+      PersonalAssistantNotifier(),
+    );
+
+    getIt.registerSingleton<BotListNotifier>(
+        BotListNotifier(
+          getIt<CreateBotUseCase>(),
+          getIt<LogoutUseCase>(),
+          getIt<GetBotListUseCase>(),
+          getIt<DeleteBotUseCase>(),
+          getIt<UpdateBotUseCase>(),
+        )
+    );
     //HistoryConversationListNotifier:-----------------------------------------------------
     getIt.registerSingleton<HistoryConversationListNotifier>(
       HistoryConversationListNotifier(
@@ -82,6 +107,10 @@ class ProviderModule {
         getIt<HistoryConversationListNotifier>(),
         getIt<GetUsageTokenUsecase>(),
         getIt<GetMessagesByConversationIdUsecase>(),
+        getIt<PersonalAssistantNotifier>(),
+        getIt<CreateThreadUseCase>(),
+        getIt<AskBotUseCase>(),
+        getIt<LogoutUseCase>(),
       ),
     );
 
@@ -119,10 +148,25 @@ class ProviderModule {
     getIt.registerSingleton<ConfluenceNotifier>(ConfluenceNotifier());
     getIt.registerSingleton<SlackNotifier>(SlackNotifier());
     getIt.registerSingleton<PromptListNotifier>(
-      PromptListNotifier(
-        getIt<GetPromptListUseCase>(), getIt<GetFeaturedPromptUseCase>()
-      )
+        PromptListNotifier(
+          getIt<GetPromptListUseCase>(), , getIt<GetFeaturedPromptUseCase>()
+        )
     );
+    //Chat page:----------------------------------------------------------------
+    getIt.registerSingleton<ChatBarNotifier>(
+        ChatBarNotifier(
+          getIt<LogoutUseCase>(),
+        )
+    );
+
+    //Preview page:-------------------------------------------------------------
+    getIt.registerSingleton<PreviewChatNotifier>(
+      PreviewChatNotifier(
+          getIt<PersonalAssistantNotifier>(),
+          getIt<AskBotUseCase>(),
+          getIt<CreateThreadUseCase>(),
+          getIt<LogoutUseCase>()
+      ),
     //Chat page:----------------------------------------------------------------
 
     getIt.registerSingleton<SubscriptionNotifier>(

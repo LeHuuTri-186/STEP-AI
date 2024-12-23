@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:step_ai/config/routes/routes.dart';
+import 'package:step_ai/features/chat/domain/entity/assistant.dart';
 import 'package:step_ai/features/chat/notifier/assistant_notifier.dart';
+import 'package:step_ai/features/chat/notifier/personal_assistant_notifier.dart';
+import 'package:step_ai/features/personal/presentation/pages/personal_page.dart';
 import 'package:step_ai/shared/styles/horizontal_spacing.dart';
 
 import '../styles/colors.dart';
@@ -17,9 +21,8 @@ class _DropdownAIState extends State<DropdownAI> {
 
   @override
   Widget build(BuildContext context) {
-    final _assistantNotifier =
-        Provider.of<AssistantNotifier>(context, listen: true);
-
+    final _assistantNotifier = Provider.of<AssistantNotifier>(context, listen: true);
+    final personalAssistantNotifier = context.watch<PersonalAssistantNotifier>();
     return Center(
       child: PopupMenuButton(
         onOpened: () => setState(() {
@@ -52,7 +55,9 @@ class _DropdownAIState extends State<DropdownAI> {
                         color: Colors.transparent,
                         child: InkWell(
                           borderRadius: BorderRadius.circular(12),
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.of(context).pushNamed(Routes.personal);
+                          },
                           child: Ink(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
@@ -86,21 +91,65 @@ class _DropdownAIState extends State<DropdownAI> {
                       ),
                     ],
                   ),
+                  //Add personal assistants picked.
+                  Consumer<PersonalAssistantNotifier>(
+                    builder: (context, personalAssistantNotifier, child) {
+                      return Wrap(
+                        children: personalAssistantNotifier.personalAssistants
+                            .map((model) {
+                          return PopupMenuItem(
+                            value: model,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                // Text và IconButton
+                                Text(
+                                  model!.name!,
+                                  style: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: TColor.petRock,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+                                HSpacing.md,
+                                IconButton(
+                                  icon: const Icon(Icons.close),
+                                  onPressed: () {
+                                    personalAssistantNotifier.removeAssistant(
+                                        model);
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                      );
+                    },
+                  ),
                   const Divider(),
                   Text(
                     "Base model",
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.w500,
-                          color: TColor.petRock.withOpacity(0.6),
-                          fontSize: 15,
-                        ),
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .bodyLarge
+                        ?.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: TColor.petRock.withOpacity(0.6),
+                      fontSize: 15,
+                    ),
                   ), // Add a divider to separate the header
                 ],
               ),
             ),
             ..._assistantNotifier.assistants.map((model) {
               return PopupMenuItem(
-                value: model.id,
+                value: model,
                 child: Row(
                   children: [
                     Container(
@@ -118,10 +167,14 @@ class _DropdownAIState extends State<DropdownAI> {
                     HSpacing.md,
                     Text(
                       model.name!,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: TColor.petRock,
-                          ),
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: TColor.petRock,
+                      ),
                     ),
                   ],
                 ),
@@ -130,7 +183,14 @@ class _DropdownAIState extends State<DropdownAI> {
           ];
         },
         onSelected: (value) {
-          _assistantNotifier.setCurrentAssistantId(value);
+          if ((value as Assistant).model == 'personal') {
+            personalAssistantNotifier.setCurrentAssistantId(value.id!);
+            personalAssistantNotifier.changePersonalCheck(true);
+          }
+          else {
+            _assistantNotifier.setCurrentAssistantId(value.id!);
+            personalAssistantNotifier.changePersonalCheck(false);
+          }
         },
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
@@ -145,27 +205,44 @@ class _DropdownAIState extends State<DropdownAI> {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                width: 30,
-                height: 30,
-                decoration: BoxDecoration(
-                  color: TColor.slate.withOpacity(0.9),
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: AssetImage(
-                        _assistantNotifier.currentAssistant.logoPath!),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
+              Selector<PersonalAssistantNotifier, bool>(
+                selector: (context, notifier) => notifier.isPersonal,
+                  builder: (context, isPersonal, child) {
+                    return isPersonal ? const SizedBox.shrink() : Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        color: TColor.slate.withOpacity(0.9),
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          image: AssetImage(_assistantNotifier.currentAssistant.logoPath!),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    );
+                  }),
               HSpacing.sm,
-              Text(
-                _assistantNotifier.currentAssistant.name!,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: TColor.petRock,
-                    ),
-              ),
+              Selector<PersonalAssistantNotifier, bool>(
+                  selector: (context, notifier) => notifier.isPersonal,
+                  builder: (context, isPersonal, child) {
+                    return isPersonal ?
+                        //Personal bots
+                    Text(
+                      personalAssistantNotifier.currentAssistant!.name!,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: TColor.petRock,
+                      ),
+                    ) :
+                       //Given models
+                    Text(
+                      _assistantNotifier.currentAssistant.name!,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: TColor.petRock,
+                      ),
+                    );
+                  }),
               Icon(
                 _isExpanded
                     ? Icons.arrow_drop_up_rounded

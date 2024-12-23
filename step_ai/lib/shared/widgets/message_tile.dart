@@ -24,7 +24,6 @@ class MessageTile extends StatelessWidget {
     return Column(
       crossAxisAlignment: isAI ? CrossAxisAlignment.start : CrossAxisAlignment.end,
       children: [
-
         if (currentMessage.files != null)
           _buildImageWrap(),
         Row(

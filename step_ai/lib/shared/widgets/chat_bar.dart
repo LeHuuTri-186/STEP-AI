@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:step_ai/features/chat/notifier/personal_assistant_notifier.dart';
 import 'package:step_ai/features/chat/presentation/notifier/chat_bar_notifier.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:step_ai/config/routes/routes.dart';
@@ -33,6 +34,8 @@ class _ChatBarState extends State<ChatBar> {
   final FocusNode _focusNode = FocusNode();
   late ChatBarNotifier _chatBarNotifier;
   late PromptListNotifier _listNotifier;
+  late PersonalAssistantNotifier _personalAssistantNotifier;
+
   Timer? _debounce;
 
 
@@ -137,6 +140,8 @@ class _ChatBarState extends State<ChatBar> {
   Widget build(BuildContext context) {
     _chatBarNotifier = Provider.of<ChatBarNotifier>(context);
     _listNotifier = Provider.of<PromptListNotifier>(context);
+    _personalAssistantNotifier = Provider.of<PersonalAssistantNotifier>(context);
+
     if (_chatBarNotifier.triggeredPrompt) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _controller.text = '';
@@ -237,7 +242,8 @@ class _ChatBarState extends State<ChatBar> {
                       ],
                     ),
                   ),
-                  //TextField to chat
+                ),
+                //TextField to chat
                   SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     child: Padding(
@@ -267,6 +273,64 @@ class _ChatBarState extends State<ChatBar> {
                                   ),
                           border: InputBorder.none,
                         ),
+
+                      ),
+                    ),
+                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        _chatBarNotifier.setShowOverlay(false);
+                        showModalBottomSheet(
+                          backgroundColor: TColor.doctorWhite,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          context: context,
+                          builder: (_) {
+                            return ClipRRect(
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(30),
+                                topRight: Radius.circular(30),
+                              ),
+                              child: PromptBottomSheet(
+                                returnPrompt: (value) async {
+                                  _controller.clear();
+                                  try {
+                                    if (_personalAssistantNotifier.isPersonal) {
+                                      await Provider.of<ChatNotifier>(
+                                          context, listen: false
+                                      ).sendMessageForPersonalBot(value);
+                                    }
+                                    else {
+                                      await Provider.of<ChatNotifier>(
+                                          context, listen: false
+                                      ).sendMessage(value);
+                                    }
+                                  } catch (e) {
+                                    //e is 401 and return to login screen
+                                    print(
+                                        "e is 401 and return to login screen");
+                                    print(e);
+
+                                    Navigator.of(context)
+                                        .pushNamedAndRemoveUntil(
+                                      Routes.authenticate,
+                                          (Route<dynamic> route) => false,
+                                    );
+                                  }
+                                },
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      icon: Icon(
+                        FontAwesomeIcons.wandMagicSparkles,
+                        color: TColor.petRock,
+                        size: 20,
                       ),
                     ),
                   ),
@@ -292,6 +356,16 @@ class _ChatBarState extends State<ChatBar> {
                               FocusScope.of(context).unfocus();
                               try {
                                 _chatBarNotifier.setShowOverlay(false);
+                                if (!_personalAssistantNotifier.isPersonal) {
+                                  await Provider.of<ChatNotifier>(context,
+                                      listen: false)
+                                      .sendMessage(_controller.text);
+                                } else {
+                                  await Provider.of<ChatNotifier>(
+                                      context, listen: false
+                                  ).sendMessageForPersonalBot(_controller.text);
+                                }
+
                                 String message = _controller.text;
                                 _controller.clear();
                                 await Provider.of<ChatNotifier>(context,

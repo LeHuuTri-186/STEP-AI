@@ -1,7 +1,9 @@
 class Constant{
   Constant._();
   //API:------------------------------------------------------------------------
-  static String apiBaseUrl = 'https://api.jarvis.cx';
+  // static String apiBaseUrl = 'https://api.jarvis.cx';
+  static String apiBaseUrl = 'https://api.dev.jarvis.cx';
+  static String kbApiUrl = 'https://knowledge-api.dev.jarvis.cx';
 
   static String loginEndpoint = '/api/v1/auth/sign-in';
   static String registerEndpoint = '/api/v1/auth/sign-up';
@@ -19,6 +21,22 @@ class Constant{
   static String access = 'AccessToken';
   static String refresh = 'RefreshToken';
 
+  //Bot/Assistant Endpoint:-----------------------------------------------------
+  static String createBotEndpoint = '/kb-core/v1/ai-assistant';
+  static String loginKbEndpoint = '/kb-core/v1/auth/external-sign-in';
+  static String kbRefreshEndpointPart = '/kb-core/v1/auth/refresh?refreshToken=';
+  static String deleteBotEndpoint = '/kb-core/v1/ai-assistant/';
+  static String updateBotEndpoint = '/kb-core/v1/ai-assistant/';
+  //----Bot get-----------------------------------------------------------------
+  static String botGetEndpoint = '/kb-core/v1/ai-assistant?q';
+  static String botGetOrderSet = '&order=DESC&order_field=createdAt';
+  static String botOffset = '&offset=';
+  static String botLimit = '&limit=10';
+  static String botPublished = '&isPublished';
+  static String createThreadEndpoint = '/kb-core/v1/ai-assistant/thread';
+  static String askBotInThreadEndpoint = '/kb-core/v1/ai-assistant';
+
+
   //Image File Source:----------------------------------------------------------
   static String localFileImagePath = 'lib/core/assets/source_unit_images/file.png';
   static String webImagePath = 'lib/core/assets/source_unit_images/web.png';
@@ -28,4 +46,5 @@ class Constant{
 
   //Test
   static String KB_accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImJlZjgxMDA4LTg4MTktNGM5NS1iNzZjLWQwODA3YzU0MTNiNSIsImVtYWlsIjoibmd1eWVuYm9jaGFAZ21haWwuY29tIiwiaWF0IjoxNzM0OTY0NzQ1LCJleHAiOjE3MzUwNTExNDV9.AliBAowMFZWHmFBn5dZG5JgdvG_aIVEpyc7z-XQjUk0';
+
 }

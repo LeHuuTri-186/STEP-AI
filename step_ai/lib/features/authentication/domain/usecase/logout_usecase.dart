@@ -11,6 +11,7 @@ class LogoutUseCase extends UseCase<void, void>{
   final SharedPreferencesHelper _sharedPreferencesHelper;
   final SecureStorageHelper _secureStorageHelper;
 
+
   LogoutUseCase(
       this._logoutRepository,
       this._sharedPreferencesHelper,
@@ -21,6 +22,7 @@ class LogoutUseCase extends UseCase<void, void>{
     int statusCode = await _logoutRepository.logout();
     if (statusCode == 401){
       await _secureStorageHelper.deleteAll();
+
       await _sharedPreferencesHelper.saveIsLoggedIn(false);
       return;
     }

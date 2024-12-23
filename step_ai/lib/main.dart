@@ -11,6 +11,8 @@ import 'package:step_ai/features/authentication/domain/usecase/is_logged_in_usec
 import 'package:step_ai/features/authentication/domain/usecase/save_login_status_usecase.dart';
 import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
 import 'package:step_ai/features/chat/notifier/history_conversation_list_notifier.dart';
+import 'package:step_ai/features/chat/notifier/personal_assistant_notifier.dart';
+import 'package:step_ai/features/preview/presentation/notifier/preview_chat_notifier.dart';
 import 'package:step_ai/features/knowledge_base/notifier/add_knowledge_dialog_notifier.dart';
 import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart';
 import 'package:step_ai/features/prompt/presentation/state/prompt_view_provider.dart';
@@ -26,6 +28,8 @@ import 'package:step_ai/features/units_in_knowledge/notifier/web_notifier.dart';
 import 'config/routes/routes.dart';
 import 'config/theme/app_theme.dart';
 import 'core/di/service_locator.dart';
+
+import 'features/personal/presentation/notifier/bot_list_notifier.dart';
 import 'features/chat/notifier/assistant_notifier.dart';
 import 'features/chat/presentation/notifier/chat_bar_notifier.dart';
 import 'features/chat/presentation/notifier/prompt_list_notifier.dart';
@@ -88,7 +92,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => getIt<PublicViewState>()),
         ChangeNotifierProvider(create: (_) => getIt<PrivateViewState>()),
         ChangeNotifierProvider(create: (_) => getIt<FormModel>()),
+        ChangeNotifierProvider(create: (_) => getIt<BotListNotifier>()),
         ChangeNotifierProvider(create: (_) => getIt<PromptViewState>()),
+        ChangeNotifierProvider(create: (_) => getIt<PersonalAssistantNotifier>()),
+        ChangeNotifierProvider(create: (_) => getIt<PreviewChatNotifier>())
         ChangeNotifierProvider.value(value: getIt<ChatBarNotifier>()),
         ChangeNotifierProvider.value(value: getIt<PromptListNotifier>()),
         ChangeNotifierProvider.value(value: getIt<AssistantNotifier>()),
