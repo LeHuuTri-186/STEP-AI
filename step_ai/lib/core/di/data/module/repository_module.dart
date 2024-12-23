@@ -19,7 +19,10 @@ import 'package:step_ai/features/knowledge_base/domain/repository/knowledge_repo
 import 'package:step_ai/features/units_in_knowledge/data/network/unit_api.dart';
 import 'package:step_ai/features/units_in_knowledge/data/repository/unit_repository_impl.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/repository/unit_repository.dart';
+import 'package:step_ai/features/plan/data/network/api_subscription.dart';
+import 'package:step_ai/features/plan/domain/repository/subscription_repository.dart';
 
+import '../../../../features/plan/data/repository/subscription_repository_impl.dart';
 import '../../service_locator.dart';
 
 class RepositoryModule {
@@ -50,5 +53,9 @@ class RepositoryModule {
     //Units:--------------------------------------------------------------------
     getIt.registerSingleton<UnitRepository>(
         UnitRepositoryImpl(getIt<UnitApi>()) as UnitRepository);
+
+    getIt.registerSingleton<SubscriptionRepository>(
+        SubscriptionRepositoryImpl(getIt<ApiSubscription>())
+        as SubscriptionRepository);
   }
 }

@@ -7,6 +7,7 @@ class Constant{
   static String registerEndpoint = '/api/v1/auth/sign-up';
   static String logoutEndpoint = '/api/v1/auth/sign-out';
   static String refreshTokenPartEndpoint = '/api/v1/auth/refresh?refreshToken=';
+  static String usageEndpoint = '/api/v1/subscriptions/me';
 
   static String promptSearchBaseEndpoint = '/api/v1/prompts?';
   static String promptSearchQuery = 'query=';

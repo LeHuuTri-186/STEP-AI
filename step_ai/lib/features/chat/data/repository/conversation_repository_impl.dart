@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:step_ai/core/data/model/conversation_model.dart';
 import 'package:step_ai/core/data/model/detailed_messages_model.dart';
 import 'package:step_ai/core/data/model/message_model.dart';
@@ -12,23 +13,23 @@ class ConversationRepositoryImpl extends ConversationRepository {
   ConversationRepositoryImpl(this._apiClientChat);
 
   @override
-  Future<MessageModel> sendMessage(SendMessageParam sendMessageParam) async {
+  Future<MessageModel> sendMessage(SendMessageParam params) async {
     final Map<String, dynamic> body = {
-      "content": sendMessageParam
-          .historyMessages[sendMessageParam.historyMessages.length - 2].content,
+      "content": params
+          .historyMessages[params.historyMessages.length - 2].content,
       "metadata": null,
-      "assistant": sendMessageParam
-          .historyMessages[sendMessageParam.historyMessages.length - 2]
+      "assistant": params
+          .historyMessages[params.historyMessages.length - 2]
           .assistant
           .toJson(),
-      "files": null,
     };
+
     //Add metadata if have history message
-    final historyMessages = sendMessageParam.historyMessages;
-    if (sendMessageParam.conversationId != null) {
+    final historyMessages = params.historyMessages;
+    if (params.conversationId != null) {
       body["metadata"] = {
         "conversation": {
-          "id": sendMessageParam.conversationId,
+          "id": params.conversationId,
           "messages": historyMessages
               .take(historyMessages.length - 2)
               .map((message) => message.toJson())

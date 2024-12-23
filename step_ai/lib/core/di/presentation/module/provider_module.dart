@@ -8,6 +8,7 @@ import 'package:step_ai/features/authentication/domain/usecase/save_login_status
 import 'package:step_ai/features/authentication/notifier/login_notifier.dart';
 import 'package:step_ai/features/authentication/notifier/register_notifier.dart';
 import 'package:step_ai/features/authentication/notifier/ui_notifier.dart';
+import 'package:step_ai/features/chat/domain/usecase/get_featured_prompts_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_prompt_list_usecase.dart';
 import 'package:step_ai/features/chat/presentation/notifier/chat_bar_notifier.dart';
 import 'package:step_ai/features/chat/presentation/notifier/prompt_list_notifier.dart';
@@ -41,6 +42,8 @@ import 'package:step_ai/features/units_in_knowledge/notifier/local_file_notifier
 import 'package:step_ai/features/units_in_knowledge/notifier/slack_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/unit_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/web_notifier.dart';
+import 'package:step_ai/features/plan/domain/usecases/get_subscription_usecase.dart';
+import 'package:step_ai/features/plan/presentation/notifier/subscription_notifier.dart';
 
 class ProviderModule {
   static Future<void> configureStoreModuleInjection() async {
@@ -119,5 +122,23 @@ class ProviderModule {
     getIt.registerSingleton<DriveNotifier>(DriveNotifier());
     getIt.registerSingleton<ConfluenceNotifier>(ConfluenceNotifier());
     getIt.registerSingleton<SlackNotifier>(SlackNotifier());
+    getIt.registerSingleton<PromptListNotifier>(
+      PromptListNotifier(
+        getIt<GetPromptListUseCase>(), getIt<GetFeaturedPromptUseCase>()
+      )
+    );
+    //Chat page:----------------------------------------------------------------
+    getIt.registerSingleton<ChatBarNotifier>(
+      ChatBarNotifier(
+        getIt<LogoutUseCase>(),
+      )
+    );
+
+    getIt.registerSingleton<SubscriptionNotifier>(
+        SubscriptionNotifier(
+          getIt<LogoutUseCase>(),
+          getIt<GetSubscriptionUsecase>()
+        )
+    );
   }
 }
