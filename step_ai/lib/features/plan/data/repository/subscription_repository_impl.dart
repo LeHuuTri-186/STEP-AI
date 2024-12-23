@@ -12,7 +12,14 @@ class SubscriptionRepositoryImpl extends SubscriptionRepository {
   SubscriptionRepositoryImpl(this._apiSubscription);
   @override
   Future<Plan> getCurrentPlan() async {
-    Response<dynamic> response = await _apiSubscription.getUsage(Constant.usageEndpoint);
+    late Response<dynamic> response;
+    try {
+      response = await _apiSubscription.getUsage(Constant.usageEndpoint);
+      print(response);
+    }catch (e) {
+      throw("Error getting usage");
+    }
+
 
     return PlanModel.fromJson(response.data).toPlanEntity();
   }

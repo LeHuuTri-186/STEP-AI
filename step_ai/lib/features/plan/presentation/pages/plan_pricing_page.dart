@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:step_ai/features/authentication/notifier/login_notifier.dart';
 
 import 'package:step_ai/features/plan/domain/usecases/get_subscription_usecase.dart';
 import 'package:step_ai/features/plan/presentation/notifier/subscription_notifier.dart';
@@ -9,6 +10,7 @@ import 'package:step_ai/shared/styles/vertical_spacing.dart';
 import 'package:step_ai/shared/usecases/pricing_redirect_service.dart';
 import 'package:step_ai/shared/widgets/history_drawer.dart';
 
+import '../../../../config/routes/routes.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../shared/styles/colors.dart';
 import '../../../../shared/widgets/gradient_text.dart';
@@ -21,25 +23,50 @@ class PlanPricingPage extends StatefulWidget {
   State<PlanPricingPage> createState() => _PlanPricingPageState();
 }
 
-
 class _PlanPricingPageState extends State<PlanPricingPage> {
-  late SubscriptionNotifier _subscriptionNotifier;
   @override
   void initState() {
     super.initState();
+
+    final notifier = Provider.of<SubscriptionNotifier>(context, listen: false);
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<SubscriptionNotifier>(context, listen: false).getPlan();
+    });
+
+    notifier.addListener(() {
+      if (notifier.hasError) {
+        Navigator.of(context).pushReplacementNamed(Routes.authenticate);
+      }
     });
   }
 
   @override
+  void dispose() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        final notifier = Provider.of<SubscriptionNotifier>(context, listen: false);
+        notifier.removeListener(() {});
+      }
+    });
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    _subscriptionNotifier = Provider.of<SubscriptionNotifier>(context);
+    return Consumer<SubscriptionNotifier>(
+        builder: (context, subscriptionNotifier, child) {
+      if (subscriptionNotifier.isLoading || subscriptionNotifier.plan == null) {
+        return _buildProgressIndicator();
+      }
 
-    if (_subscriptionNotifier.plan == null) {
-      return Scaffold(body: _buildProgressIndicator(), backgroundColor: TColor.doctorWhite,);
-    }
+      return _buildPlanAndPricing(context, subscriptionNotifier);
+    });
+  }
 
+  Scaffold _buildPlanAndPricing(
+      BuildContext context, SubscriptionNotifier notifier) {
     return Scaffold(
       onDrawerChanged: (isOpened) {
         if (isOpened) {
@@ -55,65 +82,75 @@ class _PlanPricingPageState extends State<PlanPricingPage> {
             runSpacing: 10,
             alignment: WrapAlignment.center,
             children: [
-              Column(children: [
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GradientText(
-                      "Choose your plan",
-                      style: Theme.of(context).textTheme.titleMedium,
-                      gradient: LinearGradient(colors: [
-                        TColor.tamarama,
-                        TColor.goldenState,
-                      ]),
+              Column(
+                children: [
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GradientText(
+                        "Choose your plan",
+                        style: Theme.of(context).textTheme.titleMedium,
+                        gradient: LinearGradient(colors: [
+                          TColor.tamarama,
+                          TColor.goldenState,
+                        ]),
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                  height: 100,
-                  child: Text(
-                    "Upgrade plan now for a seamless, user-friendly experience. Unlock the full potential of our app and enjoy convenience at your fingertips.",
-                    maxLines: 3,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyMedium
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                    height: 100,
+                    child: Text(
+                        "Upgrade plan now for a seamless, user-friendly experience. Unlock the full potential of our app and enjoy convenience at your fingertips.",
+                        maxLines: 3,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.bodyMedium),
                   ),
-                ),
-              ],),
-
-              BasicPlan(isSelected: _subscriptionNotifier.plan!.name == 'basic',),
-              StarterPlan(isSelected: _subscriptionNotifier.plan!.name == 'starter'),
-              ProPlan(isSelected: _subscriptionNotifier.plan!.name == 'pro'),
-              SizedBox(width: MediaQuery.of(context).size.width, height: 20,),
-              Column(children: [
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 30.0),
-                  child: const Text(
-                    "* Our subscription plan is designed with flexibility and transparency in mind. While it offers unlimited usage, we acknowledge the possibility of adjustments in the future to meet evolving needs. Rest assured, any such changes will be communicated well in advance, providing our customers with the information they need to make informed decisions. Additionally, we understand that adjustments may not align with everyone's expectations, which is why we've implemented a generous refund program. Subscribers can terminate their subscription within 7 days of the announced adjustments and receive a refund if they so choose. Moreover, our commitment to customer satisfaction is further emphasized by allowing subscribers the freedom to cancel their subscription at any time, providing ultimate flexibility in managing their subscription preferences.",
-                    maxLines: 20,
-                    textAlign: TextAlign.center,
+                ],
+              ),
+              BasicPlan(
+                isSelected: notifier.plan!.name == 'basic',
+              ),
+              StarterPlan(isSelected: notifier.plan!.name == 'starter'),
+              ProPlan(isSelected: notifier.plan!.name == 'pro'),
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 20,
+              ),
+              Column(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 30.0),
+                    child: const Text(
+                      "* Our subscription plan is designed with flexibility and transparency in mind. While it offers unlimited usage, we acknowledge the possibility of adjustments in the future to meet evolving needs. Rest assured, any such changes will be communicated well in advance, providing our customers with the information they need to make informed decisions. Additionally, we understand that adjustments may not align with everyone's expectations, which is why we've implemented a generous refund program. Subscribers can terminate their subscription within 7 days of the announced adjustments and receive a refund if they so choose. Moreover, our commitment to customer satisfaction is further emphasized by allowing subscribers the freedom to cancel their subscription at any time, providing ultimate flexibility in managing their subscription preferences.",
+                      maxLines: 20,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                ),
-                VSpacing.sm,
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 30.0),
-                  child: const Text(
-                    "* By subscribing, you are enrolling in automatic payments. Cancel or manage your subscription through Stripe's customer portal from \"Dashboard\".",
-                    maxLines: 5,
-                    textAlign: TextAlign.center,
+                  VSpacing.sm,
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 30.0),
+                    child: const Text(
+                      "* By subscribing, you are enrolling in automatic payments. Cancel or manage your subscription through Stripe's customer portal from \"Dashboard\".",
+                      maxLines: 5,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                ),
-                VSpacing.sm,
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 30.0),
-                  child: const Text(
-                    "* All services are delivered according to the Terms of Service you confirm with your sign-up.",
-                    maxLines: 5,
-                    textAlign: TextAlign.center,
+                  VSpacing.sm,
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 30.0),
+                    child: const Text(
+                      "* All services are delivered according to the Terms of Service you confirm with your sign-up.",
+                      maxLines: 5,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                ),
-              ],),
-              SizedBox(width: MediaQuery.of(context).size.width, height: 20,),
+                ],
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 20,
+              ),
             ],
           ),
         ),
@@ -164,10 +201,7 @@ class _PlanPricingPageState extends State<PlanPricingPage> {
 class BasicPlan extends StatelessWidget {
   final bool isSelected;
 
-  const BasicPlan({
-    super.key,
-    this.isSelected = false
-  });
+  const BasicPlan({super.key, this.isSelected = false});
 
   @override
   Widget build(BuildContext context) {
@@ -189,27 +223,32 @@ class BasicPlan extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
         child: Stack(
           children: [
-            if (isSelected) Positioned(
-              right: 0,
-              child: Transform.translate(
-                offset: const Offset(17, -5),
-                child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: TColor.finePine, width: 2),
+            if (isSelected)
+              Positioned(
+                right: 0,
+                child: Transform.translate(
+                  offset: const Offset(17, -5),
+                  child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: TColor.finePine, width: 2),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 4.0),
+                        child: Text("Current plan",
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge
+                                ?.copyWith(
+                                  color: TColor.finePine,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w800,
+                                  fontStyle: FontStyle.italic,
+                                )),
+                      )),
                 ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                    child: Text("Current plan", style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: TColor.finePine,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w800,
-                      fontStyle: FontStyle.italic,
-                    )),
-                  )
               ),
-              ),
-            ),
             Column(
               children: [
                 VSpacing.sm,
@@ -220,8 +259,7 @@ class BasicPlan extends StatelessWidget {
                 VSpacing.sm,
                 const Text(""),
                 VSpacing.sm,
-                Text("Free",
-                    style: Theme.of(context).textTheme.titleMedium),
+                Text("Free", style: Theme.of(context).textTheme.titleMedium),
                 VSpacing.sm,
                 const Text(""),
                 VSpacing.sm,
@@ -248,8 +286,7 @@ class BasicPlan extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text("AI Models",
-                            style:
-                            Theme.of(context).textTheme.titleSmall),
+                            style: Theme.of(context).textTheme.titleSmall),
                         const SizedBox(
                             width: 250,
                             child: Text(
@@ -281,9 +318,7 @@ class BasicPlan extends StatelessWidget {
                   ],
                 ),
                 VSpacing.sm,
-
-                    Text("",
-                        style: Theme.of(context).textTheme.titleSmall),
+                Text("", style: Theme.of(context).textTheme.titleSmall),
                 Divider(
                   color: TColor.petRock.withOpacity(0.5),
                 ),
@@ -345,15 +380,13 @@ class BasicPlan extends StatelessWidget {
                 VSpacing.sm,
                 Row(
                   children: [
-                    Text("",
-                        style: Theme.of(context).textTheme.titleSmall),
+                    Text("", style: Theme.of(context).textTheme.titleSmall),
                   ],
                 ),
                 VSpacing.sm,
                 Row(
                   children: [
-                    Text("",
-                        style: Theme.of(context).textTheme.titleSmall),
+                    Text("", style: Theme.of(context).textTheme.titleSmall),
                   ],
                 ),
                 VSpacing.sm,
@@ -363,17 +396,14 @@ class BasicPlan extends StatelessWidget {
                     style: Theme.of(context)
                         .textTheme
                         .titleSmall
-                        ?.copyWith(
-                        color: TColor.petRock.withOpacity(0.8)),
+                        ?.copyWith(color: TColor.petRock.withOpacity(0.8)),
                     children: [
                       TextSpan(
                           text: "",
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleSmall!
-                              .copyWith(
-                            fontWeight: FontWeight.w700,
-                          )),
+                          style:
+                              Theme.of(context).textTheme.titleSmall!.copyWith(
+                                    fontWeight: FontWeight.w700,
+                                  )),
                       const TextSpan(text: ""),
                     ],
                   ),
@@ -403,15 +433,13 @@ class BasicPlan extends StatelessWidget {
                 VSpacing.sm,
                 Row(
                   children: [
-                    Text("",
-                        style: Theme.of(context).textTheme.titleSmall),
+                    Text("", style: Theme.of(context).textTheme.titleSmall),
                   ],
                 ),
                 VSpacing.sm,
                 Row(
                   children: [
-                    Text("",
-                        style: Theme.of(context).textTheme.titleSmall),
+                    Text("", style: Theme.of(context).textTheme.titleSmall),
                   ],
                 ),
                 VSpacing.sm,
@@ -427,10 +455,7 @@ class BasicPlan extends StatelessWidget {
 class StarterPlan extends StatelessWidget {
   final bool isSelected;
 
-  const StarterPlan({
-    super.key,
-    this.isSelected = false
-  });
+  const StarterPlan({super.key, this.isSelected = false});
 
   @override
   Widget build(BuildContext context) {
@@ -452,31 +477,36 @@ class StarterPlan extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
         child: Stack(
           children: [
-            if (isSelected) Positioned(
-          right: 0,
-          child: Transform.translate(
-            offset: const Offset(17, -5),
-            child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: TColor.finePine, width: 2),
+            if (isSelected)
+              Positioned(
+                right: 0,
+                child: Transform.translate(
+                  offset: const Offset(17, -5),
+                  child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: TColor.finePine, width: 2),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 4.0),
+                        child: Text("Current plan",
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge
+                                ?.copyWith(
+                                  color: TColor.finePine,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w800,
+                                  fontStyle: FontStyle.italic,
+                                )),
+                      )),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                  child: Text("Current plan", style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: TColor.finePine,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w800,
-                    fontStyle: FontStyle.italic,
-                  )),
-                )
-            ),
-          ),),
+              ),
             Column(
               children: [
                 VSpacing.sm,
-                Text("Starter",
-                    style: Theme.of(context).textTheme.titleLarge),
+                Text("Starter", style: Theme.of(context).textTheme.titleLarge),
                 VSpacing.sm,
                 Text("1-month Free Trial",
                     style: Theme.of(context).textTheme.titleSmall),
@@ -503,10 +533,8 @@ class StarterPlan extends StatelessWidget {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(4),
                           color: TColor.goldenState,
-                          gradient: LinearGradient(colors: [
-                            TColor.tamarama,
-                            TColor.royalBlue
-                          ])),
+                          gradient: LinearGradient(
+                              colors: [TColor.tamarama, TColor.royalBlue])),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: 6.0, horizontal: 50),
@@ -545,8 +573,7 @@ class StarterPlan extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text("AI Models",
-                            style:
-                            Theme.of(context).textTheme.titleSmall),
+                            style: Theme.of(context).textTheme.titleSmall),
                         const SizedBox(
                             width: 250,
                             child: Text(
@@ -674,17 +701,14 @@ class StarterPlan extends StatelessWidget {
                     style: Theme.of(context)
                         .textTheme
                         .titleSmall
-                        ?.copyWith(
-                        color: TColor.petRock.withOpacity(0.8)),
+                        ?.copyWith(color: TColor.petRock.withOpacity(0.8)),
                     children: [
                       TextSpan(
                           text: "unlimited*",
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleSmall!
-                              .copyWith(
-                            fontWeight: FontWeight.w700,
-                          )),
+                          style:
+                              Theme.of(context).textTheme.titleSmall!.copyWith(
+                                    fontWeight: FontWeight.w700,
+                                  )),
                       const TextSpan(text: " queries"),
                     ],
                   ),
@@ -740,10 +764,7 @@ class StarterPlan extends StatelessWidget {
 class ProPlan extends StatelessWidget {
   final bool isSelected;
 
-  const ProPlan({
-    super.key,
-    this.isSelected = false
-  });
+  const ProPlan({super.key, this.isSelected = false});
 
   @override
   Widget build(BuildContext context) {
@@ -762,38 +783,42 @@ class ProPlan extends StatelessWidget {
         border: Border.all(color: TColor.petRock.withOpacity(0.5)),
       ),
       child: Padding(
-        padding:
-            const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
         child: Stack(
           children: [
-            if (isSelected) Positioned(
-          right: 0,
-          child: Transform.translate(
-            offset: const Offset(17, -5),
-            child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: TColor.finePine, width: 2),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                  child: Text("Current plan", style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: TColor.finePine,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w800,
-                    fontStyle: FontStyle.italic,
+            if (isSelected)
+              Positioned(
+                  right: 0,
+                  child: Transform.translate(
+                    offset: const Offset(17, -5),
+                    child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: TColor.finePine, width: 2),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 4.0),
+                          child: Text("Current plan",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleLarge
+                                  ?.copyWith(
+                                    color: TColor.finePine,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w800,
+                                    fontStyle: FontStyle.italic,
+                                  )),
+                        )),
                   )),
-                )
-            ),
-          )),
             Column(
               children: [
                 VSpacing.sm,
                 Text("Pro Annually",
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w800,
-                    )),
+                          fontSize: 22,
+                          fontWeight: FontWeight.w800,
+                        )),
                 VSpacing.sm,
                 Text("1-month Free Trial",
                     style: Theme.of(context).textTheme.titleSmall),
@@ -820,15 +845,13 @@ class ProPlan extends StatelessWidget {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(4),
                           color: TColor.goldenState,
-                          gradient: LinearGradient(colors: [
-                            TColor.goldenState,
-                            Colors.deepOrange
-                          ])),
+                          gradient: LinearGradient(
+                              colors: [TColor.goldenState, Colors.deepOrange])),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: 6.0, horizontal: 50),
                         child: Text(
-                         isSelected? "Unsubscribe" : "Choose Plan",
+                          isSelected ? "Unsubscribe" : "Choose Plan",
                           style: Theme.of(context)
                               .textTheme
                               .titleLarge!
@@ -862,8 +885,7 @@ class ProPlan extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text("AI Models",
-                            style:
-                                Theme.of(context).textTheme.titleSmall),
+                            style: Theme.of(context).textTheme.titleSmall),
                         const SizedBox(
                             width: 250,
                             child: Text(
@@ -991,17 +1013,14 @@ class ProPlan extends StatelessWidget {
                     style: Theme.of(context)
                         .textTheme
                         .titleSmall
-                        ?.copyWith(
-                            color: TColor.petRock.withOpacity(0.8)),
+                        ?.copyWith(color: TColor.petRock.withOpacity(0.8)),
                     children: [
                       TextSpan(
                           text: "unlimited*",
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleSmall!
-                              .copyWith(
-                                fontWeight: FontWeight.w700,
-                              )),
+                          style:
+                              Theme.of(context).textTheme.titleSmall!.copyWith(
+                                    fontWeight: FontWeight.w700,
+                                  )),
                       const TextSpan(text: " queries"),
                     ],
                   ),

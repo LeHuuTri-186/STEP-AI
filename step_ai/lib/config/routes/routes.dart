@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/core/di/service_locator.dart';
+import 'package:step_ai/features/email_composer/presentation/pages/email_composer.dart';
 import 'package:step_ai/lib/features/chat/notifier/history_conversation_list_notifier.dart';
 
 import 'package:step_ai/features/authentication/presentation/pages/authenticate.dart';
@@ -88,5 +89,6 @@ class Routes {
     slackPage: (BuildContext context) => SlackPage(),
     confluencePage: (BuildContext context) => ConfluencePage(),
     drivePage: (BuildContext context) => DrivePage(),
+    email: (BuildContext context) => const EmailComposer(),
   };
 }
