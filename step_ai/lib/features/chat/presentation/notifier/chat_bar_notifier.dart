@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:step_ai/features/authentication/domain/usecase/logout_usecase.dart';
 
-class ChatBarNotifier extends ChangeNotifier{
+class ChatBarNotifier extends ChangeNotifier {
   bool showIcons = false;
   bool showIconSend = false;
   bool showOverlay = false;
@@ -48,6 +48,7 @@ class ChatBarNotifier extends ChangeNotifier{
   void setContent(String value){
     contentToSet = value;
   }
+  
   Future<void> callLogout()async{
     await _logoutUseCase.call(params: null);
   }

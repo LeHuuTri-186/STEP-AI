@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:step_ai/features/chat/domain/entity/message.dart';
@@ -19,7 +21,7 @@ class ChatNotifier with ChangeNotifier {
   }
 
   //isLoading detailed conversation
-  GetMessagesByConversationIdUsecase _getMessagesByConversationIdUsecase;
+  final GetMessagesByConversationIdUsecase _getMessagesByConversationIdUsecase;
   bool _isLoadingDetailedConversation = false;
   bool get isLoadingDetailedConversation => _isLoadingDetailedConversation;
 
@@ -31,7 +33,7 @@ class ChatNotifier with ChangeNotifier {
       final detailMessagesModel = await _getMessagesByConversationIdUsecase
           .call(params: _idCurrentConversation!);
       clearHistoryMessages();
-      detailMessagesModel.items.forEach((element) {
+      for (var element in detailMessagesModel.items) {
         addMessage(Message(
             assistant: _assistantNotifier.currentAssistant,
             role: "user",
@@ -41,7 +43,7 @@ class ChatNotifier with ChangeNotifier {
             assistant: _assistantNotifier.currentAssistant,
             role: "model",
             content: element.answer));
-      });
+      }
     } catch (e) {
       if (e is DioException) {
         print(
@@ -96,24 +98,27 @@ class ChatNotifier with ChangeNotifier {
       this._getUsageTokenUsecase,
       this._getMessagesByConversationIdUsecase);
 
-  Future<void> sendMessage(String contentSend) async {
+  Future<void> sendMessage(String contentSend, {List<File>? files}) async {
     //Add message send to history
     addMessage(Message(
         assistant: _assistantNotifier.currentAssistant,
         role: "user",
-        content: contentSend));
+        content: contentSend,
+        files: files),);
     //Add message model to history with content null
     addMessage(Message(
         assistant: _assistantNotifier.currentAssistant,
         role: "model",
-        content: null));
+        content: null),);
     notifyListeners();
 
     try {
       final messageModel = await _sendMessageUsecase.call(
           params: SendMessageParam(
               historyMessages: _historyMessages,
-              conversationId: _idCurrentConversation));
+              conversationId: _idCurrentConversation,
+          files: files),
+      );
 
       updateLastMessage(messageModel.message);
       _numberRestToken = messageModel.remainingUsage;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:step_ai/features/prompt/data/models/prompt_model.dart';
+import 'package:step_ai/features/prompt/presentation/widgets/user_input_specifier.dart';
 
 import '../../../../shared/styles/colors.dart';
 import '../../../../shared/styles/horizontal_spacing.dart';
@@ -112,27 +113,7 @@ class _PrivateUpdateFormState extends State<PrivateUpdateForm> {
             ),
           ),
           VSpacing.sm,
-          Container(
-            decoration: BoxDecoration(
-              color: TColor.tamarama.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(2.0),
-              child: Row(
-                children: [
-                  Icon(Icons.info_rounded, color: TColor.tamarama,),
-                  HSpacing.sm,
-                  Text(
-                    "Use square brackets [ ] to specify user input.",
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: TColor.squidInk
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          const userInputSpecifier(),
           VSpacing.sm,
           TextFormField(
             initialValue: _content,

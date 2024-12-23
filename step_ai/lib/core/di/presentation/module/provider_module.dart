@@ -8,6 +8,7 @@ import 'package:step_ai/features/authentication/domain/usecase/save_login_status
 import 'package:step_ai/features/authentication/notifier/login_notifier.dart';
 import 'package:step_ai/features/authentication/notifier/register_notifier.dart';
 import 'package:step_ai/features/authentication/notifier/ui_notifier.dart';
+import 'package:step_ai/features/chat/domain/usecase/get_featured_prompts_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_prompt_list_usecase.dart';
 import 'package:step_ai/features/chat/presentation/notifier/chat_bar_notifier.dart';
 import 'package:step_ai/features/chat/presentation/notifier/prompt_list_notifier.dart';
@@ -18,6 +19,8 @@ import 'package:step_ai/features/chat/domain/usecase/send_message_usecase.dart';
 import 'package:step_ai/features/chat/notifier/assistant_notifier.dart';
 import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
 import 'package:step_ai/features/chat/notifier/history_conversation_list_notifier.dart';
+import 'package:step_ai/features/plan/domain/usecases/get_subscription_usecase.dart';
+import 'package:step_ai/features/plan/presentation/notifier/subscription_notifier.dart';
 
 class ProviderModule {
   static Future<void> configureStoreModuleInjection() async {
@@ -62,7 +65,7 @@ class ProviderModule {
     //Slash prompts:------------------------------------------------------------
     getIt.registerSingleton<PromptListNotifier>(
       PromptListNotifier(
-        getIt<GetPromptListUseCase>(),
+        getIt<GetPromptListUseCase>(), getIt<GetFeaturedPromptUseCase>()
       )
     );
     //Chat page:----------------------------------------------------------------
@@ -70,6 +73,13 @@ class ProviderModule {
       ChatBarNotifier(
         getIt<LogoutUseCase>(),
       )
+    );
+
+    getIt.registerSingleton<SubscriptionNotifier>(
+        SubscriptionNotifier(
+          getIt<LogoutUseCase>(),
+          getIt<GetSubscriptionUsecase>()
+        )
     );
   }
 }

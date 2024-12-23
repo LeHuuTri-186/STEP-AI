@@ -13,7 +13,10 @@ import 'package:step_ai/features/chat/domain/repository/slash_prompt_repository.
 import 'package:step_ai/features/chat/data/network/api_client_chat.dart';
 import 'package:step_ai/features/chat/data/repository/conversation_repository_impl.dart';
 import 'package:step_ai/features/chat/domain/repository/conversation_repository.dart';
+import 'package:step_ai/features/plan/data/network/api_subscription.dart';
+import 'package:step_ai/features/plan/domain/repository/subscription_repository.dart';
 
+import '../../../../features/plan/data/repository/subscription_repository_impl.dart';
 import '../../service_locator.dart';
 
 class RepositoryModule {
@@ -39,5 +42,9 @@ class RepositoryModule {
     getIt.registerSingleton<ConversationRepository>(
         ConversationRepositoryImpl(getIt<ApiClientChat>())
             as ConversationRepository);
+
+    getIt.registerSingleton<SubscriptionRepository>(
+        SubscriptionRepositoryImpl(getIt<ApiSubscription>())
+        as SubscriptionRepository);
   }
 }

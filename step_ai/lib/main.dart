@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/core/data/local/securestorage/secure_storage_helper.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +24,11 @@ import 'features/prompt/presentation/state/public_prompt/public_view_provider.da
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
+  RequestConfiguration requestConfiguration = RequestConfiguration(
+    testDeviceIds: ["448b50b89e91785ddbf4df161da40386"],
+  );
+  MobileAds.instance.updateRequestConfiguration(requestConfiguration);
   await ServiceLocator.configureDependencies();
   // FlutterSecureStorage.setMockInitialValues({});
 
@@ -29,7 +36,6 @@ Future<void> main() async {
   final IsLoggedInUseCase isLoggedInUseCase = getIt<IsLoggedInUseCase>();
   final isLoggedIn = await isLoggedInUseCase.call(params: null);
   final initialRoute = isLoggedIn ? Routes.chat : Routes.authenticate;
-  final initialRoute1 = Routes.chat; //to test chat page
 
   if (isLoggedIn) {
     final ChatNotifier chatNotifier = getIt<ChatNotifier>();
@@ -38,9 +44,6 @@ Future<void> main() async {
         getIt<HistoryConversationListNotifier>();
     await historyConversationListNotifier.getHistoryConversationList();
   }
-
-  // final helper = getIt<SecureStorageHelper>();
-  // if(isLoggedIn) print(await helper.accessToken);
 
   runApp(MyApp(initialRoute: initialRoute));
 }

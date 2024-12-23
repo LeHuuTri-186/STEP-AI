@@ -10,13 +10,16 @@ import 'package:step_ai/features/authentication/domain/usecase/login_usecase.dar
 import 'package:step_ai/features/authentication/domain/usecase/logout_usecase.dart';
 import 'package:step_ai/features/authentication/domain/usecase/register_usecase.dart';
 import 'package:step_ai/features/chat/domain/repository/slash_prompt_repository.dart';
+import 'package:step_ai/features/chat/domain/usecase/get_featured_prompts_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_prompt_list_usecase.dart';
 import 'package:step_ai/features/chat/domain/repository/conversation_repository.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_history_conversation_list_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_messages_by_conversation_id_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_usage_token_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/send_message_usecase.dart';
-import 'package:step_ai/shared/usecase/refresh_token_usecase.dart';
+import 'package:step_ai/features/plan/domain/repository/subscription_repository.dart';
+import 'package:step_ai/features/plan/domain/usecases/get_subscription_usecase.dart';
+import 'package:step_ai/shared/usecases/refresh_token_usecase.dart';
 
 import '../../../../features/authentication/domain/repository/register_repository.dart';
 import '../../../di/service_locator.dart';
@@ -43,6 +46,7 @@ class UseCaseModule {
           getIt<LoginRepository>(),
         )
     );
+
 
     //Register:-----------------------------------------------------------------
     getIt.registerSingleton<RegisterUseCase>(
@@ -73,6 +77,10 @@ class UseCaseModule {
       )
     );
 
+    getIt.registerSingleton<GetFeaturedPromptUseCase>(
+        GetFeaturedPromptUseCase(getIt<SlashPromptRepository>(), getIt<RefreshTokenUseCase>(), getIt<LogoutUseCase>())
+    );
+
     //Chat:---------------------------------------------------------------------
     getIt.registerSingleton<SendMessageUsecase>(
       SendMessageUsecase(
@@ -93,6 +101,12 @@ class UseCaseModule {
       GetUsageTokenUsecase(
         getIt<ConversationRepository>(),
       ),
+    );
+
+    getIt.registerSingleton<GetSubscriptionUsecase>(
+        GetSubscriptionUsecase(
+          getIt<SubscriptionRepository>(),
+        )
     );
   }
 }

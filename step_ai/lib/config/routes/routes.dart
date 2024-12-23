@@ -17,8 +17,9 @@ import 'package:step_ai/features/chat/presentation/pages/chat_page.dart';
 
 import 'package:step_ai/features/authentication/presentation/pages/email_page.dart';
 import 'package:step_ai/features/authentication/presentation/pages/forgot_password_page.dart';
+import 'package:step_ai/features/plan/presentation/notifier/subscription_notifier.dart';
 
-import 'package:step_ai/features/plan/presentation/pages/planPricingPage.dart';
+import 'package:step_ai/features/plan/presentation/pages/plan_pricing_page.dart';
 import 'package:step_ai/features/prompt/presentation/pages/prompt_list.dart';
 
 import '../../features/chat/notifier/chat_notifier.dart';
@@ -51,11 +52,18 @@ class Routes {
                 ChangeNotifierProvider.value(value: getIt<ChatNotifier>()),
                 ChangeNotifierProvider.value(value: getIt<HistoryConversationListNotifier>()),
               ],
-              child: ChatPage(),
+              child: const ChatPage(),
             );
           },
         ),
-    planAndPricing: (BuildContext context) => PlanPricingPage(),
+    planAndPricing: (BuildContext context) => Builder(builder: (context) {
+      return MultiProvider(providers: [
+        ChangeNotifierProvider.value(value: getIt<HistoryConversationListNotifier>()),
+        ChangeNotifierProvider.value(value: getIt<ChatNotifier>()),
+        ChangeNotifierProvider.value(value: getIt<SubscriptionNotifier>()),
+      ],
+      child: const PlanPricingPage());
+    }),
 
     // signIn: (BuildContext context) => SignInPage(),
     authenticate: (BuildContext context) =>

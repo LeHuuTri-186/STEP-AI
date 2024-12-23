@@ -9,6 +9,7 @@ import 'package:step_ai/features/authentication/notifier/register_notifier.dart'
 import 'package:step_ai/features/authentication/notifier/ui_notifier.dart';
 import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
 import 'package:step_ai/features/chat/notifier/history_conversation_list_notifier.dart';
+import 'package:step_ai/features/prompt/presentation/widgets/buttons_pair.dart';
 import 'package:step_ai/shared/styles/vertical_spacing.dart';
 import 'package:step_ai/shared/widgets/app_name_widget.dart';
 
@@ -54,7 +55,9 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     return AppBar(
       automaticallyImplyLeading: false,
       title: Center(
-        child: AppNameWidget(color: TColor.tamarama,),
+        child: AppNameWidget(
+          color: TColor.tamarama,
+        ),
       ),
     );
   }
@@ -62,11 +65,11 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
   Widget _buildBody() {
     return SingleChildScrollView(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 25.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            SizedBox(height: 70),
+            _buildImage(),
             _buildToggleButton(),
             const SizedBox(height: 20),
             _authUINotifier.isLogin ? _buildLoginView() : _buildRegisterView(),
@@ -74,6 +77,17 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
         ),
       ),
     );
+  }
+
+  SizedBox _buildImage() {
+    return SizedBox(
+            width: 250,
+            height: 250,
+            child: Image.asset(
+              _authUINotifier.isLogin ? 'lib/core/assets/imgs/sign-in.png' : 'lib/core/assets/imgs/sign-up.png',
+              fit: BoxFit.contain,
+            ),
+          );
   }
 
   //Build items:----------------------------------------------------------------
@@ -91,33 +105,29 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
   }
 
   Widget _buildToggleButton() {
-    return LayoutBuilder(
-        builder: (context, constraints) => ToggleButtons(
-              constraints: BoxConstraints.expand(
-                  width: (constraints.maxWidth - 16) / 2, height: 40),
-              fillColor: TColor.tamarama,
-              color: TColor.squidInk,
-              selectedColor: TColor.northEastSnow,
-              borderRadius: BorderRadius.circular(8.0),
-              isSelected: [_authUINotifier.isLogin, !_authUINotifier.isLogin],
-              onPressed: (index) {
-                setState(() {
-                  _authUINotifier.setToSpecific((index == 0));
-                  resetTextFieldValue();
-                });
-              },
-              children: <Widget>[
-                _buildToggleText('Login', _authUINotifier.isLogin),
-                _buildToggleText('Register', !_authUINotifier.isLogin),
-              ],
-            ));
+    return ButtonsPair(
+      isFirstSelected: _authUINotifier.isLogin,
+      firstOnTap: () {
+        _authUINotifier.setToSpecific(true);
+        resetTextFieldValue();
+      },
+      secondOnTap: () {
+        _authUINotifier.setToSpecific(false);
+        resetTextFieldValue();
+      },
+      firstButtonText: 'Login',
+      secondButtonText: 'Register',
+      mainAxisSize: MainAxisSize.max,
+      borderRadius: 8,
+    );
   }
 
   Widget _buildToggleText(String text, bool selected) {
-    return Text(text, style: Theme.of(context).textTheme.displayLarge?.copyWith(
-      fontSize: 15,
-      color: selected ? TColor.doctorWhite : TColor.squidInk,
-    ));
+    return Text(text,
+        style: Theme.of(context).textTheme.displayLarge?.copyWith(
+              fontSize: 15,
+              color: selected ? TColor.doctorWhite : TColor.squidInk,
+            ));
   }
 
   Widget _buildLoginView() {

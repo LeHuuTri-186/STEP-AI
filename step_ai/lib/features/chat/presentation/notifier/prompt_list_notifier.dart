@@ -1,15 +1,24 @@
 import 'package:flutter/widgets.dart';
 import 'package:step_ai/config/enum/task_status.dart';
+import 'package:step_ai/features/chat/domain/entity/slash_prompt.dart';
 import 'package:step_ai/features/chat/domain/entity/slash_prompt_list.dart';
+import 'package:step_ai/features/chat/domain/usecase/get_featured_prompts_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_prompt_list_usecase.dart';
 
 class PromptListNotifier extends ChangeNotifier {
   final GetPromptListUseCase _getPromptListUseCase;
+  final GetFeaturedPromptUseCase _getFeaturedPromptUseCase;
   String key = '';
   SlashPromptList list = SlashPromptList(prompts: []);
   bool isFetching = false;
   int needRebuildCounter = 0;
-  PromptListNotifier(this._getPromptListUseCase);
+  PromptListNotifier(this._getPromptListUseCase, this._getFeaturedPromptUseCase);
+  List<SlashPrompt> displayPrompt = [];
+
+  Future<void> loadFeaturedPrompt() async {
+    displayPrompt = await _getFeaturedPromptUseCase.call(params: 3);
+    notifyListeners();
+  }
 
   bool isChangingKey(String value) {
     if (value.isEmpty) return false;

@@ -18,21 +18,22 @@ class _DropdownAIState extends State<DropdownAI> {
 
   @override
   Widget build(BuildContext context) {
-    final _assistantNotifier = Provider.of<AssistantNotifier>(context, listen: true);
+    final _assistantNotifier =
+        Provider.of<AssistantNotifier>(context, listen: true);
 
     return Center(
       child: PopupMenuButton(
         onOpened: () => setState(() {
+          FocusScope.of(context).unfocus();
           _isExpanded = true;
         }),
         onCanceled: () => setState(() {
+          FocusScope.of(context).unfocus();
           _isExpanded = false;
         }),
-        popUpAnimationStyle: AnimationStyle(
-          duration: const Duration()
-        ),
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        popUpAnimationStyle: AnimationStyle(duration: const Duration()),
         color: TColor.doctorWhite,
-        offset: Offset(0, -(_assistantNotifier.assistants.length * 48.0) - 10.0),
         position: PopupMenuPosition.over,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
@@ -56,16 +57,29 @@ class _DropdownAIState extends State<DropdownAI> {
                           child: Ink(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
-                              color: TColor.daJuice.withOpacity(0.3),
+                              color: TColor.tamarama,
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 4.0),
-                              child: Text(
-                                "+ Create Assistant",
-                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                  color: TColor.petRock,
-                                  fontSize: 12,
-                                ),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20.0, vertical: 8.0),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.add,
+                                    color: TColor.doctorWhite,
+                                  ),
+                                  HSpacing.sm,
+                                  Text(
+                                    "Create Assistant",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge
+                                        ?.copyWith(
+                                          color: TColor.doctorWhite,
+                                          fontSize: 12,
+                                        ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -77,15 +91,14 @@ class _DropdownAIState extends State<DropdownAI> {
                   Text(
                     "Base model",
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: TColor.petRock.withOpacity(0.6),
-                      fontSize: 15,
-                    ),
-                  ),// Add a divider to separate the header
+                          fontWeight: FontWeight.w500,
+                          color: TColor.petRock.withOpacity(0.6),
+                          fontSize: 15,
+                        ),
+                  ), // Add a divider to separate the header
                 ],
               ),
             ),
-            // Add the list of assistants
             ..._assistantNotifier.assistants.map((model) {
               return PopupMenuItem(
                 value: model.id,
@@ -107,9 +120,9 @@ class _DropdownAIState extends State<DropdownAI> {
                     Text(
                       model.name!,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: TColor.petRock,
-                      ),
+                            fontWeight: FontWeight.w600,
+                            color: TColor.petRock,
+                          ),
                     ),
                   ],
                 ),
@@ -140,7 +153,8 @@ class _DropdownAIState extends State<DropdownAI> {
                   color: TColor.slate.withOpacity(0.9),
                   shape: BoxShape.circle,
                   image: DecorationImage(
-                    image: AssetImage(_assistantNotifier.currentAssistant.logoPath!),
+                    image: AssetImage(
+                        _assistantNotifier.currentAssistant.logoPath!),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -149,9 +163,9 @@ class _DropdownAIState extends State<DropdownAI> {
               Text(
                 _assistantNotifier.currentAssistant.name!,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: TColor.petRock,
-                ),
+                      fontWeight: FontWeight.w600,
+                      color: TColor.petRock,
+                    ),
               ),
               Icon(
                 _isExpanded

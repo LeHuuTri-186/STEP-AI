@@ -1,12 +1,13 @@
+import 'dart:io';
 
-
+import 'package:dio/dio.dart';
 import 'package:step_ai/features/chat/domain/entity/assistant.dart';
 
 class Message {
   Assistant assistant;
   String role;
   String? content;
-  List<String>? files;
+  List<File>? files;
   Message({
     required this.assistant,
     required this.role,
@@ -22,11 +23,16 @@ class Message {
     );
   }
   Map<String, dynamic> toJson() {
-    return {
+    Map<String, dynamic> json = {
       'assistant': assistant.toJson(),
       'role': role,
-      'content': content??'',
-      'files': files,
+      'content': content ?? '',
     };
+
+    if (files != null && files!.isNotEmpty) {
+      json['files'] = files;
+    }
+
+    return json;
   }
 }
