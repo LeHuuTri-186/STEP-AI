@@ -52,7 +52,8 @@ class _EditKnowledgeDialogState extends State<EditKnowledgeDialog> {
         Provider.of<EditKnowledgeDialogNotifier>(context, listen: true);
     _unitNotifier = Provider.of<UnitNotifier>(context, listen: false);
     return AlertDialog(
-      title: const Text('Edit Knowledge'),
+      backgroundColor: Colors.white,
+      title: const Text('Edit Knowledge',textAlign: TextAlign.center,style: TextStyle(color: Colors.lightBlue),),
       content: SizedBox(
         width: 400,
         child: Form(
@@ -150,7 +151,7 @@ class _EditKnowledgeDialogState extends State<EditKnowledgeDialog> {
           child: _editKnowledgeDialogNotifier.isLoadingWhenEditNewKnowledge
               ? Stack(alignment: Alignment.center, children: [
                   Container(
-                    padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(14),
                         color: Colors.grey,
@@ -164,12 +165,16 @@ class _EditKnowledgeDialogState extends State<EditKnowledgeDialog> {
                   ),
                 ])
               : Container(
-                  padding: const EdgeInsets.all(8),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(14),
                     color: Colors.blue,
                   ),
-                  child: const Text('Edit')),
+                  child: const Text(
+                    'Edit',
+                    style: TextStyle(color: Colors.white),
+                  )),
         ),
       ],
     );

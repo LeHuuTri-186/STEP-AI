@@ -90,9 +90,10 @@ class UnitItem extends StatelessWidget {
                             context: context,
                             builder: (context) {
                               return AlertDialog(
-                                title: const Text('Delete Unit'),
+                                backgroundColor: Colors.white,
+                                title: const Text('Delete Unit', textAlign: TextAlign.center, style: TextStyle(color: Colors.red)),
                                 content: Text(
-                                    'Are you sure you want to delete "${unit.name}"?'),
+                                    'Are you sure you want to delete "${unit.name}"?', textAlign: TextAlign.center,),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
@@ -128,7 +129,7 @@ class UnitItem extends StatelessWidget {
                                         decoration: BoxDecoration(
                                             color: Colors.red,
                                             borderRadius:
-                                                BorderRadius.circular(5)),
+                                                BorderRadius.circular(8)),
                                         child: const Text('Delete',
                                             style: TextStyle(
                                                 color: Colors.white))),

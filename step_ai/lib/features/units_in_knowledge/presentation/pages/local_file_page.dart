@@ -65,7 +65,7 @@ class LocalFilePage extends StatelessWidget {
           width: MediaQuery.of(context).size.width * 0.75,
           height: MediaQuery.of(context).size.height * 0.5,
           decoration: BoxDecoration(
-            color: Colors.grey[300],
+            color: Colors.lightBlue[100],
             borderRadius: BorderRadius.circular(10),
           ),
           //Main Column
@@ -166,6 +166,13 @@ class LocalFilePage extends StatelessWidget {
               const SizedBox(height: 10),
               //Button to connect
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.lightBlue,
+                  disabledBackgroundColor: const Color.fromARGB(255, 173, 205, 221),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
                 onPressed: (localFileNotifier.isUploadLoading || file == null)
                     ? null
                     : () async {

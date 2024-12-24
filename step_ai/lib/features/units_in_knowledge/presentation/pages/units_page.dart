@@ -26,7 +26,10 @@ class UnitsPage extends StatelessWidget {
           ),
           actions: [
             IconButton(
-              icon: const Icon(Icons.edit),
+              icon: const Icon(
+                Icons.edit,
+                color: Colors.blue,
+              ),
               onPressed: (_unitNotifier.numberLoadingItemSwitchCounter != 0)
                   ? null
                   : () {
@@ -42,13 +45,20 @@ class UnitsPage extends StatelessWidget {
         body: Column(
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const SizedBox(width: 20),
-                Text(
-                    "Size: ${ConvertSize.bytesToSize(_unitNotifier.currentKnowledge!.totalSize)}"),
-                const SizedBox(width: 20),
-                Text("Units: ${_unitNotifier.currentKnowledge!.numberUnits}"),
-                Expanded(child: ButtonAddNewUnit()),
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                          "Size: ${ConvertSize.bytesToSize(_unitNotifier.currentKnowledge!.totalSize)}"),
+                      Text(
+                          "Units: ${_unitNotifier.currentKnowledge!.numberUnits}"),
+                    ],
+                  ),
+                ),
+                ButtonAddNewUnit(),
               ],
             ),
             const SizedBox(height: 10),

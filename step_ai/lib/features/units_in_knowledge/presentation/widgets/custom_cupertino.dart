@@ -32,6 +32,7 @@ class CustomCupertino extends StatelessWidget {
               Opacity(
                 opacity: cupertinoNotifier.isLoading ? 0.5 : 1.0,
                 child: CupertinoSwitch(
+                  activeColor: Colors.blue,
                   value: cupertinoNotifier.switchValue,
                   onChanged: cupertinoNotifier.isLoading
                       ? null

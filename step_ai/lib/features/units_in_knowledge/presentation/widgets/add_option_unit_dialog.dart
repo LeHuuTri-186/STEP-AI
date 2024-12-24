@@ -31,6 +31,7 @@ class AddOptionUnitDialog extends StatelessWidget {
     addOptionUnitNotifier =
         Provider.of<AddOptionUnitNotifier>(context, listen: false);
     return AlertDialog(
+      backgroundColor: Colors.white,
       content: SizedBox(
         height: MediaQuery.of(context).size.height * 0.5,
         child: Column(

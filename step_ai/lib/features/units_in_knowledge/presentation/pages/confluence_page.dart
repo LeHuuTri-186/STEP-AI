@@ -49,7 +49,7 @@ class ConfluencePage extends StatelessWidget {
             width: MediaQuery.of(context).size.width * 0.8,
             height: MediaQuery.of(context).size.height * 0.6,
             decoration: BoxDecoration(
-              color: Colors.grey[300],
+              color: Colors.lightBlue[100],
               borderRadius: BorderRadius.circular(10),
             ),
             //Main Column
@@ -58,6 +58,9 @@ class ConfluencePage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  const SizedBox(
+                    height: 20,
+                  ),
                   //Title of the page + Image
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -89,6 +92,7 @@ class ConfluencePage extends StatelessWidget {
                           icon: const Icon(
                             Icons.link,
                             color: Colors.blue,
+                            size: 30,
                           ))
                     ],
                   ),
@@ -190,9 +194,17 @@ class ConfluencePage extends StatelessWidget {
                       },
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 30),
                   //Button to connect
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.lightBlue,
+                      disabledBackgroundColor:
+                          const Color.fromARGB(255, 173, 205, 221),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
                     onPressed: (confluenceNotifier.isUploadLoading)
                         ? null
                         : () async {

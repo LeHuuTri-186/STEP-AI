@@ -72,42 +72,53 @@ class KnowledgeItem extends StatelessWidget {
                     context: context,
                     builder: (context) {
                       return AlertDialog(
-                        title: const Text('Delete Knowledge'),
+                        backgroundColor: Colors.white,
+                        title: const Text('Delete Knowledge',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.red)),
                         content: Text(
-                            'Are you sure you want to delete "${knowledge.knowledgeName}"?'),
+                          'Are you sure you want to delete "${knowledge.knowledgeName}"?',
+                          textAlign: TextAlign.center,
+                        ),
                         actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('Cancel'),
+                          Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.grey),
+                              child: const Text("Cancel",
+                                  style: TextStyle(color: Colors.white)),
+                            ),
                           ),
-                          TextButton(
-                            onPressed: () async {
-                              final scaffoldContext =
-                                  ScaffoldMessenger.of(context);
-                              Navigator.of(context).pop();
-                              try {
-                                await knowledgeNotifier
-                                    .deleteKnowledge(knowledge.id);
-                                await knowledgeNotifier.getKnowledgeList();
-                              } catch (e) {
-                                scaffoldContext.showSnackBar(
-                                  SnackBar(
-                                    content: Text(e.toString()),
-                                  ),
-                                );
-                              }
-                            },
-                            child: Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                    color: Colors.red,
-                                    borderRadius: BorderRadius.circular(5)),
-                                child: const Text(
-                                  'Delete',
-                                  style: TextStyle(color: Colors.white),
-                                )),
+                          Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                final scaffoldContext =
+                                    ScaffoldMessenger.of(context);
+                                Navigator.of(context).pop();
+                                try {
+                                  await knowledgeNotifier
+                                      .deleteKnowledge(knowledge.id);
+                                  await knowledgeNotifier.getKnowledgeList();
+                                } catch (e) {
+                                  scaffoldContext.showSnackBar(
+                                    SnackBar(
+                                      content: Text(e.toString()),
+                                    ),
+                                  );
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.red),
+                              child: const Text(
+                                'Delete',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
                           ),
                         ],
                       );
