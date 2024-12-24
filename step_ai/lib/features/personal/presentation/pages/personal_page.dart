@@ -220,6 +220,7 @@ class _PersonalPageState extends State<PersonalPage>
         ),
       ),
     );
+  }
     
   Widget buildKnowledgeBaseTab(BuildContext context) {
     return const KnowledgePage();

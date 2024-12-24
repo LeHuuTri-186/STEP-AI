@@ -95,7 +95,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => getIt<BotListNotifier>()),
         ChangeNotifierProvider(create: (_) => getIt<PromptViewState>()),
         ChangeNotifierProvider(create: (_) => getIt<PersonalAssistantNotifier>()),
-        ChangeNotifierProvider(create: (_) => getIt<PreviewChatNotifier>())
+        ChangeNotifierProvider(create: (_) => getIt<PreviewChatNotifier>()),
         ChangeNotifierProvider.value(value: getIt<ChatBarNotifier>()),
         ChangeNotifierProvider.value(value: getIt<PromptListNotifier>()),
         ChangeNotifierProvider.value(value: getIt<AssistantNotifier>()),

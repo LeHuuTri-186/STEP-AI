@@ -5,7 +5,6 @@ import 'package:step_ai/features/personal/data/models/bot_model.dart';
 import 'package:step_ai/features/personal/data/repository/bot_list_repository_impl.dart';
 import 'package:step_ai/features/personal/domain/repository/bot_list_repository.dart';
 import 'package:step_ai/shared/usecase/refresh_kb_token_usecase.dart';
-import 'package:step_ai/shared/usecase/refresh_token_usecase.dart';
 
 class CreateBotUseCase extends UseCase<int, BotModel> {
   final RefreshKbTokenUseCase _refreshUC;

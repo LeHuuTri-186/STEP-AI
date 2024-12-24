@@ -18,7 +18,6 @@ import 'package:step_ai/features/authentication/presentation/pages/email_page.da
 import 'package:step_ai/features/authentication/presentation/pages/forgot_password_page.dart';
 import 'package:step_ai/features/personal/presentation/notifier/bot_list_notifier.dart';
 
-import 'package:step_ai/features/plan/presentation/pages/planPricingPage.dart';
 import 'package:step_ai/features/preview/presentation/notifier/preview_chat_notifier.dart';
 import 'package:step_ai/features/preview/presentation/pages/preview_chat_page.dart';
 import 'package:step_ai/features/prompt/presentation/pages/prompt_list.dart';

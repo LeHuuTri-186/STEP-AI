@@ -242,7 +242,6 @@ class _ChatBarState extends State<ChatBar> {
                       ],
                     ),
                   ),
-                ),
                 //TextField to chat
                   SingleChildScrollView(
                     scrollDirection: Axis.vertical,
@@ -333,7 +332,6 @@ class _ChatBarState extends State<ChatBar> {
                         size: 20,
                       ),
                     ),
-                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -400,14 +398,13 @@ class _ChatBarState extends State<ChatBar> {
                               onPressed: () {},
                             ),
                     ],
-                  )
-                ],
-              ),
+                  )]
+              )],
             ),
           ),
         ),
       ),
-    );
+    ));
   }
 
   IconButton _buildImageUploadButton(BuildContext context) {

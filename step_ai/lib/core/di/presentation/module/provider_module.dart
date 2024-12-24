@@ -149,13 +149,7 @@ class ProviderModule {
     getIt.registerSingleton<SlackNotifier>(SlackNotifier());
     getIt.registerSingleton<PromptListNotifier>(
         PromptListNotifier(
-          getIt<GetPromptListUseCase>(), , getIt<GetFeaturedPromptUseCase>()
-        )
-    );
-    //Chat page:----------------------------------------------------------------
-    getIt.registerSingleton<ChatBarNotifier>(
-        ChatBarNotifier(
-          getIt<LogoutUseCase>(),
+          getIt<GetPromptListUseCase>(), getIt<GetFeaturedPromptUseCase>()
         )
     );
 
@@ -166,7 +160,7 @@ class ProviderModule {
           getIt<AskBotUseCase>(),
           getIt<CreateThreadUseCase>(),
           getIt<LogoutUseCase>()
-      ),
+      ),);
     //Chat page:----------------------------------------------------------------
 
     getIt.registerSingleton<SubscriptionNotifier>(

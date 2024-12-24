@@ -7,7 +7,8 @@ import 'package:step_ai/core/api/api_service.dart';
 import 'package:step_ai/core/data/local/securestorage/secure_storage_helper.dart';
 import 'package:step_ai/core/usecase/use_case.dart';
 import 'package:step_ai/features/personal/data/models/kb_token_model.dart';
-import 'package:step_ai/shared/usecase/refresh_token_usecase.dart';
+
+import '../../../../shared/usecases/refresh_token_usecase.dart';
 
 class LoginKbUseCase extends UseCase<int, void>{
   final SecureStorageHelper _secureStorageHelper;
