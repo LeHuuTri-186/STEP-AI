@@ -77,7 +77,7 @@ class AddOptionUnitDialog extends StatelessWidget {
             //Button Cancel and Next
             const SizedBox(height: 10),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Padding(
                   padding: const EdgeInsets.all(4.0),

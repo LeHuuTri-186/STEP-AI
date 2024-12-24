@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:step_ai/config/enum/task_status.dart';
+import 'package:step_ai/config/routes/routes.dart';
 import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart';
 import 'package:step_ai/features/knowledge_base/presentation/widgets/button_add_new_knowledge.dart';
 import 'package:step_ai/features/knowledge_base/presentation/widgets/knowledge_listview.dart';
@@ -11,7 +13,15 @@ class KnowledgePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     KnowledgeNotifier knowledgeNotifier =
-        Provider.of<KnowledgeNotifier>(context, listen: false);
+        Provider.of<KnowledgeNotifier>(context, listen: true);
+    if (knowledgeNotifier.taskStatus == TaskStatus.UNAUTHORIZED) {
+      knowledgeNotifier.taskStatus = TaskStatus.OK;
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        Routes.authenticate,
+        (Route<dynamic> route) => false,
+      );
+    }
+
     return Column(
       children: [
         SizedBox(height: MediaQuery.of(context).size.height * 0.02),
@@ -29,10 +39,10 @@ class KnowledgePage extends StatelessWidget {
             ],
           ),
         ),
-    
+
         //Button add knowledge
         const ButtonAddNewKnowledge(),
-    
+
         //Knowledge list view
         Expanded(
           child: KnowledgeListview(),

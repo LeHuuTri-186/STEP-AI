@@ -53,7 +53,11 @@ class _EditKnowledgeDialogState extends State<EditKnowledgeDialog> {
     _unitNotifier = Provider.of<UnitNotifier>(context, listen: false);
     return AlertDialog(
       backgroundColor: Colors.white,
-      title: const Text('Edit Knowledge',textAlign: TextAlign.center,style: TextStyle(color: Colors.lightBlue),),
+      title: const Text(
+        'Edit Knowledge',
+        textAlign: TextAlign.center,
+        style: TextStyle(color: Colors.lightBlue),
+      ),
       content: SizedBox(
         width: 400,
         child: Form(
@@ -103,78 +107,81 @@ class _EditKnowledgeDialogState extends State<EditKnowledgeDialog> {
           ),
         ),
       ),
+      actionsAlignment: MainAxisAlignment.center,
       actions: [
-        TextButton(
-          onPressed: () {
-            _nameController.clear();
-            _descriptionController.clear();
-            _editKnowledgeDialogNotifier.setErrorDisplayWhenNameIsUsed("");
-            Navigator.pop(context);
-          },
-          child: const Text('Cancel'),
+        Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: ElevatedButton(
+            onPressed: () {
+              _nameController.clear();
+              _descriptionController.clear();
+              _editKnowledgeDialogNotifier.setErrorDisplayWhenNameIsUsed("");
+              Navigator.pop(context);
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.grey),
+            child: const Text("Cancel", style: TextStyle(color: Colors.white)),
+          ),
         ),
-        TextButton(
-          onPressed: _editKnowledgeDialogNotifier.isLoadingWhenEditNewKnowledge
-              ? null
-              : () async {
-                  //Hide keyboard
-                  FocusScope.of(context).unfocus();
-                  if (_formKey.currentState!.validate()) {
-                    // Form is valid, proceed with save
-                    try {
-                      //show Indicator
-                      _editKnowledgeDialogNotifier
-                          .setIsLoadingWhenEditKnowledge(true);
-                      //update
-                      await _knowledgeNotifier.updateKnowledge(
-                          _unitNotifier.currentKnowledge!.id,
-                          _nameController.text,
-                          _descriptionController.text);
 
-                      await _knowledgeNotifier.getKnowledgeList();
-                      findAndUpdateCurrentKnowledge();
+        //Edit button
+        Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: ElevatedButton(
+            onPressed:
+                _editKnowledgeDialogNotifier.isLoadingWhenEditNewKnowledge
+                    ? null
+                    : () async {
+                        //Hide keyboard
+                        FocusScope.of(context).unfocus();
+                        if (_formKey.currentState!.validate()) {
+                          // Form is valid, proceed with save
+                          try {
+                            //show Indicator
+                            _editKnowledgeDialogNotifier
+                                .setIsLoadingWhenEditKnowledge(true);
+                            //update
+                            await _knowledgeNotifier.updateKnowledge(
+                                _unitNotifier.currentKnowledge!.id,
+                                _nameController.text,
+                                _descriptionController.text);
 
-                      //hide Indicator
-                      _editKnowledgeDialogNotifier
-                          .setIsLoadingWhenEditKnowledge(false);
-                      _nameController.clear();
-                      _descriptionController.clear();
-                      Navigator.pop(context);
-                    } catch (e) {
-                      _editKnowledgeDialogNotifier
-                          .setIsLoadingWhenEditKnowledge(false);
-                      _editKnowledgeDialogNotifier
-                          .setErrorDisplayWhenNameIsUsed(e.toString());
-                    }
-                  }
-                },
-          child: _editKnowledgeDialogNotifier.isLoadingWhenEditNewKnowledge
-              ? Stack(alignment: Alignment.center, children: [
-                  Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(14),
-                        color: Colors.grey,
+                            await _knowledgeNotifier.getKnowledgeList();
+                            findAndUpdateCurrentKnowledge();
+
+                            //hide Indicator
+                            _editKnowledgeDialogNotifier
+                                .setIsLoadingWhenEditKnowledge(false);
+                            _nameController.clear();
+                            _descriptionController.clear();
+                            Navigator.pop(context);
+                          } catch (e) {
+                            _editKnowledgeDialogNotifier
+                                .setIsLoadingWhenEditKnowledge(false);
+                            _editKnowledgeDialogNotifier
+                                .setErrorDisplayWhenNameIsUsed(e.toString());
+                          }
+                        }
+                      },
+            style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    _editKnowledgeDialogNotifier.isLoadingWhenEditNewKnowledge
+                        ? Colors.grey
+                        : Colors.lightBlue),
+            child: _editKnowledgeDialogNotifier.isLoadingWhenEditNewKnowledge
+                ? const Stack(alignment: Alignment.center, children: [
+                    Text("Loading..."),
+                    Positioned(
+                      child: CupertinoActivityIndicator(
+                        radius: 10,
+                        color: Colors.blue,
                       ),
-                      child: const Text("Loading...")),
-                  const Positioned(
-                    child: CupertinoActivityIndicator(
-                      radius: 10,
-                      color: Colors.blue,
                     ),
-                  ),
-                ])
-              : Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(14),
-                    color: Colors.blue,
-                  ),
-                  child: const Text(
+                  ])
+                : const Text(
                     'Edit',
                     style: TextStyle(color: Colors.white),
-                  )),
+                  ),
+          ),
         ),
       ],
     );

@@ -80,6 +80,7 @@ class KnowledgeItem extends StatelessWidget {
                           'Are you sure you want to delete "${knowledge.knowledgeName}"?',
                           textAlign: TextAlign.center,
                         ),
+                        actionsAlignment: MainAxisAlignment.center,
                         actions: [
                           Padding(
                             padding: const EdgeInsets.all(4.0),

@@ -91,48 +91,61 @@ class UnitItem extends StatelessWidget {
                             builder: (context) {
                               return AlertDialog(
                                 backgroundColor: Colors.white,
-                                title: const Text('Delete Unit', textAlign: TextAlign.center, style: TextStyle(color: Colors.red)),
+                                title: const Text('Delete Unit',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(color: Colors.red)),
                                 content: Text(
-                                    'Are you sure you want to delete "${unit.name}"?', textAlign: TextAlign.center,),
+                                  'Are you sure you want to delete "${unit.name}"?',
+                                  textAlign: TextAlign.center,
+                                ),
+                                actionsAlignment: MainAxisAlignment.center,
                                 actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text('Cancel'),
+                                  Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.grey),
+                                      child: const Text("Cancel",
+                                          style:
+                                              TextStyle(color: Colors.white)),
+                                    ),
                                   ),
-                                  TextButton(
-                                    onPressed: () async {
-                                      final scaffoldContext =
-                                          ScaffoldMessenger.of(context);
-                                      Navigator.of(context).pop();
-                                      try {
-                                        await unitNotifier.deleteUnit(unit.id);
-                                        await unitNotifier.getUnitList();
+                                  Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: ElevatedButton(
+                                      onPressed: () async {
+                                        final scaffoldContext =
+                                            ScaffoldMessenger.of(context);
+                                        Navigator.of(context).pop();
+                                        try {
+                                          await unitNotifier
+                                              .deleteUnit(unit.id);
+                                          await unitNotifier.getUnitList();
 
-                                        unitNotifier.setIsLoading(true);
-                                        await knowledgeNotifier
-                                            .getKnowledgeList();
-                                        findAndUpdateCurrentKnowledge();
-                                        unitNotifier.setIsLoading(false);
-                                      } catch (e) {
-                                        unitNotifier.setIsLoading(false);
-                                        scaffoldContext.showSnackBar(SnackBar(
-                                          content: Text(
-                                            e.toString(),
-                                          ),
-                                        ));
-                                      }
-                                    },
-                                    child: Container(
-                                        padding: const EdgeInsets.all(8),
-                                        decoration: BoxDecoration(
-                                            color: Colors.red,
-                                            borderRadius:
-                                                BorderRadius.circular(8)),
-                                        child: const Text('Delete',
-                                            style: TextStyle(
-                                                color: Colors.white))),
+                                          unitNotifier.setIsLoading(true);
+                                          await knowledgeNotifier
+                                              .getKnowledgeList();
+                                          findAndUpdateCurrentKnowledge();
+                                          unitNotifier.setIsLoading(false);
+                                        } catch (e) {
+                                          unitNotifier.setIsLoading(false);
+                                          scaffoldContext.showSnackBar(SnackBar(
+                                            content: Text(
+                                              e.toString(),
+                                            ),
+                                          ));
+                                        }
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.red),
+                                      child: const Text(
+                                        'Delete',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
                                   ),
                                 ],
                               );

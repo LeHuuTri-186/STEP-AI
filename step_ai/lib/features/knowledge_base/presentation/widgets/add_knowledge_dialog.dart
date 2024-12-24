@@ -85,6 +85,7 @@ class _AddKnowledgeDialogState extends State<AddKnowledgeDialog> {
           ),
         ),
       ),
+      actionsAlignment: MainAxisAlignment.center,
       actions: [
         TextButton(
           onPressed: () {
@@ -96,11 +97,13 @@ class _AddKnowledgeDialogState extends State<AddKnowledgeDialog> {
           child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(20),
                 color: Colors.grey,
               ),
               child: const Text('Cancel', style: TextStyle(color: Colors.white))),
         ),
+
+
         TextButton(
           onPressed: _addKnowledgeDialogNotifier.isLoadingWhenCreateNewKnowledge
               ? null
@@ -136,7 +139,7 @@ class _AddKnowledgeDialogState extends State<AddKnowledgeDialog> {
                   Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(14),
+                        borderRadius: BorderRadius.circular(20),
                         color: Colors.lightBlue.withOpacity(0.5),
                       ),
                       child: const Text("Loading...")),
@@ -151,7 +154,7 @@ class _AddKnowledgeDialogState extends State<AddKnowledgeDialog> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(20),
                     color: Colors.lightBlue,
                   ),
                   child: const Text(

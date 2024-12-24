@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:step_ai/config/enum/task_status.dart';
+import 'package:step_ai/core/data/model/conversation_model.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_history_conversation_list_usecase.dart';
 
 import '../domain/entity/conversation.dart';
@@ -27,8 +28,10 @@ class HistoryConversationListNotifier extends ChangeNotifier {
       _limitConversation = _limitConversation + 10;
       final conversationModel = await _getHistoryConversationListUsecase.call(
           params: _limitConversation);
+      print("=============getHistoryConversationList2");
       this._historyConversationList.clear();
       this._historyConversationList = conversationModel.items.map((item) {
+        print("------------------------->get Trong notifier");
         return Conversation(
           id: item.id!,
           title: item.title,
@@ -52,7 +55,7 @@ class HistoryConversationListNotifier extends ChangeNotifier {
             "Error in getHistoryConversationList in history conversation list notifier with status code: ${e.response?.statusCode}");
       } else {
         print(
-            "Error in getHistoryConversationList in history conversation list notifier");
+            "Error in getHistoryConversationList in history conversation list notifier $e");
       }
     } finally {
       isLoading = false;

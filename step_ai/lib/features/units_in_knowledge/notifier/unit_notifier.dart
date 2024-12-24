@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:http_parser/src/media_type.dart';
+import 'package:step_ai/config/enum/task_status.dart';
 import 'package:step_ai/features/knowledge_base/domain/entity/knowledge.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/entity/unit_list.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/params/delete_unit_param.dart';
@@ -30,6 +31,12 @@ class UnitNotifier extends ChangeNotifier {
   UploadSlackUsecase _uploadSlackUsecase;
   UploadDriveUsecae _uploadDriveUsecae;
   UploadConfluenceUsecase _uploadConfluenceUsecase;
+
+  TaskStatus taskStatus = TaskStatus.OK;
+  void changeTaskStatus(TaskStatus taskStatus) {
+    this.taskStatus = taskStatus;
+    notifyListeners();
+  }
 
   UnitNotifier(
       this._getUnitListUsecase,
@@ -61,6 +68,9 @@ class UnitNotifier extends ChangeNotifier {
         if (e.type == DioExceptionType.connectionError) {
           errorString = "Please check your internet connection";
         }
+        if (e.response?.statusCode == 401) {
+          changeTaskStatus(TaskStatus.UNAUTHORIZED);
+        }
       }
     }
     isLoading = false;
@@ -77,6 +87,9 @@ class UnitNotifier extends ChangeNotifier {
         if (e.type == DioExceptionType.connectionError) {
           throw "Please check your internet connection";
         }
+        if (e.response?.statusCode == 401) {
+          changeTaskStatus(TaskStatus.UNAUTHORIZED);
+        }
       }
       print("Error in deleteUnit in unit notifier with error: $e");
       throw "Delete unit failed. Try again later";
@@ -91,6 +104,9 @@ class UnitNotifier extends ChangeNotifier {
       if (e is DioException) {
         if (e.type == DioExceptionType.connectionError) {
           throw "Please check your internet connection";
+        }
+        if (e.response?.statusCode == 401) {
+          changeTaskStatus(TaskStatus.UNAUTHORIZED);
         }
       }
       print("Error in updateStatusUnit in unit notifier with error: $e");
@@ -110,6 +126,9 @@ class UnitNotifier extends ChangeNotifier {
       if (e is DioException) {
         if (e.type == DioExceptionType.connectionError) {
           throw "Please check your internet connection";
+        }
+        if (e.response?.statusCode == 401) {
+          changeTaskStatus(TaskStatus.UNAUTHORIZED);
         }
       }
       print("Error in uploadLocalFile in unit notifier with error: $e");
@@ -131,6 +150,9 @@ class UnitNotifier extends ChangeNotifier {
         }
         if (e.response!.statusCode == 500) {
           throw "Url is not valid";
+        }
+        if (e.response?.statusCode == 401) {
+          changeTaskStatus(TaskStatus.UNAUTHORIZED);
         }
       }
       print("Error in uploadweb in unit notifier with error: $e");
@@ -156,6 +178,9 @@ class UnitNotifier extends ChangeNotifier {
         }
         if (e.response!.statusCode == 400) {
           throw e.response!.data["details"][0]["issue"];
+        }
+        if (e.response?.statusCode == 401) {
+          changeTaskStatus(TaskStatus.UNAUTHORIZED);
         }
       }
       throw e.toString();
@@ -185,6 +210,9 @@ class UnitNotifier extends ChangeNotifier {
         }
         if (e.response!.statusCode == 400) {
           throw e.response!.data["details"][0]["issue"];
+        }
+        if (e.response?.statusCode == 401) {
+          changeTaskStatus(TaskStatus.UNAUTHORIZED);
         }
       }
       throw e.toString();

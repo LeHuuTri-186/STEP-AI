@@ -56,8 +56,8 @@ Future<void> main() async {
   final ChatNotifier chatNotifier = getIt<ChatNotifier>();
   final HistoryConversationListNotifier historyConversationListNotifier =
       getIt<HistoryConversationListNotifier>();
-  final isLoggedIn = await isLoggedInUseCase.call(params: null);
-  final initialRoute = isLoggedIn ? Routes.chat : Routes.authenticate;
+  var isLoggedIn = await isLoggedInUseCase.call(params: null);
+  
   if (isLoggedIn) {
     try {
       await chatNotifier.getNumberRestToken();
@@ -65,6 +65,7 @@ Future<void> main() async {
     } catch (e) {
       print(e);
       if (e is TaskStatus && e == TaskStatus.UNAUTHORIZED) {
+        isLoggedIn = false;
         saveLoginStatusUseCase.call(params: false);
       }
       if (e is TaskStatus && e == TaskStatus.NO_INTERNET) {
@@ -72,6 +73,7 @@ Future<void> main() async {
       }
     }
   }
+  final initialRoute = isLoggedIn ? Routes.chat : Routes.authenticate;
   // final helper = getIt<SecureStorageHelper>();
   // if(isLoggedIn) print(await helper.accessToken);
 
