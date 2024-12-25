@@ -4,7 +4,7 @@ import 'package:step_ai/config/routes/routes.dart';
 import 'package:step_ai/features/chat/domain/entity/assistant.dart';
 import 'package:step_ai/features/chat/notifier/assistant_notifier.dart';
 import 'package:step_ai/features/chat/notifier/personal_assistant_notifier.dart';
-import 'package:step_ai/features/personal/presentation/pages/personal_page.dart';
+import 'package:step_ai/features/personal/presentation/pages/playground_page.dart';
 import 'package:step_ai/shared/styles/horizontal_spacing.dart';
 
 import '../styles/colors.dart';

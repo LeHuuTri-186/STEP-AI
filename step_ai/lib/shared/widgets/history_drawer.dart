@@ -16,7 +16,7 @@ import 'package:step_ai/shared/styles/vertical_spacing.dart';
 import 'package:step_ai/shared/widgets/app_name_widget.dart';
 import 'package:step_ai/features/plan/presentation/pages/plan_pricing_page.dart';
 import 'package:step_ai/shared/widgets/search_bar.dart';
-import '../../features/personal/presentation/pages/personal_page.dart';
+import '../../features/personal/presentation/pages/playground_page.dart';
 import '../styles/colors.dart';
 
 class HistoryDrawer extends StatefulWidget {

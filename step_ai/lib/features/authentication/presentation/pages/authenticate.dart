@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
@@ -45,8 +47,11 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
     return Stack(
       children: [
         Scaffold(
-          appBar: _buildAppBar(),
-          body: _buildBody(),
+          backgroundColor: TColor.tamarama.withOpacity(0.8),
+          body: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: _buildBody(),
+          ),
         ),
         if (_loginNotifier.isLoading ||
             _registerNotifier.isLoading ||
@@ -70,17 +75,37 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
   }
 
   Widget _buildBody() {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            _buildImage(),
-            _buildToggleButton(),
-            const SizedBox(height: 20),
-            _authUINotifier.isLogin ? _buildLoginView() : _buildRegisterView(),
+    return Center(
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: TColor.doctorWhite,
+          boxShadow: [
+            BoxShadow(
+                offset: const Offset(-3, 3),
+                color: TColor.slate.withOpacity(0.5),
+                blurRadius: 5.0)
           ],
+        ),
+        width: min(MediaQuery.of(context).size.width, 450),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Center(
+                  child: AppNameWidget(
+                    color: TColor.tamarama,
+                  ),
+                ),
+                _buildImage(),
+                _buildToggleButton(),
+                const SizedBox(height: 20),
+                _authUINotifier.isLogin ? _buildLoginView() : _buildRegisterView(),
+              ],
+            ),
+          ),
         ),
       ),
     );

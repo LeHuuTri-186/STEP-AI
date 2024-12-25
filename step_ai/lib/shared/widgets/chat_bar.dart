@@ -353,22 +353,20 @@ class _ChatBarState extends State<ChatBar> {
                               // Hide keyboard
                               FocusScope.of(context).unfocus();
                               try {
+                                String message = _controller.text;
+                                _controller.clear();
                                 _chatBarNotifier.setShowOverlay(false);
                                 if (!_personalAssistantNotifier.isPersonal) {
                                   await Provider.of<ChatNotifier>(context,
                                       listen: false)
-                                      .sendMessage(_controller.text);
+                                      .sendMessage(message);
                                 } else {
                                   await Provider.of<ChatNotifier>(
                                       context, listen: false
-                                  ).sendMessageForPersonalBot(_controller.text);
+                                  ).sendMessageForPersonalBot(message);
                                 }
 
-                                String message = _controller.text;
-                                _controller.clear();
-                                await Provider.of<ChatNotifier>(context,
-                                        listen: false)
-                                    .sendMessage(message);
+
                               } catch (e) {
                                 //e is 401 and return to login screen
 

@@ -42,7 +42,7 @@ import '../../features/chat/notifier/chat_notifier.dart';
 import '../../features/chat/notifier/history_conversation_list_notifier.dart';
 import '../../features/chat/presentation/notifier/chat_bar_notifier.dart';
 import '../../features/chat/presentation/notifier/prompt_list_notifier.dart';
-import '../../features/personal/presentation/pages/personal_page.dart';
+import '../../features/personal/presentation/pages/playground_page.dart';
 
 class Routes {
   Routes._();
@@ -67,7 +67,7 @@ class Routes {
 
   static final routes = <String, WidgetBuilder>{
     personal: (BuildContext context) => Builder(builder: (context) {
-          return const PersonalPage();
+          return const PlaygroundPage();
         }),
 
     chat: (BuildContext context) => MultiProvider(providers: [
