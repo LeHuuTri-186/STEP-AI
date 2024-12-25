@@ -3,10 +3,10 @@ import 'package:step_ai/features/publish/domain/params/disconnector_param.dart';
 class Constant{
   Constant._();
   //API:------------------------------------------------------------------------
-  // static String apiBaseUrl = 'https://api.jarvis.cx';
-  static String apiBaseUrl = 'https://api.dev.jarvis.cx';
-  static String kbApiUrl = 'https://knowledge-api.dev.jarvis.cx';
-  // static String kbApiUrl = 'https://knowledge-api.jarvis.cx';
+  // static String apiBaseUrl = 'https://api.dev.jarvis.cx';
+  // static String kbApiUrl = 'https://knowledge-api.dev.jarvis.cx';
+  static String apiBaseUrl = 'https://api.jarvis.cx';
+  static String kbApiUrl = 'https://knowledge-api.jarvis.cx';
 
   static String loginEndpoint = '/api/v1/auth/sign-in';
   static String registerEndpoint = '/api/v1/auth/sign-up';
@@ -50,7 +50,16 @@ class Constant{
 
   //Publish:--------------------------------------------------------------------
   static String getPublishedEndpoint(String id) => '/kb-core/v1/bot-integration/$id/configurations';
+
   static String telegramValidateEndpoint = '/kb-core/v1/bot-integration/telegram/validation';
+  static String messengerValidateEndpoint= '/kb-core/v1/bot-integration/messenger/validation';
+  static String slackValidateEndpoint = '/kb-core/v1/bot-integration/slack/validation';
+
   static String telegramPublishEndpoint(String id) => '/kb-core/v1/bot-integration/telegram/publish/$id';
+  static String messengerPublishEndpoint(String id) => '/kb-core/v1/bot-integration/messenger/publish/$id';
+  static String slackPublishEndpoint(String id) => '/kb-core/v1/bot-integration/slack/publish/$id';
+
   static String disconnectBotEndpoint(String id, String type) => '/kb-core/v1/bot-integration/$id/$type';
+
+
 }

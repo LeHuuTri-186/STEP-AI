@@ -41,6 +41,10 @@ import 'package:step_ai/features/knowledge_base/domain/usecase/get_knowledge_lis
 import 'package:step_ai/features/knowledge_base/notifier/add_knowledge_dialog_notifier.dart';
 import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart';
 import 'package:step_ai/features/publish/domain/usecase/get_published_usecase.dart';
+import 'package:step_ai/features/publish/domain/usecase/messenger_publish_usecase.dart';
+import 'package:step_ai/features/publish/domain/usecase/messenger_validate_usecase.dart';
+import 'package:step_ai/features/publish/domain/usecase/slack_publish_usecase.dart';
+import 'package:step_ai/features/publish/domain/usecase/slack_validate_usecase.dart';
 import 'package:step_ai/features/publish/domain/usecase/telegram_disconnect_usecase.dart';
 import 'package:step_ai/features/publish/domain/usecase/telegram_publish_usecase.dart';
 import 'package:step_ai/features/publish/domain/usecase/telegram_validate_usecase.dart';
@@ -158,39 +162,43 @@ class ProviderModule {
     getIt.registerSingleton<SlackNotifier>(SlackNotifier());
     getIt.registerSingleton<PromptListNotifier>(
         PromptListNotifier(
-          getIt<GetPromptListUseCase>(), getIt<GetFeaturedPromptUseCase>()
+            getIt<GetPromptListUseCase>(), getIt<GetFeaturedPromptUseCase>()
         )
     );
 
     //Preview page:-------------------------------------------------------------
     getIt.registerSingleton<PreviewChatNotifier>(
       PreviewChatNotifier(
-          getIt<PersonalAssistantNotifier>(),
-          getIt<AskBotUseCase>(),
-          getIt<CreateThreadUseCase>(),
-          getIt<LogoutUseCase>(),
-          getIt<GetKbInBotUseCase>(),
-          getIt<GetKnowledgeListUsecase>(),
-          getIt<ImportKbUseCase>(),
-          getIt<RemoveKbUseCase>(),
+        getIt<PersonalAssistantNotifier>(),
+        getIt<AskBotUseCase>(),
+        getIt<CreateThreadUseCase>(),
+        getIt<LogoutUseCase>(),
+        getIt<GetKbInBotUseCase>(),
+        getIt<GetKnowledgeListUsecase>(),
+        getIt<ImportKbUseCase>(),
+        getIt<RemoveKbUseCase>(),
       ),);
 
     //Publish page:-------------------------------------------------------------
     getIt.registerSingleton<PublishNotifier>(
-      PublishNotifier(
+        PublishNotifier(
           getIt<GetPublishedUseCase>(),
           getIt<LogoutUseCase>(),
           getIt<TelegramValidateUseCase>(),
           getIt<TelegramPublishUseCase>(),
-          getIt<TelegramDisconnectUseCase>()
-      )
+          getIt<TelegramDisconnectUseCase>(),
+          getIt<MessengerValidateUseCase>(),
+          getIt<MessengerPublishUseCase>(),
+          getIt<SlackValidateUseCase>(),
+          getIt<SlackPublishUseCase>(),
+        )
     );
     //Chat page:----------------------------------------------------------------
 
     getIt.registerSingleton<SubscriptionNotifier>(
         SubscriptionNotifier(
-          getIt<LogoutUseCase>(),
-          getIt<GetSubscriptionUsecase>()
+            getIt<LogoutUseCase>(),
+            getIt<GetSubscriptionUsecase>()
         )
     );
   }

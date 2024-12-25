@@ -31,6 +31,10 @@ import 'package:step_ai/features/preview/domain/usecase/get_kb_in_bot_usecase.da
 import 'package:step_ai/features/preview/domain/usecase/import_kb_usecase.dart';
 import 'package:step_ai/features/preview/domain/usecase/remove_kb_usecase.dart';
 import 'package:step_ai/features/publish/domain/usecase/get_published_usecase.dart';
+import 'package:step_ai/features/publish/domain/usecase/messenger_publish_usecase.dart';
+import 'package:step_ai/features/publish/domain/usecase/messenger_validate_usecase.dart';
+import 'package:step_ai/features/publish/domain/usecase/slack_publish_usecase.dart';
+import 'package:step_ai/features/publish/domain/usecase/slack_validate_usecase.dart';
 import 'package:step_ai/features/publish/domain/usecase/telegram_disconnect_usecase.dart';
 import 'package:step_ai/features/publish/domain/usecase/telegram_publish_usecase.dart';
 import 'package:step_ai/features/publish/domain/usecase/telegram_validate_usecase.dart';
@@ -182,6 +186,7 @@ class UseCaseModule {
       GetPublishedUseCase(getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>())
     );
 
+    //Telegram
     getIt.registerSingleton<TelegramValidateUseCase>(
       TelegramValidateUseCase(getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()
       )
@@ -196,6 +201,29 @@ class UseCaseModule {
         TelegramDisconnectUseCase(getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()
         )
     );
+
+    //Messenger
+    getIt.registerSingleton<MessengerValidateUseCase>(
+        MessengerValidateUseCase(getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()
+        )
+    );
+
+    getIt.registerSingleton<MessengerPublishUseCase>(
+        MessengerPublishUseCase(getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()
+        )
+    );
+
+    //Slack
+    getIt.registerSingleton<SlackValidateUseCase>(
+        SlackValidateUseCase(getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()
+        )
+    );
+
+    getIt.registerSingleton<SlackPublishUseCase>(
+        SlackPublishUseCase(getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()
+        )
+    );
+
     ///Knowledge base:-----------------------------------------------------------
     getIt.registerSingleton<GetKnowledgeListUsecase>(GetKnowledgeListUsecase(
       getIt<KnowledgeRepository>(),
