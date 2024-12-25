@@ -1,3 +1,5 @@
+import 'package:step_ai/features/publish/domain/params/disconnector_param.dart';
+
 class Constant{
   Constant._();
   //API:------------------------------------------------------------------------
@@ -46,6 +48,9 @@ class Constant{
   static String confluenceImagePath = 'lib/core/assets/source_unit_images/confluence.png';
   static String slackImagePath = 'lib/core/assets/source_unit_images/slack.png';
 
-
-
+  //Publish:--------------------------------------------------------------------
+  static String getPublishedEndpoint(String id) => '/kb-core/v1/bot-integration/$id/configurations';
+  static String telegramValidateEndpoint = '/kb-core/v1/bot-integration/telegram/validation';
+  static String telegramPublishEndpoint(String id) => '/kb-core/v1/bot-integration/telegram/publish/$id';
+  static String disconnectBotEndpoint(String id, String type) => '/kb-core/v1/bot-integration/$id/$type';
 }

@@ -30,6 +30,10 @@ import 'package:step_ai/features/personal/domain/usecase/update_bot_usecase.dart
 import 'package:step_ai/features/preview/domain/usecase/get_kb_in_bot_usecase.dart';
 import 'package:step_ai/features/preview/domain/usecase/import_kb_usecase.dart';
 import 'package:step_ai/features/preview/domain/usecase/remove_kb_usecase.dart';
+import 'package:step_ai/features/publish/domain/usecase/get_published_usecase.dart';
+import 'package:step_ai/features/publish/domain/usecase/telegram_disconnect_usecase.dart';
+import 'package:step_ai/features/publish/domain/usecase/telegram_publish_usecase.dart';
+import 'package:step_ai/features/publish/domain/usecase/telegram_validate_usecase.dart';
 import 'package:step_ai/shared/usecase/refresh_kb_token_usecase.dart';
 import 'package:step_ai/features/knowledge_base/domain/entity/knowledge.dart';
 import 'package:step_ai/features/knowledge_base/domain/repository/knowledge_repository.dart';
@@ -172,6 +176,25 @@ class UseCaseModule {
 
     getIt.registerSingleton<RemoveKbUseCase>(
         RemoveKbUseCase(getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>())
+    );
+
+    getIt.registerSingleton<GetPublishedUseCase>(
+      GetPublishedUseCase(getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>())
+    );
+
+    getIt.registerSingleton<TelegramValidateUseCase>(
+      TelegramValidateUseCase(getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()
+      )
+    );
+
+    getIt.registerSingleton<TelegramPublishUseCase>(
+      TelegramPublishUseCase(getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()
+      )
+    );
+
+    getIt.registerSingleton<TelegramDisconnectUseCase>(
+        TelegramDisconnectUseCase(getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()
+        )
     );
     ///Knowledge base:-----------------------------------------------------------
     getIt.registerSingleton<GetKnowledgeListUsecase>(GetKnowledgeListUsecase(

@@ -14,6 +14,7 @@ import 'package:step_ai/features/preview/presentation/widgets/added_kb_list_pane
 import 'package:step_ai/features/preview/presentation/widgets/added_kb_list_view.dart';
 import 'package:step_ai/features/preview/presentation/widgets/preview_chat_bar.dart';
 import 'package:step_ai/features/prompt/data/models/prompt_model.dart';
+import 'package:step_ai/features/publish/presentation/pages/publish_page.dart';
 import 'package:step_ai/shared/widgets/message_tile.dart';
 
 import '../../../../shared/widgets/chat_bar.dart';
@@ -154,7 +155,11 @@ class _PreviewChatPageState extends State<PreviewChatPage> {
           IconButton(
               onPressed: () async {
                 //Knowledge_base publishing
-
+                Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => const PublishPage()
+                    )
+                );
               },
               icon: Icon(
                 Icons.publish,

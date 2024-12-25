@@ -40,6 +40,11 @@ import 'package:step_ai/features/knowledge_base/domain/usecase/edit_knowledge_us
 import 'package:step_ai/features/knowledge_base/domain/usecase/get_knowledge_list_usecase.dart';
 import 'package:step_ai/features/knowledge_base/notifier/add_knowledge_dialog_notifier.dart';
 import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart';
+import 'package:step_ai/features/publish/domain/usecase/get_published_usecase.dart';
+import 'package:step_ai/features/publish/domain/usecase/telegram_disconnect_usecase.dart';
+import 'package:step_ai/features/publish/domain/usecase/telegram_publish_usecase.dart';
+import 'package:step_ai/features/publish/domain/usecase/telegram_validate_usecase.dart';
+import 'package:step_ai/features/publish/presentation/notifier/publish_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/usecase/delete_unit_usecase.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/usecase/get_unit_list_usecase.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/usecase/update_status_unit_usecase.dart';
@@ -169,6 +174,17 @@ class ProviderModule {
           getIt<ImportKbUseCase>(),
           getIt<RemoveKbUseCase>(),
       ),);
+
+    //Publish page:-------------------------------------------------------------
+    getIt.registerSingleton<PublishNotifier>(
+      PublishNotifier(
+          getIt<GetPublishedUseCase>(),
+          getIt<LogoutUseCase>(),
+          getIt<TelegramValidateUseCase>(),
+          getIt<TelegramPublishUseCase>(),
+          getIt<TelegramDisconnectUseCase>()
+      )
+    );
     //Chat page:----------------------------------------------------------------
 
     getIt.registerSingleton<SubscriptionNotifier>(
