@@ -12,7 +12,7 @@ class KnowledgeApi {
   SecureStorageHelper secureStorageHelper;
 
   KnowledgeApi(this.secureStorageHelper) {
-    _dio.options.baseUrl = Constant.kbProducApiUrl; // Base URL API
+    _dio.options.baseUrl = Constant.kbApiUrl; // Base URL API
 
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
@@ -23,6 +23,16 @@ class KnowledgeApi {
         if (accessKnowledgeToken != null) {
           options.headers['Authorization'] = 'Bearer $accessKnowledgeToken';
         }
+        // In ra headers
+        //print("Headers: ${options.headers}");
+
+        // In ra body (payload)
+        // if (options.data != null) {
+        //   print("Body: ${options.data}");
+        // } else {
+        //   print("Body: null");
+        // }
+
         return handler.next(options);
       },
       onResponse: (response, handler) {
@@ -47,6 +57,48 @@ class KnowledgeApi {
     // refreshKnowledgeToken = await secureStorageHelper.refreshToken;
     accessKnowledgeToken = await secureStorageHelper.kbAccessToken;
   }
+
+  // Call API to make a new access token and saved it in RefreshTokenUseCase
+  // Future<void> _refreshToken() async {
+  //   print("------------refreshToken------------");
+  //   try {
+  //     // int statusCode = await refreshTokenUseCase.call(params: null);
+  //     var myResponse = await _apiService
+  //         .get('${Constant.refreshTokenPartEndpoint}$refreshToken');
+
+  //     if (myResponse.statusCode == 200) {
+  //       print("*****************Làm mới token thành công");
+  //       TokenModel token;
+  //       token = TokenModel.fromJson(
+  //           jsonDecode(await myResponse.stream.bytesToString()));
+  //       await secureStorageHelper.saveAccessToken(token.accessToken);
+  //       //lưu để gọi lại sau
+  //       accessToken = await secureStorageHelper.accessToken;
+  //       //_dio.options.headers['Authorization'] = 'Bearer $accessToken';
+  //     } else {
+  //       print("*****************Làm mới token thất bại");
+  //       throw Exception('Không thể làm mới token');
+  //     }
+  //   } catch (e) {
+  //     print("*****************Không thể làm mới token");
+  //     throw Exception('Không thể làm mới token');
+  //   }
+  // }
+
+  //Request again with new access token
+  // Future<Response> _retryRequest(RequestOptions requestOptions) async {
+  //   print("retryRequest");
+  //   final options = Options(
+  //     method: requestOptions.method,
+  //     headers: requestOptions.headers,
+  //   );
+  //   return _dio.request(
+  //     requestOptions.path,
+  //     options: options,
+  //     data: requestOptions.data,
+  //     queryParameters: requestOptions.queryParameters,
+  //   );
+  // }
 
   // Các phương thức API
 

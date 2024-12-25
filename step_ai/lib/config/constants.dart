@@ -1,10 +1,10 @@
 class Constant{
   Constant._();
   //API:------------------------------------------------------------------------
-  static String apiBaseUrl = 'https://api.jarvis.cx';
-  //static String apiBaseUrl = 'https://api.dev.jarvis.cx';
-  static String kbApiUrl = 'https://knowledge-api.jarvis.cx';
-  static String kbProducApiUrl = 'https://knowledge-api.jarvis.cx';
+  // static String apiBaseUrl = 'https://api.jarvis.cx';
+  static String apiBaseUrl = 'https://api.dev.jarvis.cx';
+  static String kbApiUrl = 'https://knowledge-api.dev.jarvis.cx';
+  // static String kbApiUrl = 'https://knowledge-api.jarvis.cx';
 
   static String loginEndpoint = '/api/v1/auth/sign-in';
   static String registerEndpoint = '/api/v1/auth/sign-up';
@@ -36,7 +36,8 @@ class Constant{
   static String botPublished = '&isPublished';
   static String createThreadEndpoint = '/kb-core/v1/ai-assistant/thread';
   static String askBotInThreadEndpoint = '/kb-core/v1/ai-assistant';
-
+  static String botEndpoint = '/kb-core/v1/ai-assistant';
+  static String kbInBotQuery = '/knowledges?q&order=DESC&order_field=createdAt&offset&limit=20';
 
   //Image File Source:----------------------------------------------------------
   static String localFileImagePath = 'lib/core/assets/source_unit_images/file.png';

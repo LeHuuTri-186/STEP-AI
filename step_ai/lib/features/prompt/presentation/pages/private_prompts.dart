@@ -13,7 +13,6 @@ import '../state/private_prompt/private_filter_provider.dart';
 import '../state/private_prompt/private_view_provider.dart';
 import '../widgets/no_prompts_panel.dart';
 import '../widgets/private_prompt_list_view.dart';
-import '../widgets/prompt_list_view.dart';
 
 class PrivatePromptsPanel extends StatefulWidget {
   const PrivatePromptsPanel({super.key, required this.returnPrompt});

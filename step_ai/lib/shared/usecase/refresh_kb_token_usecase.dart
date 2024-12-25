@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:step_ai/config/constants.dart';
 import 'package:step_ai/core/api/api_service.dart';
 import 'package:step_ai/core/data/local/securestorage/secure_storage_helper.dart';
-import 'package:step_ai/core/data/model/token_model.dart';
 import 'package:step_ai/core/usecase/use_case.dart';
 import 'package:step_ai/features/authentication/domain/usecase/login_kb_usecase.dart';
 import 'package:step_ai/features/personal/data/models/kb_token_model.dart';

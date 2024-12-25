@@ -37,7 +37,8 @@ class MessageTile extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: TColor.slate.withOpacity(0.9),
                   shape: BoxShape.circle,
-                  image: DecorationImage(
+                  image: currentMessage.assistant.logoPath == null ? null :
+                  DecorationImage(
                     image: AssetImage(currentMessage.assistant.logoPath!),
                     fit: BoxFit.cover,
                   ),

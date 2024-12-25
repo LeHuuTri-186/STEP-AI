@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:http/http.dart';
 import 'package:step_ai/core/di/service_locator.dart';
 import 'package:step_ai/features/authentication/domain/usecase/login_kb_usecase.dart';
 import 'package:step_ai/features/authentication/domain/usecase/login_usecase.dart';
@@ -29,6 +30,7 @@ import 'package:step_ai/features/personal/domain/usecase/delete_bot_usecase.dart
 import 'package:step_ai/features/personal/domain/usecase/get_bot_list_usecase.dart';
 import 'package:step_ai/features/personal/domain/usecase/update_bot_usecase.dart';
 import 'package:step_ai/features/personal/presentation/notifier/bot_list_notifier.dart';
+import 'package:step_ai/features/preview/domain/usecase/get_kb_in_bot_usecase.dart';
 import 'package:step_ai/features/preview/presentation/notifier/preview_chat_notifier.dart';
 import 'package:step_ai/features/knowledge_base/domain/usecase/add_knowledge_usecase.dart';
 import 'package:step_ai/features/knowledge_base/domain/usecase/delete_knowledge_usecase.dart';
@@ -159,7 +161,9 @@ class ProviderModule {
           getIt<PersonalAssistantNotifier>(),
           getIt<AskBotUseCase>(),
           getIt<CreateThreadUseCase>(),
-          getIt<LogoutUseCase>()
+          getIt<LogoutUseCase>(),
+          getIt<GetKbInBotUseCase>(),
+          getIt<GetKnowledgeListUsecase>(),
       ),);
     //Chat page:----------------------------------------------------------------
 

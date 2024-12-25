@@ -27,6 +27,7 @@ import 'package:step_ai/features/personal/domain/usecase/create_bot_usecase.dart
 import 'package:step_ai/features/personal/domain/usecase/delete_bot_usecase.dart';
 import 'package:step_ai/features/personal/domain/usecase/get_bot_list_usecase.dart';
 import 'package:step_ai/features/personal/domain/usecase/update_bot_usecase.dart';
+import 'package:step_ai/features/preview/domain/usecase/get_kb_in_bot_usecase.dart';
 import 'package:step_ai/shared/usecase/refresh_kb_token_usecase.dart';
 import 'package:step_ai/features/knowledge_base/domain/entity/knowledge.dart';
 import 'package:step_ai/features/knowledge_base/domain/repository/knowledge_repository.dart';
@@ -47,6 +48,7 @@ import 'package:step_ai/features/units_in_knowledge/domain/usecase/upload_web_us
 import 'package:step_ai/features/plan/domain/repository/subscription_repository.dart';
 import 'package:step_ai/features/plan/domain/usecases/get_subscription_usecase.dart';
 import 'package:step_ai/shared/usecases/refresh_token_usecase.dart';
+
 
 import '../../../../features/authentication/domain/repository/register_repository.dart';
 import '../../../di/service_locator.dart';
@@ -90,6 +92,7 @@ class UseCaseModule {
     getIt.registerSingleton<SaveLoginStatusUseCase>(SaveLoginStatusUseCase(
       getIt<LoginRepository>(),
     ));
+
 
     //Register:-----------------------------------------------------------------
     getIt.registerSingleton<RegisterUseCase>(
@@ -157,6 +160,10 @@ class UseCaseModule {
 
     getIt.registerSingleton<AskBotUseCase>(AskBotUseCase(
         getIt<RefreshKbTokenUseCase>(), getIt<BotThreadRepository>()));
+
+    getIt.registerSingleton<GetKbInBotUseCase>(
+      GetKbInBotUseCase(getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>())
+    );
 
     ///Knowledge base:-----------------------------------------------------------
     getIt.registerSingleton<GetKnowledgeListUsecase>(GetKnowledgeListUsecase(

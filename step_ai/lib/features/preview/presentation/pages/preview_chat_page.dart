@@ -7,7 +7,11 @@ import 'package:step_ai/config/routes/routes.dart';
 import 'package:step_ai/features/chat/domain/entity/assistant.dart';
 import 'package:step_ai/features/chat/presentation/notifier/chat_bar_notifier.dart';
 import 'package:step_ai/features/chat/presentation/notifier/prompt_list_notifier.dart';
+import 'package:step_ai/features/preview/domain/entity/kb_in_bot.dart';
 import 'package:step_ai/features/preview/presentation/notifier/preview_chat_notifier.dart';
+import 'package:step_ai/features/preview/presentation/widgets/added_kb_bottom_sheet.dart';
+import 'package:step_ai/features/preview/presentation/widgets/added_kb_list_panel.dart';
+import 'package:step_ai/features/preview/presentation/widgets/added_kb_list_view.dart';
 import 'package:step_ai/features/preview/presentation/widgets/preview_chat_bar.dart';
 import 'package:step_ai/features/prompt/data/models/prompt_model.dart';
 import 'package:step_ai/shared/widgets/message_tile.dart';
@@ -131,13 +135,18 @@ class _PreviewChatPageState extends State<PreviewChatPage> {
         actions: [
           IconButton(
               onPressed: () async {
-                _previewChatNotifier.reset();
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  Routes.chat, (Route<dynamic> route) => false);
+                //Knowledge_base linking
+                print("Preview KB check: ");
+                KbListInBot? kbs = await _previewChatNotifier.getKbInBot();
+                showModalBottomSheet(
+                    context: context,
+                    builder: (BuildContext context){
+                  return const AddedKbBottomSheet();
+                });
               },
 
               icon: Icon(
-                Icons.add,
+                Icons.library_books_rounded,
                 color: TColor.petRock,
               )),
         ],

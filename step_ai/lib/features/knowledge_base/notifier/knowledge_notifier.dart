@@ -41,7 +41,8 @@ class KnowledgeNotifier with ChangeNotifier {
       // limit += 5;
       final knowledgeListModel = await _getKnowledgeListUsecase.call(
           params: GetKnowledgesParam(limit: 50));
-      knowledgeList = KnowledgeList.fromModel(knowledgeListModel);
+
+      knowledgeList = KnowledgeList.fromModel(knowledgeListModel!);
       knowledgeList!.knowledgeList.sort((a, b) => a.knowledgeName
           .toLowerCase()
           .compareTo(b.knowledgeName.toLowerCase()));
@@ -62,6 +63,7 @@ class KnowledgeNotifier with ChangeNotifier {
           changeTaskStatus(TaskStatus.UNAUTHORIZED);
         }
       }
+
     } finally {
       isLoadingKnowledgeList = false;
       notifyListeners();
