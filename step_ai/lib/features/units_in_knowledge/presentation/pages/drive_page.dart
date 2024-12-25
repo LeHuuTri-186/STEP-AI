@@ -30,7 +30,7 @@ class DrivePage extends StatelessWidget {
     unitNotifier = Provider.of<UnitNotifier>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Slack'),
+        title: const Text('Drive'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: driveNotifier.isUploadLoading
@@ -42,10 +42,10 @@ class DrivePage extends StatelessWidget {
       ),
       body: Center(
         child: Container(
-          width: MediaQuery.of(context).size.width * 0.75,
-          height: MediaQuery.of(context).size.height * 0.6,
+          width: MediaQuery.of(context).size.width * 0.7,
+          height: MediaQuery.of(context).size.height * 0.45,
           decoration: BoxDecoration(
-            color: Colors.grey[300],
+            color: Colors.lightBlue[100],
             borderRadius: BorderRadius.circular(10),
           ),
           //Main Column
@@ -84,12 +84,13 @@ class DrivePage extends StatelessWidget {
                       icon: const Icon(
                         Icons.link,
                         color: Colors.blue,
+                        size: 30,
                       ))
                 ],
               ),
               const SizedBox(height: 4),
               const Divider(),
-              const SizedBox(height: 10),
+              const SizedBox(height: 20),
               //TextFormField for  name unit
               Form(
                 key: formKey,
@@ -115,37 +116,43 @@ class DrivePage extends StatelessWidget {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      style: BorderStyle.solid,
-                      color: Colors.grey,
-                      width: 1.0,
-                    ),
+              const SizedBox(height: 30),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    style: BorderStyle.solid,
+                    color: Colors.grey,
+                    width: 1.0,
                   ),
-                  width: MediaQuery.of(context).size.width * 0.6,
-                  child: TextButton(
-                      onPressed: () {},
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(Constant.driveImagePath,
-                              width: 30, height: 30),
-                          const SizedBox(width: 10),
-                          const Text("Upload Drive",
-                              style: TextStyle(color: Colors.blue)),
-                        ],
-                      )),
                 ),
+                width: MediaQuery.of(context).size.width * 0.6,
+                child: TextButton(
+                    onPressed: () {},
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(Constant.driveImagePath,
+                            width: 30, height: 30),
+                        const SizedBox(width: 10),
+                        const Text("Upload Drive",
+                            style: TextStyle(color: Colors.blue)),
+                      ],
+                    )),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 30),
               //TextFormField for Slack Workspace
               //Button to connect
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.lightBlue,
+                  disabledBackgroundColor:
+                      const Color.fromARGB(255, 173, 205, 221),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
                 onPressed: (driveNotifier.isUploadLoading)
                     ? null
                     : () async {

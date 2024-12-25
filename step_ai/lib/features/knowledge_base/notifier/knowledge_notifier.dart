@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:step_ai/config/enum/task_status.dart';
 import 'package:step_ai/features/knowledge_base/domain/entity/knowledge_list.dart';
 import 'package:step_ai/features/knowledge_base/domain/params/edit_knowledge_param.dart';
 import 'package:step_ai/features/knowledge_base/domain/params/knowledge_param.dart';
@@ -22,9 +23,15 @@ class KnowledgeNotifier with ChangeNotifier {
   KnowledgeList? knowledgeList;
   int limit = 0;
   bool hasNext = false;
+  TaskStatus taskStatus = TaskStatus.OK;
   void reset() {
     limit = 0;
     hasNext = false;
+  }
+
+  void changeTaskStatus(TaskStatus taskStatus) {
+    this.taskStatus = taskStatus;
+    notifyListeners();
   }
 
   Future<void> getKnowledgeList() async {
@@ -51,6 +58,9 @@ class KnowledgeNotifier with ChangeNotifier {
         if (e.type == DioExceptionType.connectionError) {
           errorString = "Please check your internet connection";
         }
+        if (e.response?.statusCode == 401) {
+          changeTaskStatus(TaskStatus.UNAUTHORIZED);
+        }
       }
     } finally {
       isLoadingKnowledgeList = false;
@@ -72,6 +82,9 @@ class KnowledgeNotifier with ChangeNotifier {
         }
         if (e.type == DioExceptionType.connectionError) {
           throw "Please check your internet connection";
+        }
+        if (e.response?.statusCode == 401) {
+          changeTaskStatus(TaskStatus.UNAUTHORIZED);
         }
       }
       print("Error in addNewKnowledge in knowledge notifier with error: $e");
@@ -101,6 +114,9 @@ class KnowledgeNotifier with ChangeNotifier {
         if (e.type == DioExceptionType.connectionError) {
           throw "Please check your internet connection";
         }
+        if (e.response?.statusCode == 401) {
+          changeTaskStatus(TaskStatus.UNAUTHORIZED);
+        }
       }
       print("Error in EditKnowledge in knowledge notifier with error: $e");
       throw "Have error. Try again later: Edit Knowledge";
@@ -114,6 +130,9 @@ class KnowledgeNotifier with ChangeNotifier {
       if (e is DioException) {
         if (e.type == DioExceptionType.connectionError) {
           throw "Please check your internet connection";
+        }
+        if (e.response?.statusCode == 401) {
+          changeTaskStatus(TaskStatus.UNAUTHORIZED);
         }
       }
       print("Error in deleteKnowledge in knowledge notifier with error: $e");

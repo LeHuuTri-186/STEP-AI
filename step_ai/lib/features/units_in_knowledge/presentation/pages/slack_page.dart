@@ -47,7 +47,7 @@ class SlackPage extends StatelessWidget {
             width: MediaQuery.of(context).size.width * 0.75,
             height: MediaQuery.of(context).size.height * 0.6,
             decoration: BoxDecoration(
-              color: Colors.grey[300],
+              color: Colors.lightBlue[100],
               borderRadius: BorderRadius.circular(10),
             ),
             //Main Column
@@ -86,6 +86,7 @@ class SlackPage extends StatelessWidget {
                         icon: const Icon(
                           Icons.link,
                           color: Colors.blue,
+                          size: 30,
                         ))
                   ],
                 ),
@@ -160,9 +161,17 @@ class SlackPage extends StatelessWidget {
                     },
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 30),
                 //Button to connect
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.lightBlue,
+                    disabledBackgroundColor:
+                        const Color.fromARGB(255, 173, 205, 221),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
                   onPressed: (slackNotifier.isUploadLoading)
                       ? null
                       : () async {

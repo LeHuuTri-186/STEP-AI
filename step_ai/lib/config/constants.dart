@@ -1,9 +1,10 @@
 class Constant{
   Constant._();
   //API:------------------------------------------------------------------------
-  // static String apiBaseUrl = 'https://api.jarvis.cx';
-  static String apiBaseUrl = 'https://api.dev.jarvis.cx';
-  static String kbApiUrl = 'https://knowledge-api.dev.jarvis.cx';
+  static String apiBaseUrl = 'https://api.jarvis.cx';
+  //static String apiBaseUrl = 'https://api.dev.jarvis.cx';
+  static String kbApiUrl = 'https://knowledge-api.jarvis.cx';
+  static String kbProducApiUrl = 'https://knowledge-api.jarvis.cx';
 
   static String loginEndpoint = '/api/v1/auth/sign-in';
   static String registerEndpoint = '/api/v1/auth/sign-up';
@@ -44,7 +45,6 @@ class Constant{
   static String confluenceImagePath = 'lib/core/assets/source_unit_images/confluence.png';
   static String slackImagePath = 'lib/core/assets/source_unit_images/slack.png';
 
-  //Test
-  static String KB_accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImJlZjgxMDA4LTg4MTktNGM5NS1iNzZjLWQwODA3YzU0MTNiNSIsImVtYWlsIjoibmd1eWVuYm9jaGFAZ21haWwuY29tIiwiaWF0IjoxNzM0OTY0NzQ1LCJleHAiOjE3MzUwNTExNDV9.AliBAowMFZWHmFBn5dZG5JgdvG_aIVEpyc7z-XQjUk0';
+
 
 }

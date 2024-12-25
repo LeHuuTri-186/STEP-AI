@@ -1,3 +1,4 @@
+import 'package:step_ai/core/data/local/securestorage/secure_storage_helper.dart';
 import 'package:step_ai/core/di/service_locator.dart';
 import 'package:step_ai/features/chat/data/network/api_client_chat.dart';
 import 'package:step_ai/features/knowledge_base/data/network/knowledge_api.dart';
@@ -12,10 +13,10 @@ class NetworkModule {
     );
 
     getIt.registerSingleton<KnowledgeApi>(
-      KnowledgeApi(),
+      KnowledgeApi(getIt<SecureStorageHelper>()),
     );
     getIt.registerSingleton<UnitApi>(
-      UnitApi(),
+      UnitApi(getIt<SecureStorageHelper>()),
     );
 
     getIt.registerSingleton<ApiSubscription>(

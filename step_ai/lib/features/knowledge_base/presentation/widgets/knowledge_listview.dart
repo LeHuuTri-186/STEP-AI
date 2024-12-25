@@ -126,7 +126,7 @@ class _KnowledgeListviewState extends State<KnowledgeListview> {
 
   @override
   Widget build(BuildContext context) {
-    _knowledgeNotifier = Provider.of<KnowledgeNotifier>(context);
+    _knowledgeNotifier = Provider.of<KnowledgeNotifier>(context,listen: false);
     if (_knowledgeNotifier.isLoadingKnowledgeList) {
       return Center(
         child: Padding(

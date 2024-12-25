@@ -15,12 +15,11 @@ class ConversationRepositoryImpl extends ConversationRepository {
   @override
   Future<MessageModel> sendMessage(SendMessageParam params) async {
     final Map<String, dynamic> body = {
-      "content": params
-          .historyMessages[params.historyMessages.length - 2].content,
+      "content":
+          params.historyMessages[params.historyMessages.length - 2].content,
       "metadata": null,
       "assistant": params
-          .historyMessages[params.historyMessages.length - 2]
-          .assistant
+          .historyMessages[params.historyMessages.length - 2].assistant
           .toJson(),
     };
 
@@ -57,7 +56,6 @@ class ConversationRepositoryImpl extends ConversationRepository {
     final response = await _apiClientChat.getHistoryList(
         "/api/v1/ai-chat/conversations",
         queryParams: queryParams);
-    //print(response);
     return ConversationModel.fromJson(response.data);
   }
 

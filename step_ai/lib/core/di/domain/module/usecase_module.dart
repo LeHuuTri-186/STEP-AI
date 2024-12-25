@@ -48,7 +48,6 @@ import 'package:step_ai/features/plan/domain/repository/subscription_repository.
 import 'package:step_ai/features/plan/domain/usecases/get_subscription_usecase.dart';
 import 'package:step_ai/shared/usecases/refresh_token_usecase.dart';
 
-
 import '../../../../features/authentication/domain/repository/register_repository.dart';
 import '../../../di/service_locator.dart';
 
@@ -69,12 +68,10 @@ class UseCaseModule {
       ),
     );
 
-    getIt.registerSingleton<RefreshKbTokenUseCase>(
-        RefreshKbTokenUseCase(
-            getIt<SecureStorageHelper>(),
-            getIt<RefreshTokenUseCase>(),
-            getIt<LoginKbUseCase>())
-    );
+    getIt.registerSingleton<RefreshKbTokenUseCase>(RefreshKbTokenUseCase(
+        getIt<SecureStorageHelper>(),
+        getIt<RefreshTokenUseCase>(),
+        getIt<LoginKbUseCase>()));
     //login:--------------------------------------------------------------------
     getIt.registerSingleton<LoginUseCase>(
       LoginUseCase(
@@ -93,7 +90,6 @@ class UseCaseModule {
     getIt.registerSingleton<SaveLoginStatusUseCase>(SaveLoginStatusUseCase(
       getIt<LoginRepository>(),
     ));
-
 
     //Register:-----------------------------------------------------------------
     getIt.registerSingleton<RegisterUseCase>(
@@ -114,9 +110,10 @@ class UseCaseModule {
       getIt<LogoutUseCase>(),
     ));
 
-    getIt.registerSingleton<GetFeaturedPromptUseCase>(
-        GetFeaturedPromptUseCase(getIt<SlashPromptRepository>(), getIt<RefreshTokenUseCase>(), getIt<LogoutUseCase>())
-    );
+    getIt.registerSingleton<GetFeaturedPromptUseCase>(GetFeaturedPromptUseCase(
+        getIt<SlashPromptRepository>(),
+        getIt<RefreshTokenUseCase>(),
+        getIt<LogoutUseCase>()));
 
     //Chat:---------------------------------------------------------------------
     getIt.registerSingleton<SendMessageUsecase>(
@@ -143,50 +140,50 @@ class UseCaseModule {
     //Bot:----------------------------------------------------------------------
     getIt.registerSingleton<CreateBotUseCase>(
       CreateBotUseCase(
-        getIt<RefreshKbTokenUseCase>(), getIt<BotListRepository>()
-      ),
+          getIt<RefreshKbTokenUseCase>(), getIt<BotListRepository>()),
     );
 
-    getIt.registerSingleton<GetBotListUseCase>(
-      GetBotListUseCase(getIt<RefreshKbTokenUseCase>(), getIt<BotListRepository>()
-      )
-    );
+    getIt.registerSingleton<GetBotListUseCase>(GetBotListUseCase(
+        getIt<RefreshKbTokenUseCase>(), getIt<BotListRepository>()));
 
-    getIt.registerSingleton<DeleteBotUseCase>(
-      DeleteBotUseCase(getIt<BotListRepository>(), getIt<RefreshKbTokenUseCase>()
-      )
-    );
+    getIt.registerSingleton<DeleteBotUseCase>(DeleteBotUseCase(
+        getIt<BotListRepository>(), getIt<RefreshKbTokenUseCase>()));
 
-    getIt.registerSingleton<UpdateBotUseCase>(
-        UpdateBotUseCase(getIt<BotListRepository>(), getIt<RefreshKbTokenUseCase>()
-        )
-    );
+    getIt.registerSingleton<UpdateBotUseCase>(UpdateBotUseCase(
+        getIt<BotListRepository>(), getIt<RefreshKbTokenUseCase>()));
 
-    getIt.registerSingleton<CreateThreadUseCase>(
-      CreateThreadUseCase(getIt<RefreshKbTokenUseCase>(), getIt<BotThreadRepository>())
-    );
+    getIt.registerSingleton<CreateThreadUseCase>(CreateThreadUseCase(
+        getIt<RefreshKbTokenUseCase>(), getIt<BotThreadRepository>()));
 
-    getIt.registerSingleton<AskBotUseCase>(
-      AskBotUseCase(getIt<RefreshKbTokenUseCase>(), getIt<BotThreadRepository>()));
+    getIt.registerSingleton<AskBotUseCase>(AskBotUseCase(
+        getIt<RefreshKbTokenUseCase>(), getIt<BotThreadRepository>()));
 
     ///Knowledge base:-----------------------------------------------------------
-    getIt.registerSingleton<GetKnowledgeListUsecase>(
-        GetKnowledgeListUsecase(getIt<KnowledgeRepository>())
-    );
+    getIt.registerSingleton<GetKnowledgeListUsecase>(GetKnowledgeListUsecase(
+      getIt<KnowledgeRepository>(),
+      getIt<RefreshKbTokenUseCase>(),
+      getIt<LogoutUseCase>(),
+    ));
 
     getIt.registerSingleton<AddKnowledgeUsecase>(
       AddKnowledgeUsecase(
         getIt<KnowledgeRepository>(),
+        getIt<RefreshKbTokenUseCase>(),
+        getIt<LogoutUseCase>(),
       ),
     );
     getIt.registerSingleton<DeleteKnowledgeUsecase>(
       DeleteKnowledgeUsecase(
         getIt<KnowledgeRepository>(),
+        getIt<RefreshKbTokenUseCase>(),
+        getIt<LogoutUseCase>(),
       ),
     );
     getIt.registerSingleton<EditKnowledgeUsecase>(
       EditKnowledgeUsecase(
         getIt<KnowledgeRepository>(),
+        getIt<RefreshKbTokenUseCase>(),
+        getIt<LogoutUseCase>(),
       ),
     );
 
@@ -194,30 +191,50 @@ class UseCaseModule {
     getIt.registerSingleton<GetUnitListUsecase>(
       GetUnitListUsecase(
         getIt<UnitRepository>(),
+        getIt<RefreshKbTokenUseCase>(),
+        getIt<LogoutUseCase>(),
       ),
     );
     getIt.registerSingleton<DeleteUnitUsecase>(
       DeleteUnitUsecase(
         getIt<UnitRepository>(),
+        getIt<RefreshKbTokenUseCase>(),
+        getIt<LogoutUseCase>(),
       ),
     );
-    getIt.registerSingleton<UpdateStatusUnitUsecase>(
-        UpdateStatusUnitUsecase(getIt<UnitRepository>()));
+    getIt.registerSingleton<UpdateStatusUnitUsecase>(UpdateStatusUnitUsecase(
+      getIt<UnitRepository>(),
+      getIt<RefreshKbTokenUseCase>(),
+      getIt<LogoutUseCase>(),
+    ));
     //Upload:-------------------------------------------------------------------
-    getIt.registerSingleton<UploadLocalFileUsecase>(
-        UploadLocalFileUsecase(getIt<UnitRepository>()));
-    getIt.registerSingleton<UploadWebUsecase>(
-        UploadWebUsecase(getIt<UnitRepository>()));
-    getIt.registerSingleton<UploadSlackUsecase>(
-        UploadSlackUsecase(getIt<UnitRepository>()));
-    getIt.registerSingleton<UploadDriveUsecae>(
-        UploadDriveUsecae(getIt<UnitRepository>()));
-    getIt.registerSingleton<UploadConfluenceUsecase>(
-        UploadConfluenceUsecase(getIt<UnitRepository>()));
-    getIt.registerSingleton<GetSubscriptionUsecase>(
-        GetSubscriptionUsecase(
-          getIt<SubscriptionRepository>(),
-        )
-    );
+    getIt.registerSingleton<UploadLocalFileUsecase>(UploadLocalFileUsecase(
+      getIt<UnitRepository>(),
+      getIt<RefreshKbTokenUseCase>(),
+      getIt<LogoutUseCase>(),
+    ));
+    getIt.registerSingleton<UploadWebUsecase>(UploadWebUsecase(
+      getIt<UnitRepository>(),
+      getIt<RefreshKbTokenUseCase>(),
+      getIt<LogoutUseCase>(),
+    ));
+    getIt.registerSingleton<UploadSlackUsecase>(UploadSlackUsecase(
+      getIt<UnitRepository>(),
+      getIt<RefreshKbTokenUseCase>(),
+      getIt<LogoutUseCase>(),
+    ));
+    getIt.registerSingleton<UploadDriveUsecae>(UploadDriveUsecae(
+      getIt<UnitRepository>(),
+      getIt<RefreshKbTokenUseCase>(),
+      getIt<LogoutUseCase>(),
+    ));
+    getIt.registerSingleton<UploadConfluenceUsecase>(UploadConfluenceUsecase(
+      getIt<UnitRepository>(),
+      getIt<RefreshKbTokenUseCase>(),
+      getIt<LogoutUseCase>(),
+    ));
+    getIt.registerSingleton<GetSubscriptionUsecase>(GetSubscriptionUsecase(
+      getIt<SubscriptionRepository>(),
+    ));
   }
 }

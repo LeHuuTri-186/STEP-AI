@@ -30,7 +30,12 @@ class _AddKnowledgeDialogState extends State<AddKnowledgeDialog> {
     _addKnowledgeDialogNotifier =
         Provider.of<AddKnowledgeDialogNotifier>(context, listen: true);
     return AlertDialog(
-      title: const Text('Create Knowledge'),
+      backgroundColor: Colors.white,
+      title: const Text(
+        'Create Knowledge',
+        textAlign: TextAlign.center,
+        style: TextStyle(color: Colors.lightBlue),
+      ),
       content: SizedBox(
         width: 400,
         child: Form(
@@ -80,6 +85,7 @@ class _AddKnowledgeDialogState extends State<AddKnowledgeDialog> {
           ),
         ),
       ),
+      actionsAlignment: MainAxisAlignment.center,
       actions: [
         TextButton(
           onPressed: () {
@@ -88,8 +94,16 @@ class _AddKnowledgeDialogState extends State<AddKnowledgeDialog> {
             _addKnowledgeDialogNotifier.setErrorDisplayWhenNameIsUsed("");
             Navigator.pop(context);
           },
-          child: const Text('Cancel'),
+          child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.grey,
+              ),
+              child: const Text('Cancel', style: TextStyle(color: Colors.white))),
         ),
+
+
         TextButton(
           onPressed: _addKnowledgeDialogNotifier.isLoadingWhenCreateNewKnowledge
               ? null
@@ -123,10 +137,10 @@ class _AddKnowledgeDialogState extends State<AddKnowledgeDialog> {
           child: _addKnowledgeDialogNotifier.isLoadingWhenCreateNewKnowledge
               ? Stack(alignment: Alignment.center, children: [
                   Container(
-                    padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(14),
-                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.lightBlue.withOpacity(0.5),
                       ),
                       child: const Text("Loading...")),
                   const Positioned(
@@ -137,12 +151,16 @@ class _AddKnowledgeDialogState extends State<AddKnowledgeDialog> {
                   ),
                 ])
               : Container(
-                  padding: const EdgeInsets.all(8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(14),
-                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.lightBlue,
                   ),
-                  child: const Text('Create')),
+                  child: const Text(
+                    'Create',
+                    style: TextStyle(color: Colors.white),
+                  )),
         ),
       ],
     );

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:step_ai/config/enum/task_status.dart';
+import 'package:step_ai/config/routes/routes.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/unit_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/presentation/widgets/button_add_new_unit.dart';
 import 'package:step_ai/features/units_in_knowledge/presentation/widgets/edit_knowledge_dialog.dart';
@@ -13,6 +15,13 @@ class UnitsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _unitNotifier = Provider.of<UnitNotifier>(context, listen: true);
+    if (_unitNotifier.taskStatus == TaskStatus.UNAUTHORIZED) {
+      _unitNotifier.taskStatus = TaskStatus.OK;
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        Routes.authenticate,
+        (Route<dynamic> route) => false,
+      );
+    }
     return Scaffold(
         appBar: AppBar(
           title: Text(_unitNotifier.currentKnowledge!.knowledgeName),
@@ -26,7 +35,10 @@ class UnitsPage extends StatelessWidget {
           ),
           actions: [
             IconButton(
-              icon: const Icon(Icons.edit),
+              icon: const Icon(
+                Icons.edit,
+                color: Colors.blue,
+              ),
               onPressed: (_unitNotifier.numberLoadingItemSwitchCounter != 0)
                   ? null
                   : () {
@@ -42,13 +54,20 @@ class UnitsPage extends StatelessWidget {
         body: Column(
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const SizedBox(width: 20),
-                Text(
-                    "Size: ${ConvertSize.bytesToSize(_unitNotifier.currentKnowledge!.totalSize)}"),
-                const SizedBox(width: 20),
-                Text("Units: ${_unitNotifier.currentKnowledge!.numberUnits}"),
-                Expanded(child: ButtonAddNewUnit()),
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                          "Size: ${ConvertSize.bytesToSize(_unitNotifier.currentKnowledge!.totalSize)}"),
+                      Text(
+                          "Units: ${_unitNotifier.currentKnowledge!.numberUnits}"),
+                    ],
+                  ),
+                ),
+                ButtonAddNewUnit(),
               ],
             ),
             const SizedBox(height: 10),
