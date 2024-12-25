@@ -55,23 +55,34 @@ class _AddedKbPanelState extends State<AddedKbPanel> {
   }
 
   Widget _buildBody() {
-    return Column(
-      children: [
-        VSpacing.sm,
-        VSpacing.md,
-        _buildListView(),
-        VSpacing.md,
-      ],
-    );
+    return Consumer<PreviewChatNotifier>(builder: (context, preview, child){
+      if (preview.isLoading) {
+        return Center(
+          child: _twistingDotsLoadIndicator(),
+        );
+      } else {
+        return Column(
+        children: [
+          VSpacing.sm,
+          VSpacing.md,
+          _buildListView(),
+          VSpacing.md,
+        ],
+      );
+      }
+    });
   }
 
   Widget _buildListView() {
-    final preview = Provider.of<PreviewChatNotifier>(context, listen: false);
-    return AddedKbListView(
-      scrollController: _scrollController,
-      kbs: preview.kbList,
-      deleteIndex: (int index){
-        preview.removeKbInList(null);
+    return Consumer<PreviewChatNotifier>(
+      builder: (context, preview, child) {
+        return AddedKbListView(
+          scrollController: _scrollController,
+          kbs: preview.kbList,
+          deleteIndex: (int index) {
+            preview.removeKbInList(preview.kbList[index]); // Pass the correct index instead of null
+          },
+        );
       },
     );
   }

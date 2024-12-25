@@ -8,18 +8,22 @@ import 'package:step_ai/features/chat/domain/params/thread_chat_param.dart';
 import 'package:step_ai/features/chat/domain/usecase/ask_bot_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/create_thread_usecase.dart';
 import 'package:step_ai/features/chat/notifier/personal_assistant_notifier.dart';
+import 'package:step_ai/features/knowledge_base/domain/entity/knowledge.dart';
 import 'package:step_ai/features/knowledge_base/domain/entity/knowledge_list.dart';
 import 'package:step_ai/features/knowledge_base/domain/params/get_knowledges_param.dart';
 import 'package:step_ai/features/knowledge_base/domain/usecase/get_knowledge_list_usecase.dart';
 import 'package:step_ai/features/preview/domain/entity/kb_in_bot.dart';
+import 'package:step_ai/features/preview/domain/params/import_kb_param.dart';
+import 'package:step_ai/features/preview/domain/params/remove_kb_param.dart';
 import 'package:step_ai/features/preview/domain/usecase/get_kb_in_bot_usecase.dart';
+import 'package:step_ai/features/preview/domain/usecase/import_kb_usecase.dart';
+import 'package:step_ai/features/preview/domain/usecase/remove_kb_usecase.dart';
 
 class PreviewChatNotifier extends ChangeNotifier{
   ThreadDto? currentThread;
   Assistant? currentAssistant;
 
   final PersonalAssistantNotifier _assistantNotifier;
-  final List<Message> _historyMessages = [];
   bool isCreatingThread = false;
   get historyMessages => _historyMessages;
 
@@ -28,7 +32,7 @@ class PreviewChatNotifier extends ChangeNotifier{
   KnowledgeList? knowledgeList;
   int limit = 0;
   bool hasNext = false;
-
+  final List<Message> _historyMessages = [];
   bool isLoading = false;
   bool isLoadingMore = false;
   bool hasMore = false;
@@ -46,6 +50,8 @@ class PreviewChatNotifier extends ChangeNotifier{
   final LogoutUseCase _logoutUseCase;
   final GetKbInBotUseCase _getKbInBotUseCase;
   final GetKnowledgeListUsecase _getKnowledgeListUsecase;
+  final ImportKbUseCase _importKbUseCase;
+  final RemoveKbUseCase _removeKbUseCase;
   //
   PreviewChatNotifier(
       this._assistantNotifier,
@@ -53,7 +59,9 @@ class PreviewChatNotifier extends ChangeNotifier{
       this._createThreadUseCase,
       this._logoutUseCase,
       this._getKbInBotUseCase,
-      this._getKnowledgeListUsecase
+      this._getKnowledgeListUsecase,
+      this._importKbUseCase, 
+      this._removeKbUseCase
       );
 
   //Setter:
@@ -128,7 +136,6 @@ class PreviewChatNotifier extends ChangeNotifier{
       isCreatingThread = false;
       notifyListeners();
     }
-
   }
 
   //Kb in bot:
@@ -136,12 +143,15 @@ class PreviewChatNotifier extends ChangeNotifier{
     try {
       isLoading = true;
       notifyListeners();
+
       KbListInBot? kb = await _getKbInBotUseCase.call(params: currentAssistant!.id!);
+
       if (kb!=null) {
         kbList = kb.data;
       }
       return kb;
     } catch (e) {
+      print(e);
       if (e == 401) {
         await _logoutUseCase.call(params: null);
       }
@@ -153,7 +163,30 @@ class PreviewChatNotifier extends ChangeNotifier{
   }
 
   Future<void> removeKbInList(KbInBot? kb) async{
-    return;
+    isLoading = true;
+    try {
+      int code = await _removeKbUseCase.call(params: RemoveKbParam(kb!, currentAssistant!));
+      if (code == 200) {
+        try {
+          await getKbInBot();
+        } catch (e) {
+          if (e == 401) {
+            reset();
+            await _logoutUseCase.call(params: null);
+          }
+          rethrow;
+        }
+      }
+    } catch (e) {
+      if (e == 401) {
+        reset();
+        await _logoutUseCase.call(params: null);
+      }
+      rethrow;
+    } finally {
+      isLoading =false;
+      notifyListeners();
+    }
   }
 
   Future<KnowledgeList?> getKnowledgeList() async {
@@ -163,8 +196,6 @@ class PreviewChatNotifier extends ChangeNotifier{
       // limit += 5;
       final knowledgeListModel = await _getKnowledgeListUsecase.call(
           params: GetKnowledgesParam(limit: 50));
-
-      if (knowledgeListModel == null) return null;
 
       knowledgeList = KnowledgeList.fromModel(knowledgeListModel);
       knowledgeList!.knowledgeList.sort((a, b) => a.knowledgeName
@@ -198,6 +229,43 @@ class PreviewChatNotifier extends ChangeNotifier{
       notifyListeners();
     }
   }
+
+  Future<void> addKbToBot(Knowledge kl) async {
+
+    // KbInBot kb = KbInBot(
+    //     createdAt: kl.createdAt,
+    //     description: kl.description,
+    //     knowledgeName: kl.knowledgeName,
+    //     userId: kl.userId,
+    //     updatedAt: kl.updatedAt,
+    //     updatedBy: kl.updatedBy
+    // );
+    //Call import
+    try {
+      isLoading = true;
+      int code = await _importKbUseCase.call(params: ImportKbParam(kl, currentAssistant!));
+      if (code == 200) {
+        try {
+          await getKbInBot();
+        } catch (e) {
+          if (e == 401) {
+            reset();
+            await _logoutUseCase.call(params: null);
+          }
+          rethrow;
+        }
+      }
+    } catch (e) {
+      if (e == 401) {
+        reset();
+        await _logoutUseCase.call(params: null);
+      }
+      rethrow;
+    } finally {
+      isLoading =false;
+      notifyListeners();
+    }
+  }
   //Messages display handler:---------------------------------------------------
   void addMessage(Message message) {
     _historyMessages.add(message);
@@ -215,7 +283,7 @@ class PreviewChatNotifier extends ChangeNotifier{
   void clearPersonalAssistantData(){
     _historyMessages.clear();
     currentThread = null;
-    currentThread = null;
+    currentAssistant = null;
 
     _assistantNotifier.reset();
   }
@@ -224,6 +292,19 @@ class PreviewChatNotifier extends ChangeNotifier{
     clearHistoryMessages();
     clearPersonalAssistantData();
     notifyListeners();
+
+    kbList = [];
+    knowledgeList = null;
+    limit = 0;
+
+    isLoadingKnowledgeList = false;
+    isCreatingThread = false;
+    hasNext = false;
+    isLoading = false;
+    isLoadingMore = false;
+    hasMore = false;
+
+    errorString = "";
   }
 
 }

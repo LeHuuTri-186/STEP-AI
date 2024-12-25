@@ -29,7 +29,9 @@ class AddedKbListView extends StatelessWidget {
             onDelete: () {
               try {
                 showKbListDialog(
-                    context: context, index: index, deleteIndex: deleteIndex);
+                    context: context,
+                    index: index,
+                    deleteIndex: deleteIndex);
               }
               catch (e) {
                 print("e is 401 and return to login screen");

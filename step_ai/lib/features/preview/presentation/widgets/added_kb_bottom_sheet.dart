@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/features/knowledge_base/domain/entity/knowledge_list.dart';
+import 'package:step_ai/features/preview/domain/entity/kb_in_bot.dart';
 import 'package:step_ai/features/preview/presentation/notifier/preview_chat_notifier.dart';
 import 'package:step_ai/features/preview/presentation/widgets/added_kb_list_panel.dart';
 import 'package:step_ai/shared/styles/colors.dart';
@@ -47,7 +48,7 @@ class _AddedKbBottomSheetState extends State<AddedKbBottomSheet> {
     final _preview = Provider.of<PreviewChatNotifier>(context);
     return AppBar(
       automaticallyImplyLeading: false,
-      title: const Text("Knowledge Bases Added"),
+      title: const Text("Knowledge Bases Added", overflow: TextOverflow.ellipsis),
       titleTextStyle: Theme.of(context).textTheme.titleLarge,
       centerTitle: false,
       actions: [
@@ -57,12 +58,12 @@ class _AddedKbBottomSheetState extends State<AddedKbBottomSheet> {
           child: InkWell(
             onTap: () async {
               KnowledgeList? kl = await _preview.getKnowledgeList() ?? KnowledgeList(knowledgeList: []);
-              //Load list
+              //Load list kb
               showDialog(
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: const Text('Choose Items'),
+                      title: const Text('Your Knowledge Bases'),
                       content: SizedBox(
                         width: double.maxFinite,
                         child: ListView.builder(
@@ -72,9 +73,8 @@ class _AddedKbBottomSheetState extends State<AddedKbBottomSheet> {
                             return ListTile(
                               title: Text(kl.knowledgeList[index].knowledgeName),
                               onTap: () {
-                                setState(() {
-                                  //,,,,
-                                });
+                                //Add kl to list.
+                                _preview.addKbToBot(kl.knowledgeList[index]);
                                 Navigator.pop(
                                     context); // Đóng dialog sau khi chọn
                               },

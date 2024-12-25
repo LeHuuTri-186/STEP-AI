@@ -122,6 +122,7 @@ class _PreviewChatPageState extends State<PreviewChatPage> {
             children: [
               Text(
                 '${_previewChatNotifier.currentAssistant!.name!} (Preview)',
+                overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.displayLarge?.copyWith(
                   color: TColor.petRock,
                   fontSize: 25,
@@ -136,17 +137,27 @@ class _PreviewChatPageState extends State<PreviewChatPage> {
           IconButton(
               onPressed: () async {
                 //Knowledge_base linking
-                print("Preview KB check: ");
                 KbListInBot? kbs = await _previewChatNotifier.getKbInBot();
-                showModalBottomSheet(
-                    context: context,
-                    builder: (BuildContext context){
-                  return const AddedKbBottomSheet();
-                });
+                if (!_previewChatNotifier.isLoading) {
+                  showModalBottomSheet(
+                      context: context,
+                      builder: (BuildContext context){
+                        return const AddedKbBottomSheet();
+                      });
+                }
               },
 
               icon: Icon(
                 Icons.library_books_rounded,
+                color: TColor.petRock,
+              )),
+          IconButton(
+              onPressed: () async {
+                //Knowledge_base publishing
+
+              },
+              icon: Icon(
+                Icons.publish,
                 color: TColor.petRock,
               )),
         ],

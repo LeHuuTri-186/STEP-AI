@@ -1,15 +1,18 @@
 class KbListInBot {
   List<KbInBot> data;
+  PageMetaDto meta;
 
   KbListInBot({
     required this.data,
+    required this.meta,
   });
 
   factory KbListInBot.fromJson(Map<String, dynamic> json) {
     return KbListInBot(
-      data: (json['data'] as List<dynamic>)
-          .map((item) => KbInBot.fromJson(item))
-          .toList(),
+        data: (json['data'] as List<dynamic>)
+            .map((item) => KbInBot.fromJson(item))
+            .toList(),
+        meta: PageMetaDto.fromJson(json['meta'])
     );
   }
 }
@@ -24,6 +27,7 @@ class KbInBot {
   DateTime? updatedAt;
   String? updatedBy;
   String userId;
+  String id;
 
   KbInBot({
     required this.createdAt,
@@ -33,6 +37,7 @@ class KbInBot {
     this.updatedAt,
     this.updatedBy,
     required this.userId,
+    required this.id
   });
   factory KbInBot.fromJson(Map<String, dynamic> json) {
     return KbInBot(
@@ -45,6 +50,31 @@ class KbInBot {
           : null,
       updatedBy: json['updatedBy'],
       userId: json['userId'],
+      id: json['id'],
+    );
+  }
+}
+///PageMetaDto
+class PageMetaDto {
+  bool hasNext;
+  double limit;
+  double offset;
+  double total;
+
+  PageMetaDto({
+    required this.hasNext,
+    required this.limit,
+    required this.offset,
+    required this.total,
+  });
+
+  // Factory method to create PageMetaDto from JSON
+  factory PageMetaDto.fromJson(Map<String, dynamic> json) {
+    return PageMetaDto(
+      hasNext: json['hasNext'] as bool,
+      limit: (json['limit'] as num).toDouble(), // Convert to double
+      offset: (json['offset'] as num).toDouble(), // Convert to double
+      total: (json['total'] as num).toDouble(), // Convert to double
     );
   }
 }

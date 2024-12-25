@@ -28,6 +28,8 @@ import 'package:step_ai/features/personal/domain/usecase/delete_bot_usecase.dart
 import 'package:step_ai/features/personal/domain/usecase/get_bot_list_usecase.dart';
 import 'package:step_ai/features/personal/domain/usecase/update_bot_usecase.dart';
 import 'package:step_ai/features/preview/domain/usecase/get_kb_in_bot_usecase.dart';
+import 'package:step_ai/features/preview/domain/usecase/import_kb_usecase.dart';
+import 'package:step_ai/features/preview/domain/usecase/remove_kb_usecase.dart';
 import 'package:step_ai/shared/usecase/refresh_kb_token_usecase.dart';
 import 'package:step_ai/features/knowledge_base/domain/entity/knowledge.dart';
 import 'package:step_ai/features/knowledge_base/domain/repository/knowledge_repository.dart';
@@ -164,7 +166,13 @@ class UseCaseModule {
     getIt.registerSingleton<GetKbInBotUseCase>(
       GetKbInBotUseCase(getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>())
     );
+    getIt.registerSingleton<ImportKbUseCase>(
+      ImportKbUseCase(getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>())
+    );
 
+    getIt.registerSingleton<RemoveKbUseCase>(
+        RemoveKbUseCase(getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>())
+    );
     ///Knowledge base:-----------------------------------------------------------
     getIt.registerSingleton<GetKnowledgeListUsecase>(GetKnowledgeListUsecase(
       getIt<KnowledgeRepository>(),

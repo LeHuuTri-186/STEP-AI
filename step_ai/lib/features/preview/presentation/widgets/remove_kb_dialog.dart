@@ -47,7 +47,8 @@ class _RemoveKbDialogState extends State<RemoveKbDialog> {
               ],
             ),
             VSpacing.md,
-            Text("Are you sure you want to delete this prompt?", style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            Text("Are you sure you want to remove this knowledge bases from current assistant?",
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: TColor.squidInk,
               fontSize: 14,
             ),
