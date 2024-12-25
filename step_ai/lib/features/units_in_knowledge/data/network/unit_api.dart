@@ -12,7 +12,7 @@ class UnitApi {
   SecureStorageHelper secureStorageHelper;
 
   UnitApi(this.secureStorageHelper) {
-    _dio.options.baseUrl = Constant.kbProducApiUrl; // Base URL API
+    _dio.options.baseUrl = Constant.kbApiUrl; // Base URL API
 
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {

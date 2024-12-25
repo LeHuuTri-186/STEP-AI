@@ -1,10 +1,12 @@
+import 'package:step_ai/features/publish/domain/params/disconnector_param.dart';
+
 class Constant{
   Constant._();
   //API:------------------------------------------------------------------------
+  // static String apiBaseUrl = 'https://api.dev.jarvis.cx';
+  // static String kbApiUrl = 'https://knowledge-api.dev.jarvis.cx';
   static String apiBaseUrl = 'https://api.jarvis.cx';
-  //static String apiBaseUrl = 'https://api.dev.jarvis.cx';
   static String kbApiUrl = 'https://knowledge-api.jarvis.cx';
-  static String kbProducApiUrl = 'https://knowledge-api.jarvis.cx';
 
   static String loginEndpoint = '/api/v1/auth/sign-in';
   static String registerEndpoint = '/api/v1/auth/sign-up';
@@ -36,7 +38,8 @@ class Constant{
   static String botPublished = '&isPublished';
   static String createThreadEndpoint = '/kb-core/v1/ai-assistant/thread';
   static String askBotInThreadEndpoint = '/kb-core/v1/ai-assistant';
-
+  static String botEndpoint = '/kb-core/v1/ai-assistant';
+  static String kbInBotQuery = '/knowledges?q&order=DESC&order_field=createdAt&offset&limit=20';
 
   //Image File Source:----------------------------------------------------------
   static String localFileImagePath = 'lib/core/assets/source_unit_images/file.png';
@@ -45,6 +48,18 @@ class Constant{
   static String confluenceImagePath = 'lib/core/assets/source_unit_images/confluence.png';
   static String slackImagePath = 'lib/core/assets/source_unit_images/slack.png';
 
+  //Publish:--------------------------------------------------------------------
+  static String getPublishedEndpoint(String id) => '/kb-core/v1/bot-integration/$id/configurations';
+
+  static String telegramValidateEndpoint = '/kb-core/v1/bot-integration/telegram/validation';
+  static String messengerValidateEndpoint= '/kb-core/v1/bot-integration/messenger/validation';
+  static String slackValidateEndpoint = '/kb-core/v1/bot-integration/slack/validation';
+
+  static String telegramPublishEndpoint(String id) => '/kb-core/v1/bot-integration/telegram/publish/$id';
+  static String messengerPublishEndpoint(String id) => '/kb-core/v1/bot-integration/messenger/publish/$id';
+  static String slackPublishEndpoint(String id) => '/kb-core/v1/bot-integration/slack/publish/$id';
+
+  static String disconnectBotEndpoint(String id, String type) => '/kb-core/v1/bot-integration/$id/$type';
 
 
 }

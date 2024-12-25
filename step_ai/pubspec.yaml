@@ -55,6 +55,8 @@ dependencies:
   connectivity_plus: ^6.1.1
   google_mobile_ads: ^5.2.0
 
+
+
 dev_dependencies:
   flutter_native_splash: ^2.2.10
   flutter_test:
