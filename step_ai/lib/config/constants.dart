@@ -17,7 +17,7 @@ class Constant{
   static String promptSearchOffset = 'offset=';
   static String promptSearchLimit = 'limit=';
   static String promptSearchIsFavorite = 'isFavorite=';
-  static String promptSearchIsPublic = 'isPublic';
+  static String promptSearchIsPublic = 'isPublic=';
   //Tokens map key:-------------------------------------------------------------
   static String access = 'AccessToken';
   static String refresh = 'RefreshToken';
