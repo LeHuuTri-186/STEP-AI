@@ -70,7 +70,7 @@ class BotTile extends StatelessWidget {
         ),
         VSpacing.md,
         Text(
-          "Description: ${bot.description!}",
+          "Description: ${bot.description?? ''}",
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
@@ -79,6 +79,7 @@ class BotTile extends StatelessWidget {
       ],
     );
   }
+
 
   Row _buildActionRow() {
     return Row(

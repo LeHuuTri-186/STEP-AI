@@ -19,8 +19,6 @@ class AddedKbBottomSheet extends StatefulWidget {
 class _AddedKbBottomSheetState extends State<AddedKbBottomSheet> {
   @override
   Widget build(BuildContext context) {
-
-
     return Container(
       decoration: BoxDecoration(
         color: TColor.doctorWhite,
@@ -63,6 +61,7 @@ class _AddedKbBottomSheetState extends State<AddedKbBottomSheet> {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
+                      backgroundColor: Colors.white,
                       title: const Text('Your Knowledge Bases'),
                       content: SizedBox(
                         width: double.maxFinite,

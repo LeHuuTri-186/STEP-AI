@@ -97,6 +97,7 @@ class _PublishPageState extends State<PublishPage> {
 
   Widget _buildSlackConfigureDialog(String id) {
     return AlertDialog(
+      backgroundColor: Colors.white,
       title: const Text('Configure Slack Bot'),
       content: SizedBox(
           width: double.maxFinite,
@@ -251,6 +252,7 @@ class _PublishPageState extends State<PublishPage> {
 
   Widget _buildTelegramConfigureDialog(String id) {
     return AlertDialog(
+      backgroundColor: Colors.white,
       title: const Text('Configure Telegram Bot'),
       content: SizedBox(
           width: double.maxFinite,
@@ -356,6 +358,7 @@ class _PublishPageState extends State<PublishPage> {
 
   Widget _buildMessengerConfigureDialog(String id) {
     return AlertDialog(
+      backgroundColor: Colors.white,
       title: const Text('Configure Messenger Bot'),
       content: SizedBox(
           width: double.maxFinite,

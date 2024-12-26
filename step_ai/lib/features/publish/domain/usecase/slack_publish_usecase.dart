@@ -6,7 +6,7 @@ import 'package:step_ai/core/api/api_service.dart';
 import 'package:step_ai/core/data/local/securestorage/secure_storage_helper.dart';
 import 'package:step_ai/core/usecase/use_case.dart';
 import 'package:step_ai/features/publish/domain/params/slack_publish_param.dart';
-import 'package:step_ai/shared/usecase/refresh_kb_token_usecase.dart';
+import 'package:step_ai/shared/usecases/refresh_kb_token_usecase.dart';
 
 class SlackPublishUseCase extends UseCase<String, SlackPublishParam>{
   final ApiService _rest = ApiService(Constant.kbApiUrl);

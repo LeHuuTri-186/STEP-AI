@@ -38,7 +38,7 @@ import 'package:step_ai/features/publish/domain/usecase/slack_validate_usecase.d
 import 'package:step_ai/features/publish/domain/usecase/telegram_disconnect_usecase.dart';
 import 'package:step_ai/features/publish/domain/usecase/telegram_publish_usecase.dart';
 import 'package:step_ai/features/publish/domain/usecase/telegram_validate_usecase.dart';
-import 'package:step_ai/shared/usecase/refresh_kb_token_usecase.dart';
+import 'package:step_ai/shared/usecases/refresh_kb_token_usecase.dart';
 import 'package:step_ai/features/knowledge_base/domain/entity/knowledge.dart';
 import 'package:step_ai/features/knowledge_base/domain/repository/knowledge_repository.dart';
 import 'package:step_ai/features/knowledge_base/domain/usecase/add_knowledge_usecase.dart';

@@ -20,7 +20,6 @@ import 'package:step_ai/features/personal/presentation/notifier/bot_list_notifie
 
 import 'package:step_ai/features/preview/presentation/notifier/preview_chat_notifier.dart';
 import 'package:step_ai/features/preview/presentation/pages/preview_chat_page.dart';
-import 'package:step_ai/features/prompt/presentation/pages/prompt_list.dart';
 
 import 'package:step_ai/features/chat/presentation/pages/chat_page.dart';
 
@@ -101,7 +100,6 @@ class Routes {
             );
           },
         ),
-    promptList: (BuildContext context) => PromptApp(),
     forgotPassword: (BuildContext context) => ForgotPasswordPage(),
     previewChat:(BuildContext context) => Builder(
       builder: (context) {

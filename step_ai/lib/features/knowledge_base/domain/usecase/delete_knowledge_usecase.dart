@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:step_ai/core/usecase/use_case.dart';
 import 'package:step_ai/features/authentication/domain/usecase/logout_usecase.dart';
 import 'package:step_ai/features/knowledge_base/domain/repository/knowledge_repository.dart';
-import 'package:step_ai/shared/usecase/refresh_kb_token_usecase.dart';
+import 'package:step_ai/shared/usecases/refresh_kb_token_usecase.dart';
 
 class DeleteKnowledgeUsecase extends UseCase<void, String> {
   final KnowledgeRepository _knowledgeRepository;

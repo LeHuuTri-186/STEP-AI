@@ -6,7 +6,7 @@ import 'package:step_ai/core/data/local/securestorage/secure_storage_helper.dart
 import 'package:step_ai/core/usecase/use_case.dart';
 import 'package:step_ai/features/preview/domain/params/import_kb_param.dart';
 import 'package:step_ai/features/preview/domain/params/remove_kb_param.dart';
-import 'package:step_ai/shared/usecase/refresh_kb_token_usecase.dart';
+import 'package:step_ai/shared/usecases/refresh_kb_token_usecase.dart';
 
 class RemoveKbUseCase extends UseCase<int, RemoveKbParam> {
   final ApiService _rest = ApiService(Constant.kbApiUrl);

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:step_ai/core/usecase/use_case.dart';
 import 'package:step_ai/features/personal/data/models/bot_res_dto.dart';
 import 'package:step_ai/features/personal/domain/repository/bot_list_repository.dart';
-import 'package:step_ai/shared/usecase/refresh_kb_token_usecase.dart';
+import 'package:step_ai/shared/usecases/refresh_kb_token_usecase.dart';
 
 class DeleteBotUseCase extends UseCase<int, BotResDto>{
   final BotListRepository _botListRepository;

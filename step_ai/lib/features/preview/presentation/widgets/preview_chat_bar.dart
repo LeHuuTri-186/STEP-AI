@@ -172,64 +172,6 @@ class _PreviewChatBarState extends State<PreviewChatBar> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-
-                    //Button for prompt
-
-                    // IconButton(
-                    //   onPressed: () {
-                    //     _chatBarNotifier.setShowOverlay(false);
-                    //     showModalBottomSheet(
-                    //       backgroundColor: TColor.doctorWhite,
-                    //       shape: RoundedRectangleBorder(
-                    //         borderRadius: BorderRadius.circular(12),
-                    //       ),
-                    //       context: context,
-                    //       builder: (_) {
-                    //         return ClipRRect(
-                    //           borderRadius: const BorderRadius.only(
-                    //             topLeft: Radius.circular(30),
-                    //             topRight: Radius.circular(30),
-                    //           ),
-                    //           child: PromptBottomSheet(
-                    //             returnPrompt: (value) async {
-                    //               _controller.clear();
-                    //               try {
-                    //                 if (_personalAssistantNotifier.isPersonal) {
-                    //                   await Provider.of<ChatNotifier>(
-                    //                       context, listen: false
-                    //                   ).sendMessageForPersonalBot(value);
-                    //                 }
-                    //                 else {
-                    //                   await Provider.of<ChatNotifier>(
-                    //                       context, listen: false
-                    //                   ).sendMessage(value);
-                    //                 }
-                    //               } catch (e) {
-                    //                 //e is 401 and return to login screen
-                    //                 print(
-                    //                     "e is 401 and return to login screen");
-                    //                 print(e);
-                    //
-                    //                 Navigator.of(context)
-                    //                     .pushNamedAndRemoveUntil(
-                    //                   Routes.authenticate,
-                    //                       (Route<dynamic> route) => false,
-                    //                 );
-                    //               }
-                    //             },
-                    //           ),
-                    //         );
-                    //       },
-                    //     );
-                    //   },
-                    //   icon: Icon(
-                    //     FontAwesomeIcons.wandMagicSparkles,
-                    //     color: TColor.petRock,
-                    //     size: 20,
-                    //   ),
-                    // ),
-
-
                     IconButton(
                         padding: const EdgeInsets.all(2),
                         icon: Icon(
