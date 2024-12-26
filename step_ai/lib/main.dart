@@ -15,7 +15,6 @@ import 'package:step_ai/features/chat/notifier/personal_assistant_notifier.dart'
 import 'package:step_ai/features/preview/presentation/notifier/preview_chat_notifier.dart';
 import 'package:step_ai/features/knowledge_base/notifier/add_knowledge_dialog_notifier.dart';
 import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart';
-import 'package:step_ai/features/prompt/presentation/state/prompt_view_provider.dart';
 import 'package:step_ai/features/publish/presentation/notifier/publish_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/add_option_unit_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/confluence_notifier.dart';
@@ -34,11 +33,12 @@ import 'features/personal/presentation/notifier/bot_list_notifier.dart';
 import 'features/chat/notifier/assistant_notifier.dart';
 import 'features/chat/presentation/notifier/chat_bar_notifier.dart';
 import 'features/chat/presentation/notifier/prompt_list_notifier.dart';
-import 'features/prompt/presentation/state/form_model/form_provider.dart';
-import 'features/prompt/presentation/state/private_prompt/private_filter_provider.dart';
-import 'features/prompt/presentation/state/private_prompt/private_view_provider.dart';
-import 'features/prompt/presentation/state/public_prompt/public_filter_provider.dart';
-import 'features/prompt/presentation/state/public_prompt/public_view_provider.dart';
+import 'features/prompt/presentation/notifier/form_model/form_provider.dart';
+import 'features/prompt/presentation/notifier/private_prompt/private_filter_provider.dart';
+import 'features/prompt/presentation/notifier/private_prompt/private_view_provider.dart';
+import 'features/prompt/presentation/notifier/prompt_view_provider.dart';
+import 'features/prompt/presentation/notifier/public_prompt/public_filter_provider.dart';
+import 'features/prompt/presentation/notifier/public_prompt/public_view_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

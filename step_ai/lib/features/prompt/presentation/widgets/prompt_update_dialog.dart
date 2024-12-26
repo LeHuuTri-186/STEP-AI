@@ -3,8 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:step_ai/features/prompt/data/models/prompt_model.dart';
 import 'package:step_ai/features/prompt/di/data_injection/prompt_data_di.dart';
-import 'package:step_ai/features/prompt/presentation/state/form_model/form_provider.dart';
-import 'package:step_ai/features/prompt/presentation/state/private_prompt/private_view_provider.dart';
 import 'package:step_ai/features/prompt/presentation/widgets/buttons_pair.dart';
 import 'package:step_ai/features/prompt/presentation/widgets/copy_with_tooltip.dart';
 import 'package:step_ai/features/prompt/presentation/widgets/private_form.dart';

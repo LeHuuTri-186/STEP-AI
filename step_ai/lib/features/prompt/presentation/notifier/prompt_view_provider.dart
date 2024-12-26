@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:step_ai/features/prompt/data/models/prompt_model.dart';
-import 'package:step_ai/features/prompt/presentation/state/private_prompt/private_view_provider.dart';
-import 'package:step_ai/features/prompt/presentation/state/public_prompt/public_view_provider.dart';
+import 'package:step_ai/features/prompt/presentation/notifier/private_prompt/private_view_provider.dart';
+import 'package:step_ai/features/prompt/presentation/notifier/public_prompt/public_view_provider.dart';
 
 class PromptViewState extends ChangeNotifier {
   bool _isPrivate = true;

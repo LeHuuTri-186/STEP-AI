@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:step_ai/features/prompt/presentation/widgets/category_chips_selector.dart';
+import 'package:step_ai/shared/widgets/category_chips_selector.dart';
 import 'package:step_ai/shared/styles/horizontal_spacing.dart';
 import 'package:step_ai/shared/styles/vertical_spacing.dart';
 import 'package:step_ai/shared/widgets/search_bar.dart';
 
 import '../../../../shared/styles/colors.dart';
-import '../state/public_prompt/public_filter_provider.dart';
-import '../state/public_prompt/public_view_provider.dart';
+import '../notifier/public_prompt/public_filter_provider.dart';
+import '../notifier/public_prompt/public_view_provider.dart';
 import '../widgets/no_prompts_panel.dart';
 import '../widgets/prompt_list_view.dart';
 

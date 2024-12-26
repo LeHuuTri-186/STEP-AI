@@ -25,6 +25,9 @@ class _DropdownAIState extends State<DropdownAI> {
     final personalAssistantNotifier = context.watch<PersonalAssistantNotifier>();
     return Center(
       child: PopupMenuButton(
+        splashRadius: 0,
+        surfaceTintColor: Colors.transparent,
+
         onOpened: () => setState(() {
           FocusScope.of(context).unfocus();
           _isExpanded = true;

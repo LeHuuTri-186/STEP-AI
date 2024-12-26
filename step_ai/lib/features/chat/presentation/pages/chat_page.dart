@@ -17,7 +17,6 @@ import 'package:step_ai/shared/styles/horizontal_spacing.dart';
 import 'package:step_ai/shared/usecases/admod_service.dart';
 import 'package:step_ai/shared/usecases/pricing_redirect_service.dart';
 import 'package:step_ai/shared/widgets/message_tile.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../shared/styles/vertical_spacing.dart';
 import '../../../../shared/widgets/chat_bar.dart';

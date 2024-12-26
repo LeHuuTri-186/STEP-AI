@@ -8,7 +8,7 @@ import 'package:step_ai/shared/styles/vertical_spacing.dart';
 
 import '../../../../core/di/service_locator.dart';
 import '../../../../shared/styles/colors.dart';
-import '../../../prompt/presentation/state/form_model/form_provider.dart';
+import '../../../prompt/presentation/notifier/form_model/form_provider.dart';
 
 class BotUpdateDialog extends StatefulWidget {
   final BotResDto oldBot;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:step_ai/features/prompt/presentation/state/private_prompt/private_filter_provider.dart';
+import 'package:step_ai/features/prompt/presentation/notifier/private_prompt/private_filter_provider.dart';
 
 import '../../../data/models/prompt_model.dart';
 import '../../../domain/repositories/prompt_repository.dart';

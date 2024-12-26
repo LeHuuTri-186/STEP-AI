@@ -1,12 +1,12 @@
 import 'package:get_it/get_it.dart';
-import 'package:step_ai/features/prompt/presentation/state/form_model/form_provider.dart';
-import 'package:step_ai/features/prompt/presentation/state/private_prompt/private_filter_provider.dart';
-import 'package:step_ai/features/prompt/presentation/state/private_prompt/private_view_provider.dart';
-import 'package:step_ai/features/prompt/presentation/state/prompt_view_provider.dart';
-import 'package:step_ai/features/prompt/presentation/state/public_prompt/public_filter_provider.dart';
-import 'package:step_ai/features/prompt/presentation/state/public_prompt/public_view_provider.dart';
 
 import '../../domain/repositories/prompt_repository.dart';
+import '../../presentation/notifier/form_model/form_provider.dart';
+import '../../presentation/notifier/private_prompt/private_filter_provider.dart';
+import '../../presentation/notifier/private_prompt/private_view_provider.dart';
+import '../../presentation/notifier/prompt_view_provider.dart';
+import '../../presentation/notifier/public_prompt/public_filter_provider.dart';
+import '../../presentation/notifier/public_prompt/public_view_provider.dart';
 
 final getIt = GetIt.instance;
 
