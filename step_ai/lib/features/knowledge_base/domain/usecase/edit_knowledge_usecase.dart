@@ -31,7 +31,7 @@ class EditKnowledgeUsecase extends UseCase<void, EditKnowledgeParam> {
         //if no internet connection example
         rethrow;
       }
-      print(e);
+      //print(e);
       rethrow;
     }
   }

@@ -81,7 +81,7 @@ class _ChatBarState extends State<ChatBar> {
     final currentText = _controller.text;
 
     // Log current text for debugging
-    print(currentText);
+    //print(currentText);
 
     // If the text is empty, reset relevant states and return
     if (currentText.isEmpty) {
@@ -310,9 +310,9 @@ class _ChatBarState extends State<ChatBar> {
                                     }
                                   } catch (e) {
                                     //e is 401 and return to login screen
-                                    print(
-                                        "e is 401 and return to login screen");
-                                    print(e);
+                                    // print(
+                                    //     "e is 401 and return to login screen");
+                                    // print(e);
 
                                     Navigator.of(context)
                                         .pushNamedAndRemoveUntil(
@@ -370,7 +370,7 @@ class _ChatBarState extends State<ChatBar> {
                               } catch (e) {
                                 //e is 401 and return to login screen
 
-                                print(e);
+                                // print(e);
                                 if (context.mounted &&
                                     e is TaskStatus &&
                                     e == TaskStatus.UNAUTHORIZED) {
@@ -445,8 +445,8 @@ class _ChatBarState extends State<ChatBar> {
                         .sendMessage(value);
                   } catch (e) {
                     //e is 401 and return to login screen
-                    print("e is 401 and return to login screen");
-                    print(e);
+                    // print("e is 401 and return to login screen");
+                    // print(e);
                     if (context.mounted) {
                       Navigator.of(context).pushNamedAndRemoveUntil(
                         Routes.authenticate,

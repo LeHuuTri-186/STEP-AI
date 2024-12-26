@@ -31,7 +31,7 @@ class UpdateStatusUnitUsecase extends UseCase<void, UpdateStatusUnitParam> {
         //if no internet connection example
         rethrow;
       }
-      print(e);
+      //print(e);
       rethrow;
     }
   }

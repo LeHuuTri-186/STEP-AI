@@ -63,7 +63,7 @@ class UnitNotifier extends ChangeNotifier {
     } catch (e) {
       errorString = e.toString();
       unitList = null;
-      print("Error in getUnitList in UnitNotifier: $errorString");
+      //print("Error in getUnitList in UnitNotifier: $errorString");
       if (e is DioException) {
         if (e.type == DioExceptionType.connectionError) {
           errorString = "Please check your internet connection";
@@ -91,7 +91,7 @@ class UnitNotifier extends ChangeNotifier {
           changeTaskStatus(TaskStatus.UNAUTHORIZED);
         }
       }
-      print("Error in deleteUnit in unit notifier with error: $e");
+      //print("Error in deleteUnit in unit notifier with error: $e");
       throw "Delete unit failed. Try again later";
     }
   }
@@ -109,7 +109,7 @@ class UnitNotifier extends ChangeNotifier {
           changeTaskStatus(TaskStatus.UNAUTHORIZED);
         }
       }
-      print("Error in updateStatusUnit in unit notifier with error: $e");
+      //print("Error in updateStatusUnit in unit notifier with error: $e");
       throw "Update status unit failed. Try again later";
     }
   }
@@ -131,7 +131,7 @@ class UnitNotifier extends ChangeNotifier {
           changeTaskStatus(TaskStatus.UNAUTHORIZED);
         }
       }
-      print("Error in uploadLocalFile in unit notifier with error: $e");
+      //print("Error in uploadLocalFile in unit notifier with error: $e");
       throw e.toString();
     }
   }
@@ -155,7 +155,7 @@ class UnitNotifier extends ChangeNotifier {
           changeTaskStatus(TaskStatus.UNAUTHORIZED);
         }
       }
-      print("Error in uploadweb in unit notifier with error: $e");
+      //print("Error in uploadweb in unit notifier with error: $e");
       throw e.toString();
     }
   }
@@ -170,7 +170,7 @@ class UnitNotifier extends ChangeNotifier {
               slackBotToken: slackBotToken,
               slackWorkspace: slackWorkspace));
     } catch (e) {
-      print("Error in upload Slack in unit notifier with error: $e");
+      //print("Error in upload Slack in unit notifier with error: $e");
 
       if (e is DioException) {
         if (e.type == DioExceptionType.connectionError) {
@@ -203,7 +203,7 @@ class UnitNotifier extends ChangeNotifier {
               confluenceUsername: confluenceUsername,
               confluenceAccessToken: confluenceAccessToken));
     } catch (e) {
-      print("Error in upload Confluence in unit notifier with error: $e");
+      //print("Error in upload Confluence in unit notifier with error: $e");
       if (e is DioException) {
         if (e.type == DioExceptionType.connectionError) {
           throw "Please check your internet connection";

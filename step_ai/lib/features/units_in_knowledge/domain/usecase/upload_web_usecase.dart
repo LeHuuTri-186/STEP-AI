@@ -31,7 +31,7 @@ class UploadWebUsecase extends UseCase<void, UploadWebParam> {
         //if no internet connection example
         rethrow;
       }
-      print(e);
+      //print(e);
       rethrow;
     }
   }

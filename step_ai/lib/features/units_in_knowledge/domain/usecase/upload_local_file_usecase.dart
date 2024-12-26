@@ -31,7 +31,7 @@ class UploadLocalFileUsecase extends UseCase<void, UploadLocalFileParam> {
         //if no internet connection example
         rethrow;
       }
-      print(e);
+      //print(e);
       rethrow;
     }
   }

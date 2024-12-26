@@ -26,7 +26,7 @@ class Meta {
       required this.offset,
       required this.hasNext});
   factory Meta.fromJson(Map<String, dynamic> json) {
-    print("\\\\\\\\\\\\\\\\\\\\\\Meta: $json");
+    //print("\\\\\\\\\\\\\\\\\\\\\\Meta: $json");
     return Meta(
         limit: json['limit'] ?? 0,
         total: json['total'] ?? 0,

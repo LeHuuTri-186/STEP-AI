@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:step_ai/config/constants.dart';
 import 'package:step_ai/config/routes/routes.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/add_option_unit_notifier.dart';
-import 'package:step_ai/features/units_in_knowledge/presentation/pages/local_file_page.dart';
 import 'package:step_ai/features/units_in_knowledge/presentation/widgets/option_unit_item.dart';
 
 class AddOptionUnitDialog extends StatelessWidget {

@@ -96,7 +96,7 @@ class LocalFilePage extends StatelessWidget {
                               mode: LaunchMode.externalApplication);
                         } catch (e) {
                           // Xử lý lỗi, có thể hiển thị thông báo cho người dùng
-                          print('Lỗi khi mở URL: $e');
+                          //print('Lỗi khi mở URL: $e');
                         }
                       },
                       icon: const Icon(

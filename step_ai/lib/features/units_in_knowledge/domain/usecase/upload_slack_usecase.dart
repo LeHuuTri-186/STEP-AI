@@ -31,7 +31,7 @@ class UploadSlackUsecase extends UseCase<void, UploadSlackParam> {
         //if no internet connection example
         rethrow;
       }
-      print(e);
+      //print(e);
       rethrow;
     }
   }

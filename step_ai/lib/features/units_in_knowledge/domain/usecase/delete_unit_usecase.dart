@@ -31,7 +31,7 @@ class DeleteUnitUsecase extends UseCase<void, DeleteUnitParam> {
         //if no internet connection example
         rethrow;
       }
-      print(e);
+      //print(e);
       rethrow;
     }
   }

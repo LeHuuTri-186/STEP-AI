@@ -16,8 +16,8 @@ class KnowledgeApi {
 
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
-        print(
-            "\n-----------------------------OnRequest--------------------------------1");
+        // print(
+        //     "\n-----------------------------OnRequest--------------------------------1");
         await _initializeTokens();
         options.headers['x-jarvis-guid'] = '';
         if (accessKnowledgeToken != null) {
@@ -36,16 +36,16 @@ class KnowledgeApi {
         return handler.next(options);
       },
       onResponse: (response, handler) {
-        print(
-            "-----------------------------OnResponse--------------------------------2");
-        print("Response: ${response.data}");
+        // print(
+        //     "-----------------------------OnResponse--------------------------------2");
+        // print("Response: ${response.data}");
         return handler.next(response);
       },
       onError: (DioException error, handler) async {
-        print(
-            "\n-----------------------------Error--------------------------------3");
-        print("Error: ${error.response?.statusCode}");
-        print("Error: ${error.response?.data}");
+        // print(
+        //     "\n-----------------------------Error--------------------------------3");
+        // print("Error: ${error.response?.statusCode}");
+        // print("Error: ${error.response?.data}");
         return handler.next(error);
       },
     ));
@@ -58,47 +58,6 @@ class KnowledgeApi {
     accessKnowledgeToken = await secureStorageHelper.kbAccessToken;
   }
 
-  // Call API to make a new access token and saved it in RefreshTokenUseCase
-  // Future<void> _refreshToken() async {
-  //   print("------------refreshToken------------");
-  //   try {
-  //     // int statusCode = await refreshTokenUseCase.call(params: null);
-  //     var myResponse = await _apiService
-  //         .get('${Constant.refreshTokenPartEndpoint}$refreshToken');
-
-  //     if (myResponse.statusCode == 200) {
-  //       print("*****************Làm mới token thành công");
-  //       TokenModel token;
-  //       token = TokenModel.fromJson(
-  //           jsonDecode(await myResponse.stream.bytesToString()));
-  //       await secureStorageHelper.saveAccessToken(token.accessToken);
-  //       //lưu để gọi lại sau
-  //       accessToken = await secureStorageHelper.accessToken;
-  //       //_dio.options.headers['Authorization'] = 'Bearer $accessToken';
-  //     } else {
-  //       print("*****************Làm mới token thất bại");
-  //       throw Exception('Không thể làm mới token');
-  //     }
-  //   } catch (e) {
-  //     print("*****************Không thể làm mới token");
-  //     throw Exception('Không thể làm mới token');
-  //   }
-  // }
-
-  //Request again with new access token
-  // Future<Response> _retryRequest(RequestOptions requestOptions) async {
-  //   print("retryRequest");
-  //   final options = Options(
-  //     method: requestOptions.method,
-  //     headers: requestOptions.headers,
-  //   );
-  //   return _dio.request(
-  //     requestOptions.path,
-  //     options: options,
-  //     data: requestOptions.data,
-  //     queryParameters: requestOptions.queryParameters,
-  //   );
-  // }
 
   // Các phương thức API
 

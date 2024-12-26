@@ -33,7 +33,7 @@ class GetKnowledgeListUsecase
         //if no internet connection example
         rethrow;
       }
-      print(e);
+      //print(e);
       rethrow;
     }
   }

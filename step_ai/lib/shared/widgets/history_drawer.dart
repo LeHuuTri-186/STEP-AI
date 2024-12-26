@@ -51,7 +51,7 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
           Provider.of<HistoryConversationListNotifier>(context, listen: false)
               .getHistoryConversationList();
         } catch (e) {
-          print(e);
+          //print(e);
         }
       }
     });
@@ -381,7 +381,7 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
                                 (Route<dynamic> route) => false
                         );
                       } catch (e) {
-                        print(e);
+                        //print(e);
                       }
                     },
                     child: Padding(

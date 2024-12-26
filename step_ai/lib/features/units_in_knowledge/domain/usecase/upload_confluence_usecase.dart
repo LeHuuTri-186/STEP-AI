@@ -31,7 +31,7 @@ class UploadConfluenceUsecase extends UseCase<void, UploadConfluenceParam> {
         //if no internet connection example
         rethrow;
       }
-      print(e);
+      //print(e);
       rethrow;
     }
   }

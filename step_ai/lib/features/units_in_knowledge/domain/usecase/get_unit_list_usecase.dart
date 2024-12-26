@@ -32,7 +32,7 @@ class GetUnitListUsecase extends UseCase<UnitList, String> {
         //if no internet connection example
         rethrow;
       }
-      print(e);
+      //print(e);
       rethrow;
     }
   }
