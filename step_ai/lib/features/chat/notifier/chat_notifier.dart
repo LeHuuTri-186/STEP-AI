@@ -38,7 +38,7 @@ class ChatNotifier with ChangeNotifier {
     _isLoadingDetailedConversation = true;
     notifyListeners();
     try {
-      print("Get messages by conversation id in chat notifier");
+      //print("Get messages by conversation id in chat notifier");
       final detailMessagesModel = await _getMessagesByConversationIdUsecase
           .call(params: _idCurrentConversation!);
       clearHistoryMessages();
@@ -55,11 +55,11 @@ class ChatNotifier with ChangeNotifier {
       }
     } catch (e) {
       if (e is DioException) {
-        print(
-            "Error in getMessagesByConversationId in chat notifier with status code: ${e.response?.statusCode}");
+        // print(
+        //     "Error in getMessagesByConversationId in chat notifier with status code: ${e.response?.statusCode}");
       } else {
-        print(
-            "Error in getMessagesByConversationId in chat notifier with  error: $e");
+        // print(
+        //     "Error in getMessagesByConversationId in chat notifier with  error: $e");
       }
     } finally {
       _isLoadingDetailedConversation = false;
@@ -93,10 +93,10 @@ class ChatNotifier with ChangeNotifier {
         if (e.response?.statusCode == 401) {
           throw TaskStatus.UNAUTHORIZED;
         }
-        print(
-            "Error in getNumberRestToken in chat notifier with status code: ${e.response?.statusCode}");
+        // print(
+        //     "Error in getNumberRestToken in chat notifier with status code: ${e.response?.statusCode}");
       } else {
-        print("Error in getNumberRestToken in chat notifier with  error: $e");
+        // print("Error in getNumberRestToken in chat notifier with  error: $e");
       }
 
       isLoading = false;
@@ -178,8 +178,8 @@ class ChatNotifier with ChangeNotifier {
           updateLastMessage("No internet connection. Try again!");
           throw TaskStatus.NO_INTERNET;
         }
-        print(
-            "Error in sendMessage in chat notifier with status code: ${error.response?.statusCode}");
+        // print(
+        //     "Error in sendMessage in chat notifier with status code: ${error.response?.statusCode}");
         if (error.response?.statusCode == 401) {
           this._historyMessages.clear();
           this._idCurrentConversation = null;
@@ -190,7 +190,7 @@ class ChatNotifier with ChangeNotifier {
           updateLastMessage("Server not response. Try again!");
         }
       } else {
-        print("Error in sendMessage in chat notifier with  error: $error");
+        // print("Error in sendMessage in chat notifier with  error: $error");
       }
     } finally {
       notifyListeners();
@@ -241,7 +241,7 @@ class ChatNotifier with ChangeNotifier {
     notifyListeners();
 
     try {
-      print("Reach top");
+      //print("Reach top");
       ThreadDto? thread = await _createThreadUseCase.call(
           params: _personalAssistantNotifier.currentAssistant!.id!);
       if (thread != null) {

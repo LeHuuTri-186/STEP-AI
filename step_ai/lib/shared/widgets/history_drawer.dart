@@ -30,8 +30,8 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
   final TextEditingController searchController = TextEditingController();
 
   final LogoutUseCase _logoutUseCase = getIt<LogoutUseCase>();
-  final PersonalAssistantNotifier _personalAssistantNotifier
-      = getIt<PersonalAssistantNotifier>();
+  final PersonalAssistantNotifier _personalAssistantNotifier =
+      getIt<PersonalAssistantNotifier>();
   final ChatNotifier _chatNotifier = getIt<ChatNotifier>();
 
   final ScrollController _scrollController = ScrollController();
@@ -106,7 +106,7 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
                   )),
                   VSpacing.sm,
                   // Search Bar
-                  CustomSearchBar(onChanged: (_) {}),
+                  //CustomSearchBar(onChanged: (_) {}),
                 ],
               ),
             ),
@@ -139,34 +139,34 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
                         children: [
                           Expanded(
                               child: Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  borderRadius: const BorderRadius.only(
-                                      topRight: Radius.circular(10)),
-                                  splashColor: TColor.petRock.withOpacity(0.3),
-                                  onTap: () {
-                                    Navigator.of(context).pushNamedAndRemoveUntil(
-                                      Routes.chat,
-                                          (Route<dynamic> route) => false,
-                                    );
-                                  },
-                                  child: Center(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        "Chat",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .displayMedium
-                                            ?.copyWith(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              borderRadius: const BorderRadius.only(
+                                  topRight: Radius.circular(10)),
+                              splashColor: TColor.petRock.withOpacity(0.3),
+                              onTap: () {
+                                Navigator.of(context).pushNamedAndRemoveUntil(
+                                  Routes.chat,
+                                  (Route<dynamic> route) => false,
+                                );
+                              },
+                              child: Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "Chat",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displayMedium
+                                        ?.copyWith(
                                             color: TColor.petRock,
                                             fontSize: 16,
                                             fontWeight: FontWeight.w600),
-                                      ),
-                                    ),
                                   ),
                                 ),
-                              )),
+                              ),
+                            ),
+                          )),
                         ],
                       ),
                       Row(
@@ -212,9 +212,10 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
                                 splashColor: TColor.petRock.withOpacity(0.3),
                                 onTap: () {
                                   if (context.mounted) {
-                                    Navigator.of(context).pushNamedAndRemoveUntil(
+                                    Navigator.of(context)
+                                        .pushNamedAndRemoveUntil(
                                       Routes.planAndPricing,
-                                          (Route<dynamic> route) => false,
+                                      (Route<dynamic> route) => false,
                                     );
                                   }
                                 },
@@ -273,77 +274,135 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
                           fontSize: 20),
                     ),
                     Expanded(
-                      child: ListView.separated(
-                        controller: _scrollController,
-                        padding: EdgeInsets.zero,
-                        shrinkWrap: true,
-                        itemCount: historyConversationListNotifier
-                                .historyConversationList.length +
-                            (historyConversationListNotifier.hasMore ? 1 : 0),
-                        itemBuilder: (context, index) {
-                          if (index ==
-                                  historyConversationListNotifier
-                                      .historyConversationList.length &&
-                              historyConversationListNotifier.hasMore) {
-                            return Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(3.0),
-                                child: LoadingAnimationWidget.twistingDots(
-                                  size: 50,
-                                  leftDotColor: TColor.tamarama,
-                                  rightDotColor: TColor.daJuice,
-                                ),
+                      child: historyConversationListNotifier
+                              .historyConversationList.isEmpty
+                          //Create new chat if first conversation
+                          ? Center(
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                    onTap: () async {
+                                      // Navigator.pop(context);
+                                      await _chatNotifier.resetChatNotifier();
+                                      if (context.mounted) {
+                                        Navigator.of(context)
+                                            .pushNamedAndRemoveUntil(
+                                          Routes.chat,
+                                          (Route<dynamic> route) => false,
+                                        );
+                                      }
+                                    },
+                                    borderRadius: BorderRadius.circular(50),
+                                    child: Ink(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                        color: TColor.tamarama,
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            const Icon(
+                                              Icons.add_outlined,
+                                              color: Colors.white,
+                                              size: 25,
+                                            ),
+                                            Text(
+                                                "Start your first conversation",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium
+                                                    ?.copyWith(
+                                                      color: TColor.doctorWhite,
+                                                    )),
+                                          ],
+                                        ),
+                                      ),
+                                    )),
                               ),
-                            );
-                          }
-                          return ListTile(
-                              leading: Icon(
-                                Icons.access_time,
-                                color: TColor.petRock.withOpacity(0.5),
-                              ),
-                              title: Text(
-                                "${historyConversationListNotifier.historyConversationList[index].title}",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium
-                                    ?.copyWith(
-                                        color: TColor.petRock.withOpacity(0.5),
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w800),
-                              ),
-                              onTap: () async {
-                                if (Provider.of<ChatNotifier>(context,
-                                            listen: false)
-                                        .idCurrentConversation ==
-                                    historyConversationListNotifier
-                                        .historyConversationList[index].id) {
-                                  Navigator.pop(context);
-                                  return;
-                                }
-
-                                await Provider.of<ChatNotifier>(context,
-                                        listen: false)
-                                    .resetChatNotifier();
-                                if (context.mounted) {
-                                  Provider.of<ChatNotifier>(context,
-                                              listen: false)
-                                          .idCurrentConversation =
-                                      historyConversationListNotifier
-                                          .historyConversationList[index].id;
-                                  Navigator.of(context).pushNamedAndRemoveUntil(
-                                    Routes.chat,
-                                    (Route<dynamic> route) => false,
+                            )
+                          : ListView.separated(
+                              controller: _scrollController,
+                              padding: EdgeInsets.zero,
+                              shrinkWrap: true,
+                              itemCount: historyConversationListNotifier
+                                      .historyConversationList.length +
+                                  (historyConversationListNotifier.hasMore
+                                      ? 1
+                                      : 0),
+                              itemBuilder: (context, index) {
+                                if (index ==
+                                        historyConversationListNotifier
+                                            .historyConversationList.length &&
+                                    historyConversationListNotifier.hasMore) {
+                                  return Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(3.0),
+                                      child:
+                                          LoadingAnimationWidget.twistingDots(
+                                        size: 50,
+                                        leftDotColor: TColor.tamarama,
+                                        rightDotColor: TColor.daJuice,
+                                      ),
+                                    ),
                                   );
                                 }
-                              });
-                        },
-                        separatorBuilder: (BuildContext context, int index) {
-                          return const Padding(
-                            padding: EdgeInsets.only(left: 10.0),
-                            child: Divider(),
-                          );
-                        },
-                      ),
+                                return ListTile(
+                                    leading: Icon(
+                                      Icons.access_time,
+                                      color: TColor.petRock.withOpacity(0.5),
+                                    ),
+                                    title: Text(
+                                      "${historyConversationListNotifier.historyConversationList[index].title}",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.copyWith(
+                                              color: TColor.petRock
+                                                  .withOpacity(0.5),
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w800),
+                                    ),
+                                    onTap: () async {
+                                      if (Provider.of<ChatNotifier>(context,
+                                                  listen: false)
+                                              .idCurrentConversation ==
+                                          historyConversationListNotifier
+                                              .historyConversationList[index]
+                                              .id) {
+                                        Navigator.pop(context);
+                                        return;
+                                      }
+
+                                      await Provider.of<ChatNotifier>(context,
+                                              listen: false)
+                                          .resetChatNotifier();
+                                      if (context.mounted) {
+                                        Provider.of<ChatNotifier>(context,
+                                                    listen: false)
+                                                .idCurrentConversation =
+                                            historyConversationListNotifier
+                                                .historyConversationList[index]
+                                                .id;
+                                        Navigator.of(context)
+                                            .pushNamedAndRemoveUntil(
+                                          Routes.chat,
+                                          (Route<dynamic> route) => false,
+                                        );
+                                      }
+                                    });
+                              },
+                              separatorBuilder:
+                                  (BuildContext context, int index) {
+                                return const Padding(
+                                  padding: EdgeInsets.only(left: 10.0),
+                                  child: Divider(),
+                                );
+                              },
+                            ),
                     ),
                   ],
                 ),
@@ -375,11 +434,9 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
                         _logoutUseCase.call(params: null);
                         _personalAssistantNotifier.reset();
                         _chatNotifier.reset();
-                        Navigator.of(context)
-                            .pushNamedAndRemoveUntil(
+                        Navigator.of(context).pushNamedAndRemoveUntil(
                             Routes.authenticate,
-                                (Route<dynamic> route) => false
-                        );
+                            (Route<dynamic> route) => false);
                       } catch (e) {
                         //print(e);
                       }
