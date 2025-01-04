@@ -9,6 +9,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/config/enum/task_status.dart';
 import 'package:step_ai/config/routes/routes.dart';
+import 'package:step_ai/core/data/model/current_user_model.dart';
 import 'package:step_ai/features/chat/presentation/notifier/chat_bar_notifier.dart';
 import 'package:step_ai/features/chat/presentation/notifier/prompt_list_notifier.dart';
 import 'package:step_ai/features/chat/presentation/widgets/greetings.dart';
@@ -396,54 +397,145 @@ class _ChatPageState extends State<ChatPage> {
                     Padding(
                       padding: const EdgeInsets.only(left: 10),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          ImageByText(
-                            imagePath: "lib/core/assets/imgs/flame.png",
-                            text: _chatNotifier.numberRestToken.toString(),
-                          ),
-                          HSpacing.sm,
-                          Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(20),
-                              onTap: () async =>
-                                  await PricingRedirectService.call(),
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.rocket_launch_rounded,
-                                      color: TColor.tamarama,
-                                    ),
-                                    const SizedBox(
-                                      width: 3,
-                                    ),
-                                    GradientText(
-                                      'Upgrade',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium!
-                                          .copyWith(
-                                            color: TColor.tamarama,
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 14,
+                          Row(
+                            children: [
+                              ImageByText(
+                                imagePath: "lib/core/assets/imgs/flame.png",
+                                text: _chatNotifier.numberRestToken.toString(),
+                              ),
+                              HSpacing.sm,
+                              Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(20),
+                                  onTap: () async =>
+                                      await PricingRedirectService.call(),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.rocket_launch_rounded,
+                                          color: TColor.tamarama,
+                                        ),
+                                        const SizedBox(
+                                          width: 3,
+                                        ),
+                                        GradientText(
+                                          'Upgrade',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium!
+                                              .copyWith(
+                                                color: TColor.tamarama,
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 14,
+                                              ),
+                                          gradient: LinearGradient(
+                                            begin: Alignment.bottomLeft,
+                                            end: Alignment.topRight,
+                                            tileMode: TileMode.decal,
+                                            colors: [
+                                              TColor.tamarama,
+                                              TColor.goldenState,
+                                            ],
                                           ),
-                                      gradient: LinearGradient(
-                                        begin: Alignment.bottomLeft,
-                                        end: Alignment.topRight,
-                                        tileMode: TileMode.decal,
-                                        colors: [
-                                          TColor.tamarama,
-                                          TColor.goldenState,
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
+                                  ),
                                 ),
                               ),
-                            ),
+                            ],
                           ),
+                          IconButton(
+                              onPressed: () async {
+                                try {
+                                  CurrentUserModel? currentUser =
+                                      await _chatNotifier.getCurrentUserModel();
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                            backgroundColor: Colors.white,
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(15)),
+                                            title: const Text(
+                                              "User Info",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20),
+                                            ),
+                                            content: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Icon(Icons.person,
+                                                        color: TColor.tamarama),
+                                                    const SizedBox(width: 6),
+                                                    Text(
+                                                      currentUser!.userName,
+                                                      style: const TextStyle(
+                                                          fontSize: 14),
+                                                    ),
+                                                  ],
+                                                ),
+                                                const SizedBox(height: 10),
+                                                Row(
+                                                  children: [
+                                                    Icon(Icons.email,
+                                                        color:
+                                                            TColor.goldenState),
+                                                    const SizedBox(width: 6),
+                                                    Text(
+                                                      currentUser.email,
+                                                      style: const TextStyle(
+                                                          fontSize: 14),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: Text("Close",
+                                                    style: TextStyle(
+                                                        color:
+                                                            TColor.tamarama)),
+                                              )
+                                            ],
+                                          ));
+                                } catch (e) {
+                                  if (e is TaskStatus &&
+                                      e == TaskStatus.UNAUTHORIZED) {
+                                    Navigator.of(context)
+                                        .pushNamedAndRemoveUntil(
+                                      Routes.authenticate,
+                                      (Route<dynamic> route) => false,
+                                    );
+                                  }
+                                  if (e is TaskStatus &&
+                                      e == TaskStatus.NO_INTERNET) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text("No internet connection"),
+                                      ),
+                                    );
+                                  }
+                                }
+                              },
+                              icon: Icon(
+                                Icons.account_circle_outlined,
+                                size: 30,
+                                color: TColor.tamarama,
+                              ))
                         ],
                       ),
                     ),

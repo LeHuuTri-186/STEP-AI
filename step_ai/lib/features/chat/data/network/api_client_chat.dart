@@ -150,4 +150,11 @@ class ApiClientChat {
       queryParameters: queryParams,
     );
   }
+    Future<Response> getCurrentUser(String path,
+      {Map<String, dynamic>? queryParams}) {
+    // print("getMessagesByConversationId in ChatApiClient");
+    return _dio.get(
+      path,
+    );
+  }
 }

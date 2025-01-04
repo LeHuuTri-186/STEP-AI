@@ -5,6 +5,7 @@ import 'package:step_ai/core/di/service_locator.dart';
 import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/cupertino_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/unit_notifier.dart';
+import 'package:step_ai/shared/styles/colors.dart';
 
 import '../../domain/entity/unit.dart';
 
@@ -32,7 +33,7 @@ class CustomCupertino extends StatelessWidget {
               Opacity(
                 opacity: cupertinoNotifier.isLoading ? 0.5 : 1.0,
                 child: CupertinoSwitch(
-                  activeColor: Colors.blue,
+                  activeColor: TColor.tamarama,
                   value: cupertinoNotifier.switchValue,
                   onChanged: cupertinoNotifier.isLoading
                       ? null

@@ -19,30 +19,29 @@ class KnowledgeItem extends StatelessWidget {
   Widget build(BuildContext context) {
     knowledgeNotifier = Provider.of<KnowledgeNotifier>(context, listen: false);
     unitNotifier = Provider.of<UnitNotifier>(context, listen: false);
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-      padding: const EdgeInsets.all(6),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.storage, color: TColor.tamarama, size: 38),
-
-          const SizedBox(width: 14),
-          Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: GestureDetector(
-                onTap: () {
-                  unitNotifier.currentKnowledge = knowledge;
-                  knowledgeNotifier.reset();
-                  Navigator.pushNamed(
-                    context,
-                    Routes.unitsPage,
-                  );
-                },
+    return GestureDetector(
+      onTap: () {
+        unitNotifier.currentKnowledge = knowledge;
+        knowledgeNotifier.reset();
+        Navigator.pushNamed(
+          context,
+          Routes.unitsPage,
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+        padding: const EdgeInsets.all(6),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          children: [
+            Icon(Icons.storage, color: TColor.tamarama, size: 38),
+            const SizedBox(width: 14),
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -67,69 +66,69 @@ class KnowledgeItem extends StatelessWidget {
                 ),
               ),
             ),
-          ),
-          const SizedBox(width: 8),
-          IconButton(
-              onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        backgroundColor: Colors.white,
-                        title: Text('Delete Knowledge',
+            const SizedBox(width: 8),
+            IconButton(
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          backgroundColor: Colors.white,
+                          title: Text('Delete Knowledge',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: TColor.poppySurprise)),
+                          content: Text(
+                            'Are you sure you want to delete "${knowledge.knowledgeName}"?',
                             textAlign: TextAlign.center,
-                            style: TextStyle(color: TColor.poppySurprise)),
-                        content: Text(
-                          'Are you sure you want to delete "${knowledge.knowledgeName}"?',
-                          textAlign: TextAlign.center,
-                        ),
-                        actionsAlignment: MainAxisAlignment.center,
-                        actions: [
-                          Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.grey),
-                              child: const Text("Cancel",
-                                  style: TextStyle(color: Colors.white)),
-                            ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: ElevatedButton(
-                              onPressed: () async {
-                                final scaffoldContext =
-                                    ScaffoldMessenger.of(context);
-                                Navigator.of(context).pop();
-                                try {
-                                  await knowledgeNotifier
-                                      .deleteKnowledge(knowledge.id);
-                                  await knowledgeNotifier.getKnowledgeList();
-                                } catch (e) {
-                                  scaffoldContext.showSnackBar(
-                                    SnackBar(
-                                      content: Text(e.toString()),
-                                    ),
-                                  );
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: TColor.poppySurprise),
-                              child: const Text(
-                                'Delete',
-                                style: TextStyle(color: Colors.white),
+                          actionsAlignment: MainAxisAlignment.center,
+                          actions: [
+                            Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.grey),
+                                child: const Text("Cancel",
+                                    style: TextStyle(color: Colors.white)),
                               ),
                             ),
-                          ),
-                        ],
-                      );
-                    });
-              },
-              icon: Icon(Icons.delete, color: TColor.petRock)),
-        ],
+                            Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  final scaffoldContext =
+                                      ScaffoldMessenger.of(context);
+                                  Navigator.of(context).pop();
+                                  try {
+                                    await knowledgeNotifier
+                                        .deleteKnowledge(knowledge.id);
+                                    await knowledgeNotifier.getKnowledgeList();
+                                  } catch (e) {
+                                    scaffoldContext.showSnackBar(
+                                      SnackBar(
+                                        content: Text(e.toString()),
+                                      ),
+                                    );
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: TColor.poppySurprise),
+                                child: const Text(
+                                  'Delete',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      });
+                },
+                icon: Icon(Icons.delete, color: TColor.petRock)),
+          ],
+        ),
       ),
     );
   }

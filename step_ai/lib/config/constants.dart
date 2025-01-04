@@ -2,8 +2,10 @@ import 'package:step_ai/features/publish/domain/params/disconnector_param.dart';
 
 class Constant {
   Constant._();
-  static String apiBaseUrl = 'https://api.jarvis.cx';
-  static String kbApiUrl = 'https://knowledge-api.jarvis.cx';
+  static String apiBaseUrl = 'https://api.dev.jarvis.cx';
+  static String kbApiUrl = 'https://knowledge-api.dev.jarvis.cx';
+  // static String apiBaseUrl = 'https://api.jarvis.cx';
+  // static String kbApiUrl = 'https://knowledge-api.jarvis.cx';
   static String devPricing = 'https://admin.jarvis.cx/dashboard/subscription';
   static String pricing = 'https://admin.dev.jarvis.cx/dashboard/subscription';
 
@@ -247,8 +249,10 @@ class Constant {
   };
 
   static final Map<String, String> errorMessage = {
-    'empty-email': "Your email's a blank canvas! 🎨 Add some words to spark a reply idea.",
-    'empty-idea': "Even the best ideas need a little nudge. Type something, and let's get brainstorming!"
+    'empty-email':
+        "Your email's a blank canvas! 🎨 Add some words to spark a reply idea.",
+    'empty-idea':
+        "Even the best ideas need a little nudge. Type something, and let's get brainstorming!"
   };
 
   static final Map<String, String> actionType = {

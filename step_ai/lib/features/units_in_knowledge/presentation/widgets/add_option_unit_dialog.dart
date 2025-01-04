@@ -4,6 +4,7 @@ import 'package:step_ai/config/constants.dart';
 import 'package:step_ai/config/routes/routes.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/add_option_unit_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/presentation/widgets/option_unit_item.dart';
+import 'package:step_ai/shared/styles/colors.dart';
 
 class AddOptionUnitDialog extends StatelessWidget {
   AddOptionUnitDialog({super.key});
@@ -105,7 +106,7 @@ class AddOptionUnitDialog extends StatelessWidget {
                       addOptionUnitNotifier.setSelectedOption("local_file");
                     },
                     style:
-                        ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+                        ElevatedButton.styleFrom(backgroundColor: TColor.tamarama),
                     child: const Text("Continue",
                         style: TextStyle(color: Colors.white)),
                   ),

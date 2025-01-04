@@ -15,6 +15,7 @@ import 'package:step_ai/features/chat/domain/repository/bot_thread_repository.da
 import 'package:step_ai/features/chat/domain/repository/slash_prompt_repository.dart';
 import 'package:step_ai/features/chat/domain/usecase/ask_bot_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/create_thread_usecase.dart';
+import 'package:step_ai/features/chat/domain/usecase/get_current_user_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_featured_prompts_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_prompt_list_usecase.dart';
 import 'package:step_ai/features/chat/domain/repository/conversation_repository.dart';
@@ -59,7 +60,6 @@ import 'package:step_ai/features/plan/domain/repository/subscription_repository.
 import 'package:step_ai/features/plan/domain/usecases/get_subscription_usecase.dart';
 import 'package:step_ai/shared/usecases/refresh_token_usecase.dart';
 
-
 import '../../../../features/authentication/domain/repository/register_repository.dart';
 import '../../../di/service_locator.dart';
 
@@ -102,7 +102,6 @@ class UseCaseModule {
     getIt.registerSingleton<SaveLoginStatusUseCase>(SaveLoginStatusUseCase(
       getIt<LoginRepository>(),
     ));
-
 
     //Register:-----------------------------------------------------------------
     getIt.registerSingleton<RegisterUseCase>(
@@ -149,6 +148,11 @@ class UseCaseModule {
         getIt<ConversationRepository>(),
       ),
     );
+    getIt.registerSingleton<GetCurrentUserUsecase>(
+      GetCurrentUserUsecase(
+        getIt<ConversationRepository>(),
+      ),
+    );
 
     //Bot:----------------------------------------------------------------------
     getIt.registerSingleton<CreateBotUseCase>(
@@ -171,58 +175,41 @@ class UseCaseModule {
     getIt.registerSingleton<AskBotUseCase>(AskBotUseCase(
         getIt<RefreshKbTokenUseCase>(), getIt<BotThreadRepository>()));
 
-    getIt.registerSingleton<GetKbInBotUseCase>(
-      GetKbInBotUseCase(getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>())
-    );
-    getIt.registerSingleton<ImportKbUseCase>(
-      ImportKbUseCase(getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>())
-    );
+    getIt.registerSingleton<GetKbInBotUseCase>(GetKbInBotUseCase(
+        getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()));
+    getIt.registerSingleton<ImportKbUseCase>(ImportKbUseCase(
+        getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()));
 
-    getIt.registerSingleton<RemoveKbUseCase>(
-        RemoveKbUseCase(getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>())
-    );
+    getIt.registerSingleton<RemoveKbUseCase>(RemoveKbUseCase(
+        getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()));
 
-    getIt.registerSingleton<GetPublishedUseCase>(
-      GetPublishedUseCase(getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>())
-    );
+    getIt.registerSingleton<GetPublishedUseCase>(GetPublishedUseCase(
+        getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()));
 
     //Telegram
-    getIt.registerSingleton<TelegramValidateUseCase>(
-      TelegramValidateUseCase(getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()
-      )
-    );
+    getIt.registerSingleton<TelegramValidateUseCase>(TelegramValidateUseCase(
+        getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()));
 
-    getIt.registerSingleton<TelegramPublishUseCase>(
-      TelegramPublishUseCase(getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()
-      )
-    );
+    getIt.registerSingleton<TelegramPublishUseCase>(TelegramPublishUseCase(
+        getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()));
 
     getIt.registerSingleton<TelegramDisconnectUseCase>(
-        TelegramDisconnectUseCase(getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()
-        )
-    );
+        TelegramDisconnectUseCase(
+            getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()));
 
     //Messenger
-    getIt.registerSingleton<MessengerValidateUseCase>(
-        MessengerValidateUseCase(getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()
-        )
-    );
+    getIt.registerSingleton<MessengerValidateUseCase>(MessengerValidateUseCase(
+        getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()));
 
-    getIt.registerSingleton<MessengerPublishUseCase>(
-        MessengerPublishUseCase(getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()
-        )
-    );
+    getIt.registerSingleton<MessengerPublishUseCase>(MessengerPublishUseCase(
+        getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()));
 
     //Slack
-    getIt.registerSingleton<SlackValidateUseCase>(
-        SlackValidateUseCase(getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()
-        )
-    );
+    getIt.registerSingleton<SlackValidateUseCase>(SlackValidateUseCase(
+        getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()));
 
-    getIt.registerSingleton<SlackPublishUseCase>(
-        SlackPublishUseCase(getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()
-        )
-    );
+    getIt.registerSingleton<SlackPublishUseCase>(SlackPublishUseCase(
+        getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()));
 
     ///Knowledge base:-----------------------------------------------------------
     getIt.registerSingleton<GetKnowledgeListUsecase>(GetKnowledgeListUsecase(

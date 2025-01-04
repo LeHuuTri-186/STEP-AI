@@ -12,6 +12,7 @@ import 'package:step_ai/features/authentication/notifier/register_notifier.dart'
 import 'package:step_ai/features/authentication/notifier/ui_notifier.dart';
 import 'package:step_ai/features/chat/domain/usecase/ask_bot_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/create_thread_usecase.dart';
+import 'package:step_ai/features/chat/domain/usecase/get_current_user_usecase.dart';
 
 import 'package:step_ai/features/chat/domain/usecase/get_featured_prompts_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_prompt_list_usecase.dart';
@@ -98,15 +99,13 @@ class ProviderModule {
       PersonalAssistantNotifier(),
     );
 
-    getIt.registerSingleton<BotListNotifier>(
-        BotListNotifier(
-          getIt<CreateBotUseCase>(),
-          getIt<LogoutUseCase>(),
-          getIt<GetBotListUseCase>(),
-          getIt<DeleteBotUseCase>(),
-          getIt<UpdateBotUseCase>(),
-        )
-    );
+    getIt.registerSingleton<BotListNotifier>(BotListNotifier(
+      getIt<CreateBotUseCase>(),
+      getIt<LogoutUseCase>(),
+      getIt<GetBotListUseCase>(),
+      getIt<DeleteBotUseCase>(),
+      getIt<UpdateBotUseCase>(),
+    ));
     //HistoryConversationListNotifier:-----------------------------------------------------
     getIt.registerSingleton<HistoryConversationListNotifier>(
       HistoryConversationListNotifier(
@@ -124,6 +123,7 @@ class ProviderModule {
         getIt<CreateThreadUseCase>(),
         getIt<AskBotUseCase>(),
         getIt<LogoutUseCase>(),
+        getIt<GetCurrentUserUsecase>(),
       ),
     );
 
@@ -160,11 +160,8 @@ class ProviderModule {
     getIt.registerSingleton<DriveNotifier>(DriveNotifier());
     getIt.registerSingleton<ConfluenceNotifier>(ConfluenceNotifier());
     getIt.registerSingleton<SlackNotifier>(SlackNotifier());
-    getIt.registerSingleton<PromptListNotifier>(
-        PromptListNotifier(
-            getIt<GetPromptListUseCase>(), getIt<GetFeaturedPromptUseCase>()
-        )
-    );
+    getIt.registerSingleton<PromptListNotifier>(PromptListNotifier(
+        getIt<GetPromptListUseCase>(), getIt<GetFeaturedPromptUseCase>()));
 
     //Preview page:-------------------------------------------------------------
     getIt.registerSingleton<PreviewChatNotifier>(
@@ -177,29 +174,24 @@ class ProviderModule {
         getIt<GetKnowledgeListUsecase>(),
         getIt<ImportKbUseCase>(),
         getIt<RemoveKbUseCase>(),
-      ),);
+      ),
+    );
 
     //Publish page:-------------------------------------------------------------
-    getIt.registerSingleton<PublishNotifier>(
-        PublishNotifier(
-          getIt<GetPublishedUseCase>(),
-          getIt<LogoutUseCase>(),
-          getIt<TelegramValidateUseCase>(),
-          getIt<TelegramPublishUseCase>(),
-          getIt<TelegramDisconnectUseCase>(),
-          getIt<MessengerValidateUseCase>(),
-          getIt<MessengerPublishUseCase>(),
-          getIt<SlackValidateUseCase>(),
-          getIt<SlackPublishUseCase>(),
-        )
-    );
+    getIt.registerSingleton<PublishNotifier>(PublishNotifier(
+      getIt<GetPublishedUseCase>(),
+      getIt<LogoutUseCase>(),
+      getIt<TelegramValidateUseCase>(),
+      getIt<TelegramPublishUseCase>(),
+      getIt<TelegramDisconnectUseCase>(),
+      getIt<MessengerValidateUseCase>(),
+      getIt<MessengerPublishUseCase>(),
+      getIt<SlackValidateUseCase>(),
+      getIt<SlackPublishUseCase>(),
+    ));
     //Chat page:----------------------------------------------------------------
 
-    getIt.registerSingleton<SubscriptionNotifier>(
-        SubscriptionNotifier(
-            getIt<LogoutUseCase>(),
-            getIt<GetSubscriptionUsecase>()
-        )
-    );
+    getIt.registerSingleton<SubscriptionNotifier>(SubscriptionNotifier(
+        getIt<LogoutUseCase>(), getIt<GetSubscriptionUsecase>()));
   }
 }
