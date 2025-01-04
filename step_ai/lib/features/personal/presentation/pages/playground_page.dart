@@ -111,100 +111,97 @@ class _PlaygroundPageState extends State<PlaygroundPage>
     );
   }
 
-  Column buildBotTab(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        VSpacing.sm,
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              DropdownWidget(
-                initialValue: "All",
-                items: const ["All", "Published", "Favorites"],
-                onSelected: (m) => {},
-              ),
-              HSpacing.md,
-              Expanded(
-                child: CustomSearchBar(
-                  onChanged: (searchVal) async {
-                    await _botListNotifier.getBots(searchVal);
-                    _textController.text = searchVal;
-                  },
-                ),
-              ),
-              const SizedBox(width: 8.0),
-            ],
-          ),
-        ),
-        HSpacing.sm,
-        Align(
-          alignment: Alignment.centerRight,
-          child: Padding(
+  Widget buildBotTab(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          VSpacing.sm,
+          Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                  onTap: () => {
-                        showDialog(
-                            context: context,
-                            builder: (context) => BotCreateDialog(
-                                  onCreateBot: (BotModel bot) async {
-                                    RequestResponse res =
-                                        await _botListNotifier.createBot(bot);
-                                    if (res == RequestResponse.success) {
-                                      if (kDebugMode) {
-                                        print("Done");
-                                      }
-                                      RequestResponse innerResponse =
-                                          await _botListNotifier.getBots(null);
-
-                                      if (innerResponse ==
-                                          RequestResponse.unauthorized) {
-                                        //Logout here.
-                                      }
-                                    }
-                                    if (res == RequestResponse.unauthorized) {
-                                      //Logout here
-                                    }
-                                  },
-                                ))
-                      },
-                  borderRadius: BorderRadius.circular(50),
-                  child: Ink(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        color: TColor.tamarama,),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Icon(
-                            Icons.add_outlined,
-                            color: Colors.white,
-                            size: 25,
-                          ),
-                          Text("Create bot",
-                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                color: TColor.doctorWhite,
-
-                              )),
-                        ],
-                      ),
-                    ),
-                  )),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  child: CustomSearchBar(
+                    onChanged: (searchVal) async {
+                      await _botListNotifier.getBots(searchVal);
+                      _textController.text = searchVal;
+                    },
+                  ),
+                ),
+                const SizedBox(width: 8.0),
+              ],
             ),
           ),
-        ),
-        _botListNotifier.isLoading
-            ? _buildProgressIndicator()
-            : Expanded(child: _buildBotList()),
-      ],
+          HSpacing.sm,
+          Align(
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                    onTap: () => {
+                          showDialog(
+                              context: context,
+                              builder: (context) => BotCreateDialog(
+                                    onCreateBot: (BotModel bot) async {
+                                      RequestResponse res =
+                                          await _botListNotifier.createBot(bot);
+                                      if (res == RequestResponse.success) {
+                                        if (kDebugMode) {
+                                          print("Done");
+                                        }
+                                        RequestResponse innerResponse =
+                                            await _botListNotifier.getBots(null);
+
+                                        if (innerResponse ==
+                                            RequestResponse.unauthorized) {
+                                          //Logout here.
+                                        }
+                                      }
+                                      if (res == RequestResponse.unauthorized) {
+                                        //Logout here
+                                      }
+                                    },
+                                  ))
+                        },
+                    borderRadius: BorderRadius.circular(50),
+                    child: Ink(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: TColor.tamarama,),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Icon(
+                              Icons.add_outlined,
+                              color: Colors.white,
+                              size: 25,
+                            ),
+                            Text("Create bot",
+                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                  color: TColor.doctorWhite,
+
+                                )),
+                          ],
+                        ),
+                      ),
+                    )),
+              ),
+            ),
+          ),
+          _botListNotifier.isLoading
+              ? _buildProgressIndicator()
+              : Expanded(child: _buildBotList()),
+        ],
+      ),
     );
   }
 

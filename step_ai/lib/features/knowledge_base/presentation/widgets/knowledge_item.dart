@@ -7,6 +7,8 @@ import 'package:step_ai/features/units_in_knowledge/notifier/unit_notifier.dart'
 import 'package:step_ai/shared/helpers/convert_date_time.dart';
 import 'package:step_ai/shared/helpers/convert_size.dart';
 
+import '../../../../shared/styles/colors.dart';
+
 class KnowledgeItem extends StatelessWidget {
   final Knowledge knowledge;
   KnowledgeItem({super.key, required this.knowledge});
@@ -26,7 +28,8 @@ class KnowledgeItem extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(Icons.storage, color: Colors.blueAccent, size: 38),
+          Icon(Icons.storage, color: TColor.tamarama, size: 38),
+
           const SizedBox(width: 14),
           Expanded(
             child: SingleChildScrollView(
@@ -73,9 +76,9 @@ class KnowledgeItem extends StatelessWidget {
                     builder: (context) {
                       return AlertDialog(
                         backgroundColor: Colors.white,
-                        title: const Text('Delete Knowledge',
+                        title: Text('Delete Knowledge',
                             textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.red)),
+                            style: TextStyle(color: TColor.poppySurprise)),
                         content: Text(
                           'Are you sure you want to delete "${knowledge.knowledgeName}"?',
                           textAlign: TextAlign.center,
@@ -114,7 +117,7 @@ class KnowledgeItem extends StatelessWidget {
                                 }
                               },
                               style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.red),
+                                  backgroundColor: TColor.poppySurprise),
                               child: const Text(
                                 'Delete',
                                 style: TextStyle(color: Colors.white),
@@ -125,7 +128,7 @@ class KnowledgeItem extends StatelessWidget {
                       );
                     });
               },
-              icon: const Icon(Icons.delete, color: Colors.red)),
+              icon: Icon(Icons.delete, color: TColor.petRock)),
         ],
       ),
     );

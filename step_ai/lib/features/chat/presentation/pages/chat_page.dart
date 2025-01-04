@@ -143,6 +143,7 @@ class _ChatPageState extends State<ChatPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
+                overflow: TextOverflow.ellipsis,
                 _chatNotifier.getTitleCurrentConversation(),
                 style: Theme.of(context).textTheme.displayLarge?.copyWith(
                       color: TColor.petRock,

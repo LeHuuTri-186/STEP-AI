@@ -25,7 +25,6 @@ import 'package:step_ai/shared/widgets/category_selector.dart';
 
 import '../../../../config/constants.dart';
 import '../../../../shared/styles/colors.dart';
-import '../../domain/usecase/generate_idea_usecase.dart';
 
 class EmailComposer extends StatefulWidget {
   const EmailComposer({super.key});
@@ -38,6 +37,7 @@ class _EmailComposerState extends State<EmailComposer> {
   final _formKey = GlobalKey<FormState>();
 
   var _isGeneratingEmail = false;
+  final FocusNode _focusNode = FocusNode();
 
   final TextEditingController _subjectController = TextEditingController();
   final TextEditingController _senderController = TextEditingController();
@@ -92,6 +92,7 @@ class _EmailComposerState extends State<EmailComposer> {
     _yourEmailController.removeListener(_textChange);
     // Dispose controllers to free resources
     _subjectController.dispose();
+    _focusNode.dispose();
     _senderController.dispose();
     _receiverController.dispose();
     _yourEmailController.dispose();
@@ -131,9 +132,14 @@ class _EmailComposerState extends State<EmailComposer> {
       appBar: AppBar(
         title: const Text("Email Composer"),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: _buildForm(),
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: _buildForm(),
+        ),
       ),
     );
   }

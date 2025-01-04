@@ -279,125 +279,68 @@ class _ChatBarState extends State<ChatBar> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    IconButton(
-                      onPressed: () {
-                        _chatBarNotifier.setShowOverlay(false);
-                        showModalBottomSheet(
-                          backgroundColor: TColor.doctorWhite,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          context: context,
-                          builder: (_) {
-                            return ClipRRect(
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(30),
-                                topRight: Radius.circular(30),
-                              ),
-                              child: PromptBottomSheet(
-                                returnPrompt: (value) async {
-                                  _controller.clear();
-                                  try {
-                                    if (_personalAssistantNotifier.isPersonal) {
-                                      await Provider.of<ChatNotifier>(
-                                          context, listen: false
-                                      ).sendMessageForPersonalBot(value);
-                                    }
-                                    else {
-                                      await Provider.of<ChatNotifier>(
-                                          context, listen: false
-                                      ).sendMessage(value);
-                                    }
-                                  } catch (e) {
-                                    //e is 401 and return to login screen
-                                    // print(
-                                    //     "e is 401 and return to login screen");
-                                    // print(e);
-
-                                    Navigator.of(context)
-                                        .pushNamedAndRemoveUntil(
-                                      Routes.authenticate,
-                                          (Route<dynamic> route) => false,
-                                    );
-                                  }
-                                },
-                              ),
-                            );
-                          },
-                        );
-                      },
-                      icon: Icon(
-                        FontAwesomeIcons.wandMagicSparkles,
-                        color: TColor.petRock,
-                        size: 20,
-                      ),
+                    Row(
+                      children: [
+                        _buildPromptButton(context),
+                        _buildImageUploadButton(context),
+                      ],
                     ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          _buildPromptButton(context),
-                          _buildImageUploadButton(context),
-                        ],
-                      ),
-                    _showIconSend
-                        ? IconButton(
-                            padding: const EdgeInsets.all(2),
-                            icon: Icon(
-                              Icons.send,
-                              size: 20,
-                              color: TColor.tamarama,
-                            ),
-                            onPressed: () async {
-                              // Hide keyboard
-                              FocusScope.of(context).unfocus();
-                              try {
-                                String message = _controller.text;
-                                _controller.clear();
-                                _chatBarNotifier.setShowOverlay(false);
-                                if (!_personalAssistantNotifier.isPersonal) {
-                                  await Provider.of<ChatNotifier>(context,
-                                      listen: false)
-                                      .sendMessage(message);
-                                } else {
-                                  await Provider.of<ChatNotifier>(
-                                      context, listen: false
-                                  ).sendMessageForPersonalBot(message);
-                                }
-
-
-                              } catch (e) {
-                                //e is 401 and return to login screen
-
-                                // print(e);
-                                if (context.mounted &&
-                                    e is TaskStatus &&
-                                    e == TaskStatus.UNAUTHORIZED) {
-                                  Navigator.of(context).pushNamedAndRemoveUntil(
-                                    Routes.authenticate,
-                                    (Route<dynamic> route) => false,
-                                  );
-                                }
+                  _showIconSend
+                      ? IconButton(
+                          padding: const EdgeInsets.all(2),
+                          icon: Icon(
+                            Icons.send,
+                            size: 20,
+                            color: TColor.tamarama,
+                          ),
+                          onPressed: () async {
+                            // Hide keyboard
+                            FocusScope.of(context).unfocus();
+                            try {
+                              String message = _controller.text;
+                              _controller.clear();
+                              _chatBarNotifier.setShowOverlay(false);
+                              if (!_personalAssistantNotifier.isPersonal) {
+                                await Provider.of<ChatNotifier>(context,
+                                    listen: false)
+                                    .sendMessage(message);
+                              } else {
+                                await Provider.of<ChatNotifier>(
+                                    context, listen: false
+                                ).sendMessageForPersonalBot(message);
                               }
-                              setState(() {
-                                //print("set state ABCDDDDDE");
-                                _showIconSend = true;
-                              });
-                              // _controller.clear();
-                            })
-                        : IconButton(
-                            padding: const EdgeInsets.all(2),
-                            icon: Icon(
-                              Icons.send,
-                              size: 20,
-                              color: TColor.petRock
-                            ),
-                              onPressed: () {},
-                            ),
-                    ],
-                  )]
-              )],
+
+
+                            } catch (e) {
+                              //e is 401 and return to login screen
+
+                              // print(e);
+                              if (context.mounted &&
+                                  e is TaskStatus &&
+                                  e == TaskStatus.UNAUTHORIZED) {
+                                Navigator.of(context).pushNamedAndRemoveUntil(
+                                  Routes.authenticate,
+                                  (Route<dynamic> route) => false,
+                                );
+                              }
+                            }
+                            setState(() {
+                              //print("set state ABCDDDDDE");
+                              _showIconSend = true;
+                            });
+                            // _controller.clear();
+                          })
+                      : IconButton(
+                          padding: const EdgeInsets.all(2),
+                          icon: Icon(
+                            Icons.send,
+                            size: 20,
+                            color: TColor.petRock
+                          ),
+                            onPressed: () {},
+                          ),
+                  ],
+                )],
             ),
           ),
         ),

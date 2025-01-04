@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:step_ai/features/knowledge_base/notifier/add_knowledge_dialog_notifier.dart';
 import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart';
 
+import '../../../../shared/styles/colors.dart';
+
 class AddKnowledgeDialog extends StatefulWidget {
   const AddKnowledgeDialog({super.key});
 
@@ -30,11 +32,13 @@ class _AddKnowledgeDialogState extends State<AddKnowledgeDialog> {
     _addKnowledgeDialogNotifier =
         Provider.of<AddKnowledgeDialogNotifier>(context, listen: true);
     return AlertDialog(
-      backgroundColor: Colors.white,
-      title: const Text(
+      backgroundColor: TColor.doctorWhite,
+      title: Text(
         'Create Knowledge',
         textAlign: TextAlign.center,
-        style: TextStyle(color: Colors.lightBlue),
+        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+          fontSize: 20,
+      color: TColor.slate,)
       ),
       content: SizedBox(
         width: 400,
@@ -47,6 +51,18 @@ class _AddKnowledgeDialogState extends State<AddKnowledgeDialog> {
                 controller: _nameController,
                 maxLength: 50,
                 decoration: InputDecoration(
+                  labelStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      fontSize: 15,
+                    color: TColor.petRock
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: TColor.tamarama)
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: TColor.tamarama)
+                  ),
                   labelText: 'Name',
                   counterText: '${_nameController.text.length}/50',
                   errorText: _addKnowledgeDialogNotifier
@@ -70,6 +86,18 @@ class _AddKnowledgeDialogState extends State<AddKnowledgeDialog> {
                 maxLength: 2000,
                 maxLines: 5,
                 decoration: InputDecoration(
+                  labelStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    fontSize: 15,
+                      color: TColor.petRock
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: TColor.tamarama)
+                  ),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: TColor.tamarama)
+                  ),
                   labelText: 'Description',
                   alignLabelWithHint: true,
                   counterText: '${_descriptionController.text.length}/2000',
@@ -140,7 +168,7 @@ class _AddKnowledgeDialogState extends State<AddKnowledgeDialog> {
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
-                        color: Colors.lightBlue.withOpacity(0.5),
+                        color: TColor.tamarama.withOpacity(0.5),
                       ),
                       child: const Text("Loading...")),
                   const Positioned(
@@ -155,7 +183,7 @@ class _AddKnowledgeDialogState extends State<AddKnowledgeDialog> {
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    color: Colors.lightBlue,
+                    color: TColor.tamarama,
                   ),
                   child: const Text(
                     'Create',

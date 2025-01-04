@@ -1,8 +1,4 @@
 import 'package:get_it/get_it.dart';
-import 'package:step_ai/features/email_composer/data/network/api_response_email.dart';
-import 'package:step_ai/features/email_composer/data/network/api_usage.dart';
-import 'package:step_ai/features/email_composer/data/repository/response_email_repository_impl.dart';
-import 'package:step_ai/features/email_composer/data/repository/usage_repository_impl.dart';
 import 'package:step_ai/features/email_composer/domain/repository/response_email_repository.dart';
 
 import '../../domain/repository/usage_repository.dart';

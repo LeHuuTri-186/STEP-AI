@@ -35,12 +35,12 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
   final ChatNotifier _chatNotifier = getIt<ChatNotifier>();
 
   final ScrollController _scrollController = ScrollController();
+  bool _isExpanded = false;
 
   @override
   void initState() {
     super.initState();
 
-    // Lắng nghe sự kiện cuộn
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
               _scrollController.position.maxScrollExtent &&
@@ -105,8 +105,6 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
                     name: 'lib/core/assets/imgs/step-ai-logo-white.png',
                   )),
                   VSpacing.sm,
-                  // Search Bar
-                  //CustomSearchBar(onChanged: (_) {}),
                 ],
               ),
             ),
@@ -201,36 +199,102 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
                           )),
                         ],
                       ),
-                      Row(
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          splashColor: Colors.grey.withOpacity(0.3),
+                          onTap: () {
+                            setState(() {
+                              _isExpanded = !_isExpanded; // Toggle the expansion state
+                            });
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Email",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displayMedium
+                                      ?.copyWith(
+                                      color: TColor.petRock,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      if (_isExpanded) Row(
                         children: [
                           Expanded(
-                              child: Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  splashColor: TColor.petRock.withOpacity(0.3),
-                                  onTap: () {
-                                    Navigator.of(context).pushNamedAndRemoveUntil(
-                                      Routes.email,
-                                          (Route<dynamic> route) => false,
-                                    );
-                                  },
-                                  child: Center(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        "Email composer",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .displayMedium
-                                            ?.copyWith(
-                                            color: TColor.petRock,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600),
+                            child: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                splashColor: TColor.petRock.withOpacity(0.3),
+                                onTap: () {
+                                  Navigator.of(context).pushNamedAndRemoveUntil(
+                                    Routes.email,
+                                        (Route<dynamic> route) => false,
+                                  );
+                                },
+                                child: Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      "Email Replier",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displayMedium
+                                          ?.copyWith(
+                                        color: TColor.petRock,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
                                       ),
                                     ),
                                   ),
                                 ),
-                              )),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      if (_isExpanded) Row(
+                        children: [
+                          Expanded(
+                            child: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                splashColor: TColor.petRock.withOpacity(0.3),
+                                onTap: () {
+                                  Navigator.of(context).pushNamedAndRemoveUntil(
+                                    Routes.aiAction,
+                                        (Route<dynamic> route) => false,
+                                  );
+                                },
+                                child: Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      "Email Writer",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displayMedium
+                                          ?.copyWith(
+                                        color: TColor.petRock,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                       Row(
@@ -309,8 +373,9 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
                       child: historyConversationListNotifier
                               .historyConversationList.isEmpty
                           //Create new chat if first conversation
-                          ? Center(
-                              child: Material(
+                          ? Column(
+                            children: [
+                              Material(
                                 color: Colors.transparent,
                                 child: InkWell(
                                     onTap: () async {
@@ -327,35 +392,24 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
                                     borderRadius: BorderRadius.circular(50),
                                     child: Ink(
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
+                                        borderRadius: BorderRadius.circular(8),
                                         color: TColor.tamarama,
                                       ),
                                       child: Padding(
                                         padding: const EdgeInsets.all(10.0),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            const Icon(
-                                              Icons.add_outlined,
-                                              color: Colors.white,
-                                              size: 25,
-                                            ),
-                                            Text(
-                                                "Start your first conversation",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyMedium
-                                                    ?.copyWith(
-                                                      color: TColor.doctorWhite,
-                                                    )),
-                                          ],
-                                        ),
+                                        child: Text(
+                                            "Start your first conversation",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium
+                                                ?.copyWith(
+                                                  color: TColor.doctorWhite,
+                                                )),
                                       ),
                                     )),
                               ),
-                            )
+                            ],
+                          )
                           : ListView.separated(
                               controller: _scrollController,
                               padding: EdgeInsets.zero,

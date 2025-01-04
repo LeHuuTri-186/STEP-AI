@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/features/email_composer/domain/entity/ai_email.dart';
+import 'package:step_ai/features/email_composer/domain/entity/compose_email.dart';
 import 'package:step_ai/features/email_composer/domain/entity/email_style.dart';
 import 'package:step_ai/features/email_composer/domain/entity/response_email.dart';
 import 'package:step_ai/features/email_composer/domain/usecase/generate_email_response_usecase.dart';
@@ -27,6 +28,7 @@ import 'package:step_ai/shared/widgets/category_selector.dart';
 import '../../../../config/constants.dart';
 import '../../../../shared/styles/colors.dart';
 import '../../domain/usecase/generate_idea_usecase.dart';
+import '../notifier/ai_action_notifier.dart';
 
 class EmailAction extends StatefulWidget {
   const EmailAction({super.key});
@@ -45,26 +47,17 @@ class _EmailActionState extends State<EmailAction> {
   final TextEditingController _receiverController = TextEditingController();
   final TextEditingController _yourEmailController = TextEditingController();
   final TextEditingController _mainIdeaController = TextEditingController();
-  final _formalityOptions = Constant.formalityOptions.keys.toList();
-  final _toneOptions = Constant.toneOptions.keys.toList();
-  final _lengthOptions = Constant.lengthOptions.keys.toList();
   final _assistantList = Constant.baseModels.map(Assistant.fromJson).toList();
   final _languages = Constant.languages;
-  late String _selectedFormality;
-  late String _selectedTone;
-  late String _selectedLength;
   late Assistant _selectedAssistant;
   late String _selectedLanguage;
-  late EmailComposerNotifier _composerNotifier;
+  late AiActionNotifier _composerNotifier;
   late UsageTokenNotifier _notifier;
   List<String> ideas = [];
 
   @override
   void initState() {
     super.initState();
-    _selectedFormality = _formalityOptions.first;
-    _selectedTone = _toneOptions.first;
-    _selectedLength = _lengthOptions.first;
     _selectedAssistant = _assistantList.first;
     _selectedLanguage = _languages.keys.first;
 
@@ -100,7 +93,7 @@ class _EmailActionState extends State<EmailAction> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         final notifier =
-        Provider.of<UsageTokenNotifier>(context, listen: false);
+            Provider.of<UsageTokenNotifier>(context, listen: false);
         notifier.removeListener(() {});
       }
     });
@@ -117,8 +110,7 @@ class _EmailActionState extends State<EmailAction> {
 
   @override
   Widget build(BuildContext context) {
-    _composerNotifier =
-        Provider.of<EmailComposerNotifier>(context, listen: true);
+    _composerNotifier = Provider.of<AiActionNotifier>(context, listen: true);
     _notifier = Provider.of<UsageTokenNotifier>(context, listen: true);
 
     return Scaffold(
@@ -139,37 +131,6 @@ class _EmailActionState extends State<EmailAction> {
     );
   }
 
-  Widget _buildResult(String email) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Word count: ${email.trim().split(RegExp(r'\s+')).length}',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      // Implement copying logic
-                      Clipboard.setData(ClipboardData(text: email));
-                    },
-                    tooltip: 'Copy',
-                    icon: const Icon(Icons.copy_rounded),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Text(email, style: Theme.of(context).textTheme.bodyLarge),
-        ],
-      ),
-    );
-  }
-
   Widget _buildForm() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -185,12 +146,21 @@ class _EmailActionState extends State<EmailAction> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      _buildEmailFormField("Email:",
-                          _yourEmailController, _validateField),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: CollapsibleCategoryChips(categories: Constant.actionType.keys.toList(), selectedCategory: Constant.actionType.keys.first, isExpanded: true, onCategorySelected: (c) {}, onToggleExpanded: (){}),
-                      )
+                      _buildEmailFormField(
+                          "Email:", _yourEmailController, _validateField),
+                      CollapsibleChipListScreen(
+                          actions: Constant.actionType,
+                          onClick: (m, l) {
+                            if (_yourEmailController.text.isEmpty) {
+                              showErrorDialog(context, Constant.errorMessage['empty-email']!);
+                              return;
+                            }
+                            String action = m.substring(3);
+                            _composeEmail(_yourEmailController.text, action,
+                                Constant.actionType[m]!,
+                                language: l);
+                            _notifier.loadUsageToken();
+                          })
                     ],
                   ),
                 ),
@@ -203,74 +173,23 @@ class _EmailActionState extends State<EmailAction> {
                     child: Column(
                       children: [
                         Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  AiSelector(
-                                    assistants: _assistantList,
-                                    onAssistantSelected: (a) {
-                                      setState(() {
-                                        _selectedAssistant = a;
-                                      });
-                                    },
-                                    selectedAssistant: _selectedAssistant,
-                                  ),
-                                  IconButton(
-                                    tooltip: "Generate ideas",
-                                    onPressed:
-                                    _composerNotifier.isGeneratingIdea
-                                        ? () {}
-                                        : () async {
-                                      if (_formKey.currentState!
-                                          .validate()) {
-                                        await _generateIdeas();
-                                      } else {
-                                        showErrorDialog(
-                                            context,
-                                            Constant.errorMessage[
-                                            'empty-email']!);
-                                      }
-                                    },
-                                    icon: _composerNotifier.isGeneratingIdea
-                                        ? Row(
-                                      children: [
-                                        LoadingAnimationWidget
-                                            .discreteCircle(
-                                            color: TColor.doctorWhite,
-                                            size: 12),
-                                        HSpacing.sm,
-                                        Text(
-                                          "Generating...",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleLarge!
-                                              .copyWith(
-                                            fontSize: 13,
-                                            color: TColor.doctorWhite,
-                                            fontWeight:
-                                            FontWeight.w800,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                        : Icon(
-                                      Icons.lightbulb_outline_rounded,
-                                      color: TColor.doctorWhite,
-                                    ),
-                                    color: TColor.goldenState,
-                                    highlightColor: TColor.goldenState,
-                                    style: ButtonStyle(
-                                        backgroundColor:
-                                        _composerNotifier.isGeneratingIdea
-                                            ? WidgetStatePropertyAll(
-                                            TColor.goldenState)
-                                            : WidgetStatePropertyAll(
-                                            TColor.tamarama)),
-                                  )
-                                ])),
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              AiSelector(
+                                assistants: _assistantList,
+                                onAssistantSelected: (a) {
+                                  setState(() {
+                                    _selectedAssistant = a;
+                                  });
+                                },
+                                selectedAssistant: _selectedAssistant,
+                              ),
+                            ],
+                          ),
+                        ),
                         _buildActionField(_mainIdeaController),
                         const SizedBox(
                           height: 2,
@@ -283,7 +202,7 @@ class _EmailActionState extends State<EmailAction> {
                                 imagePath: "lib/core/assets/imgs/flame.png",
                                 text: _notifier.model != null
                                     ? _notifier.model!.availableTokens
-                                    .toString()
+                                        .toString()
                                     : "",
                               ),
                               HSpacing.sm,
@@ -292,7 +211,7 @@ class _EmailActionState extends State<EmailAction> {
                                 child: InkWell(
                                   borderRadius: BorderRadius.circular(20),
                                   onTap: () async =>
-                                  await PricingRedirectService.call(),
+                                      await PricingRedirectService.call(),
                                   child: Padding(
                                     padding: const EdgeInsets.all(4.0),
                                     child: Row(
@@ -310,10 +229,10 @@ class _EmailActionState extends State<EmailAction> {
                                               .textTheme
                                               .titleMedium!
                                               .copyWith(
-                                            color: TColor.tamarama,
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 14,
-                                          ),
+                                                color: TColor.tamarama,
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 14,
+                                              ),
                                           gradient: LinearGradient(
                                             begin: Alignment.bottomLeft,
                                             end: Alignment.topRight,
@@ -344,245 +263,68 @@ class _EmailActionState extends State<EmailAction> {
     );
   }
 
-  Future<void> _generateIdeas(
-      {String suggestion = "Suggest 3 ideas for this email"}) async {
-    EmailStyle style = EmailStyle(
-        formality: _selectedFormality,
-        length: _selectedLength,
-        tone: _selectedTone);
-    AiEmail email = _buildAiEmail(style, suggestion, _mainIdeaController.text);
-    await _composerNotifier.generateIdeas(email);
-  }
-
-  AiEmail _buildAiEmail(EmailStyle style, String action, String mainIdea) {
-    return AiEmail(
-      subject: _subjectController.text,
-      sender: _senderController.text,
-      receiver: _receiverController.text,
-      action: action,
-      email: _yourEmailController.text,
-      mainIdea: mainIdea,
-      language: _languages[_selectedLanguage] ?? "English",
-      style: style,
-    );
-  }
-
-  Widget _buildAdvancedOptionsButton() {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        focusColor: Colors.transparent,
-        splashColor: TColor.northEastSnow,
-        hoverColor: Colors.transparent,
-        borderRadius: BorderRadius.circular(10),
-        onTap: () {
-          showDialog(
-              context: context,
-              builder: (_) {
-                return _buildStyleAndLength();
-              });
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: Text(
-            "Advanced Options",
-            style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                fontSize: 13,
-                color: TColor.tamarama,
-                fontWeight: FontWeight.w800),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildStyleAndLength() {
-    return Dialog(
-      backgroundColor: TColor.doctorWhite,
-      child: StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
-          return Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: SizedBox(
-              width: min(450, MediaQuery.of(context).size.width * 0.8),
-              height: 600,
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Advanced Options",
-                            style: Theme.of(context).textTheme.bodyLarge),
-                        CloseButton(
-                          onPressed: Navigator.of(context).pop,
-                        )
-                      ],
-                    ),
-                    _buildRowFormField("Subject:", _subjectController),
-                    _buildRowFormField("From:", _senderController),
-                    _buildRowFormField("To:", _receiverController),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "Language:",
-                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                          color: TColor.petRock.withOpacity(0.8),
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: LanguageCustomDropdown(
-                          value: _selectedLanguage,
-                          items: _languages,
-                          onChanged: (e) {
-                            setState(() {
-                              _selectedLanguage = e ?? "Auto";
-                            });
-                          },
-                          hintText: "Select a language"),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "Length:",
-                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                          color: TColor.petRock.withOpacity(0.8),
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CategoryChips(
-                          categories: _lengthOptions,
-                          selectedCategory: _selectedLength,
-                          onCategorySelected: (e) {
-                            setState(() {
-                              _selectedLength = e;
-                            });
-                          }),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "Formality:",
-                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                          color: TColor.petRock.withOpacity(0.8),
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CategoryChips(
-                          categories: _formalityOptions,
-                          selectedCategory: _selectedFormality,
-                          onCategorySelected: (e) {
-                            setState(() {
-                              _selectedFormality = e;
-                            });
-                          }),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "Tone:",
-                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                          color: TColor.petRock.withOpacity(0.8),
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CategoryChips(
-                          categories: _toneOptions,
-                          selectedCategory: _selectedTone,
-                          onCategorySelected: (e) {
-                            setState(() {
-                              _selectedTone = e;
-                            });
-                          }),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
   Widget _buildActionField(TextEditingController controller) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: TextField(
-        enabled: !_isGeneratingEmail,
+        enabled: !_composerNotifier.isGeneratingEmail,
         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-          color: TColor.petRock,
-          fontWeight: FontWeight.w600,
-          fontSize: 13,
-        ),
+              color: TColor.petRock,
+              fontWeight: FontWeight.w600,
+              fontSize: 13,
+            ),
         controller: controller,
         decoration: InputDecoration(
           suffixIcon: _mainIdeaController.text.isNotEmpty
               ? IconButton(
-            padding: const EdgeInsets.all(2),
-            icon: _isGeneratingEmail
-                ? Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  color: TColor.tamarama,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: LoadingAnimationWidget.discreteCircle(
-                      color: TColor.doctorWhite, size: 12),
-                ))
-                : Icon(Icons.send_rounded,
-                size: 20, color: TColor.tamarama),
-            onPressed: () async {
-              if (_formKey.currentState!.validate()) {
-                setState(() {
-                  _isGeneratingEmail = true;
-                });
-                await _composeEmail(_mainIdeaController.text);
-                _mainIdeaController.clear();
-                setState(() {
-                  _isGeneratingEmail = false;
-                });
-              } else {
-                showErrorDialog(
-                    context, Constant.errorMessage['empty-email']!);
-              }
-            },
-          )
+                  padding: const EdgeInsets.all(2),
+                  icon: _isGeneratingEmail
+                      ? Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            color: TColor.tamarama,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: LoadingAnimationWidget.discreteCircle(
+                                color: TColor.doctorWhite, size: 12),
+                          ))
+                      : _composerNotifier.isGeneratingEmail
+                          ? LoadingAnimationWidget.discreteCircle(
+                              color: TColor.doctorWhite, size: 14)
+                          : Icon(Icons.send_rounded,
+                              size: 20, color: TColor.tamarama),
+                  onPressed: () async {
+                    await _composeEmail(_yourEmailController.text,
+                        _mainIdeaController.text, "ask");
+                    _mainIdeaController.clear();
+                    _notifier.loadUsageToken();
+                  },
+                )
               : IconButton(
-            padding: const EdgeInsets.all(2),
-            icon:
-            Icon(Icons.send_rounded, size: 20, color: TColor.petRock),
-            onPressed: () {
-              showErrorDialog(
-                  context, Constant.errorMessage['empty-email']!);
-            },
-          ),
-          hintText: "Tell STEP how you would like to reply...",
+                  padding: const EdgeInsets.all(2),
+                  icon: _composerNotifier.isGeneratingEmail
+                      ? LoadingAnimationWidget.discreteCircle(
+                          color: TColor.doctorWhite, size: 14)
+                      : Icon(Icons.send_rounded,
+                          size: 20, color: TColor.petRock),
+                  onPressed: () {
+                    showErrorDialog(
+                        context, Constant.errorMessage['empty-email']!);
+                  },
+                ),
+          hintText: "Tell STEP what you wanna write...",
           floatingLabelBehavior: FloatingLabelBehavior.auto,
           hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-            color: TColor.petRock.withOpacity(0.7),
-            fontWeight: FontWeight.w600,
-            fontSize: 13,
-          ),
+                color: TColor.petRock.withOpacity(0.7),
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
+              ),
           labelStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-            color: TColor.petRock.withOpacity(0.7),
-            fontWeight: FontWeight.w600,
-            fontSize: 13,
-          ),
+                color: TColor.petRock.withOpacity(0.7),
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
+              ),
           filled: true,
           fillColor: TColor.northEastSnow,
           focusedBorder: OutlineInputBorder(
@@ -600,72 +342,35 @@ class _EmailActionState extends State<EmailAction> {
     );
   }
 
-
-  Widget _buildRowFormField(String label, TextEditingController controller) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: Theme.of(context).textTheme.titleMedium!.copyWith(
-              color: TColor.petRock.withOpacity(0.8),
-              fontSize: 14,
-            ),
-          ),
-          TextFormField(
-            style: Theme.of(context).textTheme.titleSmall!.copyWith(
-              color: TColor.petRock,
-              fontSize: 14,
-              fontWeight: FontWeight.w800,
-            ),
-            controller: controller,
-            decoration: InputDecoration(
-              floatingLabelBehavior: FloatingLabelBehavior.auto,
-              hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                color: TColor.petRock.withOpacity(0.7),
-                fontWeight: FontWeight.w600,
-                fontSize: 13,
-              ),
-              labelStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                color: TColor.petRock.withOpacity(0.7),
-                fontWeight: FontWeight.w600,
-                fontSize: 13,
-              ),
-              filled: true,
-              fillColor: TColor.northEastSnow,
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8.0),
-                borderSide: BorderSide(
-                  color: TColor.tamarama,
-                ),
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8.0),
-                borderSide: BorderSide.none,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildEmailFormField(String label, TextEditingController controller,
       FormFieldValidator<String> validator) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            label,
-            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-              color: TColor.petRock,
-              fontWeight: FontWeight.w700,
-              fontSize: 14,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                label,
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      color: TColor.petRock,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                    ),
+              ),
+              IconButton(
+                  icon: const Icon(Icons.copy),
+                  onPressed: () async {
+                    if (_yourEmailController.text.isEmpty) {
+                      showErrorDialog(context, Constant.errorMessage['empty-email']!);
+                      return;
+                    }
+                    await Clipboard.setData(
+                        ClipboardData(text: _yourEmailController.text));
+                  }),
+            ],
           ),
           VSpacing.sm,
           TextFormField(
@@ -673,18 +378,19 @@ class _EmailActionState extends State<EmailAction> {
             minLines: 10,
             controller: controller,
             validator: validator,
+            enabled: !_composerNotifier.isGeneratingEmail,
             decoration: InputDecoration(
               hintText: "Your email",
               hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                color: TColor.petRock.withOpacity(0.7),
-                fontWeight: FontWeight.w600,
-                fontSize: 13,
-              ),
+                    color: TColor.petRock.withOpacity(0.7),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                  ),
               labelStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                color: TColor.petRock.withOpacity(0.7),
-                fontWeight: FontWeight.w700,
-                fontSize: 13,
-              ),
+                    color: TColor.petRock.withOpacity(0.7),
+                    fontWeight: FontWeight.w700,
+                    fontSize: 13,
+                  ),
               filled: true,
               fillColor: TColor.northEastSnow,
               focusedBorder: OutlineInputBorder(
@@ -716,8 +422,8 @@ class _EmailActionState extends State<EmailAction> {
               Text(
                 "Oops!",
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                  fontWeight: FontWeight.w800,
-                ),
+                      fontWeight: FontWeight.w800,
+                    ),
               ),
               CloseButton(
                 onPressed: Navigator.of(context).pop,
@@ -728,9 +434,9 @@ class _EmailActionState extends State<EmailAction> {
             padding: const EdgeInsets.all(8.0),
             child: Text(error,
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                  color: TColor.petRock,
-                  fontWeight: FontWeight.w700,
-                )),
+                      color: TColor.petRock,
+                      fontWeight: FontWeight.w700,
+                    )),
           ),
           actions: [
             TextButton(
@@ -738,8 +444,8 @@ class _EmailActionState extends State<EmailAction> {
               child: Text(
                 "Got it",
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                  color: TColor.poppySurprise,
-                ),
+                      color: TColor.poppySurprise,
+                    ),
               ),
             ),
           ],
@@ -748,7 +454,193 @@ class _EmailActionState extends State<EmailAction> {
     );
   }
 
-  _composeEmail(String text) {
+  Future<void> _composeEmail(String text, String action, String type,
+      {String? language}) async {
+    ComposeEmail composeEmail = ComposeEmail(
+        action: action,
+        type: type,
+        content: text,
+        assistant: _selectedAssistant,
+        language: language);
 
+    await _composerNotifier.composeEmail(composeEmail);
+
+    setState(() {
+      _yourEmailController.text = _composerNotifier.currentEmail() != null
+          ? _composerNotifier.currentEmail()!.email
+          : "";
+    });
+  }
+
+
+}
+
+class CollapsibleChipListScreen extends StatefulWidget {
+  final Map<String, String>
+      actions; // Map for chip labels and their corresponding actions
+  final void Function(String, String?) onClick;
+  CollapsibleChipListScreen({
+    required this.actions,
+    required this.onClick,
+  });
+
+  @override
+  State<CollapsibleChipListScreen> createState() =>
+      _CollapsibleChipListScreenState();
+}
+
+class _CollapsibleChipListScreenState extends State<CollapsibleChipListScreen> {
+  // Callback for chip click
+  String _selectedLanguage = Constant.languages.values.first;
+
+  final _languages = Constant.languages;
+
+  bool _canceled = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Wrap(
+        spacing: 8.0, // Horizontal spacing between chips
+        runSpacing: 8.0, // Vertical spacing between rows of chips
+        children: widget.actions.entries.map((entry) {
+          return ActionChip(
+            side: BorderSide.none,
+            label: Text(entry.key),
+            onPressed: () async {
+              if (entry.key.contains("Translate to")) {
+                await _showLanguageSelectorDialog(context);
+                print(_selectedLanguage);
+                if (!_canceled) {
+                  _canceled = true;
+                  return widget.onClick(entry.key, _selectedLanguage);
+                }
+
+                return;
+              }
+              widget.onClick(entry.key, null); // Trigger callback with action
+            },
+            backgroundColor: TColor.tamarama,
+            labelStyle: Theme.of(context)
+                .textTheme
+                .bodyMedium!
+                .copyWith(color: TColor.doctorWhite),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Future<void> _showLanguageSelectorDialog(BuildContext context) {
+    setState(() {
+      _selectedLanguage = _languages.values.first;
+    });
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: StatefulBuilder(builder: (context, setState) {
+            return Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Select Language',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          _canceled = true;
+                          Navigator.of(context).pop();
+                        },
+                        borderRadius: BorderRadius.circular(20),
+                        child: const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(Icons.close),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  LanguageCustomDropdown(
+                      value: _selectedLanguage,
+                      items: _languages,
+                      onChanged: (l) {
+                        setState(() {
+                          _selectedLanguage = l!;
+                        });
+                      },
+                      hintText: "Select language"),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                            _canceled = true;
+                          },
+                          borderRadius: BorderRadius.circular(20),
+                          child: Ink(
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 10),
+                              child: Text('Cancel'),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () {
+                            _canceled = false;
+                            Navigator.of(context).pop();
+                          },
+                          borderRadius: BorderRadius.circular(20),
+                          child: Ink(
+                            decoration: BoxDecoration(
+                              color: TColor.tamarama,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 10),
+                              child: Text(
+                                'OK',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          }),
+        );
+      },
+    );
   }
 }

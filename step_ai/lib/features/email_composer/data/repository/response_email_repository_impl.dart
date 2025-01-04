@@ -70,9 +70,18 @@ class ResponseEmailRepositoryImpl extends ResponseEmailRepository {
       }
     };
 
-    Response response = await _apiResponseEmail.postComposeEmailRequest(payload);
 
-    ResponseEmailModel responseEmail = ResponseEmailModel.fromMap(response.data);
+    print(payload);
+
+    late Response response;
+    try {
+      response = await _apiResponseEmail.postComposeEmailRequest(payload);
+    } catch(e) {
+      print(e);
+    }
+
+
+    ResponseEmailModel responseEmail = ResponseEmailModel.fromMapComposer(response.data);
 
     return ResponseEmail.fromModel(responseEmail);
   }

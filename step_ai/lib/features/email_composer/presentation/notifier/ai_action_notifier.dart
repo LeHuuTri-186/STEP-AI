@@ -8,7 +8,7 @@ import '../../domain/entity/response_email.dart';
 
 class AiActionNotifier extends ChangeNotifier {
   List<String> ideas = [];
-  var isGeneratingEmail = false;
+  bool isGeneratingEmail = false;
   var hasError = false;
   List<ResponseEmail> emailList = [];
   int currentEmailIndex = -1;
@@ -23,8 +23,10 @@ class AiActionNotifier extends ChangeNotifier {
 
     try {
       emailList.add(await _composeEmailUsecase.call(params: email));
+      currentEmailIndex++;
     } catch (e) {
       hasError = true;
+      print(e);
     } finally {
       isGeneratingEmail = false;
       notifyListeners();
@@ -43,5 +45,13 @@ class AiActionNotifier extends ChangeNotifier {
       currentEmailIndex++;
       notifyListeners();
     }
+  }
+
+  ResponseEmail? currentEmail() {
+    if (currentEmailIndex != - 1) {
+      return emailList[currentEmailIndex];
+    }
+
+    return null;
   }
 }

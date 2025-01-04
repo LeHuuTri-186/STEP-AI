@@ -18,10 +18,6 @@ import 'package:step_ai/features/chat/notifier/history_conversation_list_notifie
 
 import 'package:step_ai/features/chat/presentation/pages/chat_page.dart';
 
-import 'package:step_ai/features/authentication/presentation/pages/email_page.dart';
-import 'package:step_ai/features/authentication/presentation/pages/forgot_password_page.dart';
-import 'package:step_ai/features/personal/presentation/notifier/bot_list_notifier.dart';
-
 import 'package:step_ai/features/preview/presentation/notifier/preview_chat_notifier.dart';
 import 'package:step_ai/features/preview/presentation/pages/preview_chat_page.dart';
 import 'package:step_ai/features/prompt/presentation/pages/prompt_list.dart';
@@ -42,6 +38,7 @@ import '../../features/authentication/notifier/login_notifier.dart';
 import '../../features/authentication/notifier/register_notifier.dart';
 import '../../features/authentication/notifier/ui_notifier.dart';
 import '../../features/chat/notifier/chat_notifier.dart';
+import '../../features/email_composer/presentation/notifier/ai_action_notifier.dart';
 import '../../features/personal/presentation/pages/playground_page.dart';
 
 class Routes {
@@ -132,7 +129,7 @@ class Routes {
         builder: (context) {
           return MultiProvider(
             providers: [
-              ChangeNotifierProvider.value(value: getIt<EmailComposerNotifier>()),
+              ChangeNotifierProvider.value(value: getIt<AiActionNotifier>()),
               ChangeNotifierProvider.value(value: getIt<UsageTokenNotifier>()),
             ],
             child: const EmailAction(),

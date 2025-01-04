@@ -27,6 +27,11 @@ class ResponseEmailModel {
     remainingUsage: json["remainingUsage"],
   );
 
+  factory ResponseEmailModel.fromMapComposer(Map<String, dynamic> json) => ResponseEmailModel(
+    email: json["message"],
+    remainingUsage: json["remainingUsage"],
+  );
+
   Map<String, dynamic> toMap() => {
     "email": email,
     "remainingUsage": remainingUsage,

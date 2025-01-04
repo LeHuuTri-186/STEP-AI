@@ -62,41 +62,36 @@ class _PublishPageState extends State<PublishPage> {
           title: const Text('Publish Configuration'),
           leading: IconButton(
               icon: const Icon(Icons.arrow_back),
-              onPressed: Navigator
-                  .of(context)
-                  .pop),
+              onPressed: Navigator.of(context).pop),
         ),
         body: Consumer<PublishNotifier>(builder: (context, notifier, child) {
-          return notifier.isLoading ?
-
-          Center(child: _twistingDotsLoadIndicator()) :
-
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "By publishing your bot on the following platforms, you fully understand and agree to abide by Terms of service for each publishing channel (including, but not limited to, any privacy policy, community guidelines, data processing agreement, etc.).",
-                    style: TextStyle(fontSize: 14, color: Colors.grey[700]),
-                  ),
-                  const SizedBox(height: 20),
-                  //Slack: -----------------------------------------------------------
-                  _buildSlackConfigureCard(notifier),
-                  //Telegram:--------------------------------------------------------
-                  _buildTelegramConfigureCard(notifier),
-                  //Messenger:--------------------------------------------------------
-                  _buildMessengerConfigureCard(notifier),
-                ]
-            ),
-          );
-        }
-        )
-    );
+          return notifier.isLoading
+              ? Center(child: _twistingDotsLoadIndicator())
+              : Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "By publishing your bot on the following platforms, you fully understand and agree to abide by Terms of service for each publishing channel (including, but not limited to, any privacy policy, community guidelines, data processing agreement, etc.).",
+                          style:
+                              TextStyle(fontSize: 14, color: Colors.grey[700]),
+                        ),
+                        const SizedBox(height: 20),
+                        //Slack: -----------------------------------------------------------
+                        _buildSlackConfigureCard(notifier),
+                        //Telegram:--------------------------------------------------------
+                        _buildTelegramConfigureCard(notifier),
+                        //Messenger:--------------------------------------------------------
+                        _buildMessengerConfigureCard(notifier),
+                      ]),
+                );
+        }));
   }
 
   Widget _buildSlackConfigureDialog(String id) {
     return AlertDialog(
+      backgroundColor: TColor.doctorWhite,
       title: const Text('Configure Slack Bot'),
       content: SizedBox(
           width: double.maxFinite,
@@ -111,14 +106,15 @@ class _PublishPageState extends State<PublishPage> {
                 SizedBox(height: 5),
                 Text(
                   'How to obtain Slack configurations?',
-                  style: TextStyle(fontSize: 13,
+                  style: TextStyle(
+                      fontSize: 13,
                       fontWeight: FontWeight.w600,
                       color: Colors.blue),
                 ),
                 SizedBox(height: 20),
                 const Text(
                   '1. Slack copy link\n'
-                      'Copy the following content to your Slack app configuration page.',
+                  'Copy the following content to your Slack app configuration page.',
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                 ),
                 SizedBox(height: 10),
@@ -134,26 +130,30 @@ class _PublishPageState extends State<PublishPage> {
                 _buildUrlLink(
                     'https://knowledge-api.jarvis.cx/kb-core/v1/hook/slack/slash/$id'),
                 SizedBox(height: 20),
-
-                const Text('2. Slack information',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),),
+                const Text(
+                  '2. Slack information',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                ),
                 const SizedBox(height: 10),
                 TextField(
                   controller: _tokenSlackController,
                   decoration: InputDecoration(
                     labelText: 'Token',
                     hintText: 'Enter Bot Token',
+                    labelStyle: TextStyle(fontSize: 12, color: TColor.petRock),
                     hintStyle: const TextStyle(fontSize: 12),
                     // errorText: _tokenSlackController.text.isEmpty ? 'This field is required' : null,
                   ),
                 ),
                 const SizedBox(height: 10),
                 TextField(
+                  style: Theme.of(context).textTheme.bodyMedium,
                   controller: _clientIdSlackController,
                   decoration: InputDecoration(
                     labelText: 'Client ID',
+                    labelStyle: TextStyle(fontSize: 12, color: TColor.petRock),
                     hintText: 'Enter Client ID',
-                    hintStyle: const TextStyle(fontSize: 12),
+                    hintStyle: const TextStyle(fontSize: 8),
                     // errorText: _clientIdSlackController.text.isEmpty ? 'This field is required' : null,
                   ),
                 ),
@@ -162,6 +162,7 @@ class _PublishPageState extends State<PublishPage> {
                   controller: _clientSecretSlackController,
                   decoration: InputDecoration(
                     labelText: 'Client Secret',
+                    labelStyle: TextStyle(fontSize: 12, color: TColor.petRock),
                     hintText: 'Enter Client Secret',
                     hintStyle: const TextStyle(fontSize: 12),
                     // errorText: _clientSecretSlackController.text.isEmpty ? 'This field is required' : null,
@@ -172,6 +173,7 @@ class _PublishPageState extends State<PublishPage> {
                   controller: _signingSecretSlackController,
                   decoration: InputDecoration(
                     labelText: 'Signing Secret',
+                    labelStyle: TextStyle(fontSize: 12, color: TColor.petRock),
                     hintText: 'Enter Signing Secret',
                     hintStyle: const TextStyle(fontSize: 12),
                     // errorText: _signingSecretSlackController.text.isEmpty ? 'This field is required' : null,
@@ -179,8 +181,7 @@ class _PublishPageState extends State<PublishPage> {
                 ),
               ],
             ),
-          )
-      ),
+          )),
       actions: [
         TextButton(
           onPressed: () async {
@@ -211,8 +212,7 @@ class _PublishPageState extends State<PublishPage> {
                     duration: Duration(seconds: 1),
                   ),
                 );
-              }
-              else if (e == 401) {
+              } else if (e == 401) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Publish failed: Unauthorized'),
@@ -222,35 +222,34 @@ class _PublishPageState extends State<PublishPage> {
                 //TODO: Logout
                 Navigator.of(context).pushNamedAndRemoveUntil(
                   Routes.authenticate,
-                      (Route<dynamic> route) => false,
+                  (Route<dynamic> route) => false,
                 );
-              }
-              else {
+              } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text(
-                        'Publish failed: Some information are wrong.'),
+                    content:
+                        Text('Publish failed: Some information are wrong.'),
                     duration: Duration(seconds: 1),
                   ),
                 );
               }
             }
           },
-          child: const Text('OK'),
+          child: Text('OK', style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 18, fontWeight: FontWeight.w700, color: TColor.tamarama),),
         ),
         TextButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text('Cancel'),
+          child: Text('Cancel',style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 18, fontWeight: FontWeight.w700, color: TColor.petRock),),
         ),
       ],
     );
   }
 
-
   Widget _buildTelegramConfigureDialog(String id) {
     return AlertDialog(
+      backgroundColor: TColor.doctorWhite,
       title: const Text('Configure Telegram Bot'),
       content: SizedBox(
           width: double.maxFinite,
@@ -263,40 +262,39 @@ class _PublishPageState extends State<PublishPage> {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 5),
-
                 const Text(
                   'How to obtain Telegram configurations?',
-                  style: TextStyle(fontSize: 13,
+                  style: TextStyle(
+                      fontSize: 13,
                       fontWeight: FontWeight.w600,
                       color: Colors.blue),
                 ),
                 const SizedBox(height: 20),
-
-                const Text('1. Telegram information',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),),
+                const Text(
+                  '1. Telegram information',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                ),
                 const SizedBox(height: 10),
                 TextField(
                   controller: _tokenTelegramController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Token',
+                    labelStyle: TextStyle(fontSize: 12, color: TColor.petRock),
                     hintText: 'Enter Bot Token',
-                    hintStyle: TextStyle(fontSize: 12),
+                    hintStyle: const TextStyle(fontSize: 12),
                     // errorText: _tokenSlackController.text.isEmpty ? 'This field is required' : null,
                   ),
                 ),
                 const SizedBox(height: 10),
-
               ],
             ),
-          )
-      ),
+          )),
       actions: [
         TextButton(
           onPressed: () async {
             try {
               Navigator.of(context).pop();
-              bool val = await _publishNotifier
-                  .validateTelegram(
+              bool val = await _publishNotifier.validateTelegram(
                   TelegramParam(_tokenTelegramController.text));
               if (val) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -306,8 +304,8 @@ class _PublishPageState extends State<PublishPage> {
                   ),
                 );
                 //call publish here.
-                await _publishNotifier.publishTelegram(
-                    _tokenTelegramController.text);
+                await _publishNotifier
+                    .publishTelegram(_tokenTelegramController.text);
                 await _publishNotifier.getPublishedList();
               }
             } catch (e) {
@@ -318,8 +316,7 @@ class _PublishPageState extends State<PublishPage> {
                     duration: Duration(seconds: 1),
                   ),
                 );
-              }
-              else if (e == 401) {
+              } else if (e == 401) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Publish failed: Unauthorized'),
@@ -329,10 +326,9 @@ class _PublishPageState extends State<PublishPage> {
                 //TODO: Logout
                 Navigator.of(context).pushNamedAndRemoveUntil(
                   Routes.authenticate,
-                      (Route<dynamic> route) => false,
+                  (Route<dynamic> route) => false,
                 );
-              }
-              else {
+              } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Publish failed: Unknown error'),
@@ -342,13 +338,13 @@ class _PublishPageState extends State<PublishPage> {
               }
             }
           },
-          child: const Text('OK'),
+          child: Text('OK', style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 18, fontWeight: FontWeight.w700, color: TColor.tamarama),),
         ),
         TextButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text('Cancel'),
+          child: Text('Cancel', style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 18, fontWeight: FontWeight.w700, color: TColor.petRock),),
         ),
       ],
     );
@@ -356,6 +352,7 @@ class _PublishPageState extends State<PublishPage> {
 
   Widget _buildMessengerConfigureDialog(String id) {
     return AlertDialog(
+      backgroundColor: TColor.doctorWhite,
       title: const Text('Configure Messenger Bot'),
       content: SizedBox(
           width: double.maxFinite,
@@ -370,34 +367,35 @@ class _PublishPageState extends State<PublishPage> {
                 SizedBox(height: 5),
                 const Text(
                   'How to obtain Slack configurations?',
-                  style: TextStyle(fontSize: 13,
+                  style: TextStyle(
+                      fontSize: 13,
                       fontWeight: FontWeight.w600,
                       color: Colors.blue),
                 ),
                 SizedBox(height: 20),
                 const Text(
                   '1. Message copy link\n'
-                      'Copy the following content to your Slack app configuration page.',
+                  'Copy the following content to your Slack app configuration page.',
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 10),
-
                 const Text('Callback URL'),
                 _buildUrlLink(
                     'https://knowledge-api.jarvis.cx/kb-core/v1/hook/messenger/$id'),
-
                 const SizedBox(height: 10),
                 const Text('Verify Token'),
                 _buildUrlLink('knowledge'),
                 const SizedBox(height: 10),
-
-                const Text('2. Messenger information',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),),
+                const Text(
+                  '2. Messenger information',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                ),
                 const SizedBox(height: 10),
                 TextField(
                   controller: _tokenMessengerController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Messenger Bot Token',
+                    labelStyle: TextStyle(fontSize: 12, color: TColor.petRock),
                     hintText: 'Enter Bot Token',
                     hintStyle: TextStyle(fontSize: 12),
                     // errorText: _tokenSlackController.text.isEmpty ? 'This field is required' : null,
@@ -406,8 +404,9 @@ class _PublishPageState extends State<PublishPage> {
                 const SizedBox(height: 10),
                 TextField(
                   controller: _pageIdMessengerController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Messenger Bot Page ID',
+                    labelStyle: TextStyle(fontSize: 12, color: TColor.petRock),
                     hintText: 'Enter Page ID',
                     hintStyle: TextStyle(fontSize: 12),
                     // errorText: _clientIdSlackController.text.isEmpty ? 'This field is required' : null,
@@ -416,8 +415,9 @@ class _PublishPageState extends State<PublishPage> {
                 const SizedBox(height: 10),
                 TextField(
                   controller: _appSecretMessengerController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Messenger Bot App Secret',
+                    labelStyle: TextStyle(fontSize: 12, color: TColor.petRock),
                     hintText: 'Enter App Secret',
                     hintStyle: TextStyle(fontSize: 12),
                     // errorText: _clientSecretSlackController.text.isEmpty ? 'This field is required' : null,
@@ -426,8 +426,7 @@ class _PublishPageState extends State<PublishPage> {
                 const SizedBox(height: 10),
               ],
             ),
-          )
-      ),
+          )),
       actions: [
         TextButton(
           onPressed: () async {
@@ -457,8 +456,7 @@ class _PublishPageState extends State<PublishPage> {
                     duration: Duration(seconds: 1),
                   ),
                 );
-              }
-              else if (e == 401) {
+              } else if (e == 401) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Publish failed: Unauthorized'),
@@ -468,27 +466,26 @@ class _PublishPageState extends State<PublishPage> {
                 //TODO: Logout
                 Navigator.of(context).pushNamedAndRemoveUntil(
                   Routes.authenticate,
-                      (Route<dynamic> route) => false,
+                  (Route<dynamic> route) => false,
                 );
-              }
-              else {
+              } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text(
-                        'Publish failed: Some information are wrong.'),
+                    content:
+                        Text('Publish failed: Some information are wrong.'),
                     duration: Duration(seconds: 1),
                   ),
                 );
               }
             }
           },
-          child: const Text('OK'),
+          child: Text('OK', style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 18, fontWeight: FontWeight.w700, color: TColor.tamarama),),
         ),
         TextButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text('Cancel'),
+          child: Text('Cancel', style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 18, fontWeight: FontWeight.w700, color: TColor.petRock),),
         ),
       ],
     );
@@ -525,6 +522,8 @@ class _PublishPageState extends State<PublishPage> {
 
   Widget _buildSlackConfigureCard(PublishNotifier notifier) {
     return Card(
+      elevation: 5,
+      color: TColor.doctorWhite,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
@@ -541,8 +540,8 @@ class _PublishPageState extends State<PublishPage> {
                 const SizedBox(width: 10),
                 TextButton(
                   onPressed: () async {
-                    if (notifier.slackUrl == null ||
-                        notifier.slackUrl!.isEmpty) return;
+                    if (notifier.slackUrl == null || notifier.slackUrl!.isEmpty)
+                      return;
                     final Uri url = Uri.parse(notifier.slackUrl!);
                     if (await canLaunchUrl(url)) {
                       await launchUrl(url);
@@ -550,26 +549,37 @@ class _PublishPageState extends State<PublishPage> {
                       throw 'Could not launch $url';
                     }
                   },
-                  child: const Text(
+                  child: Text(
                     "Slack",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: TColor.tamarama,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800
+                    ),
                   ),
                 )
               ],
             ),
             Row(
               children: [
-                notifier.isConfiguredSlack ? Text(
-                  "Published",
-                  style: TextStyle(fontSize: 14, color: Colors.green[600]),
-                ) : Text(
-                  "Not Configured",
-                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                ),
-
+                notifier.isConfiguredSlack
+                    ? Text(
+                        "Published",
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: TColor.tamarama,
+                  ),
+                      )
+                    : Text(
+                        "Not Configured",
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: TColor.poppySurprise,
+                  ),
+                      ),
                 const SizedBox(width: 10),
                 TextButton(
-                  onPressed: () async{
+                  onPressed: () async {
                     if (notifier.isConfiguredSlack) {
                       try {
                         await notifier.disconnect('slack');
@@ -585,14 +595,13 @@ class _PublishPageState extends State<PublishPage> {
                           //TODO: reset & logout
                           Navigator.of(context).pushNamedAndRemoveUntil(
                             Routes.authenticate,
-                                (Route<dynamic> route) => false,
+                            (Route<dynamic> route) => false,
                           );
-                        }
-                        else {
+                        } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content: Text(
-                                  'Disconnect failed: Unknown error.'),
+                              content:
+                                  Text('Disconnect failed: Unknown error.'),
                               duration: Duration(seconds: 1),
                             ),
                           );
@@ -604,18 +613,25 @@ class _PublishPageState extends State<PublishPage> {
                     showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return _buildSlackConfigureDialog(notifier
-                              .currentAssistant!.id!);
+                          return _buildSlackConfigureDialog(
+                              notifier.currentAssistant!.id!);
                         });
                   },
-                  child: notifier.isConfiguredSlack ?
-                  Text(
-                    "Disconnect",
-                    style: TextStyle(fontSize: 14, color: Colors.red[600]),
-                  ) : Text(
-                    "Publish",
-                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                  ),
+                  child: notifier.isConfiguredSlack
+                      ? Text(
+                          "Disconnect",
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: TColor.poppySurprise,
+                    ),
+                        )
+                      : Text(
+                          "Publish",
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: TColor.tamarama,
+                    ),
+                        ),
                 )
               ],
             ),
@@ -627,6 +643,8 @@ class _PublishPageState extends State<PublishPage> {
 
   Widget _buildTelegramConfigureCard(PublishNotifier notifier) {
     return Card(
+      elevation: 5,
+      color: TColor.doctorWhite,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
@@ -652,23 +670,34 @@ class _PublishPageState extends State<PublishPage> {
                       throw 'Could not launch $url';
                     }
                   },
-                  child: const Text(
+                  child: Text(
                     "Telegram",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                  ),)
-
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: TColor.tamarama,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800
+                    ),
+                  ),
+                )
               ],
             ),
             Row(
               children: [
-                notifier.isConfiguredTelegram ? Text(
-                  "Published",
-                  style: TextStyle(fontSize: 14, color: Colors.green[600]),
-                ) : Text(
-                  "Not Configured",
-                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                ),
-
+                notifier.isConfiguredTelegram
+                    ? Text(
+                        "Published",
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: TColor.slate,
+                    fontWeight: FontWeight.w800
+                  ),
+                      )
+                    : Text(
+                        "Not Configured",
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: TColor.poppySurprise,
+                    fontWeight: FontWeight.w800
+                  ),
+                      ),
                 const SizedBox(width: 10),
                 TextButton(
                   onPressed: () async {
@@ -687,14 +716,13 @@ class _PublishPageState extends State<PublishPage> {
                           //TODO: reset & logout
                           Navigator.of(context).pushNamedAndRemoveUntil(
                             Routes.authenticate,
-                                (Route<dynamic> route) => false,
+                            (Route<dynamic> route) => false,
                           );
-                        }
-                        else {
+                        } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content: Text(
-                                  'Disconnect failed: Unknown error.'),
+                              content:
+                                  Text('Disconnect failed: Unknown error.'),
                               duration: Duration(seconds: 1),
                             ),
                           );
@@ -705,18 +733,25 @@ class _PublishPageState extends State<PublishPage> {
                     showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return _buildTelegramConfigureDialog(notifier
-                              .currentAssistant!.id!);
+                          return _buildTelegramConfigureDialog(
+                              notifier.currentAssistant!.id!);
                         });
                   },
-                  child: notifier.isConfiguredTelegram ?
-                  Text(
-                    "Disconnect",
-                    style: TextStyle(fontSize: 14, color: Colors.red[600]),
-                  ) : Text(
-                    "Publish",
-                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                  ),
+                  child: notifier.isConfiguredTelegram
+                      ? Text(
+                          "Disconnect",
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      color: TColor.poppySurprise,
+                      fontWeight: FontWeight.w800
+                    ),
+                        )
+                      : Text(
+                          "Publish",
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      color: TColor.tamarama,
+                      fontWeight: FontWeight.w800
+                    ),
+                        ),
                 )
               ],
             ),
@@ -728,6 +763,8 @@ class _PublishPageState extends State<PublishPage> {
 
   Widget _buildMessengerConfigureCard(PublishNotifier notifier) {
     return Card(
+      elevation: 5,
+      color: TColor.doctorWhite,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
@@ -753,23 +790,34 @@ class _PublishPageState extends State<PublishPage> {
                       throw 'Could not launch $url';
                     }
                   },
-                  child: const Text(
+                  child: Text(
                     "Messenger",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: TColor.tamarama,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800
+                    ),
                   ),
                 )
               ],
             ),
             Row(
               children: [
-                notifier.isConfiguredMessenger ? Text(
-                  "Published",
-                  style: TextStyle(fontSize: 14, color: Colors.green[600]),
-                ) : Text(
-                  "Not Configured",
-                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                ),
-
+                notifier.isConfiguredMessenger
+                    ? Text(
+                        "Published",
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          fontWeight: FontWeight.w800,
+                              color: TColor.tamarama,
+                            ),
+                      )
+                    : Text(
+                        "Not Configured",
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              color: TColor.poppySurprise,
+                          fontWeight: FontWeight.w800
+                            ),
+                      ),
                 const SizedBox(width: 10),
                 TextButton(
                   onPressed: () async {
@@ -785,17 +833,15 @@ class _PublishPageState extends State<PublishPage> {
                         );
                       } catch (e) {
                         if (e == 401) {
-                          //TODO: reset & logout
                           Navigator.of(context).pushNamedAndRemoveUntil(
                             Routes.authenticate,
-                                (Route<dynamic> route) => false,
+                            (Route<dynamic> route) => false,
                           );
-                        }
-                        else {
+                        } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content: Text(
-                                  'Disconnect failed: Unknown error.'),
+                              content:
+                                  Text('Disconnect failed: Unknown error.'),
                               duration: Duration(seconds: 1),
                             ),
                           );
@@ -811,14 +857,21 @@ class _PublishPageState extends State<PublishPage> {
                               notifier.currentAssistant!.id!);
                         });
                   },
-                  child: notifier.isConfiguredMessenger ?
-                  Text(
-                    "Disconnect",
-                    style: TextStyle(fontSize: 14, color: Colors.red[600]),
-                  ) : Text(
-                    "Publish",
-                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                  ),
+                  child: notifier.isConfiguredMessenger
+                      ? Text(
+                          "Disconnect",
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        fontWeight: FontWeight.w800,
+                        color: TColor.poppySurprise,
+                      ),
+                        )
+                      : Text(
+                          "Publish",
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: TColor.tamarama,
+                    ),
+                        ),
                 )
               ],
             ),
@@ -827,5 +880,4 @@ class _PublishPageState extends State<PublishPage> {
       ),
     );
   }
-
 }

@@ -31,7 +31,6 @@ class LoginRepositoryImpl extends LoginRepository{
         body: body,
         headers: _headers);
 
-      print('Login ${response.statusCode}');
       //200 for login success
       if (response.statusCode == 200){
         TokenModel token;
@@ -46,7 +45,6 @@ class LoginRepositoryImpl extends LoginRepository{
         throw ('Error: ${response.reasonPhrase!}');
       }
     } catch (e) {
-      print('Error: $e');
       return null;
     }
   }
