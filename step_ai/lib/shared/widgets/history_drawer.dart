@@ -186,7 +186,7 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
-                                    "Personal",
+                                    "Playground",
                                     style: Theme.of(context)
                                         .textTheme
                                         .displayMedium
@@ -199,6 +199,38 @@ class _HistoryDrawerState extends State<HistoryDrawer> {
                               ),
                             ),
                           )),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  splashColor: TColor.petRock.withOpacity(0.3),
+                                  onTap: () {
+                                    Navigator.of(context).pushNamedAndRemoveUntil(
+                                      Routes.email,
+                                          (Route<dynamic> route) => false,
+                                    );
+                                  },
+                                  child: Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        "Email composer",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displayMedium
+                                            ?.copyWith(
+                                            color: TColor.petRock,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )),
                         ],
                       ),
                       Row(

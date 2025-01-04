@@ -4,7 +4,7 @@ import 'package:step_ai/features/email_composer/domain/entity/ai_email.dart';
 import 'package:step_ai/features/email_composer/domain/entity/compose_email.dart';
 import 'package:step_ai/features/email_composer/domain/entity/response_email.dart';
 
-import '../../domain/repository/reponse_email_repository.dart';
+import '../../domain/repository/response_email_repository.dart';
 import '../model/response_email_model.dart';
 
 class ResponseEmailRepositoryImpl extends ResponseEmailRepository {
@@ -62,7 +62,7 @@ class ResponseEmailRepositoryImpl extends ResponseEmailRepository {
   Future<ResponseEmail> composeEmail({required ComposeEmail composeEmail}) async {
     Map<String, dynamic> payload = {
       if (composeEmail.assistant != null) "assistant": composeEmail.assistant!.toJson(),
-      "action": composeEmail.action,
+      if (composeEmail.action != "") "action": composeEmail.action,
       "type": composeEmail.type,
       "content": composeEmail.content,
       "metadata": {

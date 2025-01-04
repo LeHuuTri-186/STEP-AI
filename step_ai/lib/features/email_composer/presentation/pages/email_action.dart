@@ -14,6 +14,7 @@ import 'package:step_ai/features/email_composer/presentation/widgets/action_tile
 import 'package:step_ai/features/prompt/presentation/widgets/language_custom_dropdown.dart';
 import 'package:step_ai/shared/styles/horizontal_spacing.dart';
 import 'package:step_ai/shared/styles/vertical_spacing.dart';
+import 'package:step_ai/shared/widgets/category_chips_selector.dart';
 import 'package:step_ai/shared/widgets/history_drawer.dart';
 import '../../../../config/routes/routes.dart';
 import '../../../../shared/usecases/pricing_redirect_service.dart';
@@ -27,14 +28,14 @@ import '../../../../config/constants.dart';
 import '../../../../shared/styles/colors.dart';
 import '../../domain/usecase/generate_idea_usecase.dart';
 
-class EmailComposer extends StatefulWidget {
-  const EmailComposer({super.key});
+class EmailAction extends StatefulWidget {
+  const EmailAction({super.key});
 
   @override
-  State<EmailComposer> createState() => _EmailComposerState();
+  State<EmailAction> createState() => _EmailActionState();
 }
 
-class _EmailComposerState extends State<EmailComposer> {
+class _EmailActionState extends State<EmailAction> {
   final _formKey = GlobalKey<FormState>();
 
   var _isGeneratingEmail = false;
@@ -99,7 +100,7 @@ class _EmailComposerState extends State<EmailComposer> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         final notifier =
-            Provider.of<UsageTokenNotifier>(context, listen: false);
+        Provider.of<UsageTokenNotifier>(context, listen: false);
         notifier.removeListener(() {});
       }
     });
@@ -129,7 +130,7 @@ class _EmailComposerState extends State<EmailComposer> {
         }
       },
       appBar: AppBar(
-        title: const Text("Email Composer"),
+        title: const Text("Email Action"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -184,19 +185,12 @@ class _EmailComposerState extends State<EmailComposer> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      _buildEmailFormField("Email to reply to:",
+                      _buildEmailFormField("Email:",
                           _yourEmailController, _validateField),
-                      if (_composerNotifier.ideas.isNotEmpty)
-                        ..._composerNotifier.ideas.map(
-                          (idea) => Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ActionTile(
-                                action: idea,
-                                onTap: () async {
-                                  await _replyEmail(idea);
-                                }),
-                          ),
-                        ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CollapsibleCategoryChips(categories: Constant.actionType.keys.toList(), selectedCategory: Constant.actionType.keys.first, isExpanded: true, onCategorySelected: (c) {}, onToggleExpanded: (){}),
+                      )
                     ],
                   ),
                 ),
@@ -212,7 +206,7 @@ class _EmailComposerState extends State<EmailComposer> {
                             padding: const EdgeInsets.all(8.0),
                             child: Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   AiSelector(
@@ -227,54 +221,54 @@ class _EmailComposerState extends State<EmailComposer> {
                                   IconButton(
                                     tooltip: "Generate ideas",
                                     onPressed:
-                                        _composerNotifier.isGeneratingIdea
-                                            ? () {}
-                                            : () async {
-                                                if (_formKey.currentState!
-                                                    .validate()) {
-                                                  await _generateIdeas();
-                                                } else {
-                                                  showErrorDialog(
-                                                      context,
-                                                      Constant.errorMessage[
-                                                          'empty-email']!);
-                                                }
-                                              },
+                                    _composerNotifier.isGeneratingIdea
+                                        ? () {}
+                                        : () async {
+                                      if (_formKey.currentState!
+                                          .validate()) {
+                                        await _generateIdeas();
+                                      } else {
+                                        showErrorDialog(
+                                            context,
+                                            Constant.errorMessage[
+                                            'empty-email']!);
+                                      }
+                                    },
                                     icon: _composerNotifier.isGeneratingIdea
                                         ? Row(
-                                            children: [
-                                              LoadingAnimationWidget
-                                                  .discreteCircle(
-                                                      color: TColor.doctorWhite,
-                                                      size: 12),
-                                              HSpacing.sm,
-                                              Text(
-                                                "Generating...",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .titleLarge!
-                                                    .copyWith(
-                                                      fontSize: 13,
-                                                      color: TColor.doctorWhite,
-                                                      fontWeight:
-                                                          FontWeight.w800,
-                                                    ),
-                                              ),
-                                            ],
-                                          )
-                                        : Icon(
-                                            Icons.lightbulb_outline_rounded,
+                                      children: [
+                                        LoadingAnimationWidget
+                                            .discreteCircle(
                                             color: TColor.doctorWhite,
+                                            size: 12),
+                                        HSpacing.sm,
+                                        Text(
+                                          "Generating...",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleLarge!
+                                              .copyWith(
+                                            fontSize: 13,
+                                            color: TColor.doctorWhite,
+                                            fontWeight:
+                                            FontWeight.w800,
                                           ),
+                                        ),
+                                      ],
+                                    )
+                                        : Icon(
+                                      Icons.lightbulb_outline_rounded,
+                                      color: TColor.doctorWhite,
+                                    ),
                                     color: TColor.goldenState,
                                     highlightColor: TColor.goldenState,
                                     style: ButtonStyle(
                                         backgroundColor:
-                                            _composerNotifier.isGeneratingIdea
-                                                ? WidgetStatePropertyAll(
-                                                    TColor.goldenState)
-                                                : WidgetStatePropertyAll(
-                                                    TColor.tamarama)),
+                                        _composerNotifier.isGeneratingIdea
+                                            ? WidgetStatePropertyAll(
+                                            TColor.goldenState)
+                                            : WidgetStatePropertyAll(
+                                            TColor.tamarama)),
                                   )
                                 ])),
                         _buildActionField(_mainIdeaController),
@@ -289,7 +283,7 @@ class _EmailComposerState extends State<EmailComposer> {
                                 imagePath: "lib/core/assets/imgs/flame.png",
                                 text: _notifier.model != null
                                     ? _notifier.model!.availableTokens
-                                        .toString()
+                                    .toString()
                                     : "",
                               ),
                               HSpacing.sm,
@@ -298,7 +292,7 @@ class _EmailComposerState extends State<EmailComposer> {
                                 child: InkWell(
                                   borderRadius: BorderRadius.circular(20),
                                   onTap: () async =>
-                                      await PricingRedirectService.call(),
+                                  await PricingRedirectService.call(),
                                   child: Padding(
                                     padding: const EdgeInsets.all(4.0),
                                     child: Row(
@@ -316,10 +310,10 @@ class _EmailComposerState extends State<EmailComposer> {
                                               .textTheme
                                               .titleMedium!
                                               .copyWith(
-                                                color: TColor.tamarama,
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 14,
-                                              ),
+                                            color: TColor.tamarama,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 14,
+                                          ),
                                           gradient: LinearGradient(
                                             begin: Alignment.bottomLeft,
                                             end: Alignment.topRight,
@@ -434,9 +428,9 @@ class _EmailComposerState extends State<EmailComposer> {
                       child: Text(
                         "Language:",
                         style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                              color: TColor.petRock.withOpacity(0.8),
-                              fontSize: 14,
-                            ),
+                          color: TColor.petRock.withOpacity(0.8),
+                          fontSize: 14,
+                        ),
                       ),
                     ),
                     Padding(
@@ -456,9 +450,9 @@ class _EmailComposerState extends State<EmailComposer> {
                       child: Text(
                         "Length:",
                         style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                              color: TColor.petRock.withOpacity(0.8),
-                              fontSize: 14,
-                            ),
+                          color: TColor.petRock.withOpacity(0.8),
+                          fontSize: 14,
+                        ),
                       ),
                     ),
                     Padding(
@@ -477,9 +471,9 @@ class _EmailComposerState extends State<EmailComposer> {
                       child: Text(
                         "Formality:",
                         style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                              color: TColor.petRock.withOpacity(0.8),
-                              fontSize: 14,
-                            ),
+                          color: TColor.petRock.withOpacity(0.8),
+                          fontSize: 14,
+                        ),
                       ),
                     ),
                     Padding(
@@ -498,9 +492,9 @@ class _EmailComposerState extends State<EmailComposer> {
                       child: Text(
                         "Tone:",
                         style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                              color: TColor.petRock.withOpacity(0.8),
-                              fontSize: 14,
-                            ),
+                          color: TColor.petRock.withOpacity(0.8),
+                          fontSize: 14,
+                        ),
                       ),
                     ),
                     Padding(
@@ -530,65 +524,65 @@ class _EmailComposerState extends State<EmailComposer> {
       child: TextField(
         enabled: !_isGeneratingEmail,
         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-              color: TColor.petRock,
-              fontWeight: FontWeight.w600,
-              fontSize: 13,
-            ),
+          color: TColor.petRock,
+          fontWeight: FontWeight.w600,
+          fontSize: 13,
+        ),
         controller: controller,
         decoration: InputDecoration(
           suffixIcon: _mainIdeaController.text.isNotEmpty
               ? IconButton(
-                  padding: const EdgeInsets.all(2),
-                  icon: _isGeneratingEmail
-                      ? Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            color: TColor.tamarama,
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: LoadingAnimationWidget.discreteCircle(
-                                color: TColor.doctorWhite, size: 12),
-                          ))
-                      : Icon(Icons.send_rounded,
-                          size: 20, color: TColor.tamarama),
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      setState(() {
-                        _isGeneratingEmail = true;
-                      });
-                      await _replyEmail(_mainIdeaController.text);
-                      _mainIdeaController.clear();
-                      setState(() {
-                        _isGeneratingEmail = false;
-                      });
-                    } else {
-                      showErrorDialog(
-                          context, Constant.errorMessage['empty-email']!);
-                    }
-                  },
-                )
-              : IconButton(
-                  padding: const EdgeInsets.all(2),
-                  icon:
-                      Icon(Icons.send_rounded, size: 20, color: TColor.petRock),
-                  onPressed: () {
-                    showErrorDialog(
-                        context, Constant.errorMessage['empty-email']!);
-                  },
+            padding: const EdgeInsets.all(2),
+            icon: _isGeneratingEmail
+                ? Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  color: TColor.tamarama,
                 ),
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: LoadingAnimationWidget.discreteCircle(
+                      color: TColor.doctorWhite, size: 12),
+                ))
+                : Icon(Icons.send_rounded,
+                size: 20, color: TColor.tamarama),
+            onPressed: () async {
+              if (_formKey.currentState!.validate()) {
+                setState(() {
+                  _isGeneratingEmail = true;
+                });
+                await _composeEmail(_mainIdeaController.text);
+                _mainIdeaController.clear();
+                setState(() {
+                  _isGeneratingEmail = false;
+                });
+              } else {
+                showErrorDialog(
+                    context, Constant.errorMessage['empty-email']!);
+              }
+            },
+          )
+              : IconButton(
+            padding: const EdgeInsets.all(2),
+            icon:
+            Icon(Icons.send_rounded, size: 20, color: TColor.petRock),
+            onPressed: () {
+              showErrorDialog(
+                  context, Constant.errorMessage['empty-email']!);
+            },
+          ),
           hintText: "Tell STEP how you would like to reply...",
           floatingLabelBehavior: FloatingLabelBehavior.auto,
           hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                color: TColor.petRock.withOpacity(0.7),
-                fontWeight: FontWeight.w600,
-                fontSize: 13,
-              ),
+            color: TColor.petRock.withOpacity(0.7),
+            fontWeight: FontWeight.w600,
+            fontSize: 13,
+          ),
           labelStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                color: TColor.petRock.withOpacity(0.7),
-                fontWeight: FontWeight.w600,
-                fontSize: 13,
-              ),
+            color: TColor.petRock.withOpacity(0.7),
+            fontWeight: FontWeight.w600,
+            fontSize: 13,
+          ),
           filled: true,
           fillColor: TColor.northEastSnow,
           focusedBorder: OutlineInputBorder(
@@ -606,46 +600,6 @@ class _EmailComposerState extends State<EmailComposer> {
     );
   }
 
-  Future<void> _replyEmail(String mainIdea) async {
-    EmailStyle style = EmailStyle(
-        formality: _selectedFormality,
-        length: _selectedLength,
-        tone: _selectedTone);
-    AiEmail email = _buildAiEmail(style, "Reply to this email", mainIdea);
-
-    await _composerNotifier.generateEmail(email);
-
-    ResponseEmail result =
-        _composerNotifier.emailList[_composerNotifier.currentEmailIndex];
-
-    _notifier.loadUsageToken();
-
-    if (context.mounted) {
-      showDialog(
-        context: context,
-        barrierDismissible: true,
-        builder: (_) {
-          return AlertDialog(
-            backgroundColor: TColor.doctorWhite,
-            contentPadding: const EdgeInsets.all(16.0),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            content: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Wrap(children: [
-                Column(
-                  children: [
-                    _buildResult(result.email),
-                  ],
-                ),
-              ]),
-            ),
-          );
-        },
-      );
-    }
-  }
 
   Widget _buildRowFormField(String label, TextEditingController controller) {
     return Padding(
@@ -656,29 +610,29 @@ class _EmailComposerState extends State<EmailComposer> {
           Text(
             label,
             style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                  color: TColor.petRock.withOpacity(0.8),
-                  fontSize: 14,
-                ),
+              color: TColor.petRock.withOpacity(0.8),
+              fontSize: 14,
+            ),
           ),
           TextFormField(
             style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                  color: TColor.petRock,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w800,
-                ),
+              color: TColor.petRock,
+              fontSize: 14,
+              fontWeight: FontWeight.w800,
+            ),
             controller: controller,
             decoration: InputDecoration(
               floatingLabelBehavior: FloatingLabelBehavior.auto,
               hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    color: TColor.petRock.withOpacity(0.7),
-                    fontWeight: FontWeight.w600,
-                    fontSize: 13,
-                  ),
+                color: TColor.petRock.withOpacity(0.7),
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
+              ),
               labelStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    color: TColor.petRock.withOpacity(0.7),
-                    fontWeight: FontWeight.w600,
-                    fontSize: 13,
-                  ),
+                color: TColor.petRock.withOpacity(0.7),
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
+              ),
               filled: true,
               fillColor: TColor.northEastSnow,
               focusedBorder: OutlineInputBorder(
@@ -705,20 +659,13 @@ class _EmailComposerState extends State<EmailComposer> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                label,
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: TColor.petRock,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 14,
-                    ),
-              ),
-              _buildAdvancedOptionsButton(),
-            ],
+          Text(
+            label,
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              color: TColor.petRock,
+              fontWeight: FontWeight.w700,
+              fontSize: 14,
+            ),
           ),
           VSpacing.sm,
           TextFormField(
@@ -727,17 +674,17 @@ class _EmailComposerState extends State<EmailComposer> {
             controller: controller,
             validator: validator,
             decoration: InputDecoration(
-              hintText: "Parse the email you would like to reply",
+              hintText: "Your email",
               hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    color: TColor.petRock.withOpacity(0.7),
-                    fontWeight: FontWeight.w600,
-                    fontSize: 13,
-                  ),
+                color: TColor.petRock.withOpacity(0.7),
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
+              ),
               labelStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    color: TColor.petRock.withOpacity(0.7),
-                    fontWeight: FontWeight.w700,
-                    fontSize: 13,
-                  ),
+                color: TColor.petRock.withOpacity(0.7),
+                fontWeight: FontWeight.w700,
+                fontSize: 13,
+              ),
               filled: true,
               fillColor: TColor.northEastSnow,
               focusedBorder: OutlineInputBorder(
@@ -769,8 +716,8 @@ class _EmailComposerState extends State<EmailComposer> {
               Text(
                 "Oops!",
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
+                  fontWeight: FontWeight.w800,
+                ),
               ),
               CloseButton(
                 onPressed: Navigator.of(context).pop,
@@ -781,9 +728,9 @@ class _EmailComposerState extends State<EmailComposer> {
             padding: const EdgeInsets.all(8.0),
             child: Text(error,
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: TColor.petRock,
-                      fontWeight: FontWeight.w700,
-                    )),
+                  color: TColor.petRock,
+                  fontWeight: FontWeight.w700,
+                )),
           ),
           actions: [
             TextButton(
@@ -791,13 +738,17 @@ class _EmailComposerState extends State<EmailComposer> {
               child: Text(
                 "Got it",
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      color: TColor.poppySurprise,
-                    ),
+                  color: TColor.poppySurprise,
+                ),
               ),
             ),
           ],
         );
       },
     );
+  }
+
+  _composeEmail(String text) {
+
   }
 }

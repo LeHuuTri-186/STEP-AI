@@ -27,8 +27,9 @@ class ActionTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.8,
+                    width: MediaQuery.of(context).size.width * 0.6,
                     child: Text(
+                      maxLines: 10,
                       action,
                       style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                             color: TColor.petRock,

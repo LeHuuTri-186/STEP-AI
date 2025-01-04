@@ -5,7 +5,7 @@ class Constant {
   //API:------------------------------------------------------------------------
   // static String apiBaseUrl = 'https://api.dev.jarvis.cx';
   // static String kbApiUrl = 'https://knowledge-api.dev.jarvis.cx';
-  static String apiBaseUrl = 'https://api.jarvis.cx';
+  static String apiBaseUrl = 'https://api.dev.jarvis.cx';
   static String kbApiUrl = 'https://knowledge-api.jarvis.cx';
 
   static String loginEndpoint = '/api/v1/auth/sign-in';
@@ -250,5 +250,17 @@ class Constant {
   static final Map<String, String> errorMessage = {
     'empty-email': "Your email's a blank canvas! 🎨 Add some words to spark a reply idea.",
     'empty-idea': "Even the best ideas need a little nudge. Type something, and let's get brainstorming!"
+  };
+
+  static final Map<String, String> actionType = {
+    'Translate to': 'translate',
+    'Revise it': 'revise',
+    'Extract the main Information': 'custom',
+    'Make it Constructive': 'custom',
+    'Make it more Detailed': 'custom',
+    'Make it more Persuasive': 'custom',
+    'Paraphrase it': 'custom',
+    'Summarize it': 'custom',
+    'Simplify it': 'custom',
   };
 }
