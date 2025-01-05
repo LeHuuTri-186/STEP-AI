@@ -281,19 +281,16 @@ class _ChatPageState extends State<ChatPage> {
                                                 MainAxisAlignment.spaceBetween,
                                             direction: Axis.horizontal,
                                             children: [
-                                              SizedBox(
-                                                width: max(300, MediaQuery.of(context).size.width * 0.5),
-                                                child: FittedBox(
-                                                  fit: BoxFit.scaleDown,
-                                                  child: Text(
-                                                    "Don't know what to say? Use a prompt!",
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .bodyMedium!
-                                                        .copyWith(
-                                                            fontWeight:
-                                                                FontWeight.normal),
-                                                  ),
+                                              FittedBox(
+                                                fit: BoxFit.scaleDown,
+                                                child: Text(
+                                                  "Don't know what to say? Use a prompt!",
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium!
+                                                      .copyWith(
+                                                          fontWeight:
+                                                              FontWeight.normal),
                                                 ),
                                               ),
                                               Material(
@@ -309,19 +306,22 @@ class _ChatPageState extends State<ChatPage> {
                                                     padding:
                                                         const EdgeInsets.all(
                                                             10.0),
-                                                    child: Text(
-                                                      "View all",
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .bodyMedium!
-                                                          .copyWith(
-                                                            color: TColor
-                                                                .tamarama
-                                                                .withOpacity(
-                                                                    0.8),
-                                                            fontWeight:
-                                                                FontWeight.w800,
-                                                          ),
+                                                    child: FittedBox(
+                                                      fit: BoxFit.scaleDown,
+                                                      child: Text(
+                                                        "View all",
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .bodyMedium!
+                                                            .copyWith(
+                                                              color: TColor
+                                                                  .tamarama
+                                                                  .withOpacity(
+                                                                      0.8),
+                                                              fontWeight:
+                                                                  FontWeight.w800,
+                                                            ),
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
