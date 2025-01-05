@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:step_ai/config/constants.dart';
 import 'package:step_ai/features/units_in_knowledge/data/network/unit_api.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/entity/unit_list.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/params/delete_unit_param.dart';
@@ -19,8 +20,11 @@ class UnitRepositoryImpl extends UnitRepository {
       "limit": 10,
     };
     try {
+      // final response = await _unitApi.get(
+      //     '/kb-core/v1/knowledge/$idKnowledge/units',
+      //     queryParams: queryParams);
       final response = await _unitApi.get(
-          '/kb-core/v1/knowledge/$idKnowledge/units',
+          Constant.getUnitList.replaceAll(':idKnowledge', idKnowledge),
           queryParams: queryParams);
       UnitList unitList = UnitList.fromJson(response.data);
       return unitList;
@@ -32,14 +36,21 @@ class UnitRepositoryImpl extends UnitRepository {
 
   @override
   Future<void> deleteUnit(DeleteUnitParam deleteParam) {
-    return _unitApi.delete(
-        "/kb-core/v1/knowledge/${deleteParam.idKnowledge}/units/${deleteParam.idUnit}");
+    // return _unitApi.delete(
+    //     "/kb-core/v1/knowledge/${deleteParam.idKnowledge}/units/${deleteParam.idUnit}");
+    return _unitApi.delete(Constant.deleteUnit
+        .replaceAll(':idKnowledge', deleteParam.idKnowledge)
+        .replaceAll(':idUnit', deleteParam.idUnit));
   }
 
   @override
   Future<void> updateStatusUnit(UpdateStatusUnitParam updateStatusUnitParam) {
+    // return _unitApi.patch(
+    //     "/kb-core/v1/knowledge/units/${updateStatusUnitParam.id}/status",
+    //     data: {'status': updateStatusUnitParam.status});
     return _unitApi.patch(
-        "/kb-core/v1/knowledge/units/${updateStatusUnitParam.id}/status",
+        Constant.updateStatusUnit
+            .replaceAll(':idUnit', updateStatusUnitParam.id),
         data: {'status': updateStatusUnitParam.status});
   }
 
@@ -57,24 +68,44 @@ class UnitRepositoryImpl extends UnitRepository {
             contentType: uploadLocalFileParam.mediaType),
       ),
     );
+    // await _unitApi.postFile(
+    //     "/kb-core/v1/knowledge/${uploadLocalFileParam.knowledgeId}/local-file",
+    //     data: formData);
     await _unitApi.postFile(
-        "/kb-core/v1/knowledge/${uploadLocalFileParam.knowledgeId}/local-file",
+        Constant.postFile
+            .replaceAll(":idKnowledge", uploadLocalFileParam.knowledgeId),
         data: formData);
   }
 
   @override
   Future<void> uploadWeb(UploadWebParam uploadWebParam) {
-    return _unitApi
-        .post("/kb-core/v1/knowledge/${uploadWebParam.knowledgeId}/web", data: {
-      "unitName": uploadWebParam.unitName,
-      "webUrl": uploadWebParam.webUrl
-    });
+    // return _unitApi
+    //     .post("/kb-core/v1/knowledge/${uploadWebParam.knowledgeId}/web", data: {
+    //   "unitName": uploadWebParam.unitName,
+    //   "webUrl": uploadWebParam.webUrl
+    // });
+    return _unitApi.post(
+        Constant.postWeb.replaceAll(":idKnowledge", uploadWebParam.knowledgeId),
+        data: {
+          "unitName": uploadWebParam.unitName,
+          "webUrl": uploadWebParam.webUrl
+        });
   }
 
   @override
   Future<void> uploadConfluence(UploadConfluenceParam uploadConfluenceParam) {
+    // return _unitApi.post(
+    //     "/kb-core/v1/knowledge/${uploadConfluenceParam.knowledgeId}/confluence",
+    //     data: {
+    //       "unitName": uploadConfluenceParam.unitName,
+    //       "wikiPageUrl": uploadConfluenceParam.wikiPageUrl,
+    //       "confluenceUsername": uploadConfluenceParam.confluenceUsername,
+    //       "confluenceAccessToken": uploadConfluenceParam.confluenceAccessToken
+    //     });
+
     return _unitApi.post(
-        "/kb-core/v1/knowledge/${uploadConfluenceParam.knowledgeId}/confluence",
+        Constant.postConfluence
+            .replaceAll(":idKnowledge", uploadConfluenceParam.knowledgeId),
         data: {
           "unitName": uploadConfluenceParam.unitName,
           "wikiPageUrl": uploadConfluenceParam.wikiPageUrl,
@@ -92,8 +123,16 @@ class UnitRepositoryImpl extends UnitRepository {
   @override
   Future<void> uploadSlack(UploadSlackParam uploadSlackParam) {
     // TODO: implement uploadSlack
+    // return _unitApi.post(
+    //     "/kb-core/v1/knowledge/${uploadSlackParam.knowledgeId}/slack",
+    //     data: {
+    //       "unitName": uploadSlackParam.unitName,
+    //       "slackWorkspace": uploadSlackParam.slackWorkspace,
+    //       "slackBotToken": uploadSlackParam.slackBotToken
+    //     });
     return _unitApi.post(
-        "/kb-core/v1/knowledge/${uploadSlackParam.knowledgeId}/slack",
+        Constant.postSlack
+            .replaceAll(":idKnowledge", uploadSlackParam.knowledgeId),
         data: {
           "unitName": uploadSlackParam.unitName,
           "slackWorkspace": uploadSlackParam.slackWorkspace,

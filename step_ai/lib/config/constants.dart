@@ -32,6 +32,27 @@ class Constant {
       '/kb-core/v1/auth/refresh?refreshToken=';
   static String deleteBotEndpoint = '/kb-core/v1/ai-assistant/';
   static String updateBotEndpoint = '/kb-core/v1/ai-assistant/';
+  static String getUsageToken = "/api/v1/tokens/usage";
+  //ConversationAPI-----------------------------------------------------
+  static String sendMessage = "/api/v1/ai-chat/messages";
+  static String getHistoryList = "/api/v1/ai-chat/conversations";
+  static String getMessagesByConversationId =
+      "/api/v1/ai-chat/conversations/:idConversation/messages";
+  static String getCurrentUser = "/api/v1/auth/me";
+  //Knowledge Base API:--------------------------------------------------------
+  static String getKnowledgeList = "/kb-core/v1/knowledge";
+  static String addKnowledge = "/kb-core/v1/knowledge";
+  static String deleteKnowledge = "/kb-core/v1/knowledge/:id";
+  static String editKnowledge = "/kb-core/v1/knowledge/:id";
+  //Unit API:-------------------------------------------------------------------
+  static String getUnitList = "/kb-core/v1/knowledge/:idKnowledge/units";
+  static String deleteUnit = "/kb-core/v1/knowledge/:idKnowledge/units/:idUnit";
+  static String updateStatusUnit = "/kb-core/v1/knowledge/units/:idUnit/status";
+  static String postFile = "/kb-core/v1/knowledge/:idKnowledge/local-file";
+  static String postWeb = "/kb-core/v1/knowledge/:idKnowledge/web";
+  static String postConfluence =
+      "/kb-core/v1/knowledge/:idKnowledge/confluence";
+  static String postSlack = "/kb-core/v1/knowledge/:idKnowledge/slack";
   //----Bot get-----------------------------------------------------------------
   static String botGetEndpoint = '/kb-core/v1/ai-assistant?q';
   static String botGetOrderSet = '&order=DESC&order_field=createdAt';
