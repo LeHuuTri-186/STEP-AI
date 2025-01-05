@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/features/prompt/presentation/pages/private_prompts.dart';
 import 'package:step_ai/features/prompt/presentation/pages/public_prompts.dart';
-import 'package:step_ai/features/prompt/presentation/state/form_model/form_provider.dart';
-import 'package:step_ai/features/prompt/presentation/state/public_prompt/public_filter_provider.dart';
+import 'package:step_ai/features/prompt/presentation/notifier//form_model/form_provider.dart';
+import 'package:step_ai/features/prompt/presentation/notifier//public_prompt/public_filter_provider.dart';
 import 'package:step_ai/features/prompt/presentation/widgets/buttons_pair.dart';
 import 'package:step_ai/features/prompt/presentation/widgets/prompt_create_dialog.dart';
 import 'package:step_ai/shared/styles/colors.dart';
 import 'package:step_ai/shared/styles/vertical_spacing.dart';
 
-import '../state/prompt_view_provider.dart';
+import '../notifier/prompt_view_provider.dart';
+
 
 class PromptBottomSheet extends StatefulWidget {
   const PromptBottomSheet({super.key, required this.returnPrompt});

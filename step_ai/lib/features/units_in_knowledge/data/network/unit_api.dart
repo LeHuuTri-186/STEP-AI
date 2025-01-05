@@ -12,12 +12,12 @@ class UnitApi {
   SecureStorageHelper secureStorageHelper;
 
   UnitApi(this.secureStorageHelper) {
-    _dio.options.baseUrl = Constant.kbProducApiUrl; // Base URL API
+    _dio.options.baseUrl = Constant.kbApiUrl; // Base URL API
 
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
-        print(
-            "\n-----------------------------OnRequest--------------------------------1");
+        // print(
+        //     "\n-----------------------------OnRequest--------------------------------1");
         await _initializeTokens();
         options.headers['x-jarvis-guid'] = '';
         if (accessKnowledgeToken != null) {
@@ -36,16 +36,16 @@ class UnitApi {
         return handler.next(options);
       },
       onResponse: (response, handler) {
-        print(
-            "-----------------------------OnResponse--------------------------------2");
-        print("Response: ${response.data}");
+        // print(
+        //     "-----------------------------OnResponse--------------------------------2");
+        // print("Response: ${response.data}");
         return handler.next(response);
       },
       onError: (DioException error, handler) async {
-        print(
-            "\n-----------------------------Error--------------------------------3");
-        print("Error: ${error.response?.statusCode}");
-        print("Error: ${error.response?.data}");
+        // print(
+        //     "\n-----------------------------Error--------------------------------3");
+        // print("Error: ${error.response?.statusCode}");
+        // print("Error: ${error.response?.data}");
         return handler.next(error);
       },
     ));

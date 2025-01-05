@@ -11,21 +11,15 @@ class NoDataPannel extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Image(
+        const Image(
           image: AssetImage('lib/core/assets/imgs/file.png'),
-          width: 100,
+          width: 300,
         ),
         Text(
           "No data",
-          style: GoogleFonts.jetBrainsMono(
-              fontSize: MediaQuery.of(context).size.width * 0.05,
-              fontWeight: FontWeight.w800),
+          style: Theme.of(context).textTheme.titleLarge,
         ),
-        Text(contentNoData, style: GoogleFonts.jetBrainsMono(
-            fontSize: MediaQuery.of(context).size.width * 0.035,
-            color: Colors.black54,
-            fontWeight: FontWeight.w500),
-        )
+        Text(contentNoData, style: Theme.of(context).textTheme.bodyMedium),
       ],
     );
   }

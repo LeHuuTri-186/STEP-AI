@@ -1,11 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/config/constants.dart';
 import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/drive_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/unit_notifier.dart';
+import 'package:step_ai/shared/styles/vertical_spacing.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../../../shared/styles/colors.dart';
 
 class DrivePage extends StatelessWidget {
   DrivePage({super.key});
@@ -40,20 +44,19 @@ class DrivePage extends StatelessWidget {
                 },
         ),
       ),
-      body: Center(
+      body: Align(
+        alignment: Alignment.topCenter,
         child: Container(
-          width: MediaQuery.of(context).size.width * 0.7,
-          height: MediaQuery.of(context).size.height * 0.45,
+          width: MediaQuery.of(context).size.width * 0.8,
           decoration: BoxDecoration(
-            color: Colors.lightBlue[100],
             borderRadius: BorderRadius.circular(10),
           ),
           //Main Column
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              //Title of the page + Image
+              VSpacing.md,
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -62,7 +65,7 @@ class DrivePage extends StatelessWidget {
                       Image.asset(Constant.driveImagePath,
                           width: 50, height: 50),
                       const SizedBox(width: 10),
-                      const Text('Drive'),
+                      Text('Drive', style: Theme.of(context).textTheme.titleLarge,),
                     ],
                   ),
                   IconButton(
@@ -78,7 +81,7 @@ class DrivePage extends StatelessWidget {
                               mode: LaunchMode.externalApplication);
                         } catch (e) {
                           // Xử lý lỗi, có thể hiển thị thông báo cho người dùng
-                          print('Lỗi khi mở URL: $e');
+                          //print('Lỗi khi mở URL: $e');
                         }
                       },
                       icon: const Icon(
@@ -89,7 +92,6 @@ class DrivePage extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 4),
-              const Divider(),
               const SizedBox(height: 20),
               //TextFormField for  name unit
               Form(
@@ -98,11 +100,21 @@ class DrivePage extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
                     style: const TextStyle(fontSize: 12),
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
+                      labelStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          fontSize: 15,
+                          color: TColor.slate
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: TColor.tamarama)
+                      ),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: TColor.tamarama)
+                      ),
                       labelText: 'Name',
                       hintText: 'Enter Name',
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -117,83 +129,102 @@ class DrivePage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 30),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    style: BorderStyle.solid,
-                    color: Colors.grey,
-                    width: 1.0,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      style: BorderStyle.solid,
+                      color: Colors.grey,
+                      width: 1.0,
+                    ),
                   ),
+                  child: TextButton(
+                      onPressed: () {},
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(Constant.driveImagePath,
+                              width: 30, height: 30),
+                          const SizedBox(width: 10),
+                          Text("Upload Drive",
+                              style: Theme.of(context).textTheme.titleMedium),
+                        ],
+                      )),
                 ),
-                width: MediaQuery.of(context).size.width * 0.6,
-                child: TextButton(
-                    onPressed: () {},
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(Constant.driveImagePath,
-                            width: 30, height: 30),
-                        const SizedBox(width: 10),
-                        const Text("Upload Drive",
-                            style: TextStyle(color: Colors.blue)),
-                      ],
-                    )),
               ),
               const SizedBox(height: 30),
               //TextFormField for Slack Workspace
               //Button to connect
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.lightBlue,
-                  disabledBackgroundColor:
-                      const Color.fromARGB(255, 173, 205, 221),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: TColor.tamarama,
+                    disabledBackgroundColor:
+                        TColor.petRock,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
-                ),
-                onPressed: (driveNotifier.isUploadLoading)
-                    ? null
-                    : () async {
-                        if (!formKey.currentState!.validate()) {
-                          return;
-                        }
-                        //show indicator
-                        driveNotifier.setUploadLoading(true);
-                        //try catch if web not valid
-                        try {
-                          await unitNotifier.uploadDrive();
-                          await knowledgeNotifier.getKnowledgeList();
-                          await unitNotifier.getUnitList();
-                          findAndUpdateCurrentKnowledge();
-                        } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(e.toString()),
-                            ),
-                          );
+                  onPressed: (driveNotifier.isUploadLoading)
+                      ? null
+                      : () async {
+                          if (!formKey.currentState!.validate()) {
+                            return;
+                          }
+                          //show indicator
+                          driveNotifier.setUploadLoading(true);
+                          //try catch if web not valid
+                          try {
+                            await unitNotifier.uploadDrive();
+                            await knowledgeNotifier.getKnowledgeList();
+                            await unitNotifier.getUnitList();
+                            findAndUpdateCurrentKnowledge();
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(e.toString()),
+                              ),
+                            );
+                            //hide indicator
+                            driveNotifier.setUploadLoading(false);
+                            return;
+                          }
+
                           //hide indicator
                           driveNotifier.setUploadLoading(false);
-                          return;
-                        }
-
-                        //hide indicator
-                        driveNotifier.setUploadLoading(false);
-                        Navigator.pop(context);
-                      },
-                child: (driveNotifier.isUploadLoading)
-                    ? const Stack(alignment: Alignment.center, children: [
-                        Text("Uploading..."),
-                        Positioned(
-                          child: CupertinoActivityIndicator(
-                            radius: 10,
-                            color: Colors.blue,
-                          ),
-                        ),
-                      ])
-                    : const Text('Connect',
-                        style: TextStyle(color: Colors.white)),
+                          Navigator.pop(context);
+                        },
+                  child: (driveNotifier.isUploadLoading)
+                      ?  Stack(alignment: Alignment.center, children: [
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Uploading..."),
+                        ],
+                      ),
+                    ),
+                    Positioned(
+                        child: LoadingAnimationWidget.discreteCircle(
+                            color: TColor.doctorWhite, size: 14)
+                    ),
+                  ])
+                      : const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Connect',
+                            style: TextStyle(color: Colors.white)),
+                      ],
+                    ),
+                  ),
+                ),
               ),
             ],
           ),

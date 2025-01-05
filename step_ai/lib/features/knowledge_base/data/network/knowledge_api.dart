@@ -12,30 +12,40 @@ class KnowledgeApi {
   SecureStorageHelper secureStorageHelper;
 
   KnowledgeApi(this.secureStorageHelper) {
-    _dio.options.baseUrl = Constant.kbProducApiUrl; // Base URL API
+    _dio.options.baseUrl = Constant.kbApiUrl; // Base URL API
 
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
-        print(
-            "\n-----------------------------OnRequest--------------------------------1");
+        // print(
+        //     "\n-----------------------------OnRequest--------------------------------1");
         await _initializeTokens();
         options.headers['x-jarvis-guid'] = '';
         if (accessKnowledgeToken != null) {
           options.headers['Authorization'] = 'Bearer $accessKnowledgeToken';
         }
+        // In ra headers
+        //print("Headers: ${options.headers}");
+
+        // In ra body (payload)
+        // if (options.data != null) {
+        //   print("Body: ${options.data}");
+        // } else {
+        //   print("Body: null");
+        // }
+
         return handler.next(options);
       },
       onResponse: (response, handler) {
-        print(
-            "-----------------------------OnResponse--------------------------------2");
-        print("Response: ${response.data}");
+        // print(
+        //     "-----------------------------OnResponse--------------------------------2");
+        // print("Response: ${response.data}");
         return handler.next(response);
       },
       onError: (DioException error, handler) async {
-        print(
-            "\n-----------------------------Error--------------------------------3");
-        print("Error: ${error.response?.statusCode}");
-        print("Error: ${error.response?.data}");
+        // print(
+        //     "\n-----------------------------Error--------------------------------3");
+        // print("Error: ${error.response?.statusCode}");
+        // print("Error: ${error.response?.data}");
         return handler.next(error);
       },
     ));
@@ -47,6 +57,7 @@ class KnowledgeApi {
     // refreshKnowledgeToken = await secureStorageHelper.refreshToken;
     accessKnowledgeToken = await secureStorageHelper.kbAccessToken;
   }
+
 
   // Các phương thức API
 

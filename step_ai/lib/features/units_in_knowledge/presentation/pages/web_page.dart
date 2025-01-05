@@ -1,11 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/config/constants.dart';
 import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/unit_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/web_notifier.dart';
+import 'package:step_ai/shared/styles/vertical_spacing.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../../../shared/styles/colors.dart';
 
 class WebPage extends StatelessWidget {
   WebPage({super.key});
@@ -42,19 +46,20 @@ class WebPage extends StatelessWidget {
       ),
       body: Form(
         key: formKey,
-        child: Center(
+        child: Align(
+          alignment: Alignment.topCenter,
           child: Container(
             width: MediaQuery.of(context).size.width * 0.75,
             height: MediaQuery.of(context).size.height * 0.45,
             decoration: BoxDecoration(
-              color:  Colors.lightBlue[100],
               borderRadius: BorderRadius.circular(10),
             ),
             //Main Column
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                VSpacing.md,
                 //Title of the page + Image
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -64,7 +69,7 @@ class WebPage extends StatelessWidget {
                         Image.asset(Constant.webImagePath,
                             width: 50, height: 50),
                         const SizedBox(width: 10),
-                        const Text('Website'),
+                        Text('Website', style: Theme.of(context).textTheme.titleLarge,),
                       ],
                     ),
                     IconButton(
@@ -80,29 +85,38 @@ class WebPage extends StatelessWidget {
                                 mode: LaunchMode.externalApplication);
                           } catch (e) {
                             // Xử lý lỗi, có thể hiển thị thông báo cho người dùng
-                            print('Lỗi khi mở URL: $e');
+                            //print('Lỗi khi mở URL: $e');
                           }
                         },
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.link,
-                          color: Colors.blue,
+                          color: TColor.tamarama,
                           size: 30,
                         ))
                   ],
                 ),
                 const SizedBox(height: 4),
-                const Divider(),
                 const SizedBox(height: 10),
                 //TextFormField for  name unit
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
                     style: const TextStyle(fontSize: 12),
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
+                      labelStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          fontSize: 15,
+                          color: TColor.slate
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: TColor.tamarama)
+                      ),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: TColor.tamarama)
+                      ),
                       labelText: 'Name',
                       hintText: 'Enter Name',
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -121,11 +135,21 @@ class WebPage extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
                     style: const TextStyle(fontSize: 12),
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
+                      labelStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          fontSize: 15,
+                          color: TColor.slate
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: TColor.tamarama)
+                      ),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: TColor.tamarama)
+                      ),
                       labelText: 'URL',
                       hintText: 'Enter URL',
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -140,57 +164,74 @@ class WebPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 //Button to connect
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.lightBlue,
-                  disabledBackgroundColor: const Color.fromARGB(255, 173, 205, 221),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                    backgroundColor: TColor.tamarama,
+                    disabledBackgroundColor: TColor.petRock,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
-                ),
-                  onPressed: (webNotifier.isUploadLoading)
-                      ? null
-                      : () async {
-                          if (!formKey.currentState!.validate()) {
-                            return;
-                          }
-                          //show indicator
-                          webNotifier.setUploadLoading(true);
-                          //try catch if web not valid
-                          try {
-                            await unitNotifier.uploadWeb(
-                                webNotifier.webUrl, webNotifier.nameUnit);
-                            await knowledgeNotifier.getKnowledgeList();
-                            await unitNotifier.getUnitList();
-                            findAndUpdateCurrentKnowledge();
-                            //hide indicator
-                            webNotifier.setUploadLoading(false);
-                            Navigator.pop(context);
-                          } catch (e) {
-                            //hide indicator
-                            webNotifier.setUploadLoading(false);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(e.toString()),
-                              ),
-                            );
-                            //hide indicator
-                            webNotifier.setUploadLoading(false);
-                            return;
-                          }
-                        },
-                  child: (webNotifier.isUploadLoading)
-                      ? const Stack(alignment: Alignment.center, children: [
-                          Text("Uploading..."),
-                          Positioned(
-                            child: CupertinoActivityIndicator(
-                              radius: 10,
-                              color: Colors.blue,
-                            ),
-                          ),
-                        ])
-                      : const Text('Connect',
-                          style: TextStyle(color: Colors.white)),
+                    onPressed: (webNotifier.isUploadLoading)
+                        ? null
+                        : () async {
+                            if (!formKey.currentState!.validate()) {
+                              return;
+                            }
+                            //show indicator
+                            webNotifier.setUploadLoading(true);
+                            //try catch if web not valid
+                            try {
+                              await unitNotifier.uploadWeb(
+                                  webNotifier.webUrl, webNotifier.nameUnit);
+                              await knowledgeNotifier.getKnowledgeList();
+                              await unitNotifier.getUnitList();
+                              findAndUpdateCurrentKnowledge();
+                              //hide indicator
+                              webNotifier.setUploadLoading(false);
+                              Navigator.pop(context);
+                            } catch (e) {
+                              //hide indicator
+                              webNotifier.setUploadLoading(false);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(e.toString()),
+                                ),
+                              );
+                              //hide indicator
+                              webNotifier.setUploadLoading(false);
+                              return;
+                            }
+                          },
+                    child: (webNotifier.isUploadLoading)
+                        ? Stack(alignment: Alignment.center, children: [
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("Uploading..."),
+                          ],
+                        ),
+                      ),
+                      Positioned(
+                          child: LoadingAnimationWidget.discreteCircle(
+                              color: TColor.doctorWhite, size: 14)
+                      ),
+                    ])
+                        : const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Connect',
+                              style: TextStyle(color: Colors.white)),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),

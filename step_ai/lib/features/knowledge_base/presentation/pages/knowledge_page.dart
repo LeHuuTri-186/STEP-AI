@@ -5,6 +5,7 @@ import 'package:step_ai/config/routes/routes.dart';
 import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart';
 import 'package:step_ai/features/knowledge_base/presentation/widgets/button_add_new_knowledge.dart';
 import 'package:step_ai/features/knowledge_base/presentation/widgets/knowledge_listview.dart';
+import 'package:step_ai/shared/styles/vertical_spacing.dart';
 import 'package:step_ai/shared/widgets/search_bar.dart';
 
 class KnowledgePage extends StatelessWidget {
@@ -22,13 +23,12 @@ class KnowledgePage extends StatelessWidget {
       );
     }
 
-    return Column(
-      children: [
-        SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-        //Search bar
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          VSpacing.sm,
+          Row(
             children: [
               Expanded(
                   child: CustomSearchBar(
@@ -38,16 +38,18 @@ class KnowledgePage extends StatelessWidget {
                           })),
             ],
           ),
-        ),
+          VSpacing.sm,
+          //Button add knowledge
+          const Align(
+            alignment: Alignment.centerRight,
+              child: ButtonAddNewKnowledge()),
 
-        //Button add knowledge
-        const ButtonAddNewKnowledge(),
-
-        //Knowledge list view
-        Expanded(
-          child: KnowledgeListview(),
-        ),
-      ],
+          //Knowledge list view
+          Expanded(
+            child: KnowledgeListview(),
+          ),
+        ],
+      ),
     );
   }
 }

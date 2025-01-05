@@ -9,6 +9,8 @@ import 'package:step_ai/features/units_in_knowledge/presentation/widgets/unit_li
 import 'package:step_ai/shared/helpers/convert_size.dart';
 import 'package:step_ai/shared/widgets/search_bar.dart';
 
+import '../../../../shared/styles/colors.dart';
+
 class UnitsPage extends StatelessWidget {
   UnitsPage({super.key});
 
@@ -35,9 +37,9 @@ class UnitsPage extends StatelessWidget {
           ),
           actions: [
             IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.edit,
-                color: Colors.blue,
+                color: TColor.tamarama,
               ),
               onPressed: (_unitNotifier.numberLoadingItemSwitchCounter != 0)
                   ? null
@@ -51,42 +53,45 @@ class UnitsPage extends StatelessWidget {
             )
           ],
         ),
-        body: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(
-                          "Size: ${ConvertSize.bytesToSize(_unitNotifier.currentKnowledge!.totalSize)}"),
-                      Text(
-                          "Units: ${_unitNotifier.currentKnowledge!.numberUnits}"),
-                    ],
-                  ),
-                ),
-                ButtonAddNewUnit(),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                      child: CustomSearchBar(
-                          onChanged: (value) => {
-                                _unitNotifier
-                                    .changeDisplayUnitsWhenSearching(value)
-                              })),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                            "Size: ${ConvertSize.bytesToSize(_unitNotifier.currentKnowledge!.totalSize)}"),
+                        Text(
+                            "Units: ${_unitNotifier.currentKnowledge!.numberUnits}"),
+                      ],
+                    ),
+                  ),
+                  ButtonAddNewUnit(),
                 ],
               ),
-            ),
-            const SizedBox(height: 10),
-            Expanded(child: UnitListview()),
-          ],
+              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                        child: CustomSearchBar(
+                            onChanged: (value) => {
+                                  _unitNotifier
+                                      .changeDisplayUnitsWhenSearching(value)
+                                })),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 10),
+              Expanded(child: UnitListview()),
+            ],
+          ),
         ));
   }
 }

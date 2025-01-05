@@ -1,6 +1,5 @@
 import 'package:step_ai/features/knowledge_base/data/model/knowledge_list_model.dart';
 import 'package:step_ai/features/knowledge_base/data/network/knowledge_api.dart';
-import 'package:step_ai/features/knowledge_base/domain/entity/knowledge_list.dart';
 import 'package:step_ai/features/knowledge_base/domain/params/edit_knowledge_param.dart';
 import 'package:step_ai/features/knowledge_base/domain/params/get_knowledges_param.dart';
 import 'package:step_ai/features/knowledge_base/domain/params/knowledge_param.dart';

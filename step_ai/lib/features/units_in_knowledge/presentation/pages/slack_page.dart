@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/config/constants.dart';
 import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/slack_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/unit_notifier.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../../../shared/styles/colors.dart';
 
 class SlackPage extends StatelessWidget {
   SlackPage({super.key});
@@ -42,17 +45,17 @@ class SlackPage extends StatelessWidget {
       ),
       body: Form(
         key: formKey,
-        child: Center(
+        child: Align(
+          alignment: Alignment.topCenter,
           child: Container(
             width: MediaQuery.of(context).size.width * 0.75,
             height: MediaQuery.of(context).size.height * 0.6,
             decoration: BoxDecoration(
-              color: Colors.lightBlue[100],
               borderRadius: BorderRadius.circular(10),
             ),
             //Main Column
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 //Title of the page + Image
@@ -64,7 +67,7 @@ class SlackPage extends StatelessWidget {
                         Image.asset(Constant.slackImagePath,
                             width: 50, height: 50),
                         const SizedBox(width: 10),
-                        const Text('Slack'),
+                        Text('Slack', style: Theme.of(context).textTheme.titleLarge,),
                       ],
                     ),
                     IconButton(
@@ -80,29 +83,38 @@ class SlackPage extends StatelessWidget {
                                 mode: LaunchMode.externalApplication);
                           } catch (e) {
                             // Xử lý lỗi, có thể hiển thị thông báo cho người dùng
-                            print('Lỗi khi mở URL: $e');
+                            //print('Lỗi khi mở URL: $e');
                           }
                         },
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.link,
-                          color: Colors.blue,
+                          color: TColor.tamarama,
                           size: 30,
                         ))
                   ],
                 ),
                 const SizedBox(height: 4),
-                const Divider(),
                 const SizedBox(height: 10),
                 //TextFormField for  name unit
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
                     style: const TextStyle(fontSize: 12),
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
+                      labelStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          fontSize: 15,
+                          color: TColor.slate
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: TColor.tamarama)
+                      ),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: TColor.tamarama)
+                      ),
                       labelText: 'Name',
                       hintText: 'Enter Name',
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -121,11 +133,21 @@ class SlackPage extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
                     style: const TextStyle(fontSize: 12),
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
+                      labelStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          fontSize: 15,
+                          color: TColor.slate
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: TColor.tamarama)
+                      ),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: TColor.tamarama)
+                      ),
                       labelText: 'Slack Workspace',
                       hintText: 'Enter Workspace',
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -144,11 +166,21 @@ class SlackPage extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
                     style: const TextStyle(fontSize: 12),
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
+                      labelStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          fontSize: 15,
+                          color: TColor.slate
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: TColor.tamarama)
+                      ),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: TColor.tamarama)
+                      ),
                       labelText: 'Slack Bot Token',
                       hintText: 'Enter Bot Token',
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -163,59 +195,76 @@ class SlackPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 30),
                 //Button to connect
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.lightBlue,
-                    disabledBackgroundColor:
-                        const Color.fromARGB(255, 173, 205, 221),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: TColor.tamarama,
+                      disabledBackgroundColor:
+                          TColor.petRock,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    onPressed: (slackNotifier.isUploadLoading)
+                        ? null
+                        : () async {
+                            if (!formKey.currentState!.validate()) {
+                              return;
+                            }
+                            //show indicator
+                            slackNotifier.setUploadLoading(true);
+                            //try catch if web not valid
+                            try {
+                              await unitNotifier.uploadSlack(
+                                  slackNotifier.unitName,
+                                  slackNotifier.slackWorkspace,
+                                  slackNotifier.slackBotToken);
+                              await knowledgeNotifier.getKnowledgeList();
+                              await unitNotifier.getUnitList();
+                              findAndUpdateCurrentKnowledge();
+                              //hide indicator
+                              slackNotifier.setUploadLoading(false);
+                              Navigator.pop(context);
+                            } catch (e) {
+                              slackNotifier.setUploadLoading(false);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(e.toString()),
+                                ),
+                              );
+                              //hide indicator
+                              slackNotifier.setUploadLoading(false);
+                              return;
+                            }
+                          },
+                    child: (slackNotifier.isUploadLoading)
+                        ? Stack(alignment: Alignment.center, children: [
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("Uploading..."),
+                          ],
+                        ),
+                      ),
+                      Positioned(
+                          child: LoadingAnimationWidget.discreteCircle(
+                              color: TColor.doctorWhite, size: 14)
+                      ),
+                    ])
+                        : const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Connect',
+                              style: TextStyle(color: Colors.white)),
+                        ],
+                      ),
                     ),
                   ),
-                  onPressed: (slackNotifier.isUploadLoading)
-                      ? null
-                      : () async {
-                          if (!formKey.currentState!.validate()) {
-                            return;
-                          }
-                          //show indicator
-                          slackNotifier.setUploadLoading(true);
-                          //try catch if web not valid
-                          try {
-                            await unitNotifier.uploadSlack(
-                                slackNotifier.unitName,
-                                slackNotifier.slackWorkspace,
-                                slackNotifier.slackBotToken);
-                            await knowledgeNotifier.getKnowledgeList();
-                            await unitNotifier.getUnitList();
-                            findAndUpdateCurrentKnowledge();
-                            //hide indicator
-                            slackNotifier.setUploadLoading(false);
-                            Navigator.pop(context);
-                          } catch (e) {
-                            slackNotifier.setUploadLoading(false);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(e.toString()),
-                              ),
-                            );
-                            //hide indicator
-                            slackNotifier.setUploadLoading(false);
-                            return;
-                          }
-                        },
-                  child: (slackNotifier.isUploadLoading)
-                      ? const Stack(alignment: Alignment.center, children: [
-                          Text("Uploading..."),
-                          Positioned(
-                            child: CupertinoActivityIndicator(
-                              radius: 10,
-                              color: Colors.blue,
-                            ),
-                          ),
-                        ])
-                      : const Text('Connect',
-                          style: TextStyle(color: Colors.white)),
                 ),
               ],
             ),

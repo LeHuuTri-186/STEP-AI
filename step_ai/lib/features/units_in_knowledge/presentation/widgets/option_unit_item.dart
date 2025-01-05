@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/add_option_unit_notifier.dart';
+import 'package:step_ai/shared/styles/colors.dart';
 
 class OptionUnitItem extends StatelessWidget {
   final String imagePath;
@@ -85,7 +86,7 @@ class OptionUnitItem extends StatelessWidget {
               onChanged: (String? newValue) {
                 addOptionUnitNotifier.selectedOption = newValue!;
               },
-              activeColor: Colors.blue,
+              activeColor: TColor.tamarama,
             ),
           ],
         ),

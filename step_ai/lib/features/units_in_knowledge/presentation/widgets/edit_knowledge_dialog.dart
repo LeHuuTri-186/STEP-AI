@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/edit_knowledge_dialog_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/unit_notifier.dart';
+import 'package:step_ai/shared/styles/colors.dart';
 
 class EditKnowledgeDialog extends StatefulWidget {
   const EditKnowledgeDialog({super.key});
@@ -53,10 +54,10 @@ class _EditKnowledgeDialogState extends State<EditKnowledgeDialog> {
     _unitNotifier = Provider.of<UnitNotifier>(context, listen: false);
     return AlertDialog(
       backgroundColor: Colors.white,
-      title: const Text(
+      title: Text(
         'Edit Knowledge',
         textAlign: TextAlign.center,
-        style: TextStyle(color: Colors.lightBlue),
+        style: TextStyle(color: TColor.tamarama),
       ),
       content: SizedBox(
         width: 400,
@@ -163,22 +164,24 @@ class _EditKnowledgeDialogState extends State<EditKnowledgeDialog> {
                         }
                       },
             style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    _editKnowledgeDialogNotifier.isLoadingWhenEditNewKnowledge
-                        ? Colors.grey
-                        : Colors.lightBlue),
+              backgroundColor:
+                  _editKnowledgeDialogNotifier.isLoadingWhenEditNewKnowledge
+                      ? Colors.grey
+                      : TColor.tamarama,
+              minimumSize: const Size(90, 42),
+            ),
             child: _editKnowledgeDialogNotifier.isLoadingWhenEditNewKnowledge
-                ? const Stack(alignment: Alignment.center, children: [
-                    Text("Loading..."),
+                ? Stack(alignment: Alignment.center, children: [
+                    const Text("Loading"),
                     Positioned(
                       child: CupertinoActivityIndicator(
                         radius: 10,
-                        color: Colors.blue,
+                        color: TColor.tamarama,
                       ),
                     ),
                   ])
                 : const Text(
-                    'Edit',
+                    'Save',
                     style: TextStyle(color: Colors.white),
                   ),
           ),

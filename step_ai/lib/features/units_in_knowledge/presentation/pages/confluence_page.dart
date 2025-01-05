@@ -1,12 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/config/constants.dart';
 import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/confluence_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/slack_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/unit_notifier.dart';
+import 'package:step_ai/shared/styles/vertical_spacing.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../../../shared/styles/colors.dart';
 
 class ConfluencePage extends StatelessWidget {
   ConfluencePage({super.key});
@@ -43,24 +47,21 @@ class ConfluencePage extends StatelessWidget {
       ),
       body: Form(
         key: formKey,
-        child: Center(
+        child: Align(
+          alignment: Alignment.topCenter,
           child: Container(
             padding: const EdgeInsets.all(8.0),
             width: MediaQuery.of(context).size.width * 0.8,
-            height: MediaQuery.of(context).size.height * 0.6,
             decoration: BoxDecoration(
-              color: Colors.lightBlue[100],
               borderRadius: BorderRadius.circular(10),
             ),
             //Main Column
             child: SingleChildScrollView(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
+                  VSpacing.md,
                   //Title of the page + Image
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -70,7 +71,7 @@ class ConfluencePage extends StatelessWidget {
                           Image.asset(Constant.confluenceImagePath,
                               width: 50, height: 50),
                           const SizedBox(width: 10),
-                          const Text('Confluence'),
+                          Text('Confluence', style: Theme.of(context).textTheme.titleLarge,),
                         ],
                       ),
                       IconButton(
@@ -86,7 +87,7 @@ class ConfluencePage extends StatelessWidget {
                                   mode: LaunchMode.externalApplication);
                             } catch (e) {
                               // Xử lý lỗi, có thể hiển thị thông báo cho người dùng
-                              print('Lỗi khi mở URL: $e');
+                              //print('Lỗi khi mở URL: $e');
                             }
                           },
                           icon: const Icon(
@@ -96,20 +97,27 @@ class ConfluencePage extends StatelessWidget {
                           ))
                     ],
                   ),
-                  const SizedBox(height: 4),
-                  const Divider(),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 20),
                   //TextFormField for  name unit
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
                       style: const TextStyle(fontSize: 12),
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
+                        labelStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                            fontSize: 15,
+                            color: TColor.slate
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: TColor.tamarama)
+                        ),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: TColor.tamarama)
+                        ),
                         labelText: 'Name',
                         hintText: 'Enter Name',
-                        border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -128,12 +136,21 @@ class ConfluencePage extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
                       style: const TextStyle(fontSize: 12),
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
+                        labelStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                            fontSize: 15,
+                            color: TColor.slate
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: TColor.tamarama)
+                        ),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: TColor.tamarama)
+                        ),
                         labelText: 'Wiki Page URL',
                         hintText: 'Enter Wiki Page URL',
-                        border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -152,12 +169,21 @@ class ConfluencePage extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
                       style: const TextStyle(fontSize: 12),
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
+                        labelStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                            fontSize: 15,
+                            color: TColor.slate
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: TColor.tamarama)
+                        ),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: TColor.tamarama)
+                        ),
                         labelText: 'Confluence Username',
                         hintText: 'Enter Confluence Username',
-                        border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -176,12 +202,21 @@ class ConfluencePage extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
                       style: const TextStyle(fontSize: 12),
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
+                        labelStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                            fontSize: 15,
+                            color: TColor.slate
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: TColor.tamarama)
+                        ),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: TColor.tamarama)
+                        ),
                         labelText: 'Confluence Access Token',
                         hintText: 'Enter Confluence Access Token',
-                        border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -196,62 +231,79 @@ class ConfluencePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 30),
                   //Button to connect
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.lightBlue,
-                      disabledBackgroundColor:
-                          const Color.fromARGB(255, 173, 205, 221),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: TColor.tamarama,
+                        disabledBackgroundColor:
+                            TColor.petRock,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
-                    ),
-                    onPressed: (confluenceNotifier.isUploadLoading)
-                        ? null
-                        : () async {
-                            if (!formKey.currentState!.validate()) {
-                              return;
-                            }
-                            //show indicator
-                            confluenceNotifier.setUploadLoading(true);
-                            //try catch if web not valid
-                            try {
-                              await unitNotifier.uploadConfluence(
-                                confluenceNotifier.unitName,
-                                confluenceNotifier.wikiPageUrl,
-                                confluenceNotifier.confluenceUsername,
-                                confluenceNotifier.confluenceAccessToken,
-                              );
-                              await knowledgeNotifier.getKnowledgeList();
-                              await unitNotifier.getUnitList();
-                              findAndUpdateCurrentKnowledge();
-                              //hide indicator
-                              confluenceNotifier.setUploadLoading(false);
-                              Navigator.pop(context);
-                            } catch (e) {
-                              //hide indicator
-                              confluenceNotifier.setUploadLoading(false);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(e.toString()),
+                      onPressed: (confluenceNotifier.isUploadLoading)
+                          ? null
+                          : () async {
+                              if (!formKey.currentState!.validate()) {
+                                return;
+                              }
+                              //show indicator
+                              confluenceNotifier.setUploadLoading(true);
+                              //try catch if web not valid
+                              try {
+                                await unitNotifier.uploadConfluence(
+                                  confluenceNotifier.unitName,
+                                  confluenceNotifier.wikiPageUrl,
+                                  confluenceNotifier.confluenceUsername,
+                                  confluenceNotifier.confluenceAccessToken,
+                                );
+                                await knowledgeNotifier.getKnowledgeList();
+                                await unitNotifier.getUnitList();
+                                findAndUpdateCurrentKnowledge();
+                                //hide indicator
+                                confluenceNotifier.setUploadLoading(false);
+                                Navigator.pop(context);
+                              } catch (e) {
+                                //hide indicator
+                                confluenceNotifier.setUploadLoading(false);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(e.toString()),
+                                  ),
+                                );
+                                //hide indicator
+                                confluenceNotifier.setUploadLoading(false);
+                                return;
+                              }
+                            },
+                      child: (confluenceNotifier.isUploadLoading)
+                          ? Stack(alignment: Alignment.center, children: [
+                              const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text("Uploading..."),
+                                  ],
                                 ),
-                              );
-                              //hide indicator
-                              confluenceNotifier.setUploadLoading(false);
-                              return;
-                            }
-                          },
-                    child: (confluenceNotifier.isUploadLoading)
-                        ? const Stack(alignment: Alignment.center, children: [
-                            Text("Uploading..."),
-                            Positioned(
-                              child: CupertinoActivityIndicator(
-                                radius: 10,
-                                color: Colors.blue,
                               ),
+                              Positioned(
+                                child: LoadingAnimationWidget.discreteCircle(
+                                    color: TColor.doctorWhite, size: 14)
+                              ),
+                            ])
+                          : const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('Connect',
+                                    style: TextStyle(color: Colors.white)),
+                              ],
                             ),
-                          ])
-                        : const Text('Connect',
-                            style: TextStyle(color: Colors.white)),
+                          ),
+                    ),
                   ),
                 ],
               ),

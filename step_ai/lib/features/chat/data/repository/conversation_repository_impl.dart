@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:step_ai/core/data/model/conversation_model.dart';
+import 'package:step_ai/core/data/model/current_user_model.dart';
 import 'package:step_ai/core/data/model/detailed_messages_model.dart';
 import 'package:step_ai/core/data/model/message_model.dart';
 import 'package:step_ai/core/data/model/usage_token_model.dart';
@@ -80,5 +81,12 @@ class ConversationRepositoryImpl extends ConversationRepository {
         queryParams: queryParams);
     //print(response);
     return DetailedMessagesModel.fromJson(response.data);
+  }
+
+  @override
+  Future<CurrentUserModel> getCurrentUser() async {
+    // TODO: implement getCurrentUser
+    final response = await _apiClientChat.getCurrentUser("/api/v1/auth/me");
+    return CurrentUserModel.fromJson(response.data);
   }
 }

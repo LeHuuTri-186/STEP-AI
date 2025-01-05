@@ -1,7 +1,8 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:step_ai/config/constants.dart';
 import 'package:step_ai/core/data/local/securestorage/constants/storage.dart';
-import 'package:step_ai/features/personal/data/models/kb_token_model.dart';
+
+import '../../../../features/playground/data/models/kb_token_model.dart';
 
 class SecureStorageHelper{
   final FlutterSecureStorage _secureStorage;

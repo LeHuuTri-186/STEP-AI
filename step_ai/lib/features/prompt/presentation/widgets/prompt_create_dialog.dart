@@ -3,8 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:step_ai/features/prompt/data/models/prompt_model.dart';
 import 'package:step_ai/features/prompt/di/data_injection/prompt_data_di.dart';
-import 'package:step_ai/features/prompt/presentation/state/form_model/form_provider.dart';
-import 'package:step_ai/features/prompt/presentation/state/private_prompt/private_view_provider.dart';
 import 'package:step_ai/features/prompt/presentation/widgets/buttons_pair.dart';
 import 'package:step_ai/features/prompt/presentation/widgets/copy_with_tooltip.dart';
 import 'package:step_ai/features/prompt/presentation/widgets/private_form.dart';
@@ -14,6 +12,7 @@ import 'package:step_ai/shared/styles/horizontal_spacing.dart';
 import '../../../../shared/styles/colors.dart';
 import '../../../../shared/styles/varela_round_style.dart';
 import '../../../../shared/styles/vertical_spacing.dart';
+import '../notifier/form_model/form_provider.dart';
 
 class PromptCreateDialog extends StatefulWidget {
   final Function(PromptModel) onCreatePrompt;
@@ -45,6 +44,50 @@ class _PromptCreateDialogState extends State<PromptCreateDialog> {
         userName: '',
         language: 'auto',
         description: '');
+  }
+
+  void showErrorDialog(BuildContext context, String error) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: TColor.doctorWhite,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Oops!",
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              CloseButton(
+                onPressed: Navigator.of(context).pop,
+              )
+            ],
+          ),
+          content: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(error,
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: TColor.petRock,
+                  fontWeight: FontWeight.w700,
+                )),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                "Got it",
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  color: TColor.poppySurprise,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -166,10 +209,20 @@ class _PromptCreateDialogState extends State<PromptCreateDialog> {
                         InkWell(
                           splashColor: TColor.finePine.withOpacity(0.2),
                           onTap: _isAdding ? () {} : () async {
-                            setState(() {
-                              _isAdding = true;
-                            });
                             try {
+                              if (_prompt.content.trim().isEmpty || _prompt.title.isEmpty) {
+                                showErrorDialog(context, 'Seems like you left out some fields! Fill them out before proceeding');
+                                return;
+                              }
+
+                              if (_isPublic && _prompt.category.isEmpty) {
+                                showErrorDialog(context, 'Seems like you left out some fields! Fill them out before proceeding');
+                                return;
+                              }
+                              setState(() {
+                                _isAdding = true;
+                              });
+
                               await widget.onCreatePrompt(_prompt);
                               await Future.delayed(const Duration(milliseconds: 500));
 

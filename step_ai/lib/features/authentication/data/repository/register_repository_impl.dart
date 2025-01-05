@@ -23,7 +23,6 @@ class RegisterRepositoryImpl extends RegisterRepository{
         Constant.registerEndpoint,
         body: body,
         headers: _headers);
-    print(await response.stream.transform(utf8.decoder).join());
     return response.statusCode;
   }
 }

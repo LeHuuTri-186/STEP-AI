@@ -15,7 +15,6 @@ class SubscriptionRepositoryImpl extends SubscriptionRepository {
     late Response<dynamic> response;
     try {
       response = await _apiSubscription.getUsage(Constant.usageEndpoint);
-      print(response);
     }catch (e) {
       throw("Error getting usage");
     }

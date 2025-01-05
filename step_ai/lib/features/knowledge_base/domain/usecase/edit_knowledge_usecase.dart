@@ -5,7 +5,7 @@ import 'package:step_ai/core/usecase/use_case.dart';
 import 'package:step_ai/features/authentication/domain/usecase/logout_usecase.dart';
 import 'package:step_ai/features/knowledge_base/domain/params/edit_knowledge_param.dart';
 import 'package:step_ai/features/knowledge_base/domain/repository/knowledge_repository.dart';
-import 'package:step_ai/shared/usecase/refresh_kb_token_usecase.dart';
+import 'package:step_ai/shared/usecases/refresh_kb_token_usecase.dart';
 
 class EditKnowledgeUsecase extends UseCase<void, EditKnowledgeParam> {
   KnowledgeRepository _knowledgeRepository;
@@ -31,7 +31,7 @@ class EditKnowledgeUsecase extends UseCase<void, EditKnowledgeParam> {
         //if no internet connection example
         rethrow;
       }
-      print(e);
+      //print(e);
       rethrow;
     }
   }

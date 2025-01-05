@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:step_ai/core/data/model/current_user_model.dart';
 import 'package:step_ai/features/authentication/domain/usecase/logout_usecase.dart';
 
 import 'package:step_ai/config/enum/task_status.dart';
@@ -11,6 +12,7 @@ import 'package:step_ai/features/chat/domain/params/send_message_param.dart';
 import 'package:step_ai/features/chat/domain/params/thread_chat_param.dart';
 import 'package:step_ai/features/chat/domain/usecase/ask_bot_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/create_thread_usecase.dart';
+import 'package:step_ai/features/chat/domain/usecase/get_current_user_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_usage_token_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/send_message_usecase.dart';
 import 'package:step_ai/features/chat/notifier/assistant_notifier.dart';
@@ -38,7 +40,7 @@ class ChatNotifier with ChangeNotifier {
     _isLoadingDetailedConversation = true;
     notifyListeners();
     try {
-      print("Get messages by conversation id in chat notifier");
+      //print("Get messages by conversation id in chat notifier");
       final detailMessagesModel = await _getMessagesByConversationIdUsecase
           .call(params: _idCurrentConversation!);
       clearHistoryMessages();
@@ -55,11 +57,11 @@ class ChatNotifier with ChangeNotifier {
       }
     } catch (e) {
       if (e is DioException) {
-        print(
-            "Error in getMessagesByConversationId in chat notifier with status code: ${e.response?.statusCode}");
+        // print(
+        //     "Error in getMessagesByConversationId in chat notifier with status code: ${e.response?.statusCode}");
       } else {
-        print(
-            "Error in getMessagesByConversationId in chat notifier with  error: $e");
+        // print(
+        //     "Error in getMessagesByConversationId in chat notifier with  error: $e");
       }
     } finally {
       _isLoadingDetailedConversation = false;
@@ -93,10 +95,10 @@ class ChatNotifier with ChangeNotifier {
         if (e.response?.statusCode == 401) {
           throw TaskStatus.UNAUTHORIZED;
         }
-        print(
-            "Error in getNumberRestToken in chat notifier with status code: ${e.response?.statusCode}");
+        // print(
+        //     "Error in getNumberRestToken in chat notifier with status code: ${e.response?.statusCode}");
       } else {
-        print("Error in getNumberRestToken in chat notifier with  error: $e");
+        // print("Error in getNumberRestToken in chat notifier with  error: $e");
       }
 
       isLoading = false;
@@ -122,6 +124,7 @@ class ChatNotifier with ChangeNotifier {
   CreateThreadUseCase _createThreadUseCase;
   AskBotUseCase _askBotUseCase;
   LogoutUseCase _logoutUseCase;
+  GetCurrentUserUsecase _getCurrentUserUsecase;
 
   ChatNotifier(
       this._sendMessageUsecase,
@@ -132,29 +135,33 @@ class ChatNotifier with ChangeNotifier {
       this._personalAssistantNotifier,
       this._createThreadUseCase,
       this._askBotUseCase,
-      this._logoutUseCase
-      );
+      this._logoutUseCase,
+      this._getCurrentUserUsecase);
 
   Future<void> sendMessage(String contentSend, {List<File>? files}) async {
     //Add message send to history
-    addMessage(Message(
-        assistant: _assistantNotifier.currentAssistant,
-        role: "user",
-        content: contentSend,
-        files: files),);
+    addMessage(
+      Message(
+          assistant: _assistantNotifier.currentAssistant,
+          role: "user",
+          content: contentSend,
+          files: files),
+    );
     //Add message model to history with content null
-    addMessage(Message(
-        assistant: _assistantNotifier.currentAssistant,
-        role: "model",
-        content: null),);
+    addMessage(
+      Message(
+          assistant: _assistantNotifier.currentAssistant,
+          role: "model",
+          content: null),
+    );
     notifyListeners();
 
     try {
       final messageModel = await _sendMessageUsecase.call(
-          params: SendMessageParam(
-              historyMessages: _historyMessages,
-              conversationId: _idCurrentConversation,
-          files: files),
+        params: SendMessageParam(
+            historyMessages: _historyMessages,
+            conversationId: _idCurrentConversation,
+            files: files),
       );
 
       updateLastMessage(messageModel.message);
@@ -178,8 +185,8 @@ class ChatNotifier with ChangeNotifier {
           updateLastMessage("No internet connection. Try again!");
           throw TaskStatus.NO_INTERNET;
         }
-        print(
-            "Error in sendMessage in chat notifier with status code: ${error.response?.statusCode}");
+        // print(
+        //     "Error in sendMessage in chat notifier with status code: ${error.response?.statusCode}");
         if (error.response?.statusCode == 401) {
           this._historyMessages.clear();
           this._idCurrentConversation = null;
@@ -190,7 +197,7 @@ class ChatNotifier with ChangeNotifier {
           updateLastMessage("Server not response. Try again!");
         }
       } else {
-        print("Error in sendMessage in chat notifier with  error: $error");
+        // print("Error in sendMessage in chat notifier with  error: $error");
       }
     } finally {
       notifyListeners();
@@ -226,6 +233,27 @@ class ChatNotifier with ChangeNotifier {
     }
   }
 
+  Future<CurrentUserModel?> getCurrentUserModel() async {
+    try {
+      final currentUserModel = await _getCurrentUserUsecase.call(params: null);
+      return currentUserModel;
+    } catch (e) {
+      if (e is DioException) {
+        if (e.type == DioExceptionType.connectionError) {
+          throw TaskStatus.NO_INTERNET;
+        }
+        if (e.response?.statusCode == 401) {
+          throw TaskStatus.UNAUTHORIZED;
+        }
+        // print(
+        //     "Error in getNumberRestToken in chat notifier with status code: ${e.response?.statusCode}");
+      } else {
+        // print("Error in getNumberRestToken in chat notifier with  error: $e");
+      }
+      return null;
+    }
+  }
+
   //Added:
   Future<void> sendMessageForPersonalBot(String contentSend) async {
     //Add message send to history
@@ -241,7 +269,7 @@ class ChatNotifier with ChangeNotifier {
     notifyListeners();
 
     try {
-      print("Reach top");
+      //print("Reach top");
       ThreadDto? thread = await _createThreadUseCase.call(
           params: _personalAssistantNotifier.currentAssistant!.id!);
       if (thread != null) {
@@ -251,8 +279,7 @@ class ChatNotifier with ChangeNotifier {
                 message: contentSend,
                 openAiThreadId: currentThread!.openAiThreadId,
                 assistantId: currentThread!.assistantId,
-                additionalInstruction: "")
-        );
+                additionalInstruction: ""));
         updateLastMessage(response);
         notifyListeners();
       }
@@ -266,7 +293,7 @@ class ChatNotifier with ChangeNotifier {
     }
   }
 
-  void clearPersonalAssistantData(){
+  void clearPersonalAssistantData() {
     _historyMessages.clear();
     _idCurrentConversation = null;
     _numberRestToken = 0;
@@ -276,7 +303,7 @@ class ChatNotifier with ChangeNotifier {
     _personalAssistantNotifier.reset();
   }
 
-  void reset(){
+  void reset() {
     clearHistoryMessages();
     clearPersonalAssistantData();
     notifyListeners();

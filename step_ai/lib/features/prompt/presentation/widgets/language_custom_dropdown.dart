@@ -135,7 +135,7 @@ class _LanguageCustomDropdownState extends State<LanguageCustomDropdown> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
-            color: TColor.northEastSnow,
+            color: TColor.doctorWhite,
             border: Border.all(color: TColor.petRock),
             borderRadius: BorderRadius.circular(8),
           ),

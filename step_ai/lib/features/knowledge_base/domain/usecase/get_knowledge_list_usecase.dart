@@ -6,7 +6,7 @@ import 'package:step_ai/features/authentication/domain/usecase/logout_usecase.da
 import 'package:step_ai/features/knowledge_base/data/model/knowledge_list_model.dart';
 import 'package:step_ai/features/knowledge_base/domain/params/get_knowledges_param.dart';
 import 'package:step_ai/features/knowledge_base/domain/repository/knowledge_repository.dart';
-import 'package:step_ai/shared/usecase/refresh_kb_token_usecase.dart';
+import 'package:step_ai/shared/usecases/refresh_kb_token_usecase.dart';
 
 class GetKnowledgeListUsecase
     extends UseCase<KnowledgeListModel, GetKnowledgesParam> {
@@ -33,7 +33,7 @@ class GetKnowledgeListUsecase
         //if no internet connection example
         rethrow;
       }
-      print(e);
+      //print(e);
       rethrow;
     }
   }

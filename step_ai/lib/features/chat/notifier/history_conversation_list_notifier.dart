@@ -24,14 +24,14 @@ class HistoryConversationListNotifier extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
     try {
-      print("=============getHistoryConversationList");
+      //print("=============getHistoryConversationList");
       _limitConversation = _limitConversation + 10;
       final conversationModel = await _getHistoryConversationListUsecase.call(
           params: _limitConversation);
-      print("=============getHistoryConversationList2");
+      //print("=============getHistoryConversationList2");
       this._historyConversationList.clear();
       this._historyConversationList = conversationModel.items.map((item) {
-        print("------------------------->get Trong notifier");
+        //print("------------------------->get Trong notifier");
         return Conversation(
           id: item.id!,
           title: item.title,
@@ -39,7 +39,7 @@ class HistoryConversationListNotifier extends ChangeNotifier {
         );
       }).toList();
       _hasMore = conversationModel.hasMore;
-      print("=============getHistoryConversationList success");
+      //print("=============getHistoryConversationList success");
     } catch (e) {
       _historyConversationList = [];
       _limitConversation = 0;
@@ -51,11 +51,11 @@ class HistoryConversationListNotifier extends ChangeNotifier {
         if (e.response?.statusCode == 401) {
           throw TaskStatus.UNAUTHORIZED;
         }
-        print(
-            "Error in getHistoryConversationList in history conversation list notifier with status code: ${e.response?.statusCode}");
+        // print(
+        //     "Error in getHistoryConversationList in history conversation list notifier with status code: ${e.response?.statusCode}");
       } else {
-        print(
-            "Error in getHistoryConversationList in history conversation list notifier $e");
+        // print(
+        //     "Error in getHistoryConversationList in history conversation list notifier $e");
       }
     } finally {
       isLoading = false;

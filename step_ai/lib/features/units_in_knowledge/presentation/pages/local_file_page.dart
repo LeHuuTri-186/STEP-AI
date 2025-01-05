@@ -4,12 +4,16 @@ import 'package:http_parser/http_parser.dart';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/config/constants.dart';
 import 'package:step_ai/features/knowledge_base/notifier/knowledge_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/local_file_notifier.dart';
 import 'package:step_ai/features/units_in_knowledge/notifier/unit_notifier.dart';
+import 'package:step_ai/shared/styles/vertical_spacing.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../../../shared/styles/colors.dart';
 
 class LocalFilePage extends StatelessWidget {
   LocalFilePage({super.key});
@@ -60,19 +64,19 @@ class LocalFilePage extends StatelessWidget {
                 },
         ),
       ),
-      body: Center(
+      body: Align(
+        alignment: Alignment.topCenter,
         child: Container(
-          width: MediaQuery.of(context).size.width * 0.75,
-          height: MediaQuery.of(context).size.height * 0.5,
+          width: MediaQuery.of(context).size.width * 0.8,
           decoration: BoxDecoration(
-            color: Colors.lightBlue[100],
             borderRadius: BorderRadius.circular(10),
           ),
           //Main Column
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              VSpacing.md,
               //Title of the page + Image
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -81,7 +85,7 @@ class LocalFilePage extends StatelessWidget {
                     Image.asset(Constant.localFileImagePath,
                         width: 50, height: 50),
                     const SizedBox(width: 10),
-                    const Text('Local Files'),
+                    Text('Local Files', style: Theme.of(context).textTheme.titleLarge,),
                   ]),
                   IconButton(
                       onPressed: () async {
@@ -96,7 +100,7 @@ class LocalFilePage extends StatelessWidget {
                               mode: LaunchMode.externalApplication);
                         } catch (e) {
                           // Xử lý lỗi, có thể hiển thị thông báo cho người dùng
-                          print('Lỗi khi mở URL: $e');
+                          //print('Lỗi khi mở URL: $e');
                         }
                       },
                       icon: const Icon(
@@ -106,7 +110,6 @@ class LocalFilePage extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 4),
-              const Divider(),
               const SizedBox(height: 10),
               //Container to upload files (select file)
               GestureDetector(
@@ -114,8 +117,6 @@ class LocalFilePage extends StatelessWidget {
                   await selectFile();
                 },
                 child: Container(
-                  height: MediaQuery.of(context).size.height * 0.25,
-                  width: MediaQuery.of(context).size.width * 0.6,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
@@ -125,28 +126,33 @@ class LocalFilePage extends StatelessWidget {
                       width: 1.0,
                     ),
                   ),
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.cloud_upload,
-                        size: 50,
-                        color: Colors.blue,
-                      ),
-                      SizedBox(height: 10),
-                      Text("Click here to upload files",
-                          style: TextStyle(color: Colors.blue)),
-                      SizedBox(height: 4),
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text(
-                          "Support for a single or bulk. Strictly prohibit from uploading company data or other band files",
-                          style: TextStyle(color: Colors.grey, fontSize: 10),
-                          textAlign: TextAlign.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.cloud_upload,
+                          size: 50,
+                          color: TColor.tamarama,
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 10),
+                        Text("Click here to upload files",
+                            style: Theme.of(context).textTheme.bodyMedium,),
+                        const SizedBox(height: 4),
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            "Support for single or bulk. Strictly prohibit from uploading company data or other banned files",
+                            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              color: TColor.petRock,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -157,72 +163,89 @@ class LocalFilePage extends StatelessWidget {
                   : Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.attach_file, color: Colors.blue),
+                        Icon(Icons.attach_file, color: TColor.tamarama),
                         const SizedBox(width: 4),
-                        Text(localFileNotifier.fileName,
-                            style: const TextStyle(color: Colors.blue)),
+                        Text(localFileNotifier.fileName, style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: TColor.tamarama,
+                        ),),
                       ],
                     ),
               const SizedBox(height: 10),
               //Button to connect
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.lightBlue,
-                  disabledBackgroundColor: const Color.fromARGB(255, 173, 205, 221),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: TColor.tamarama,
+                    disabledBackgroundColor: TColor.petRock,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
-                ),
-                onPressed: (localFileNotifier.isUploadLoading || file == null)
-                    ? null
-                    : () async {
-                        if (file == null) {
-                          return;
-                        }
-                        //show indicator
-                        localFileNotifier.changeUploadLoading(true);
-                        try {
-                          // Upload file
-                          String extension =
-                              file!.path.split('.').last.toLowerCase();
-                          await unitNotifier.uploadLocalFile(
-                              file!,
-                              MediaType.parse(
-                                  localFileNotifier.getMimeType(extension)));
-                          await knowledgeNotifier.getKnowledgeList();
-                          await unitNotifier.getUnitList();
-                          findAndUpdateCurrentKnowledge();
-                          // Clear temporary files
-                          await FilePicker.platform.clearTemporaryFiles();
-                          localFileNotifier.changeFileName("");
-                          //hide indicator
-                          localFileNotifier.changeUploadLoading(false);
-                          localFileNotifier.changeFileName("");
-                          Navigator.pop(context);
-                        } catch (e) {
-                          //hide indicator
-                          localFileNotifier.changeUploadLoading(false);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                e.toString(),
+                  onPressed: (localFileNotifier.isUploadLoading || file == null)
+                      ? null
+                      : () async {
+                          if (file == null) {
+                            return;
+                          }
+                          //show indicator
+                          localFileNotifier.changeUploadLoading(true);
+                          try {
+                            // Upload file
+                            String extension =
+                                file!.path.split('.').last.toLowerCase();
+                            await unitNotifier.uploadLocalFile(
+                                file!,
+                                MediaType.parse(
+                                    localFileNotifier.getMimeType(extension)));
+                            await knowledgeNotifier.getKnowledgeList();
+                            await unitNotifier.getUnitList();
+                            findAndUpdateCurrentKnowledge();
+                            // Clear temporary files
+                            await FilePicker.platform.clearTemporaryFiles();
+                            localFileNotifier.changeFileName("");
+                            //hide indicator
+                            localFileNotifier.changeUploadLoading(false);
+                            localFileNotifier.changeFileName("");
+                            Navigator.pop(context);
+                          } catch (e) {
+                            //hide indicator
+                            localFileNotifier.changeUploadLoading(false);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  e.toString(),
+                                ),
                               ),
-                            ),
-                          );
-                        }
-                      },
-                child: (localFileNotifier.isUploadLoading)
-                    ? const Stack(alignment: Alignment.center, children: [
-                        Text("Uploading..."),
-                        Positioned(
-                          child: CupertinoActivityIndicator(
-                            radius: 10,
-                            color: Colors.blue,
-                          ),
-                        ),
-                      ])
-                    : const Text('Connect',
-                        style: TextStyle(color: Colors.white)),
+                            );
+                          }
+                        },
+                  child: (localFileNotifier.isUploadLoading)
+                      ? Stack(alignment: Alignment.center, children: [
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Uploading..."),
+                        ],
+                      ),
+                    ),
+                    Positioned(
+                        child: LoadingAnimationWidget.discreteCircle(
+                            color: TColor.doctorWhite, size: 14)
+                    ),
+                  ])
+                      : const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Connect',
+                            style: TextStyle(color: Colors.white)),
+                      ],
+                    ),
+                  ),),
               ),
             ],
           ),

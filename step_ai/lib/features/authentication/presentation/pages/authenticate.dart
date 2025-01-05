@@ -407,7 +407,7 @@ class _AuthenticateScreenState extends State<AuthenticateScreen> {
         ),
         suffixIcon: IconButton(
           icon: Icon(
-            isShowing ? Icons.visibility : Icons.visibility_off,
+            !isShowing ? Icons.visibility : Icons.visibility_off,
             color: Colors.grey,
           ),
           onPressed: callback,

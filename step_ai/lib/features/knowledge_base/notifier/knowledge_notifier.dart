@@ -41,7 +41,8 @@ class KnowledgeNotifier with ChangeNotifier {
       // limit += 5;
       final knowledgeListModel = await _getKnowledgeListUsecase.call(
           params: GetKnowledgesParam(limit: 50));
-      knowledgeList = KnowledgeList.fromModel(knowledgeListModel);
+
+      knowledgeList = KnowledgeList.fromModel(knowledgeListModel!);
       knowledgeList!.knowledgeList.sort((a, b) => a.knowledgeName
           .toLowerCase()
           .compareTo(b.knowledgeName.toLowerCase()));
@@ -53,7 +54,7 @@ class KnowledgeNotifier with ChangeNotifier {
       limit = 0;
       hasNext = false;
       errorString = "Have error. Try again  Get Knowledge";
-      print("Error in getKnowledgeList in knowledge notifier with error: $e");
+      //print("Error in getKnowledgeList in knowledge notifier with error: $e");
       if (e is DioException) {
         if (e.type == DioExceptionType.connectionError) {
           errorString = "Please check your internet connection";
@@ -62,6 +63,7 @@ class KnowledgeNotifier with ChangeNotifier {
           changeTaskStatus(TaskStatus.UNAUTHORIZED);
         }
       }
+
     } finally {
       isLoadingKnowledgeList = false;
       notifyListeners();
@@ -87,7 +89,7 @@ class KnowledgeNotifier with ChangeNotifier {
           changeTaskStatus(TaskStatus.UNAUTHORIZED);
         }
       }
-      print("Error in addNewKnowledge in knowledge notifier with error: $e");
+      //print("Error in addNewKnowledge in knowledge notifier with error: $e");
       throw "Have error. Try again later: Add Knowledge";
       // notifyListeners();
     }
@@ -118,7 +120,7 @@ class KnowledgeNotifier with ChangeNotifier {
           changeTaskStatus(TaskStatus.UNAUTHORIZED);
         }
       }
-      print("Error in EditKnowledge in knowledge notifier with error: $e");
+      //print("Error in EditKnowledge in knowledge notifier with error: $e");
       throw "Have error. Try again later: Edit Knowledge";
     }
   }
@@ -135,7 +137,7 @@ class KnowledgeNotifier with ChangeNotifier {
           changeTaskStatus(TaskStatus.UNAUTHORIZED);
         }
       }
-      print("Error in deleteKnowledge in knowledge notifier with error: $e");
+      //print("Error in deleteKnowledge in knowledge notifier with error: $e");
       throw "Have error Delete Knowledge. Try again";
     }
   }

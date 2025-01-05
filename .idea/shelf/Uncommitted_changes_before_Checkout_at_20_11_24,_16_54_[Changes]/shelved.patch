@@ -1,0 +1,577 @@
+Index: step_ai/lib/features/chat/presentation/pages/chat_page.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import 'package:flutter/material.dart';\nimport 'package:google_fonts/google_fonts.dart';\nimport 'package:provider/provider.dart';\nimport 'package:step_ai/config/routes/routes.dart';\nimport 'package:step_ai/features/chat/domain/entity/message.dart';\nimport 'package:step_ai/features/chat/notifier/chat_notifier.dart';\nimport 'package:step_ai/shared/widgets/chat_bar.dart';\nimport 'package:step_ai/shared/widgets/dropdown_Ai.dart';\nimport 'package:step_ai/shared/widgets/history_drawer.dart';\nimport 'package:step_ai/shared/widgets/message_tile.dart';\n\nclass ChatPage extends StatefulWidget {\n  const ChatPage({super.key, this.chatName = \"Chat\"});\n  final String? chatName;\n\n  @override\n  State<ChatPage> createState() => _ChatPageState();\n}\n\nclass _ChatPageState extends State<ChatPage> {\n  late ChatNotifier _chatNotifier;\n  late List<Message> messages;\n  final ScrollController _scrollController = ScrollController();\n\n  void _scrollToBottom() {\n    if (_scrollController.hasClients) {\n      _scrollController.animateTo(\n        _scrollController.position.maxScrollExtent,\n        duration: const Duration(microseconds: 1000),\n        curve: Curves.easeOut,\n      );\n    }\n  }\n\n  @override\n  Widget build(BuildContext context) {\n    final messages =\n        Provider.of<ChatNotifier>(context, listen: true).historyMessages;\n    _chatNotifier = Provider.of<ChatNotifier>(context, listen: false);\n\n    // Add this to scroll when messages update\n    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());\n    return Scaffold(\n      onDrawerChanged: (isOpened) {\n        if (isOpened) {\n          FocusScope.of(context).unfocus();\n        }\n      },\n      drawer: HistoryDrawer(),\n      appBar: AppBar(\n        title: SingleChildScrollView(\n          scrollDirection: Axis.horizontal,\n          child: Row(\n            crossAxisAlignment: CrossAxisAlignment.end,\n            mainAxisAlignment: MainAxisAlignment.center,\n            children: [\n              Text(\n                _chatNotifier.getTitleCurrentConversation(),\n                style: GoogleFonts.jetBrainsMono(\n                    color: Colors.white,\n                    fontWeight: FontWeight.w700,\n                    fontSize: MediaQuery.of(context).size.width * 0.05),\n              ),\n            ],\n          ),\n        ),\n        backgroundColor: Colors.blue,\n        actions: [\n          IconButton(\n              onPressed: () async {\n                await _chatNotifier.resetChatNotifier();\n                Navigator.of(context).pushNamedAndRemoveUntil(\n                  Routes.chat,\n                  (Route<dynamic> route) => false,\n                );\n              },\n              icon: const Icon(\n                Icons.add,\n                color: Colors.white,\n              )),\n        ],\n        iconTheme: const IconThemeData(color: Colors.white),\n      ),\n      body: Padding(\n          padding: const EdgeInsets.all(5),\n          child: Column(\n            children: [\n              Expanded(\n                child: ListView.builder(\n                  controller: _scrollController,\n                  itemCount: messages.length,\n                  itemBuilder: (context, index) {\n                    return MessageTile(currentMessage: messages[index]);\n                  },\n                ),\n              ),\n              Column(\n                crossAxisAlignment: CrossAxisAlignment.start,\n                children: [\n                  Padding(\n                      padding: const EdgeInsets.all(10.0),\n                      child: SizedBox(\n                        width: MediaQuery.of(context).size.width * 0.5,\n                        child: DropdownAI(),\n                      )),\n                  const SizedBox(height: 8),\n                  ChatBar(),\n                  const SizedBox(\n                    height: 5,\n                  ),\n                  Padding(\n                    padding: const EdgeInsets.only(left: 10),\n                    child: Text(\n                      \"Token còn lại: ${_chatNotifier.numberRestToken}\",\n                      style: GoogleFonts.jetBrainsMono(\n                          color: Colors.black,\n                          fontWeight: FontWeight.w700,\n                          fontSize: MediaQuery.of(context).size.width * 0.03),\n                    ),\n                  ),\n                ],\n              ),\n            ],\n          )),\n    );\n  }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/step_ai/lib/features/chat/presentation/pages/chat_page.dart b/step_ai/lib/features/chat/presentation/pages/chat_page.dart
+--- a/step_ai/lib/features/chat/presentation/pages/chat_page.dart	
++++ b/step_ai/lib/features/chat/presentation/pages/chat_page.dart	
+@@ -1,14 +1,21 @@
+ import 'package:flutter/material.dart';
++import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+ import 'package:google_fonts/google_fonts.dart';
+ import 'package:provider/provider.dart';
+ import 'package:step_ai/config/routes/routes.dart';
+ import 'package:step_ai/features/chat/domain/entity/message.dart';
+ import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
++import 'package:step_ai/features/prompt/presentation/pages/prompt_bottom_sheet.dart';
++import 'package:step_ai/features/prompt/presentation/pages/prompt_list.dart';
++import 'package:step_ai/features/prompt/presentation/state/prompt_view_provider.dart';
+ import 'package:step_ai/shared/widgets/chat_bar.dart';
+ import 'package:step_ai/shared/widgets/dropdown_Ai.dart';
+ import 'package:step_ai/shared/widgets/history_drawer.dart';
+ import 'package:step_ai/shared/widgets/message_tile.dart';
+ 
++import '../../../../core/di/service_locator.dart';
++import '../../../../shared/styles/colors.dart';
++
+ class ChatPage extends StatefulWidget {
+   const ChatPage({super.key, this.chatName = "Chat"});
+   final String? chatName;
+@@ -81,47 +88,65 @@
+         ],
+         iconTheme: const IconThemeData(color: Colors.white),
+       ),
+-      body: Padding(
+-          padding: const EdgeInsets.all(5),
+-          child: Column(
+-            children: [
+-              Expanded(
+-                child: ListView.builder(
+-                  controller: _scrollController,
+-                  itemCount: messages.length,
+-                  itemBuilder: (context, index) {
+-                    return MessageTile(currentMessage: messages[index]);
+-                  },
+-                ),
+-              ),
+-              Column(
+-                crossAxisAlignment: CrossAxisAlignment.start,
+-                children: [
+-                  Padding(
+-                      padding: const EdgeInsets.all(10.0),
+-                      child: SizedBox(
+-                        width: MediaQuery.of(context).size.width * 0.5,
+-                        child: DropdownAI(),
+-                      )),
+-                  const SizedBox(height: 8),
+-                  ChatBar(),
+-                  const SizedBox(
+-                    height: 5,
+-                  ),
+-                  Padding(
+-                    padding: const EdgeInsets.only(left: 10),
+-                    child: Text(
+-                      "Token còn lại: ${_chatNotifier.numberRestToken}",
+-                      style: GoogleFonts.jetBrainsMono(
+-                          color: Colors.black,
+-                          fontWeight: FontWeight.w700,
+-                          fontSize: MediaQuery.of(context).size.width * 0.03),
+-                    ),
+-                  ),
+-                ],
+-              ),
+-            ],
+-          )),
++      body: SafeArea(
++        child: Padding(
++            padding: const EdgeInsets.all(5),
++            child: Column(
++              children: [
++                Expanded(
++                  child: ListView.builder(
++                    controller: _scrollController,
++                    itemCount: messages.length,
++                    itemBuilder: (context, index) {
++                      return MessageTile(currentMessage: messages[index]);
++                    },
++                  ),
++                ),
++                Column(
++                  crossAxisAlignment: CrossAxisAlignment.start,
++                  children: [
++                    Row(
++                      children: [
++                        Padding(
++                          padding: const EdgeInsets.all(10.0),
++                          child: SizedBox(
++                            width: MediaQuery.of(context).size.width * 0.5,
++                            child: DropdownAI(),
++                          ),
++                        ),
++                        Material(
++                          color: Colors.transparent,
++                          child: InkWell(
++                            onTap: () => showModalBottomSheet(
++                                context: context,
++                                builder: (_) {
++                                  return const PromptBottomSheet();
++                                }),
++                            child: Icon(FontAwesomeIcons.wandMagicSparkles),
++                          ),
++                        )
++                      ],
++                    ),
++                    const SizedBox(height: 8),
++                    ChatBar(),
++                    const SizedBox(
++                      height: 5,
++                    ),
++                    Padding(
++                      padding: const EdgeInsets.only(left: 10),
++                      child: Text(
++                        "Token còn lại: ${_chatNotifier.numberRestToken}",
++                        style: GoogleFonts.jetBrainsMono(
++                            color: Colors.black,
++                            fontWeight: FontWeight.w700,
++                            fontSize: MediaQuery.of(context).size.width * 0.03),
++                      ),
++                    ),
++                  ],
++                ),
++              ],
++            )),
++      ),
+     );
+   }
+ }
+Index: .idea/vcs.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/vcs.xml b/.idea/vcs.xml
+new file mode 100644
+--- /dev/null	
++++ b/.idea/vcs.xml	
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="VcsDirectoryMappings">
++    <mapping directory="$PROJECT_DIR$" vcs="Git" />
++  </component>
++</project>
+\ No newline at end of file
+Index: step_ai/pubspec.lock
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+># Generated by pub\n# See https://dart.dev/tools/pub/glossary#lockfile\npackages:\n  _fe_analyzer_shared:\n    dependency: transitive\n    description:\n      name: _fe_analyzer_shared\n      sha256: f256b0c0ba6c7577c15e2e4e114755640a875e885099367bf6e012b19314c834\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"72.0.0\"\n  _macros:\n    dependency: transitive\n    description: dart\n    source: sdk\n    version: \"0.3.2\"\n  analyzer:\n    dependency: transitive\n    description:\n      name: analyzer\n      sha256: b652861553cd3990d8ed361f7979dc6d7053a9ac8843fa73820ab68ce5410139\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"6.7.0\"\n  args:\n    dependency: transitive\n    description:\n      name: args\n      sha256: bf9f5caeea8d8fe6721a9c358dd8a5c1947b27f1cfaa18b39c301273594919e6\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"2.6.0\"\n  async:\n    dependency: transitive\n    description:\n      name: async\n      sha256: \"947bfcf187f74dbc5e146c9eb9c0f10c9f8b30743e341481c1e2ed3ecc18c20c\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"2.11.0\"\n  boolean_selector:\n    dependency: transitive\n    description:\n      name: boolean_selector\n      sha256: \"6cfb5af12253eaf2b368f07bacc5a80d1301a071c73360d746b7f2e32d762c66\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"2.1.1\"\n  build:\n    dependency: transitive\n    description:\n      name: build\n      sha256: \"80184af8b6cb3e5c1c4ec6d8544d27711700bc3e6d2efad04238c7b5290889f0\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"2.4.1\"\n  build_config:\n    dependency: transitive\n    description:\n      name: build_config\n      sha256: bf80fcfb46a29945b423bd9aad884590fb1dc69b330a4d4700cac476af1708d1\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"1.1.1\"\n  build_daemon:\n    dependency: transitive\n    description:\n      name: build_daemon\n      sha256: \"79b2aef6ac2ed00046867ed354c88778c9c0f029df8a20fe10b5436826721ef9\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"4.0.2\"\n  build_resolvers:\n    dependency: transitive\n    description:\n      name: build_resolvers\n      sha256: \"339086358431fa15d7eca8b6a36e5d783728cf025e559b834f4609a1fcfb7b0a\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"2.4.2\"\n  build_runner:\n    dependency: \"direct dev\"\n    description:\n      name: build_runner\n      sha256: \"028819cfb90051c6b5440c7e574d1896f8037e3c96cf17aaeb054c9311cfbf4d\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"2.4.13\"\n  build_runner_core:\n    dependency: transitive\n    description:\n      name: build_runner_core\n      sha256: f8126682b87a7282a339b871298cc12009cb67109cfa1614d6436fb0289193e0\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"7.3.2\"\n  built_collection:\n    dependency: transitive\n    description:\n      name: built_collection\n      sha256: \"376e3dd27b51ea877c28d525560790aee2e6fbb5f20e2f85d5081027d94e2100\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"5.1.1\"\n  built_value:\n    dependency: transitive\n    description:\n      name: built_value\n      sha256: c7913a9737ee4007efedaffc968c049fd0f3d0e49109e778edc10de9426005cb\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"8.9.2\"\n  characters:\n    dependency: transitive\n    description:\n      name: characters\n      sha256: \"04a925763edad70e8443c99234dc3328f442e811f1d8fd1a72f1c8ad0f69a605\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"1.3.0\"\n  checked_yaml:\n    dependency: transitive\n    description:\n      name: checked_yaml\n      sha256: feb6bed21949061731a7a75fc5d2aa727cf160b91af9a3e464c5e3a32e28b5ff\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"2.0.3\"\n  clock:\n    dependency: transitive\n    description:\n      name: clock\n      sha256: cb6d7f03e1de671e34607e909a7213e31d7752be4fb66a86d29fe1eb14bfb5cf\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"1.1.1\"\n  code_builder:\n    dependency: transitive\n    description:\n      name: code_builder\n      sha256: \"0ec10bf4a89e4c613960bf1e8b42c64127021740fb21640c29c909826a5eea3e\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"4.10.1\"\n  collection:\n    dependency: transitive\n    description:\n      name: collection\n      sha256: ee67cb0715911d28db6bf4af1026078bd6f0128b07a5f66fb2ed94ec6783c09a\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"1.18.0\"\n  convert:\n    dependency: transitive\n    description:\n      name: convert\n      sha256: b30acd5944035672bc15c6b7a8b47d773e41e2f17de064350988c5d02adb1c68\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"3.1.2\"\n  crypto:\n    dependency: transitive\n    description:\n      name: crypto\n      sha256: \"1e445881f28f22d6140f181e07737b22f1e099a5e1ff94b0af2f9e4a463f4855\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"3.0.6\"\n  cupertino_icons:\n    dependency: \"direct main\"\n    description:\n      name: cupertino_icons\n      sha256: ba631d1c7f7bef6b729a622b7b752645a2d076dba9976925b8f25725a30e1ee6\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"1.0.8\"\n  dart_style:\n    dependency: transitive\n    description:\n      name: dart_style\n      sha256: \"7856d364b589d1f08986e140938578ed36ed948581fbc3bc9aef1805039ac5ab\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"2.3.7\"\n  dio:\n    dependency: \"direct main\"\n    description:\n      name: dio\n      sha256: \"5598aa796bbf4699afd5c67c0f5f6e2ed542afc956884b9cd58c306966efc260\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"5.7.0\"\n  dio_web_adapter:\n    dependency: transitive\n    description:\n      name: dio_web_adapter\n      sha256: \"33259a9276d6cea88774a0000cfae0d861003497755969c92faa223108620dc8\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"2.0.0\"\n  fake_async:\n    dependency: transitive\n    description:\n      name: fake_async\n      sha256: \"511392330127add0b769b75a987850d136345d9227c6b94c96a04cf4a391bf78\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"1.3.1\"\n  ffi:\n    dependency: transitive\n    description:\n      name: ffi\n      sha256: \"16ed7b077ef01ad6170a3d0c57caa4a112a38d7a2ed5602e0aca9ca6f3d98da6\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"2.1.3\"\n  file:\n    dependency: transitive\n    description:\n      name: file\n      sha256: a3b4f84adafef897088c160faf7dfffb7696046cb13ae90b508c2cbc95d3b8d4\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"7.0.1\"\n  fixnum:\n    dependency: transitive\n    description:\n      name: fixnum\n      sha256: b6dc7065e46c974bc7c5f143080a6764ec7a4be6da1285ececdc37be96de53be\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"1.1.1\"\n  flutter:\n    dependency: \"direct main\"\n    description: flutter\n    source: sdk\n    version: \"0.0.0\"\n  flutter_lints:\n    dependency: \"direct dev\"\n    description:\n      name: flutter_lints\n      sha256: \"3f41d009ba7172d5ff9be5f6e6e6abb4300e263aab8866d2a0842ed2a70f8f0c\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"4.0.0\"\n  flutter_markdown:\n    dependency: \"direct main\"\n    description:\n      name: flutter_markdown\n      sha256: f0e599ba89c9946c8e051780f0ec99aba4ba15895e0380a7ab68f420046fc44e\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"0.7.4+1\"\n  flutter_secure_storage:\n    dependency: \"direct main\"\n    description:\n      name: flutter_secure_storage\n      sha256: \"165164745e6afb5c0e3e3fcc72a012fb9e58496fb26ffb92cf22e16a821e85d0\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"9.2.2\"\n  flutter_secure_storage_linux:\n    dependency: transitive\n    description:\n      name: flutter_secure_storage_linux\n      sha256: \"4d91bfc23047422cbcd73ac684bc169859ee766482517c22172c86596bf1464b\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"1.2.1\"\n  flutter_secure_storage_macos:\n    dependency: transitive\n    description:\n      name: flutter_secure_storage_macos\n      sha256: \"1693ab11121a5f925bbea0be725abfcfbbcf36c1e29e571f84a0c0f436147a81\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"3.1.2\"\n  flutter_secure_storage_platform_interface:\n    dependency: transitive\n    description:\n      name: flutter_secure_storage_platform_interface\n      sha256: cf91ad32ce5adef6fba4d736a542baca9daf3beac4db2d04be350b87f69ac4a8\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"1.1.2\"\n  flutter_secure_storage_web:\n    dependency: transitive\n    description:\n      name: flutter_secure_storage_web\n      sha256: f4ebff989b4f07b2656fb16b47852c0aab9fed9b4ec1c70103368337bc1886a9\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"1.2.1\"\n  flutter_secure_storage_windows:\n    dependency: transitive\n    description:\n      name: flutter_secure_storage_windows\n      sha256: b20b07cb5ed4ed74fc567b78a72936203f587eba460af1df11281c9326cd3709\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"3.1.2\"\n  flutter_test:\n    dependency: \"direct dev\"\n    description: flutter\n    source: sdk\n    version: \"0.0.0\"\n  flutter_web_plugins:\n    dependency: transitive\n    description: flutter\n    source: sdk\n    version: \"0.0.0\"\n  font_awesome_flutter:\n    dependency: \"direct main\"\n    description:\n      name: font_awesome_flutter\n      sha256: d3a89184101baec7f4600d58840a764d2ef760fe1c5a20ef9e6b0e9b24a07a3a\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"10.8.0\"\n  freezed:\n    dependency: \"direct dev\"\n    description:\n      name: freezed\n      sha256: \"44c19278dd9d89292cf46e97dc0c1e52ce03275f40a97c5a348e802a924bf40e\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"2.5.7\"\n  freezed_annotation:\n    dependency: \"direct main\"\n    description:\n      name: freezed_annotation\n      sha256: c2e2d632dd9b8a2b7751117abcfc2b4888ecfe181bd9fca7170d9ef02e595fe2\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"2.4.4\"\n  frontend_server_client:\n    dependency: transitive\n    description:\n      name: frontend_server_client\n      sha256: f64a0333a82f30b0cca061bc3d143813a486dc086b574bfb233b7c1372427694\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"4.0.0\"\n  get_it:\n    dependency: \"direct main\"\n    description:\n      name: get_it\n      sha256: c49895c1ecb0ee2a0ec568d39de882e2c299ba26355aa6744ab1001f98cebd15\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"8.0.2\"\n  glob:\n    dependency: transitive\n    description:\n      name: glob\n      sha256: \"0e7014b3b7d4dac1ca4d6114f82bf1782ee86745b9b42a92c9289c23d8a0ab63\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"2.1.2\"\n  google_fonts:\n    dependency: \"direct main\"\n    description:\n      name: google_fonts\n      sha256: b1ac0fe2832c9cc95e5e88b57d627c5e68c223b9657f4b96e1487aa9098c7b82\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"6.2.1\"\n  graphs:\n    dependency: transitive\n    description:\n      name: graphs\n      sha256: \"741bbf84165310a68ff28fe9e727332eef1407342fca52759cb21ad8177bb8d0\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"2.3.2\"\n  http:\n    dependency: \"direct main\"\n    description:\n      name: http\n      sha256: b9c29a161230ee03d3ccf545097fccd9b87a5264228c5d348202e0f0c28f9010\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"1.2.2\"\n  http_multi_server:\n    dependency: transitive\n    description:\n      name: http_multi_server\n      sha256: \"97486f20f9c2f7be8f514851703d0119c3596d14ea63227af6f7a481ef2b2f8b\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"3.2.1\"\n  http_parser:\n    dependency: transitive\n    description:\n      name: http_parser\n      sha256: \"2aa08ce0341cc9b354a498388e30986515406668dbcc4f7c950c3e715496693b\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"4.0.2\"\n  io:\n    dependency: transitive\n    description:\n      name: io\n      sha256: \"2ec25704aba361659e10e3e5f5d672068d332fc8ac516421d483a11e5cbd061e\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"1.0.4\"\n  js:\n    dependency: transitive\n    description:\n      name: js\n      sha256: c1b2e9b5ea78c45e1a0788d29606ba27dc5f71f019f32ca5140f61ef071838cf\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"0.7.1\"\n  json_annotation:\n    dependency: \"direct main\"\n    description:\n      name: json_annotation\n      sha256: \"1ce844379ca14835a50d2f019a3099f419082cfdd231cd86a142af94dd5c6bb1\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"4.9.0\"\n  json_serializable:\n    dependency: \"direct dev\"\n    description:\n      name: json_serializable\n      sha256: ea1432d167339ea9b5bb153f0571d0039607a873d6e04e0117af043f14a1fd4b\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"6.8.0\"\n  leak_tracker:\n    dependency: transitive\n    description:\n      name: leak_tracker\n      sha256: \"3f87a60e8c63aecc975dda1ceedbc8f24de75f09e4856ea27daf8958f2f0ce05\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"10.0.5\"\n  leak_tracker_flutter_testing:\n    dependency: transitive\n    description:\n      name: leak_tracker_flutter_testing\n      sha256: \"932549fb305594d82d7183ecd9fa93463e9914e1b67cacc34bc40906594a1806\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"3.0.5\"\n  leak_tracker_testing:\n    dependency: transitive\n    description:\n      name: leak_tracker_testing\n      sha256: \"6ba465d5d76e67ddf503e1161d1f4a6bc42306f9d66ca1e8f079a47290fb06d3\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"3.0.1\"\n  lints:\n    dependency: transitive\n    description:\n      name: lints\n      sha256: \"976c774dd944a42e83e2467f4cc670daef7eed6295b10b36ae8c85bcbf828235\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"4.0.0\"\n  loading_animation_widget:\n    dependency: \"direct main\"\n    description:\n      name: loading_animation_widget\n      sha256: \"9fe23381f3096e902f39e87e487648ff7f74925e86234353fa885bb9f6c98004\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"1.3.0\"\n  logging:\n    dependency: transitive\n    description:\n      name: logging\n      sha256: c8245ada5f1717ed44271ed1c26b8ce85ca3228fd2ffdb75468ab01979309d61\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"1.3.0\"\n  macros:\n    dependency: transitive\n    description:\n      name: macros\n      sha256: \"0acaed5d6b7eab89f63350bccd82119e6c602df0f391260d0e32b5e23db79536\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"0.1.2-main.4\"\n  matcher:\n    dependency: transitive\n    description:\n      name: matcher\n      sha256: d2323aa2060500f906aa31a895b4030b6da3ebdcc5619d14ce1aada65cd161cb\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"0.12.16+1\"\n  material_color_utilities:\n    dependency: transitive\n    description:\n      name: material_color_utilities\n      sha256: f7142bb1154231d7ea5f96bc7bde4bda2a0945d2806bb11670e30b850d56bdec\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"0.11.1\"\n  meta:\n    dependency: transitive\n    description:\n      name: meta\n      sha256: bdb68674043280c3428e9ec998512fb681678676b3c54e773629ffe74419f8c7\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"1.15.0\"\n  mime:\n    dependency: transitive\n    description:\n      name: mime\n      sha256: \"41a20518f0cb1256669420fdba0cd90d21561e560ac240f26ef8322e45bb7ed6\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"2.0.0\"\n  nested:\n    dependency: transitive\n    description:\n      name: nested\n      sha256: \"03bac4c528c64c95c722ec99280375a6f2fc708eec17c7b3f07253b626cd2a20\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"1.0.0\"\n  package_config:\n    dependency: transitive\n    description:\n      name: package_config\n      sha256: \"1c5b77ccc91e4823a5af61ee74e6b972db1ef98c2ff5a18d3161c982a55448bd\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"2.1.0\"\n  path:\n    dependency: transitive\n    description:\n      name: path\n      sha256: \"087ce49c3f0dc39180befefc60fdb4acd8f8620e5682fe2476afd0b3688bb4af\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"1.9.0\"\n  path_provider:\n    dependency: transitive\n    description:\n      name: path_provider\n      sha256: \"50c5dd5b6e1aaf6fb3a78b33f6aa3afca52bf903a8a5298f53101fdaee55bbcd\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"2.1.5\"\n  path_provider_android:\n    dependency: transitive\n    description:\n      name: path_provider_android\n      sha256: c464428172cb986b758c6d1724c603097febb8fb855aa265aeecc9280c294d4a\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"2.2.12\"\n  path_provider_foundation:\n    dependency: transitive\n    description:\n      name: path_provider_foundation\n      sha256: f234384a3fdd67f989b4d54a5d73ca2a6c422fa55ae694381ae0f4375cd1ea16\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"2.4.0\"\n  path_provider_linux:\n    dependency: transitive\n    description:\n      name: path_provider_linux\n      sha256: f7a1fe3a634fe7734c8d3f2766ad746ae2a2884abe22e241a8b301bf5cac3279\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"2.2.1\"\n  path_provider_platform_interface:\n    dependency: transitive\n    description:\n      name: path_provider_platform_interface\n      sha256: \"88f5779f72ba699763fa3a3b06aa4bf6de76c8e5de842cf6f29e2e06476c2334\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"2.1.2\"\n  path_provider_windows:\n    dependency: transitive\n    description:\n      name: path_provider_windows\n      sha256: bd6f00dbd873bfb70d0761682da2b3a2c2fccc2b9e84c495821639601d81afe7\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"2.3.0\"\n  platform:\n    dependency: transitive\n    description:\n      name: platform\n      sha256: \"5d6b1b0036a5f331ebc77c850ebc8506cbc1e9416c27e59b439f917a902a4984\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"3.1.6\"\n  plugin_platform_interface:\n    dependency: transitive\n    description:\n      name: plugin_platform_interface\n      sha256: \"4820fbfdb9478b1ebae27888254d445073732dae3d6ea81f0b7e06d5dedc3f02\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"2.1.8\"\n  pool:\n    dependency: transitive\n    description:\n      name: pool\n      sha256: \"20fe868b6314b322ea036ba325e6fc0711a22948856475e2c2b6306e8ab39c2a\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"1.5.1\"\n  provider:\n    dependency: \"direct main\"\n    description:\n      name: provider\n      sha256: c8a055ee5ce3fd98d6fc872478b03823ffdb448699c6ebdbbc71d59b596fd48c\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"6.1.2\"\n  pub_semver:\n    dependency: transitive\n    description:\n      name: pub_semver\n      sha256: \"40d3ab1bbd474c4c2328c91e3a7df8c6dd629b79ece4c4bd04bee496a224fb0c\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"2.1.4\"\n  pubspec_parse:\n    dependency: transitive\n    description:\n      name: pubspec_parse\n      sha256: c799b721d79eb6ee6fa56f00c04b472dcd44a30d258fac2174a6ec57302678f8\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"1.3.0\"\n  shelf:\n    dependency: transitive\n    description:\n      name: shelf\n      sha256: ad29c505aee705f41a4d8963641f91ac4cee3c8fad5947e033390a7bd8180fa4\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"1.4.1\"\n  shelf_web_socket:\n    dependency: transitive\n    description:\n      name: shelf_web_socket\n      sha256: \"073c147238594ecd0d193f3456a5fe91c4b0abbcc68bf5cd95b36c4e194ac611\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"2.0.0\"\n  sky_engine:\n    dependency: transitive\n    description: flutter\n    source: sdk\n    version: \"0.0.99\"\n  source_gen:\n    dependency: transitive\n    description:\n      name: source_gen\n      sha256: \"14658ba5f669685cd3d63701d01b31ea748310f7ab854e471962670abcf57832\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"1.5.0\"\n  source_helper:\n    dependency: transitive\n    description:\n      name: source_helper\n      sha256: \"6adebc0006c37dd63fe05bca0a929b99f06402fc95aa35bf36d67f5c06de01fd\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"1.3.4\"\n  source_span:\n    dependency: transitive\n    description:\n      name: source_span\n      sha256: \"53e943d4206a5e30df338fd4c6e7a077e02254531b138a15aec3bd143c1a8b3c\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"1.10.0\"\n  stack_trace:\n    dependency: transitive\n    description:\n      name: stack_trace\n      sha256: \"73713990125a6d93122541237550ee3352a2d84baad52d375a4cad2eb9b7ce0b\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"1.11.1\"\n  stream_channel:\n    dependency: transitive\n    description:\n      name: stream_channel\n      sha256: ba2aa5d8cc609d96bbb2899c28934f9e1af5cddbd60a827822ea467161eb54e7\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"2.1.2\"\n  stream_transform:\n    dependency: transitive\n    description:\n      name: stream_transform\n      sha256: \"14a00e794c7c11aa145a170587321aedce29769c08d7f58b1d141da75e3b1c6f\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"2.1.0\"\n  string_scanner:\n    dependency: transitive\n    description:\n      name: string_scanner\n      sha256: \"556692adab6cfa87322a115640c11f13cb77b3f076ddcc5d6ae3c20242bedcde\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"1.2.0\"\n  term_glyph:\n    dependency: transitive\n    description:\n      name: term_glyph\n      sha256: a29248a84fbb7c79282b40b8c72a1209db169a2e0542bce341da992fe1bc7e84\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"1.2.1\"\n  test_api:\n    dependency: transitive\n    description:\n      name: test_api\n      sha256: \"5b8a98dafc4d5c4c9c72d8b31ab2b23fc13422348d2997120294d3bac86b4ddb\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"0.7.2\"\n  timing:\n    dependency: transitive\n    description:\n      name: timing\n      sha256: \"70a3b636575d4163c477e6de42f247a23b315ae20e86442bebe32d3cabf61c32\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"1.0.1\"\n  typed_data:\n    dependency: transitive\n    description:\n      name: typed_data\n      sha256: f9049c039ebfeb4cf7a7104a675823cd72dba8297f264b6637062516699fa006\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"1.4.0\"\n  vector_math:\n    dependency: transitive\n    description:\n      name: vector_math\n      sha256: \"80b3257d1492ce4d091729e3a67a60407d227c27241d6927be0130c98e741803\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"2.1.4\"\n  vm_service:\n    dependency: transitive\n    description:\n      name: vm_service\n      sha256: \"5c5f338a667b4c644744b661f309fb8080bb94b18a7e91ef1dbd343bed00ed6d\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"14.2.5\"\n  watcher:\n    dependency: transitive\n    description:\n      name: watcher\n      sha256: \"3d2ad6751b3c16cf07c7fca317a1413b3f26530319181b37e3b9039b84fc01d8\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"1.1.0\"\n  web:\n    dependency: transitive\n    description:\n      name: web\n      sha256: cd3543bd5798f6ad290ea73d210f423502e71900302dde696f8bff84bf89a1cb\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"1.1.0\"\n  win32:\n    dependency: transitive\n    description:\n      name: win32\n      sha256: \"84ba388638ed7a8cb3445a320c8273136ab2631cd5f2c57888335504ddab1bc2\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"5.8.0\"\n  web_socket:\n    dependency: transitive\n    description:\n      name: web_socket\n      sha256: \"3c12d96c0c9a4eec095246debcea7b86c0324f22df69893d538fcc6f1b8cce83\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"0.1.6\"\n  web_socket_channel:\n    dependency: transitive\n    description:\n      name: web_socket_channel\n      sha256: \"9f187088ed104edd8662ca07af4b124465893caf063ba29758f97af57e61da8f\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"3.0.1\"\n  xdg_directories:\n    dependency: transitive\n    description:\n      name: xdg_directories\n      sha256: \"7a3f37b05d989967cdddcbb571f1ea834867ae2faa29725fd085180e0883aa15\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"1.1.0\"\n  yaml:\n    dependency: transitive\n    description:\n      name: yaml\n      sha256: \"75769501ea3489fca56601ff33454fe45507ea3bfb014161abc3b43ae25989d5\"\n      url: \"https://pub.dev\"\n    source: hosted\n    version: \"3.1.2\"\nsdks:\n  dart: \">=3.5.3 <4.0.0\"\n  flutter: \">=3.24.0\"\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/step_ai/pubspec.lock b/step_ai/pubspec.lock
+--- a/step_ai/pubspec.lock	
++++ b/step_ai/pubspec.lock	
+@@ -409,10 +409,10 @@
+     dependency: transitive
+     description:
+       name: js
+-      sha256: c1b2e9b5ea78c45e1a0788d29606ba27dc5f71f019f32ca5140f61ef071838cf
++      sha256: f2c445dce49627136094980615a031419f7f3eb393237e4ecd97ac15dea343f3
+       url: "https://pub.dev"
+     source: hosted
+-    version: "0.7.1"
++    version: "0.6.7"
+   json_annotation:
+     dependency: "direct main"
+     description:
+@@ -485,6 +485,14 @@
+       url: "https://pub.dev"
+     source: hosted
+     version: "0.1.2-main.4"
++  markdown:
++    dependency: transitive
++    description:
++      name: markdown
++      sha256: ef2a1298144e3f985cc736b22e0ccdaf188b5b3970648f2d9dc13efd1d9df051
++      url: "https://pub.dev"
++    source: hosted
++    version: "7.2.2"
+   matcher:
+     dependency: transitive
+     description:
+@@ -637,6 +645,62 @@
+       url: "https://pub.dev"
+     source: hosted
+     version: "1.3.0"
++  shared_preferences:
++    dependency: "direct main"
++    description:
++      name: shared_preferences
++      sha256: "95f9997ca1fb9799d494d0cb2a780fd7be075818d59f00c43832ed112b158a82"
++      url: "https://pub.dev"
++    source: hosted
++    version: "2.3.3"
++  shared_preferences_android:
++    dependency: transitive
++    description:
++      name: shared_preferences_android
++      sha256: "3b9febd815c9ca29c9e3520d50ec32f49157711e143b7a4ca039eb87e8ade5ab"
++      url: "https://pub.dev"
++    source: hosted
++    version: "2.3.3"
++  shared_preferences_foundation:
++    dependency: transitive
++    description:
++      name: shared_preferences_foundation
++      sha256: "07e050c7cd39bad516f8d64c455f04508d09df104be326d8c02551590a0d513d"
++      url: "https://pub.dev"
++    source: hosted
++    version: "2.5.3"
++  shared_preferences_linux:
++    dependency: transitive
++    description:
++      name: shared_preferences_linux
++      sha256: "580abfd40f415611503cae30adf626e6656dfb2f0cee8f465ece7b6defb40f2f"
++      url: "https://pub.dev"
++    source: hosted
++    version: "2.4.1"
++  shared_preferences_platform_interface:
++    dependency: transitive
++    description:
++      name: shared_preferences_platform_interface
++      sha256: "57cbf196c486bc2cf1f02b85784932c6094376284b3ad5779d1b1c6c6a816b80"
++      url: "https://pub.dev"
++    source: hosted
++    version: "2.4.1"
++  shared_preferences_web:
++    dependency: transitive
++    description:
++      name: shared_preferences_web
++      sha256: d2ca4132d3946fec2184261726b355836a82c33d7d5b67af32692aff18a4684e
++      url: "https://pub.dev"
++    source: hosted
++    version: "2.4.2"
++  shared_preferences_windows:
++    dependency: transitive
++    description:
++      name: shared_preferences_windows
++      sha256: "94ef0f72b2d71bc3e700e025db3710911bd51a71cefb65cc609dd0d9a982e3c1"
++      url: "https://pub.dev"
++    source: hosted
++    version: "2.4.1"
+   shelf:
+     dependency: transitive
+     description:
+@@ -778,14 +842,6 @@
+       url: "https://pub.dev"
+     source: hosted
+     version: "1.1.0"
+-  win32:
+-    dependency: transitive
+-    description:
+-      name: win32
+-      sha256: "84ba388638ed7a8cb3445a320c8273136ab2631cd5f2c57888335504ddab1bc2"
+-      url: "https://pub.dev"
+-    source: hosted
+-    version: "5.8.0"
+   web_socket:
+     dependency: transitive
+     description:
+@@ -802,6 +858,14 @@
+       url: "https://pub.dev"
+     source: hosted
+     version: "3.0.1"
++  win32:
++    dependency: transitive
++    description:
++      name: win32
++      sha256: "84ba388638ed7a8cb3445a320c8273136ab2631cd5f2c57888335504ddab1bc2"
++      url: "https://pub.dev"
++    source: hosted
++    version: "5.8.0"
+   xdg_directories:
+     dependency: transitive
+     description:
+Index: step_ai/pubspec.yaml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>name: step_ai\ndescription: \"An AI that helps users take the right steps towards optimizing productivity in various tasks.\"\n# The following line prevents the package from being accidentally published to\n# pub.dev using `flutter pub publish`. This is preferred for private packages.\npublish_to: 'none' # Remove this line if you wish to publish to pub.dev\n\n# The following defines the version and build number for your application.\n# A version number is three numbers separated by dots, like 1.2.43\n# followed by an optional build number separated by a +.\n# Both the version and the builder number may be overridden in flutter\n# build by specifying --build-name and --build-number, respectively.\n# In Android, build-name is used as versionName while build-number used as versionCode.\n# Read more about Android versioning at https://developer.android.com/studio/publish/versioning\n# In iOS, build-name is used as CFBundleShortVersionString while build-number is used as CFBundleVersion.\n# Read more about iOS versioning at\n# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html\n# In Windows, build-name is used as the major, minor, and patch parts\n# of the product and file versions while build-number is used as the build suffix.\nversion: 1.0.0+1\n\nenvironment:\n  sdk: ^3.5.3\n\n# Dependencies specify other packages that your package needs in order to work.\n# To automatically upgrade your package dependencies to the latest versions\n# consider running `flutter pub upgrade --major-versions`. Alternatively,\n# dependencies can be manually updated by changing the version numbers below to\n# the latest version available on pub.dev. To see which dependencies have newer\n# versions available, run `flutter pub outdated`.\ndependencies:\n  google_fonts: ^6.2.1\n  font_awesome_flutter: ^10.7.0\n  flutter:\n    sdk: flutter\n\n  freezed_annotation: ^2.0.3\n  json_annotation: ^4.9.0\n  dio: ^5.7.0\n  loading_animation_widget: ^1.3.0\n\n  provider: ^6.1.2\n  \n  http: ^1.2.2\n  provider: ^6.1.2\n  flutter_secure_storage: ^9.2.2\n  shared_preferences: ^2.3.3\n  get_it: ^8.0.2\n\n\n\n  # The following adds the Cupertino Icons font to your application.\n  # Use with the CupertinoIcons class for iOS style icons.\n  cupertino_icons: ^1.0.8\n  get_it: ^8.0.2\n  flutter_markdown: ^0.7.4+1\n  dio: ^5.7.0\n  loading_animation_widget: ^1.3.0\n\ndev_dependencies:\n  flutter_test:\n    sdk: flutter\n  freezed: ^2.4.2\n  build_runner: ^2.3.3\n  json_serializable: ^6.6.2\n\n  # The \"flutter_lints\" package below contains a set of recommended lints to\n  # encourage good coding practices. The lint set provided by the package is\n  # activated in the `analysis_options.yaml` file located at the root of your\n  # package. See that file for information about deactivating specific lint\n  # rules and activating additional ones.\n  flutter_lints: ^4.0.0\n\n# For information on the generic Dart part of this file, see the\n# following page: https://dart.dev/tools/pub/pubspec\n\n# The following section is specific to Flutter packages.\nflutter:\n\n  # The following line ensures that the Material Icons font is\n  # included with your application, so that you can use the icons in\n  # the material Icons class.\n  uses-material-design: true\n\n  # To add assets to your application, add an assets section, like this:\n  assets:\n     - lib/core/assets/imgs/\n  #   - images/a_dot_ham.jpeg\n\n  # An image asset can refer to one or more resolution-specific \"variants\", see\n  # https://flutter.dev/to/resolution-aware-images\n\n  # For details regarding adding assets from package dependencies, see\n  # https://flutter.dev/to/asset-from-package\n\n  # To add custom fonts to your application, add a fonts section here,\n  # in this \"flutter\" section. Each entry in this list should have a\n  # \"family\" key with the font family name, and a \"fonts\" key with a\n  # list giving the asset and other descriptors for the font. For\n  # example:\n  # fonts:\n  #   - family: Schyler\n  #     fonts:\n  #       - asset: fonts/Schyler-Regular.ttf\n  #       - asset: fonts/Schyler-Italic.ttf\n  #         style: italic\n  #   - family: Trajan Pro\n  #     fonts:\n  #       - asset: fonts/TrajanPro.ttf\n  #       - asset: fonts/TrajanPro_Bold.ttf\n  #         weight: 700\n  #\n  # For details regarding fonts from package dependencies,\n  # see https://flutter.dev/to/font-from-package\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/step_ai/pubspec.yaml b/step_ai/pubspec.yaml
+--- a/step_ai/pubspec.yaml	
++++ b/step_ai/pubspec.yaml	
+@@ -35,10 +35,7 @@
+ 
+   freezed_annotation: ^2.0.3
+   json_annotation: ^4.9.0
+-  dio: ^5.7.0
+-  loading_animation_widget: ^1.3.0
+ 
+-  provider: ^6.1.2
+   
+   http: ^1.2.2
+   provider: ^6.1.2
+@@ -51,7 +48,6 @@
+   # The following adds the Cupertino Icons font to your application.
+   # Use with the CupertinoIcons class for iOS style icons.
+   cupertino_icons: ^1.0.8
+-  get_it: ^8.0.2
+   flutter_markdown: ^0.7.4+1
+   dio: ^5.7.0
+   loading_animation_widget: ^1.3.0
+Index: step_ai/ios/Podfile.lock
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>PODS:\n  - Flutter (1.0.0)\n  - path_provider_foundation (0.0.1):\n    - Flutter\n    - FlutterMacOS\n\nDEPENDENCIES:\n  - Flutter (from `Flutter`)\n  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)\n\nEXTERNAL SOURCES:\n  Flutter:\n    :path: Flutter\n  path_provider_foundation:\n    :path: \".symlinks/plugins/path_provider_foundation/darwin\"\n\nSPEC CHECKSUMS:\n  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7\n  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46\n\nPODFILE CHECKSUM: 819463e6a0290f5a72f145ba7cde16e8b6ef0796\n\nCOCOAPODS: 1.15.2\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/step_ai/ios/Podfile.lock b/step_ai/ios/Podfile.lock
+--- a/step_ai/ios/Podfile.lock	
++++ b/step_ai/ios/Podfile.lock	
+@@ -1,22 +1,35 @@
+ PODS:
+   - Flutter (1.0.0)
++  - flutter_secure_storage (6.0.0):
++    - Flutter
+   - path_provider_foundation (0.0.1):
+     - Flutter
+     - FlutterMacOS
++  - shared_preferences_foundation (0.0.1):
++    - Flutter
++    - FlutterMacOS
+ 
+ DEPENDENCIES:
+   - Flutter (from `Flutter`)
++  - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
+   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
++  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
+ 
+ EXTERNAL SOURCES:
+   Flutter:
+     :path: Flutter
++  flutter_secure_storage:
++    :path: ".symlinks/plugins/flutter_secure_storage/ios"
+   path_provider_foundation:
+     :path: ".symlinks/plugins/path_provider_foundation/darwin"
++  shared_preferences_foundation:
++    :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
+ 
+ SPEC CHECKSUMS:
+   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
++  flutter_secure_storage: d33dac7ae2ea08509be337e775f6b59f1ff45f12
+   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
++  shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
+ 
+ PODFILE CHECKSUM: 819463e6a0290f5a72f145ba7cde16e8b6ef0796
+ 
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"AutoImportSettings\">\n    <option name=\"autoReloadType\" value=\"NONE\" />\n  </component>\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"d36423b6-326c-41d1-9fba-ad3516026006\" name=\"Changes\" comment=\"Refactor to Feature-based clean Architecture\">\n      <change afterPath=\"$PROJECT_DIR$/step_ai/lib/config/theme/app_theme.dart\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/step_ai/lib/config/theme/bottom_nav_theme.dart\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/step_ai/lib/config/theme/light_theme.dart\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/step_ai/lib/features/prompt/presentation/pages/private_prompts.dart\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/step_ai/lib/features/prompt/presentation/pages/prompt_bottom_sheet.dart\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/step_ai/lib/features/prompt/presentation/pages/public_prompts.dart\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/step_ai/lib/shared/styles/a_bee_zee_style.dart\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/step_ai/lib/shared/styles/colors.dart\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/step_ai/lib/shared/styles/horizontal_spacing.dart\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/step_ai/lib/shared/styles/varela_round_style.dart\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/step_ai/lib/shared/styles/vertical_spacing.dart\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/step_ai/lib/shared/widgets/search_bar.dart\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/step_ai/lib/config/app_theme.dart\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/step_ai/lib/config/theme/app_bar_theme.dart\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/step_ai/lib/config/routes/routes.dart\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/step_ai/lib/config/routes/routes.dart\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/step_ai/lib/main.dart\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/step_ai/lib/main.dart\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/step_ai/pubspec.lock\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/step_ai/pubspec.lock\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/step_ai/pubspec.yaml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/step_ai/pubspec.yaml\" afterDir=\"false\" />\n    </list>\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"ClangdSettings\">\n    <option name=\"formatViaClangd\" value=\"false\" />\n  </component>\n  <component name=\"FileTemplateManagerImpl\">\n    <option name=\"RECENT_TEMPLATES\">\n      <list>\n        <option value=\"Dart File\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"Git.Settings\">\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\n      <map>\n        <entry key=\"$PROJECT_DIR$\" value=\"basic-feature\" />\n      </map>\n    </option>\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\n  </component>\n  <component name=\"GitHubPullRequestSearchHistory\">{\n  &quot;lastFilter&quot;: {\n    &quot;state&quot;: &quot;OPEN&quot;,\n    &quot;assignee&quot;: &quot;LeHuuTri-186&quot;\n  }\n}</component>\n  <component name=\"GithubPullRequestsUISettings\"><![CDATA[{\n  \"selectedUrlAndAccountId\": {\n    \"url\": \"https://github.com/LeHuuTri-186/STEP-AI.git\",\n    \"accountId\": \"62d97789-2552-40bd-9fca-043bb35448e7\"\n  },\n  \"recentNewPullRequestHead\": {\n    \"server\": {\n      \"useHttp\": false,\n      \"host\": \"github.com\",\n      \"port\": null,\n      \"suffix\": null\n    },\n    \"owner\": \"LeHuuTri-186\",\n    \"repository\": \"STEP-AI\"\n  }\n}]]></component>\n  <component name=\"ProblemsViewState\">\n    <option name=\"selectedTabId\" value=\"CurrentFile\" />\n  </component>\n  <component name=\"ProjectColorInfo\">{\n  &quot;associatedIndex&quot;: 7\n}</component>\n  <component name=\"ProjectId\" id=\"2n8xYLYUlMeQFNmQv51UvaX1rqL\" />\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\">\n    <ConfirmationsSetting value=\"2\" id=\"Add\" />\n  </component>\n  <component name=\"ProjectViewState\">\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\n    <option name=\"showLibraryContents\" value=\"true\" />\n  </component>\n  <component name=\"PropertiesComponent\"><![CDATA[{\n  \"keyToString\": {\n    \"ASKED_ADD_EXTERNAL_FILES\": \"true\",\n    \"ASKED_SHARE_PROJECT_CONFIGURATION_FILES\": \"true\",\n    \"Flutter.main.dart.executor\": \"Run\",\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\n    \"RunOnceActivity.cidr.known.project.marker\": \"true\",\n    \"RunOnceActivity.readMode.enableVisualFormatting\": \"true\",\n    \"SHARE_PROJECT_CONFIGURATION_FILES\": \"true\",\n    \"cf.first.check.clang-format\": \"false\",\n    \"cidr.known.project.marker\": \"true\",\n    \"com.google.services.firebase.aqiPopupShown\": \"true\",\n    \"dart.analysis.tool.window.visible\": \"false\",\n    \"git-widget-placeholder\": \"basic-feature-prompt-feature\",\n    \"io.flutter.reload.alreadyRun\": \"true\",\n    \"kotlin-language-version-configured\": \"true\",\n    \"last_opened_file_path\": \"/Users/lehuutri/AndroidStudioProjects/STEP-AI/step_ai/lib/config/theme\",\n    \"run.code.analysis.last.selected.profile\": \"pProject Default\",\n    \"settings.editor.selected.configurable\": \"dart.settings\",\n    \"show.migrate.to.gradle.popup\": \"false\"\n  }\n}]]></component>\n  <component name=\"RecentsManager\">\n    <key name=\"CopyFile.RECENT_KEYS\">\n      <recent name=\"$PROJECT_DIR$/step_ai/lib/config/theme\" />\n      <recent name=\"$PROJECT_DIR$/step_ai/lib/features/personal\" />\n      <recent name=\"$PROJECT_DIR$/step_ai/lib/features/prompt\" />\n      <recent name=\"$PROJECT_DIR$/step_ai/lib/features/plan\" />\n      <recent name=\"$PROJECT_DIR$/step_ai/lib/features/knowledge_base\" />\n    </key>\n    <key name=\"MoveFile.RECENT_KEYS\">\n      <recent name=\"$PROJECT_DIR$/step_ai/lib/config/routes\" />\n      <recent name=\"$PROJECT_DIR$/step_ai/lib/shared/widgets\" />\n      <recent name=\"$PROJECT_DIR$/step_ai/lib/core/utils\" />\n      <recent name=\"$PROJECT_DIR$/step_ai/lib/features/authentication/presentation/pages\" />\n      <recent name=\"$PROJECT_DIR$/step_ai/lib/features/prompt/presentation/pages\" />\n    </key>\n  </component>\n  <component name=\"RunManager\">\n    <configuration name=\"main.dart\" type=\"FlutterRunConfigurationType\" factoryName=\"Flutter\">\n      <option name=\"filePath\" value=\"$PROJECT_DIR$/step_ai/lib/main.dart\" />\n      <method v=\"2\" />\n    </configuration>\n  </component>\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\n  <component name=\"SwiftWorkspaceSettings\">\n    <option name=\"detectedToolchain\" value=\"true\" />\n    <option name=\"toolchainPathValue\" value=\"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain\" />\n  </component>\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"d36423b6-326c-41d1-9fba-ad3516026006\" name=\"Changes\" comment=\"\" />\n      <created>1728368564200</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1728368564200</updated>\n    </task>\n    <task id=\"LOCAL-00001\" summary=\"Test ui for prompt library\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1729702617410</created>\n      <option name=\"number\" value=\"00001\" />\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1729702617410</updated>\n    </task>\n    <task id=\"LOCAL-00002\" summary=\"restructure code merge pages and create basic navigation\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1729805162862</created>\n      <option name=\"number\" value=\"00002\" />\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1729805162862</updated>\n    </task>\n    <task id=\"LOCAL-00003\" summary=\"restructure code merge pages and create basic navigation\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1729805294251</created>\n      <option name=\"number\" value=\"00003\" />\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1729805294251</updated>\n    </task>\n    <task id=\"LOCAL-00004\" summary=\"merge flow and UI pages\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1729872623228</created>\n      <option name=\"number\" value=\"00004\" />\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1729872623228</updated>\n    </task>\n    <task id=\"LOCAL-00005\" summary=\"Merge remote-tracking branch 'origin/nths_lht' into nths_lht\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1729873318561</created>\n      <option name=\"number\" value=\"00005\" />\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1729873318561</updated>\n    </task>\n    <task id=\"LOCAL-00006\" summary=\"create new branch\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1731684301187</created>\n      <option name=\"number\" value=\"00006\" />\n      <option name=\"presentableId\" value=\"LOCAL-00006\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1731684301187</updated>\n    </task>\n    <task id=\"LOCAL-00007\" summary=\"Refactor to Feature-based clean Architecture\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1731751014909</created>\n      <option name=\"number\" value=\"00007\" />\n      <option name=\"presentableId\" value=\"LOCAL-00007\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1731751014909</updated>\n    </task>\n    <option name=\"localTasksCounter\" value=\"8\" />\n    <servers />\n  </component>\n  <component name=\"Vcs.Log.Tabs.Properties\">\n    <option name=\"TAB_STATES\">\n      <map>\n        <entry key=\"MAIN\">\n          <value>\n            <State />\n          </value>\n        </entry>\n      </map>\n    </option>\n  </component>\n  <component name=\"VcsManagerConfiguration\">\n    <option name=\"ADD_EXTERNAL_FILES_SILENTLY\" value=\"true\" />\n    <MESSAGE value=\"Test ui for prompt library\" />\n    <MESSAGE value=\"restructure code merge pages and create basic navigation\" />\n    <MESSAGE value=\"merge flow and UI pages\" />\n    <MESSAGE value=\"update demo Video\" />\n    <MESSAGE value=\"Merge remote-tracking branch 'origin/nths_lht' into nths_lht\" />\n    <MESSAGE value=\"create new branch\" />\n    <MESSAGE value=\"Refactor to Feature-based clean Architecture\" />\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"Refactor to Feature-based clean Architecture\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	
++++ b/.idea/workspace.xml	
+@@ -4,22 +4,12 @@
+     <option name="autoReloadType" value="NONE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="d36423b6-326c-41d1-9fba-ad3516026006" name="Changes" comment="Refactor to Feature-based clean Architecture">
+-      <change afterPath="$PROJECT_DIR$/step_ai/lib/config/theme/app_theme.dart" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/step_ai/lib/config/theme/bottom_nav_theme.dart" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/step_ai/lib/config/theme/light_theme.dart" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/step_ai/lib/features/prompt/presentation/pages/private_prompts.dart" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/step_ai/lib/features/prompt/presentation/pages/prompt_bottom_sheet.dart" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/step_ai/lib/features/prompt/presentation/pages/public_prompts.dart" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/step_ai/lib/shared/styles/a_bee_zee_style.dart" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/step_ai/lib/shared/styles/colors.dart" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/step_ai/lib/shared/styles/horizontal_spacing.dart" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/step_ai/lib/shared/styles/varela_round_style.dart" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/step_ai/lib/shared/styles/vertical_spacing.dart" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/step_ai/lib/shared/widgets/search_bar.dart" afterDir="false" />
++    <list default="true" id="d36423b6-326c-41d1-9fba-ad3516026006" name="Changes" comment="Update appTheme, fonts, colors and spacing">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/step_ai/lib/config/app_theme.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/config/theme/app_bar_theme.dart" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/step_ai/lib/config/routes/routes.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/config/routes/routes.dart" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/step_ai/ios/Podfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/ios/Podfile.lock" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/step_ai/lib/core/di/service_locator.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/core/di/service_locator.dart" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/step_ai/lib/features/authentication/presentation/pages/sign_up_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/features/authentication/presentation/pages/sign_up_page.dart" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/step_ai/lib/features/chat/presentation/pages/chat_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/features/chat/presentation/pages/chat_page.dart" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/step_ai/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/lib/main.dart" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/step_ai/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/pubspec.lock" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/step_ai/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/step_ai/pubspec.yaml" afterDir="false" />
+@@ -42,7 +32,7 @@
+   <component name="Git.Settings">
+     <option name="RECENT_BRANCH_BY_REPOSITORY">
+       <map>
+-        <entry key="$PROJECT_DIR$" value="basic-feature" />
++        <entry key="$PROJECT_DIR$" value="basic-feature-prompt-feature" />
+       </map>
+     </option>
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+@@ -53,22 +43,33 @@
+     &quot;assignee&quot;: &quot;LeHuuTri-186&quot;
+   }
+ }</component>
+-  <component name="GithubPullRequestsUISettings"><![CDATA[{
+-  "selectedUrlAndAccountId": {
+-    "url": "https://github.com/LeHuuTri-186/STEP-AI.git",
+-    "accountId": "62d97789-2552-40bd-9fca-043bb35448e7"
+-  },
+-  "recentNewPullRequestHead": {
+-    "server": {
+-      "useHttp": false,
+-      "host": "github.com",
+-      "port": null,
+-      "suffix": null
+-    },
+-    "owner": "LeHuuTri-186",
+-    "repository": "STEP-AI"
+-  }
+-}]]></component>
++  <component name="GitHubPullRequestState">{
++  &quot;prStates&quot;: [
++    {
++      &quot;id&quot;: {
++        &quot;id&quot;: &quot;PR_kwDOM9Ejjc6Cfynm&quot;,
++        &quot;number&quot;: 9
++      },
++      &quot;lastSeen&quot;: 1732093958870
++    }
++  ]
++}</component>
++  <component name="GithubPullRequestsUISettings">{
++  &quot;selectedUrlAndAccountId&quot;: {
++    &quot;url&quot;: &quot;https://github.com/LeHuuTri-186/STEP-AI.git&quot;,
++    &quot;accountId&quot;: &quot;62d97789-2552-40bd-9fca-043bb35448e7&quot;
++  },
++  &quot;recentNewPullRequestHead&quot;: {
++    &quot;server&quot;: {
++      &quot;useHttp&quot;: false,
++      &quot;host&quot;: &quot;github.com&quot;,
++      &quot;port&quot;: null,
++      &quot;suffix&quot;: null
++    },
++    &quot;owner&quot;: &quot;LeHuuTri-186&quot;,
++    &quot;repository&quot;: &quot;STEP-AI&quot;
++  }
++}</component>
+   <component name="ProblemsViewState">
+     <option name="selectedTabId" value="CurrentFile" />
+   </component>
+@@ -83,28 +84,28 @@
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent"><![CDATA[{
+-  "keyToString": {
+-    "ASKED_ADD_EXTERNAL_FILES": "true",
+-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+-    "Flutter.main.dart.executor": "Run",
+-    "RunOnceActivity.ShowReadmeOnStart": "true",
+-    "RunOnceActivity.cidr.known.project.marker": "true",
+-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+-    "cf.first.check.clang-format": "false",
+-    "cidr.known.project.marker": "true",
+-    "com.google.services.firebase.aqiPopupShown": "true",
+-    "dart.analysis.tool.window.visible": "false",
+-    "git-widget-placeholder": "basic-feature-prompt-feature",
+-    "io.flutter.reload.alreadyRun": "true",
+-    "kotlin-language-version-configured": "true",
+-    "last_opened_file_path": "/Users/lehuutri/AndroidStudioProjects/STEP-AI/step_ai/lib/config/theme",
+-    "run.code.analysis.last.selected.profile": "pProject Default",
+-    "settings.editor.selected.configurable": "dart.settings",
+-    "show.migrate.to.gradle.popup": "false"
++  <component name="PropertiesComponent">{
++  &quot;keyToString&quot;: {
++    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
++    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
++    &quot;Flutter.main.dart.executor&quot;: &quot;Run&quot;,
++    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
++    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
++    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
++    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
++    &quot;com.google.services.firebase.aqiPopupShown&quot;: &quot;true&quot;,
++    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
++    &quot;git-widget-placeholder&quot;: &quot;basic-feature-prompt-feature-in-chat&quot;,
++    &quot;io.flutter.reload.alreadyRun&quot;: &quot;true&quot;,
++    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
++    &quot;last_opened_file_path&quot;: &quot;/Users/lehuutri/AndroidStudioProjects/STEP-AI/step_ai/lib/config/theme&quot;,
++    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
++    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.group.appearance&quot;,
++    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
+   }
+-}]]></component>
++}</component>
+   <component name="RecentsManager">
+     <key name="CopyFile.RECENT_KEYS">
+       <recent name="$PROJECT_DIR$/step_ai/lib/config/theme" />
+@@ -114,11 +115,11 @@
+       <recent name="$PROJECT_DIR$/step_ai/lib/features/knowledge_base" />
+     </key>
+     <key name="MoveFile.RECENT_KEYS">
+-      <recent name="$PROJECT_DIR$/step_ai/lib/config/routes" />
+-      <recent name="$PROJECT_DIR$/step_ai/lib/shared/widgets" />
+-      <recent name="$PROJECT_DIR$/step_ai/lib/core/utils" />
+-      <recent name="$PROJECT_DIR$/step_ai/lib/features/authentication/presentation/pages" />
+-      <recent name="$PROJECT_DIR$/step_ai/lib/features/prompt/presentation/pages" />
++      <recent name="$PROJECT_DIR$/step_ai/lib/core" />
++      <recent name="$PROJECT_DIR$/step_ai/lib/features/prompt/presentation/state/public_prompt" />
++      <recent name="$PROJECT_DIR$/step_ai/lib/features/prompt/domain/repositories" />
++      <recent name="$PROJECT_DIR$/step_ai/lib/features/prompt/data/repositories" />
++      <recent name="$PROJECT_DIR$/step_ai/lib/core/assets/imgs" />
+     </key>
+   </component>
+   <component name="RunManager">
+@@ -196,15 +197,38 @@
+       <option name="project" value="LOCAL" />
+       <updated>1731751014909</updated>
+     </task>
+-    <option name="localTasksCounter" value="8" />
++    <task id="LOCAL-00008" summary="Update appTheme, fonts, colors and spacing">
++      <option name="closed" value="true" />
++      <created>1731827900890</created>
++      <option name="number" value="00008" />
++      <option name="presentableId" value="LOCAL-00008" />
++      <option name="project" value="LOCAL" />
++      <updated>1731827900890</updated>
++    </task>
++    <option name="localTasksCounter" value="9" />
+     <servers />
++  </component>
++  <component name="UnknownFeatures">
++    <option featureType="com.intellij.fileTypeFactory" implementationName="*.dart" />
+   </component>
+   <component name="Vcs.Log.Tabs.Properties">
+     <option name="TAB_STATES">
+       <map>
+         <entry key="MAIN">
+           <value>
+-            <State />
++            <State>
++              <option name="FILTERS">
++                <map>
++                  <entry key="branch">
++                    <value>
++                      <list>
++                        <option value="origin/basic-feature-chat-with-ai" />
++                      </list>
++                    </value>
++                  </entry>
++                </map>
++              </option>
++            </State>
+           </value>
+         </entry>
+       </map>
+@@ -219,6 +243,7 @@
+     <MESSAGE value="Merge remote-tracking branch 'origin/nths_lht' into nths_lht" />
+     <MESSAGE value="create new branch" />
+     <MESSAGE value="Refactor to Feature-based clean Architecture" />
+-    <option name="LAST_COMMIT_MESSAGE" value="Refactor to Feature-based clean Architecture" />
++    <MESSAGE value="Update appTheme, fonts, colors and spacing" />
++    <option name="LAST_COMMIT_MESSAGE" value="Update appTheme, fonts, colors and spacing" />
+   </component>
+ </project>
+\ No newline at end of file

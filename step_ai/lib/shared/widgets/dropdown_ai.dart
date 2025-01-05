@@ -4,7 +4,6 @@ import 'package:step_ai/config/routes/routes.dart';
 import 'package:step_ai/features/chat/domain/entity/assistant.dart';
 import 'package:step_ai/features/chat/notifier/assistant_notifier.dart';
 import 'package:step_ai/features/chat/notifier/personal_assistant_notifier.dart';
-import 'package:step_ai/features/personal/presentation/pages/playground_page.dart';
 import 'package:step_ai/shared/styles/horizontal_spacing.dart';
 
 import '../styles/colors.dart';
@@ -25,6 +24,9 @@ class _DropdownAIState extends State<DropdownAI> {
     final personalAssistantNotifier = context.watch<PersonalAssistantNotifier>();
     return Center(
       child: PopupMenuButton(
+        splashRadius: 0,
+        surfaceTintColor: Colors.transparent,
+
         onOpened: () => setState(() {
           FocusScope.of(context).unfocus();
           _isExpanded = true;

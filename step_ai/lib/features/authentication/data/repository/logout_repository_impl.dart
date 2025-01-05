@@ -17,7 +17,7 @@ class LogoutRepositoryImpl extends LogoutRepository{
     return response.statusCode;
   }
 
-  Future<Map<String, String>> _executeHeadersBuild() async{
+  Future<Map<String, String>> _executeHeadersBuild() async {
     String? token = await _secureStorageHelper.accessToken;
     token ??= '';
     var headers = {

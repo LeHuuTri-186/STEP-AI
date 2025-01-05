@@ -25,7 +25,7 @@ class UnitRepositoryImpl extends UnitRepository {
       UnitList unitList = UnitList.fromJson(response.data);
       return unitList;
     } catch (e) {
-      print(e);
+      //print(e);
       rethrow;
     }
   }

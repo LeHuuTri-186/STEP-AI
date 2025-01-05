@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:step_ai/features/prompt/data/models/prompt_model.dart';
 import 'package:step_ai/features/prompt/presentation/widgets/private_prompt_tile.dart';
-import 'package:step_ai/features/prompt/presentation/widgets/prompt_info_dialog.dart';
-import 'package:step_ai/features/prompt/presentation/widgets/prompt_tile.dart';
 import 'package:step_ai/features/prompt/presentation/widgets/prompt_update_dialog.dart';
-import 'package:step_ai/shared/styles/horizontal_spacing.dart';
-import 'package:step_ai/shared/styles/vertical_spacing.dart';
 
 import '../../../../config/routes/routes.dart';
-import '../../../../shared/styles/colors.dart';
-import '../../../../shared/styles/varela_round_style.dart';
+
 import '../../../../shared/widgets/use_prompt_bottom_sheet.dart';
 import 'delete_prompt_dialog.dart';
 
@@ -46,8 +41,6 @@ class PrivatePromptListView extends StatelessWidget {
                 showPromptDialog(context: context, index: index, deleteIndex: deleteIndex);
               }
               catch (e) {
-                print("e is 401 and return to login screen");
-                print(e);
                 Navigator.of(context).pushNamedAndRemoveUntil(
                   Routes.authenticate,
                       (Route<dynamic> route) => false,

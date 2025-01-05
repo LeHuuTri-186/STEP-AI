@@ -11,11 +11,14 @@ class AuthenticateUINotifier extends ChangeNotifier{
 
   void setToLogin(){
     _isLogin = true;
+    _isPasswordShowing = false;
     notifyListeners();
   }
 
   void setToRegister(){
     _isLogin = false;
+    _isPasswordShowing = false;
+    _isConfirmPwShowing = false;
     notifyListeners();
   }
 
