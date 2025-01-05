@@ -47,9 +47,7 @@ class _PublishPageState extends State<PublishPage> {
           Provider.of<PreviewChatNotifier>(context, listen: false);
       _publishNotifier = Provider.of<PublishNotifier>(context, listen: false);
 
-      if (_publishNotifier.currentAssistant == null) {
-        _publishNotifier.setAssistant(_previewChatNotifier.currentAssistant!);
-      }
+      _publishNotifier.setAssistant(_previewChatNotifier.currentAssistant!);
       await _publishNotifier.getPublishedList();
     });
   }
