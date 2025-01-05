@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:step_ai/core/usecase/use_case.dart';
+import 'package:step_ai/core/usecases/use_case.dart';
 import 'package:step_ai/shared/usecases/refresh_kb_token_usecase.dart';
 
 import '../../data/models/bot_model.dart';

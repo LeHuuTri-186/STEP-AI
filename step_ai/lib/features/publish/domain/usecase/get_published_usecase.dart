@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:step_ai/core/usecase/use_case.dart';
+import 'package:step_ai/core/usecases/use_case.dart';
 import 'package:step_ai/features/chat/domain/entity/assistant.dart';
 import 'package:step_ai/features/publish/domain/entity/published.dart';
 import 'package:step_ai/features/publish/domain/repository/publisher_repository.dart';

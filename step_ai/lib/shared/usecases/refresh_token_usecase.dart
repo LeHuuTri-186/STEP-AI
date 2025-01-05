@@ -5,7 +5,7 @@ import 'package:step_ai/config/constants.dart';
 import 'package:step_ai/core/api/api_service.dart';
 import 'package:step_ai/core/data/local/securestorage/secure_storage_helper.dart';
 import 'package:step_ai/core/data/model/token_model.dart';
-import 'package:step_ai/core/usecase/use_case.dart';
+import 'package:step_ai/core/usecases/use_case.dart';
 
 class RefreshTokenUseCase extends UseCase<int, void>{
   final SecureStorageHelper _secureStorageHelper;

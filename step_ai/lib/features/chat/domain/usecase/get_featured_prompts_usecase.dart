@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:step_ai/core/usecase/use_case.dart';
+import 'package:step_ai/core/usecases/use_case.dart';
 import 'package:step_ai/features/authentication/domain/usecase/logout_usecase.dart';
 import 'package:step_ai/features/chat/domain/entity/slash_prompt.dart';
 import 'package:step_ai/features/chat/domain/entity/slash_prompt_list.dart';

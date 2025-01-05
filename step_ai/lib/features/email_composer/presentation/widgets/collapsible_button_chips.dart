@@ -30,39 +30,36 @@ class _CollapsibleChipListScreenState extends State<CollapsibleChipListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Wrap(
-        spacing: 8.0, // Horizontal spacing between chips
-        runSpacing: 8.0, // Vertical spacing between rows of chips
-        children: widget.actions.entries.map((entry) {
-          return ActionChip(
-            side: BorderSide.none,
-            label: Text(entry.key),
-            onPressed: () async {
-              if (entry.key.contains("Translate to")) {
-                await _showLanguageSelectorDialog(context);
-                if (!_canceled) {
-                  _canceled = true;
-                  return widget.onClick(entry.key, _selectedLanguage);
-                }
-
-                return;
+    return Wrap(
+      spacing: 8.0, // Horizontal spacing between chips
+      runSpacing: 8.0, // Vertical spacing between rows of chips
+      children: widget.actions.entries.map((entry) {
+        return ActionChip(
+          side: BorderSide.none,
+          label: Text(entry.key),
+          onPressed: () async {
+            if (entry.key.contains("Translate to")) {
+              await _showLanguageSelectorDialog(context);
+              if (!_canceled) {
+                _canceled = true;
+                return widget.onClick(entry.key, _selectedLanguage);
               }
-              widget.onClick(entry.key, null); // Trigger callback with action
-            },
-            backgroundColor: TColor.tamarama,
-            labelStyle: Theme.of(context)
-                .textTheme
-                .bodyMedium!
-                .copyWith(
-                color: TColor.doctorWhite,
-              fontSize: 14,
-              fontWeight: FontWeight.w600
-            ),
-          );
-        }).toList(),
-      ),
+
+              return;
+            }
+            widget.onClick(entry.key, null); // Trigger callback with action
+          },
+          backgroundColor: TColor.tamarama,
+          labelStyle: Theme.of(context)
+              .textTheme
+              .bodyMedium!
+              .copyWith(
+              color: TColor.doctorWhite,
+            fontSize: 14,
+            fontWeight: FontWeight.w600
+          ),
+        );
+      }).toList(),
     );
   }
 

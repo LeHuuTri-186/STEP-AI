@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:step_ai/core/usecase/use_case.dart';
+import 'package:step_ai/core/usecases/use_case.dart';
 import 'package:step_ai/features/authentication/domain/param/login_param.dart';
 import 'package:step_ai/features/authentication/domain/repository/register_repository.dart';
 import 'package:step_ai/features/authentication/domain/usecase/login_usecase.dart';

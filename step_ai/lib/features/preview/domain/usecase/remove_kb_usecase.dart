@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:step_ai/config/constants.dart';
 import 'package:step_ai/core/api/api_service.dart';
-import 'package:step_ai/core/usecase/use_case.dart';
+import 'package:step_ai/core/usecases/use_case.dart';
 import 'package:step_ai/features/preview/domain/params/remove_kb_param.dart';
 import 'package:step_ai/features/preview/domain/repository/kb_in_bot_repository.dart';
 import 'package:step_ai/shared/usecases/refresh_kb_token_usecase.dart';
