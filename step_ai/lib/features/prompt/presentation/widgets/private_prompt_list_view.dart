@@ -41,8 +41,6 @@ class PrivatePromptListView extends StatelessWidget {
                 showPromptDialog(context: context, index: index, deleteIndex: deleteIndex);
               }
               catch (e) {
-                print("e is 401 and return to login screen");
-                print(e);
                 Navigator.of(context).pushNamedAndRemoveUntil(
                   Routes.authenticate,
                       (Route<dynamic> route) => false,
