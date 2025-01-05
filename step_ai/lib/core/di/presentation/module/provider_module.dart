@@ -26,11 +26,6 @@ import 'package:step_ai/features/chat/domain/usecase/send_message_usecase.dart';
 import 'package:step_ai/features/chat/notifier/assistant_notifier.dart';
 import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
 import 'package:step_ai/features/chat/notifier/history_conversation_list_notifier.dart';
-import 'package:step_ai/features/personal/domain/usecase/create_bot_usecase.dart';
-import 'package:step_ai/features/personal/domain/usecase/delete_bot_usecase.dart';
-import 'package:step_ai/features/personal/domain/usecase/get_bot_list_usecase.dart';
-import 'package:step_ai/features/personal/domain/usecase/update_bot_usecase.dart';
-import 'package:step_ai/features/personal/presentation/notifier/bot_list_notifier.dart';
 import 'package:step_ai/features/preview/domain/usecase/get_kb_in_bot_usecase.dart';
 import 'package:step_ai/features/preview/domain/usecase/import_kb_usecase.dart';
 import 'package:step_ai/features/preview/domain/usecase/remove_kb_usecase.dart';
@@ -69,6 +64,12 @@ import 'package:step_ai/features/units_in_knowledge/notifier/unit_notifier.dart'
 import 'package:step_ai/features/units_in_knowledge/notifier/web_notifier.dart';
 import 'package:step_ai/features/plan/domain/usecases/get_subscription_usecase.dart';
 import 'package:step_ai/features/plan/presentation/notifier/subscription_notifier.dart';
+
+import '../../../../features/playground/domain/usecase/create_bot_usecase.dart';
+import '../../../../features/playground/domain/usecase/delete_bot_usecase.dart';
+import '../../../../features/playground/domain/usecase/get_bot_list_usecase.dart';
+import '../../../../features/playground/domain/usecase/update_bot_usecase.dart';
+import '../../../../features/playground/presentation/notifier/bot_list_notifier.dart';
 
 class ProviderModule {
   static Future<void> configureStoreModuleInjection() async {

@@ -39,7 +39,7 @@ import '../../features/authentication/notifier/register_notifier.dart';
 import '../../features/authentication/notifier/ui_notifier.dart';
 import '../../features/chat/notifier/chat_notifier.dart';
 import '../../features/email_composer/presentation/notifier/ai_action_notifier.dart';
-import '../../features/personal/presentation/pages/playground_page.dart';
+import '../../features/playground/presentation/pages/playground_page.dart';
 
 class Routes {
   Routes._();
@@ -67,6 +67,7 @@ class Routes {
         }),
 
     chat: (BuildContext context) => MultiProvider(providers: [
+      ChangeNotifierProvider.value(value: getIt<SubscriptionNotifier>()),
           ChangeNotifierProvider.value(value: getIt<ChatBarNotifier>()),
           ChangeNotifierProvider.value(value: getIt<PromptListNotifier>()),
           ChangeNotifierProvider.value(value: getIt<AssistantNotifier>()),

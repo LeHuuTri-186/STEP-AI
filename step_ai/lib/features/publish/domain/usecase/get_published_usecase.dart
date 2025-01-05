@@ -7,7 +7,7 @@ import 'package:step_ai/core/data/local/securestorage/secure_storage_helper.dart
 import 'package:step_ai/core/usecase/use_case.dart';
 import 'package:step_ai/features/chat/domain/entity/assistant.dart';
 import 'package:step_ai/features/publish/domain/entity/telegram_publish.dart';
-import 'package:step_ai/shared/usecase/refresh_kb_token_usecase.dart';
+import 'package:step_ai/shared/usecases/refresh_kb_token_usecase.dart';
 
 class GetPublishedUseCase extends UseCase<List<TelegramPublish>, Assistant> {
   final ApiService _rest = ApiService(Constant.kbApiUrl);

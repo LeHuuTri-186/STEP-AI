@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:step_ai/core/usecase/use_case.dart';
 import 'package:step_ai/features/chat/domain/entity/thread_dto.dart';
 import 'package:step_ai/features/chat/domain/repository/bot_thread_repository.dart';
-import 'package:step_ai/shared/usecase/refresh_kb_token_usecase.dart';
+import 'package:step_ai/shared/usecases/refresh_kb_token_usecase.dart';
 
 class CreateThreadUseCase extends UseCase<ThreadDto?, String>{
   final RefreshKbTokenUseCase _refreshUC;

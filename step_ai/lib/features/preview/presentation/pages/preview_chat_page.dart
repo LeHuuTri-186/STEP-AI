@@ -1,30 +1,19 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/config/routes/routes.dart';
 import 'package:step_ai/features/chat/domain/entity/assistant.dart';
 import 'package:step_ai/features/chat/presentation/notifier/chat_bar_notifier.dart';
-import 'package:step_ai/features/chat/presentation/notifier/prompt_list_notifier.dart';
 import 'package:step_ai/features/preview/domain/entity/kb_in_bot.dart';
 import 'package:step_ai/features/preview/presentation/notifier/preview_chat_notifier.dart';
 import 'package:step_ai/features/preview/presentation/widgets/added_kb_bottom_sheet.dart';
-import 'package:step_ai/features/preview/presentation/widgets/added_kb_list_panel.dart';
-import 'package:step_ai/features/preview/presentation/widgets/added_kb_list_view.dart';
 import 'package:step_ai/features/preview/presentation/widgets/preview_chat_bar.dart';
-import 'package:step_ai/features/prompt/data/models/prompt_model.dart';
 import 'package:step_ai/features/publish/presentation/pages/publish_page.dart';
 import 'package:step_ai/shared/widgets/message_tile.dart';
 
-import '../../../../shared/widgets/chat_bar.dart';
 import '../../../../shared/widgets/history_drawer.dart';
-import 'package:step_ai/features/chat/notifier/chat_notifier.dart';
-import 'package:step_ai/shared/widgets/dropdown_ai.dart';
-import 'package:step_ai/shared/widgets/image_by_text_widget.dart';
 
 import '../../../../shared/styles/colors.dart';
-import '../../../../shared/widgets/use_prompt_bottom_sheet.dart';
 
 class PreviewChatPage extends StatefulWidget {
   const PreviewChatPage({super.key, this.chatName = "Chat"});
@@ -74,20 +63,7 @@ class _PreviewChatPageState extends State<PreviewChatPage> {
     _chatBarNotifier = Provider.of<ChatBarNotifier>(context);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      // //Overlay insert:--------
-      // OverlayState o = Overlay.of(context);
-      // if (_chatBarNotifier.showOverlay) {
-      //   _chatBarNotifier.cancelPrompt();
-      // } else {
-      //   if (_promptListOverlay.mounted) {
-      //     _promptListOverlay.remove();
-      //   }
-      // }
-      //
-      // //OverlayEntry rebuild:--------
-      // if (_promptListNotifier.needRebuildCounter > 0) {
-      //   _promptListOverlay.markNeedsBuild();
-      // }
+
 
       //Logout listener:-------------
       if (_chatBarNotifier.isUnauthorized) {
@@ -141,9 +117,15 @@ class _PreviewChatPageState extends State<PreviewChatPage> {
                 KbListInBot? kbs = await _previewChatNotifier.getKbInBot();
                 if (!_previewChatNotifier.isLoading) {
                   showModalBottomSheet(
+                    backgroundColor: TColor.doctorWhite,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
                       context: context,
                       builder: (BuildContext context){
-                        return const AddedKbBottomSheet();
+                        return Container(
+                            padding: const EdgeInsets.all(16.0),
+                            child: const AddedKbBottomSheet());
                       });
                 }
               },
@@ -175,9 +157,9 @@ class _PreviewChatPageState extends State<PreviewChatPage> {
               children: [
                 //Messages or Loading
                 _previewChatNotifier.isCreatingThread
-                    ? const Expanded(
+                    ? Expanded(
                   child: Center(
-                    child: CircularProgressIndicator(),
+                    child: _buildProgressIndicator(),
                   ),
                 )
                     :
@@ -199,30 +181,10 @@ class _PreviewChatPageState extends State<PreviewChatPage> {
                 const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
                     SizedBox(height: 4),
-                    //Dropdown AI?
-                    // const Row(
-                    //   children: [
-                    //     Padding(
-                    //       padding: EdgeInsets.only(left: 8.0),
-                    //       child: DropdownAI(),
-                    //     ),
-                    //   ],
-                    // ),
                     SizedBox(height: 2),
                     PreviewChatBar(),
                     SizedBox(height: 2),
-                    // Row(
-                    //   children: [
-                    //     Padding(
-                    //         padding: const EdgeInsets.only(left: 10),
-                    //         child: ImageByText(
-                    //             imagePath: "lib/core/assets/imgs/flame.png",
-                    //             text:
-                    //             _previewChatNotifier.numberRestToken.toString())),
-                    //   ],
-                    // ),
                   ],
                 ),
               ],

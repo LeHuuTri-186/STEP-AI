@@ -57,6 +57,11 @@ class EmailComposerNotifier extends ChangeNotifier {
     }
   }
 
+  void clearIdeas() {
+    ideas.clear();
+    notifyListeners();
+  }
+
   void nextEmail() {
     if (currentEmailIndex < emailList.length - 1) {
       currentEmailIndex++;

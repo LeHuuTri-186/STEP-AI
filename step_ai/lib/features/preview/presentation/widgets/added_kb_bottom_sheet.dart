@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:step_ai/features/knowledge_base/domain/entity/knowledge_list.dart';
@@ -7,7 +6,6 @@ import 'package:step_ai/features/preview/presentation/notifier/preview_chat_noti
 import 'package:step_ai/features/preview/presentation/widgets/added_kb_list_panel.dart';
 import 'package:step_ai/shared/styles/colors.dart';
 import 'package:step_ai/shared/styles/vertical_spacing.dart';
-
 
 class AddedKbBottomSheet extends StatefulWidget {
   const AddedKbBottomSheet({super.key});
@@ -19,8 +17,6 @@ class AddedKbBottomSheet extends StatefulWidget {
 class _AddedKbBottomSheetState extends State<AddedKbBottomSheet> {
   @override
   Widget build(BuildContext context) {
-
-
     return Container(
       decoration: BoxDecoration(
         color: TColor.doctorWhite,
@@ -43,12 +39,58 @@ class _AddedKbBottomSheetState extends State<AddedKbBottomSheet> {
       ),
     );
   }
+  void showErrorDialog(BuildContext context, String error) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: TColor.doctorWhite,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Oops!",
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              CloseButton(
+                onPressed: Navigator.of(context).pop,
+              )
+            ],
+          ),
+          content: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(error,
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: TColor.petRock,
+                  fontWeight: FontWeight.w700,
+                )),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                "Got it",
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  color: TColor.poppySurprise,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   AppBar _buildAppBar(BuildContext context) {
     final _preview = Provider.of<PreviewChatNotifier>(context);
     return AppBar(
       automaticallyImplyLeading: false,
-      title: const Text("Knowledge Bases Added", overflow: TextOverflow.ellipsis),
+      title: const FittedBox(
+          fit: BoxFit.fitWidth,
+          child:
+              Text("Knowledge Bases", overflow: TextOverflow.ellipsis)),
       titleTextStyle: Theme.of(context).textTheme.titleLarge,
       centerTitle: false,
       actions: [
@@ -57,12 +99,18 @@ class _AddedKbBottomSheetState extends State<AddedKbBottomSheet> {
           borderRadius: BorderRadius.circular(30),
           child: InkWell(
             onTap: () async {
-              KnowledgeList? kl = await _preview.getKnowledgeList() ?? KnowledgeList(knowledgeList: []);
-              //Load list kb
-              showDialog(
+              KnowledgeList? kl = await _preview.getKnowledgeList() ??
+                  KnowledgeList(knowledgeList: []);
+              if (kl.knowledgeList.isEmpty && context.mounted) {
+                showErrorDialog(context, 'Your knowledge base is kind of empty! Add some wisdom first!');
+              }
+
+              if (kl.knowledgeList.isNotEmpty && context.mounted) {
+                showDialog(
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
+                      backgroundColor: TColor.doctorWhite,
                       title: const Text('Your Knowledge Bases'),
                       content: SizedBox(
                         width: double.maxFinite,
@@ -71,7 +119,8 @@ class _AddedKbBottomSheetState extends State<AddedKbBottomSheet> {
                           itemCount: kl.knowledgeList.length,
                           itemBuilder: (context, index) {
                             return ListTile(
-                              title: Text(kl.knowledgeList[index].knowledgeName),
+                              title:
+                                  Text(kl.knowledgeList[index].knowledgeName),
                               onTap: () {
                                 //Add kl to list.
                                 _preview.addKbToBot(kl.knowledgeList[index]);
@@ -91,8 +140,8 @@ class _AddedKbBottomSheetState extends State<AddedKbBottomSheet> {
                         ),
                       ],
                     );
-                  }
-              );
+                  });
+              }
             },
             splashColor: TColor.daJuice.withOpacity(0.4),
             highlightColor: Colors.white.withOpacity(0.2),
@@ -120,5 +169,4 @@ class _AddedKbBottomSheetState extends State<AddedKbBottomSheet> {
       ],
     );
   }
-
 }

@@ -2,12 +2,12 @@ import 'package:step_ai/features/publish/domain/params/disconnector_param.dart';
 
 class Constant {
   Constant._();
-  static String apiBaseUrl = 'https://api.dev.jarvis.cx';
-  static String kbApiUrl = 'https://knowledge-api.dev.jarvis.cx';
+  static String apiBaseUrl = 'https://api.jarvis.cx';
+  static String kbApiUrl = 'https://knowledge-api.jarvis.cx';
   // static String apiBaseUrl = 'https://api.jarvis.cx';
   // static String kbApiUrl = 'https://knowledge-api.jarvis.cx';
   static String devPricing = 'https://admin.jarvis.cx/dashboard/subscription';
-  static String pricing = 'https://admin.dev.jarvis.cx/dashboard/subscription';
+  static String pricing = 'https://admin.jarvis.cx/dashboard/subscription';
 
   static String loginEndpoint = '/api/v1/auth/sign-in';
   static String registerEndpoint = '/api/v1/auth/sign-up';

@@ -23,11 +23,6 @@ import 'package:step_ai/features/chat/domain/usecase/get_history_conversation_li
 import 'package:step_ai/features/chat/domain/usecase/get_messages_by_conversation_id_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_usage_token_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/send_message_usecase.dart';
-import 'package:step_ai/features/personal/domain/repository/bot_list_repository.dart';
-import 'package:step_ai/features/personal/domain/usecase/create_bot_usecase.dart';
-import 'package:step_ai/features/personal/domain/usecase/delete_bot_usecase.dart';
-import 'package:step_ai/features/personal/domain/usecase/get_bot_list_usecase.dart';
-import 'package:step_ai/features/personal/domain/usecase/update_bot_usecase.dart';
 import 'package:step_ai/features/preview/domain/usecase/get_kb_in_bot_usecase.dart';
 import 'package:step_ai/features/preview/domain/usecase/import_kb_usecase.dart';
 import 'package:step_ai/features/preview/domain/usecase/remove_kb_usecase.dart';
@@ -39,7 +34,7 @@ import 'package:step_ai/features/publish/domain/usecase/slack_validate_usecase.d
 import 'package:step_ai/features/publish/domain/usecase/telegram_disconnect_usecase.dart';
 import 'package:step_ai/features/publish/domain/usecase/telegram_publish_usecase.dart';
 import 'package:step_ai/features/publish/domain/usecase/telegram_validate_usecase.dart';
-import 'package:step_ai/shared/usecase/refresh_kb_token_usecase.dart';
+import 'package:step_ai/shared/usecases/refresh_kb_token_usecase.dart';
 import 'package:step_ai/features/knowledge_base/domain/entity/knowledge.dart';
 import 'package:step_ai/features/knowledge_base/domain/repository/knowledge_repository.dart';
 import 'package:step_ai/features/knowledge_base/domain/usecase/add_knowledge_usecase.dart';
@@ -61,6 +56,11 @@ import 'package:step_ai/features/plan/domain/usecases/get_subscription_usecase.d
 import 'package:step_ai/shared/usecases/refresh_token_usecase.dart';
 
 import '../../../../features/authentication/domain/repository/register_repository.dart';
+import '../../../../features/playground/domain/repository/bot_list_repository.dart';
+import '../../../../features/playground/domain/usecase/create_bot_usecase.dart';
+import '../../../../features/playground/domain/usecase/delete_bot_usecase.dart';
+import '../../../../features/playground/domain/usecase/get_bot_list_usecase.dart';
+import '../../../../features/playground/domain/usecase/update_bot_usecase.dart';
 import '../../../di/service_locator.dart';
 
 class UseCaseModule {

@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import 'package:step_ai/features/email_composer/domain/entity/ai_email.dart';
 import 'package:step_ai/features/email_composer/domain/entity/email_style.dart';
 import 'package:step_ai/features/email_composer/domain/entity/response_email.dart';
-import 'package:step_ai/features/email_composer/domain/usecase/generate_email_response_usecase.dart';
 import 'package:step_ai/features/email_composer/presentation/notifier/email_composer_notifier.dart';
 import 'package:step_ai/features/email_composer/presentation/notifier/usage_token_notifier.dart';
 import 'package:step_ai/features/email_composer/presentation/widgets/action_tile.dart';
@@ -36,7 +35,6 @@ class EmailComposer extends StatefulWidget {
 class _EmailComposerState extends State<EmailComposer> {
   final _formKey = GlobalKey<FormState>();
 
-  var _isGeneratingEmail = false;
   final FocusNode _focusNode = FocusNode();
 
   final TextEditingController _subjectController = TextEditingController();
@@ -56,7 +54,6 @@ class _EmailComposerState extends State<EmailComposer> {
   late String _selectedLanguage;
   late EmailComposerNotifier _composerNotifier;
   late UsageTokenNotifier _notifier;
-  List<String> ideas = [];
 
   @override
   void initState() {
@@ -77,7 +74,9 @@ class _EmailComposerState extends State<EmailComposer> {
 
     notifier.addListener(() {
       if (notifier.hasError) {
-        Navigator.of(context).pushReplacementNamed(Routes.authenticate);
+        if (context.mounted) {
+          Navigator.of(context).pushReplacementNamed(Routes.authenticate);
+        }
       }
     });
   }
@@ -120,7 +119,6 @@ class _EmailComposerState extends State<EmailComposer> {
     _composerNotifier =
         Provider.of<EmailComposerNotifier>(context, listen: true);
     _notifier = Provider.of<UsageTokenNotifier>(context, listen: true);
-
     return Scaffold(
       resizeToAvoidBottomInset: true,
       drawer: HistoryDrawer(),
@@ -153,7 +151,11 @@ class _EmailComposerState extends State<EmailComposer> {
             children: [
               Text(
                 'Word count: ${email.trim().split(RegExp(r'\s+')).length}',
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: TColor.tamarama,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                ),
               ),
               Row(
                 children: [
@@ -170,6 +172,21 @@ class _EmailComposerState extends State<EmailComposer> {
             ],
           ),
           Text(email, style: Theme.of(context).textTheme.bodyLarge),
+          Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                style: ButtonStyle(
+                  backgroundColor: WidgetStateProperty.all(TColor.tamarama),
+                ),
+                  onPressed: Navigator.of(context).pop,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text("Ok", style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      color: TColor.doctorWhite,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 16,
+                    ),),
+                  ))),
         ],
       ),
     );
@@ -198,9 +215,11 @@ class _EmailComposerState extends State<EmailComposer> {
                             padding: const EdgeInsets.all(8.0),
                             child: ActionTile(
                                 action: idea,
-                                onTap: () async {
-                                  await _replyEmail(idea);
-                                }),
+                                onTap: _composerNotifier.isGeneratingEmail
+                                    ? () {}
+                                    : () async {
+                                        await _replyEmail(idea);
+                                      }),
                           ),
                         ),
                     ],
@@ -364,6 +383,7 @@ class _EmailComposerState extends State<EmailComposer> {
         tone: _selectedTone);
     AiEmail email = _buildAiEmail(style, suggestion, _mainIdeaController.text);
     await _composerNotifier.generateIdeas(email);
+    await _notifier.loadUsageToken();
   }
 
   AiEmail _buildAiEmail(EmailStyle style, String action, String mainIdea) {
@@ -418,110 +438,117 @@ class _EmailComposerState extends State<EmailComposer> {
             child: SizedBox(
               width: min(450, MediaQuery.of(context).size.width * 0.8),
               height: 600,
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Advanced Options",
-                            style: Theme.of(context).textTheme.bodyLarge),
-                        CloseButton(
-                          onPressed: Navigator.of(context).pop,
-                        )
-                      ],
-                    ),
-                    _buildRowFormField("Subject:", _subjectController),
-                    _buildRowFormField("From:", _senderController),
-                    _buildRowFormField("To:", _receiverController),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "Language:",
-                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                              color: TColor.petRock.withOpacity(0.8),
-                              fontSize: 14,
+              child: Column(
+
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Advanced Options",
+                          style: Theme.of(context).textTheme.bodyLarge),
+                      CloseButton(
+                        onPressed: Navigator.of(context).pop,
+                      )
+                    ],
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildRowFormField("Subject:", _subjectController),
+                          _buildRowFormField("From:", _senderController),
+                          _buildRowFormField("To:", _receiverController),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Language:",
+                              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                                    color: TColor.petRock.withOpacity(0.8),
+                                    fontSize: 14,
+                                  ),
                             ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: LanguageCustomDropdown(
+                                value: _selectedLanguage,
+                                items: _languages,
+                                onChanged: (e) {
+                                  setState(() {
+                                    _selectedLanguage = e ?? "Auto";
+                                  });
+                                },
+                                hintText: "Select a language"),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Length:",
+                              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                                    color: TColor.petRock.withOpacity(0.8),
+                                    fontSize: 14,
+                                  ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: CategoryChips(
+                                categories: _lengthOptions,
+                                selectedCategory: _selectedLength,
+                                onCategorySelected: (e) {
+                                  setState(() {
+                                    _selectedLength = e;
+                                  });
+                                }),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Formality:",
+                              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                                    color: TColor.petRock.withOpacity(0.8),
+                                    fontSize: 14,
+                                  ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: CategoryChips(
+                                categories: _formalityOptions,
+                                selectedCategory: _selectedFormality,
+                                onCategorySelected: (e) {
+                                  setState(() {
+                                    _selectedFormality = e;
+                                  });
+                                }),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Tone:",
+                              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                                    color: TColor.petRock.withOpacity(0.8),
+                                    fontSize: 14,
+                                  ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: CategoryChips(
+                                categories: _toneOptions,
+                                selectedCategory: _selectedTone,
+                                onCategorySelected: (e) {
+                                  setState(() {
+                                    _selectedTone = e;
+                                  });
+                                }),
+                          ),
+                        ],
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: LanguageCustomDropdown(
-                          value: _selectedLanguage,
-                          items: _languages,
-                          onChanged: (e) {
-                            setState(() {
-                              _selectedLanguage = e ?? "Auto";
-                            });
-                          },
-                          hintText: "Select a language"),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "Length:",
-                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                              color: TColor.petRock.withOpacity(0.8),
-                              fontSize: 14,
-                            ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CategoryChips(
-                          categories: _lengthOptions,
-                          selectedCategory: _selectedLength,
-                          onCategorySelected: (e) {
-                            setState(() {
-                              _selectedLength = e;
-                            });
-                          }),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "Formality:",
-                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                              color: TColor.petRock.withOpacity(0.8),
-                              fontSize: 14,
-                            ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CategoryChips(
-                          categories: _formalityOptions,
-                          selectedCategory: _selectedFormality,
-                          onCategorySelected: (e) {
-                            setState(() {
-                              _selectedFormality = e;
-                            });
-                          }),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "Tone:",
-                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                              color: TColor.petRock.withOpacity(0.8),
-                              fontSize: 14,
-                            ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CategoryChips(
-                          categories: _toneOptions,
-                          selectedCategory: _selectedTone,
-                          onCategorySelected: (e) {
-                            setState(() {
-                              _selectedTone = e;
-                            });
-                          }),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           );
@@ -534,7 +561,7 @@ class _EmailComposerState extends State<EmailComposer> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: TextField(
-        enabled: !_isGeneratingEmail,
+        enabled: !_composerNotifier.isGeneratingEmail,
         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
               color: TColor.petRock,
               fontWeight: FontWeight.w600,
@@ -545,7 +572,7 @@ class _EmailComposerState extends State<EmailComposer> {
           suffixIcon: _mainIdeaController.text.isNotEmpty
               ? IconButton(
                   padding: const EdgeInsets.all(2),
-                  icon: _isGeneratingEmail
+                  icon: _composerNotifier.isGeneratingEmail
                       ? Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(50),
@@ -560,14 +587,8 @@ class _EmailComposerState extends State<EmailComposer> {
                           size: 20, color: TColor.tamarama),
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      setState(() {
-                        _isGeneratingEmail = true;
-                      });
                       await _replyEmail(_mainIdeaController.text);
                       _mainIdeaController.clear();
-                      setState(() {
-                        _isGeneratingEmail = false;
-                      });
                     } else {
                       showErrorDialog(
                           context, Constant.errorMessage['empty-email']!);
@@ -577,7 +598,18 @@ class _EmailComposerState extends State<EmailComposer> {
               : IconButton(
                   padding: const EdgeInsets.all(2),
                   icon:
-                      Icon(Icons.send_rounded, size: 20, color: TColor.petRock),
+                  _composerNotifier.isGeneratingEmail
+                      ? Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        color: TColor.tamarama,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: LoadingAnimationWidget.discreteCircle(
+                            color: TColor.doctorWhite, size: 12),
+                      ))
+                      : Icon(Icons.send_rounded, size: 20, color: TColor.petRock),
                   onPressed: () {
                     showErrorDialog(
                         context, Constant.errorMessage['empty-email']!);

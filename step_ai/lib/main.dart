@@ -29,10 +29,10 @@ import 'config/routes/routes.dart';
 import 'config/theme/app_theme.dart';
 import 'core/di/service_locator.dart';
 
-import 'features/personal/presentation/notifier/bot_list_notifier.dart';
 import 'features/chat/notifier/assistant_notifier.dart';
 import 'features/chat/presentation/notifier/chat_bar_notifier.dart';
 import 'features/chat/presentation/notifier/prompt_list_notifier.dart';
+import 'features/playground/presentation/notifier/bot_list_notifier.dart';
 import 'features/prompt/presentation/notifier/form_model/form_provider.dart';
 import 'features/prompt/presentation/notifier/private_prompt/private_filter_provider.dart';
 import 'features/prompt/presentation/notifier/private_prompt/private_view_provider.dart';

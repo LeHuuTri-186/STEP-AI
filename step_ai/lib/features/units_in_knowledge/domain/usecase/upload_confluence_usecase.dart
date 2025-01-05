@@ -5,7 +5,7 @@ import 'package:step_ai/core/usecase/use_case.dart';
 import 'package:step_ai/features/authentication/domain/usecase/logout_usecase.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/params/upload_confluence_param.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/repository/unit_repository.dart';
-import 'package:step_ai/shared/usecase/refresh_kb_token_usecase.dart';
+import 'package:step_ai/shared/usecases/refresh_kb_token_usecase.dart';
 
 class UploadConfluenceUsecase extends UseCase<void, UploadConfluenceParam> {
   UnitRepository _unitRepository;

@@ -29,6 +29,7 @@ import 'package:step_ai/shared/widgets/image_by_text_widget.dart';
 
 import '../../../../shared/styles/colors.dart';
 import '../../../../shared/widgets/use_prompt_bottom_sheet.dart';
+import '../../../plan/presentation/notifier/subscription_notifier.dart';
 import '../../../prompt/presentation/pages/prompt_bottom_sheet.dart';
 
 class ChatPage extends StatefulWidget {
@@ -43,6 +44,7 @@ class _ChatPageState extends State<ChatPage> {
   late ChatBarNotifier _chatBarNotifier;
   late PromptListNotifier _promptListNotifier;
   late OverlayEntry _promptListOverlay;
+  late SubscriptionNotifier _subscriptionNotifier;
   List<MessageTile> messages = [];
   late ChatNotifier _chatNotifier;
   late ScrollController _scrollController;
@@ -54,6 +56,12 @@ class _ChatPageState extends State<ChatPage> {
       _promptListOverlay.remove();
     }
     _scrollController.dispose();
+
+    _subscriptionNotifier.removeListener(() {
+      if (_subscriptionNotifier.hasError) {
+        Navigator.of(context).pushReplacementNamed(Routes.authenticate);
+      }
+    });
 
     if (_bannerAd != null) {
       _bannerAd!.dispose();
@@ -67,6 +75,19 @@ class _ChatPageState extends State<ChatPage> {
     _createBannerAd();
     _initOverlay(context);
     _scrollController = ScrollController();
+
+    _subscriptionNotifier =
+        Provider.of<SubscriptionNotifier>(context, listen: false);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<SubscriptionNotifier>(context, listen: false).getPlan();
+    });
+
+    _subscriptionNotifier.addListener(() {
+      if (_subscriptionNotifier.hasError) {
+        Navigator.of(context).pushReplacementNamed(Routes.authenticate);
+      }
+    });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final chatNotifier = Provider.of<ChatNotifier>(context, listen: false);
@@ -137,23 +158,15 @@ class _ChatPageState extends State<ChatPage> {
       },
       drawer: HistoryDrawer(),
       appBar: AppBar(
-        title: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                overflow: TextOverflow.ellipsis,
-                _chatNotifier.getTitleCurrentConversation(),
-                style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                      color: TColor.petRock,
-                      fontSize: 25,
-                    ),
+        title: Text(
+          overflow: TextOverflow.ellipsis,
+          _chatNotifier.getTitleCurrentConversation(),
+          style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                color: TColor.petRock,
+                fontSize: 25,
               ),
-            ],
-          ),
         ),
+        centerTitle: true,
         backgroundColor: TColor.doctorWhite,
         actions: [
           IconButton(
@@ -180,14 +193,17 @@ class _ChatPageState extends State<ChatPage> {
             padding: const EdgeInsets.all(10),
             child: Column(
               children: [
-                if (_bannerAd != null && (Platform.isAndroid || Platform.isIOS))
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: 70,
-                    child: AdWidget(
-                      ad: _bannerAd!,
+                if (_bannerAd != null &&
+                    (Platform.isAndroid || Platform.isIOS) &&
+                    _subscriptionNotifier.plan != null)
+                  if (_subscriptionNotifier.plan!.name == 'basic')
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: 70,
+                      child: AdWidget(
+                        ad: _bannerAd!,
+                      ),
                     ),
-                  ),
                 //Messages or Loading
                 _chatNotifier.isLoadingDetailedConversation
                     ? Expanded(
@@ -249,7 +265,13 @@ class _ChatPageState extends State<ChatPage> {
                                                       FontWeight.normal),
                                         ),
                                         VSpacing.md,
-                                        _buildNewChatPage(),
+                                        _subscriptionNotifier.plan == null
+                                            ? _buildNewChatPage()
+                                            : _subscriptionNotifier
+                                                        .plan!.name !=
+                                                    'basic'
+                                                ? const SizedBox.shrink()
+                                                : _buildNewChatPage(),
                                         VSpacing.sm,
                                         if (_promptListNotifier
                                             .displayPrompt.isNotEmpty)
@@ -337,19 +359,25 @@ class _ChatPageState extends State<ChatPage> {
                                                             MainAxisAlignment
                                                                 .spaceBetween,
                                                         children: [
-                                                          Text(
-                                                            prompt.title,
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .bodyLarge!
-                                                                .copyWith(
-                                                                  color: TColor
-                                                                      .petRock,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
-                                                                ),
+                                                          SizedBox(
+                                                            width: 230,
+                                                            child: Text(
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              prompt.title,
+                                                              style: Theme.of(
+                                                                      context)
+                                                                  .textTheme
+                                                                  .bodyLarge!
+                                                                  .copyWith(
+                                                                    color: TColor
+                                                                        .petRock,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                  ),
+                                                            ),
                                                           ),
                                                           Icon(
                                                             Icons
@@ -406,136 +434,209 @@ class _ChatPageState extends State<ChatPage> {
                                 text: _chatNotifier.numberRestToken.toString(),
                               ),
                               HSpacing.sm,
-                              Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  borderRadius: BorderRadius.circular(20),
-                                  onTap: () async =>
-                                      await PricingRedirectService.call(),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.rocket_launch_rounded,
-                                          color: TColor.tamarama,
-                                        ),
-                                        const SizedBox(
-                                          width: 3,
-                                        ),
-                                        GradientText(
-                                          'Upgrade',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleMedium!
-                                              .copyWith(
+                              _subscriptionNotifier.plan == null
+                                  ? Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                        borderRadius: BorderRadius.circular(20),
+                                        onTap: () async =>
+                                            await PricingRedirectService.call(),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(4.0),
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.rocket_launch_rounded,
                                                 color: TColor.tamarama,
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 14,
                                               ),
-                                          gradient: LinearGradient(
-                                            begin: Alignment.bottomLeft,
-                                            end: Alignment.topRight,
-                                            tileMode: TileMode.decal,
-                                            colors: [
-                                              TColor.tamarama,
-                                              TColor.goldenState,
+                                              const SizedBox(
+                                                width: 3,
+                                              ),
+                                              GradientText(
+                                                'Upgrade',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleMedium!
+                                                    .copyWith(
+                                                      color: TColor.tamarama,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontSize: 14,
+                                                    ),
+                                                gradient: LinearGradient(
+                                                  begin: Alignment.bottomLeft,
+                                                  end: Alignment.topRight,
+                                                  tileMode: TileMode.decal,
+                                                  colors: [
+                                                    TColor.tamarama,
+                                                    TColor.goldenState,
+                                                  ],
+                                                ),
+                                              ),
                                             ],
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
+                                      ),
+                                    )
+                                  : _subscriptionNotifier.plan!.name == 'basic'
+                                      ? Material(
+                                          color: Colors.transparent,
+                                          child: InkWell(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            onTap: () async =>
+                                                await PricingRedirectService
+                                                    .call(),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(4.0),
+                                              child: Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.rocket_launch_rounded,
+                                                    color: TColor.tamarama,
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 3,
+                                                  ),
+                                                  GradientText(
+                                                    'Upgrade',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .titleMedium!
+                                                        .copyWith(
+                                                          color:
+                                                              TColor.tamarama,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontSize: 14,
+                                                        ),
+                                                    gradient: LinearGradient(
+                                                      begin:
+                                                          Alignment.bottomLeft,
+                                                      end: Alignment.topRight,
+                                                      tileMode: TileMode.decal,
+                                                      colors: [
+                                                        TColor.tamarama,
+                                                        TColor.goldenState,
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      : const SizedBox.shrink(),
                             ],
                           ),
                           IconButton(
-                              onPressed: () async {
-                                try {
-                                  CurrentUserModel? currentUser =
-                                      await _chatNotifier.getCurrentUserModel();
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) => AlertDialog(
-                                            backgroundColor: Colors.white,
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(15)),
-                                            title: const Text(
-                                              "User Info",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 20),
-                                            ),
-                                            content: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Icon(Icons.person,
-                                                        color: TColor.tamarama),
-                                                    const SizedBox(width: 6),
-                                                    Text(
-                                                      currentUser!.userName,
-                                                      style: const TextStyle(
-                                                          fontSize: 14),
-                                                    ),
-                                                  ],
-                                                ),
-                                                const SizedBox(height: 10),
-                                                Row(
-                                                  children: [
-                                                    Icon(Icons.email,
-                                                        color:
-                                                            TColor.goldenState),
-                                                    const SizedBox(width: 6),
-                                                    Text(
-                                                      currentUser.email,
-                                                      style: const TextStyle(
-                                                          fontSize: 14),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                                child: Text("Close",
-                                                    style: TextStyle(
-                                                        color:
-                                                            TColor.tamarama)),
-                                              )
+                            onPressed: () async {
+                              try {
+                                CurrentUserModel? currentUser =
+                                    await _chatNotifier.getCurrentUserModel();
+                                showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                          backgroundColor: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15)),
+                                          title: Text(
+                                            "User Info",
+                                            textAlign: TextAlign.center,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleLarge,
+                                          ),
+                                          content: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Icon(Icons.person,
+                                                      color: TColor.petRock),
+                                                  const SizedBox(width: 10),
+                                                  Text(
+                                                    currentUser!.userName,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium!
+                                                        .copyWith(
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          fontSize: 16,
+                                                        ),
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 20),
+                                              Row(
+                                                children: [
+                                                  Icon(Icons.email,
+                                                      color: TColor.petRock),
+                                                  const SizedBox(width: 10),
+                                                  Text(
+                                                    currentUser.email,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium!
+                                                        .copyWith(
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          fontSize: 16,
+                                                        ),
+                                                  ),
+                                                ],
+                                              ),
                                             ],
-                                          ));
-                                } catch (e) {
-                                  if (e is TaskStatus &&
-                                      e == TaskStatus.UNAUTHORIZED) {
-                                    Navigator.of(context)
-                                        .pushNamedAndRemoveUntil(
-                                      Routes.authenticate,
-                                      (Route<dynamic> route) => false,
-                                    );
-                                  }
-                                  if (e is TaskStatus &&
-                                      e == TaskStatus.NO_INTERNET) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text("No internet connection"),
-                                      ),
-                                    );
-                                  }
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text(
+                                                "Close",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .copyWith(
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        fontSize: 16,
+                                                        color: TColor
+                                                            .poppySurprise),
+                                              ),
+                                            )
+                                          ],
+                                        ));
+                              } catch (e) {
+                                if (e is TaskStatus &&
+                                    e == TaskStatus.UNAUTHORIZED) {
+                                  Navigator.of(context).pushNamedAndRemoveUntil(
+                                    Routes.authenticate,
+                                    (Route<dynamic> route) => false,
+                                  );
                                 }
-                              },
-                              icon: Icon(
-                                Icons.account_circle_outlined,
-                                size: 30,
-                                color: TColor.tamarama,
-                              ))
+                                if (e is TaskStatus &&
+                                    e == TaskStatus.NO_INTERNET) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text("No internet connection"),
+                                    ),
+                                  );
+                                }
+                              }
+                            },
+                            icon: Icon(
+                              Icons.account_circle_outlined,
+                              size: 30,
+                              color: TColor.petRock,
+                            ),
+                          )
                         ],
                       ),
                     ),
@@ -785,9 +886,6 @@ class _ChatPageState extends State<ChatPage> {
             try {
               await notifier.sendMessage(value);
             } catch (e) {
-              //e is 401 and return to login screen
-
-              print(e);
               if (context.mounted &&
                   e is TaskStatus &&
                   e == TaskStatus.UNAUTHORIZED) {
