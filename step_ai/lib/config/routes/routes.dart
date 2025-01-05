@@ -6,7 +6,6 @@ import 'package:step_ai/features/email_composer/presentation/notifier/email_comp
 import 'package:step_ai/features/email_composer/presentation/notifier/usage_token_notifier.dart';
 import 'package:step_ai/features/email_composer/presentation/pages/email_action.dart';
 import 'package:step_ai/features/email_composer/presentation/pages/email_composer.dart';
-import 'package:step_ai/lib/features/chat/notifier/history_conversation_list_notifier.dart';
 
 import 'package:step_ai/features/authentication/presentation/pages/authenticate.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_prompt_list_usecase.dart';

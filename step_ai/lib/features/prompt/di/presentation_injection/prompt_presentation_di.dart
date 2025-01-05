@@ -14,9 +14,12 @@ Future<void> initPromptPresentation() async {
   PrivateFilterState privateFilterState = PrivateFilterState();
   PublicFilterState publicFilterState = PublicFilterState();
   FormModel formModel = FormModel();
-  PrivateViewState privateViewState = PrivateViewState(repository: getIt<PromptRepository>(), filterState: privateFilterState);
-  PublicViewState publicViewState = PublicViewState(repository: getIt<PromptRepository>(), filterState: publicFilterState);
-  PromptViewState promptViewState = PromptViewState(publicViewState: publicViewState, privateViewState: privateViewState);
+  PrivateViewState privateViewState = PrivateViewState(
+      repository: getIt<PromptRepository>(), filterState: privateFilterState);
+  PublicViewState publicViewState = PublicViewState(
+      repository: getIt<PromptRepository>(), filterState: publicFilterState);
+  PromptViewState promptViewState = PromptViewState(
+      publicViewState: publicViewState, privateViewState: privateViewState);
 
   getIt.registerSingleton<PublicViewState>(publicViewState);
   getIt.registerSingleton<PrivateViewState>(privateViewState);

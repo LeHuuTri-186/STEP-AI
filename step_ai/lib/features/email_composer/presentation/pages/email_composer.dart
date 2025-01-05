@@ -176,7 +176,10 @@ class _EmailComposerState extends State<EmailComposer> {
               ),
             ],
           ),
-          Text(email, style: Theme.of(context).textTheme.bodyLarge),
+          SizedBox(
+            height: 300,
+              child: SingleChildScrollView(child: Text(email, style: Theme.of(context).textTheme.bodyLarge))),
+          VSpacing.sm,
           Align(
               alignment: Alignment.centerRight,
               child: TextButton(
@@ -185,7 +188,7 @@ class _EmailComposerState extends State<EmailComposer> {
                   ),
                   onPressed: Navigator.of(context).pop,
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Text(
                       "Ok",
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(

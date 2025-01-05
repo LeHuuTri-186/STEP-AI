@@ -67,8 +67,25 @@ class _ChatBarState extends State<ChatBar> {
         });
       }
     } catch (e) {
-      print("Error picking images: $e");
-      // Optionally show a user-friendly message
+    } finally {
+      setState(() {
+        _isUploading = false; // Stop loading
+      });
+    }
+  }
+
+  Future<void> _pickCameraImages() async {
+    try {
+      setState(() {
+        _isUploading = true;
+      });
+      final XFile? pickedFile = await _picker.pickImage(source: ImageSource.camera);
+      if (pickedFile != null) {
+        setState(() {
+          _images = [File(pickedFile.path)];
+        });
+      }
+    } catch (e) {
     } finally {
       setState(() {
         _isUploading = false; // Stop loading
@@ -283,6 +300,7 @@ class _ChatBarState extends State<ChatBar> {
                       children: [
                         _buildPromptButton(context),
                         _buildImageUploadButton(context),
+                        _buildTakeImageButton(context),
                       ],
                     ),
                   _showIconSend
@@ -353,6 +371,17 @@ class _ChatBarState extends State<ChatBar> {
       onPressed: _pickMultipleImages,
       icon: Icon(
         FontAwesomeIcons.images,
+        color: TColor.petRock.withOpacity(0.7),
+        size: 20,
+      ),
+    );
+  }
+
+  IconButton _buildTakeImageButton(BuildContext context) {
+    return IconButton(
+      onPressed: _pickCameraImages,
+      icon: Icon(
+        FontAwesomeIcons.camera,
         color: TColor.petRock.withOpacity(0.7),
         size: 20,
       ),

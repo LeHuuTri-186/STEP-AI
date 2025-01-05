@@ -15,12 +15,11 @@ class AdModService {
   }
 
   static BannerAdListener listener = BannerAdListener(
-    onAdLoaded: (ad) => debugPrint('ad loaded'),
+    onAdLoaded: (ad) => {},
     onAdFailedToLoad: (ad, error) {
       ad.dispose();
-      debugPrint(error.message);
     },
-    onAdOpened: (ad) => debugPrint('ad opened'),
-    onAdClicked: (ad) => debugPrint('ad closed'),
+    onAdOpened: (ad) => {},
+    onAdClicked: (ad) => {},
   );
 }

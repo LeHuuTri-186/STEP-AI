@@ -5,6 +5,7 @@ import 'package:step_ai/features/authentication/notifier/login_notifier.dart';
 
 import 'package:step_ai/features/plan/domain/usecases/get_subscription_usecase.dart';
 import 'package:step_ai/features/plan/presentation/notifier/subscription_notifier.dart';
+import 'package:step_ai/features/plan/presentation/widgets/current_plan.dart';
 import 'package:step_ai/shared/styles/horizontal_spacing.dart';
 import 'package:step_ai/shared/styles/vertical_spacing.dart';
 import 'package:step_ai/shared/usecases/pricing_redirect_service.dart';
@@ -111,6 +112,7 @@ class _PlanPricingPageState extends State<PlanPricingPage> {
                   ),
                 ],
               ),
+              CurrentPlan(plan: notifier.plan!),
               BasicPlan(isSelected: notifier.plan!.name == 'basic',),
               StarterPlan(isSelected: notifier.plan!.name == 'starter'),
               ProPlan(isSelected: notifier.plan!.name == 'pro'),
