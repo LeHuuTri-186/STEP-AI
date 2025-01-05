@@ -26,10 +26,13 @@ class ButtonAddNewKnowledge extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text(
-                "+ Create knowledge",
-                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                  color: Colors.white,
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  "+ Create knowledge",
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ],
