@@ -29,7 +29,6 @@ class EmailAction extends StatefulWidget {
 class _EmailActionState extends State<EmailAction> {
   final _formKey = GlobalKey<FormState>();
 
-  var _isGeneratingEmail = false;
 
   final TextEditingController _subjectController = TextEditingController();
   final TextEditingController _senderController = TextEditingController();
@@ -37,11 +36,9 @@ class _EmailActionState extends State<EmailAction> {
   final TextEditingController _yourEmailController = TextEditingController();
   final TextEditingController _mainIdeaController = TextEditingController();
   final _assistantList = Constant.baseModels.map(Assistant.fromJson).toList();
-  final _languages = Constant.languages;
   late Assistant _selectedAssistant;
   late AiActionNotifier _composerNotifier;
   late UsageTokenNotifier _notifier;
-  List<String> ideas = [];
 
   @override
   void initState() {
@@ -52,15 +49,7 @@ class _EmailActionState extends State<EmailAction> {
     _yourEmailController.addListener(_textChange);
     final notifier = Provider.of<UsageTokenNotifier>(context, listen: false);
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await notifier.loadUsageToken();
-    });
-
-    notifier.addListener(() {
-      if (notifier.hasError) {
-        Navigator.of(context).pushReplacementNamed(Routes.authenticate);
-      }
-    });
+    notifier.loadUsageToken();
   }
 
   void _textChange() {
@@ -77,13 +66,6 @@ class _EmailActionState extends State<EmailAction> {
     _receiverController.dispose();
     _yourEmailController.dispose();
     _mainIdeaController.dispose();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        final notifier =
-            Provider.of<UsageTokenNotifier>(context, listen: false);
-        notifier.removeListener(() {});
-      }
-    });
 
     super.dispose();
   }
@@ -99,6 +81,27 @@ class _EmailActionState extends State<EmailAction> {
   Widget build(BuildContext context) {
     _composerNotifier = Provider.of<AiActionNotifier>(context, listen: true);
     _notifier = Provider.of<UsageTokenNotifier>(context, listen: true);
+
+    if (_notifier.hasError) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text("Email Composer"),
+        ),
+        resizeToAvoidBottomInset: true,
+        drawer: HistoryDrawer(),
+        onDrawerChanged: (isOpened) {
+          if (isOpened) {
+            FocusScope.of(context).unfocus();
+          }
+        },
+        body: Center(
+          child: Text(
+            "An error has occurred, please try again later!",
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -135,19 +138,25 @@ class _EmailActionState extends State<EmailAction> {
                     children: [
                       _buildEmailFormField(
                           "Email:", _yourEmailController, _validateField),
-                      CollapsibleChipListScreen(
-                          actions: Constant.actionType,
-                          onClick: (m, l) {
-                            if (_yourEmailController.text.isEmpty) {
-                              showErrorDialog(context, Constant.errorMessage['empty-email']!);
-                              return;
-                            }
-                            String action = m.substring(3);
-                            _composeEmail(_yourEmailController.text, action,
-                                Constant.actionType[m]!,
-                                language: l);
-                            _notifier.loadUsageToken();
-                          })
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CollapsibleChipListScreen(
+                              actions: Constant.actionType,
+                              onClick: (m, l) {
+                                if (_yourEmailController.text.isEmpty) {
+                                  showErrorDialog(context, Constant.errorMessage['empty-email']!);
+                                  return;
+                                }
+                                String action = m.replaceAll(Constant.emojiRegex, '').trim();
+                                _composeEmail(_yourEmailController.text, action,
+                                    Constant.actionType[m]!,
+                                    language: l);
+                                _notifier.loadUsageToken();
+                              }),
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -185,6 +194,15 @@ class _EmailActionState extends State<EmailAction> {
                           padding: const EdgeInsets.only(left: 10),
                           child: Row(
                             children: [
+                              if (_notifier.isLoading)
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Center(
+                                      child:
+                                      LoadingAnimationWidget.discreteCircle(
+                                          color: TColor.doctorWhite,
+                                          size: 9)),
+                                ),
                               ImageByText(
                                 imagePath: "lib/core/assets/imgs/flame.png",
                                 text: _notifier.model != null
@@ -265,7 +283,7 @@ class _EmailActionState extends State<EmailAction> {
           suffixIcon: _mainIdeaController.text.isNotEmpty
               ? IconButton(
                   padding: const EdgeInsets.all(2),
-                  icon: _isGeneratingEmail
+                  icon: _composerNotifier.isGeneratingEmail
                       ? Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(50),
@@ -368,7 +386,7 @@ class _EmailActionState extends State<EmailAction> {
             enabled: !_composerNotifier.isGeneratingEmail,
             decoration: InputDecoration(
               hintText: "Your email",
-              hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
                     color: TColor.petRock.withOpacity(0.7),
                     fontWeight: FontWeight.w600,
                     fontSize: 13,

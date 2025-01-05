@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:step_ai/core/data/model/detailed_messages_model.dart';
-import 'package:step_ai/core/usecase/use_case.dart';
+import 'package:step_ai/core/usecases/use_case.dart';
 import 'package:step_ai/features/chat/domain/entity/message.dart';
 import 'package:step_ai/features/chat/domain/repository/conversation_repository.dart';
 

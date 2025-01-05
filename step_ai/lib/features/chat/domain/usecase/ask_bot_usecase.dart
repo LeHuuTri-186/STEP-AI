@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:step_ai/core/usecase/use_case.dart';
+import 'package:step_ai/core/usecases/use_case.dart';
 import 'package:step_ai/features/chat/domain/params/thread_chat_param.dart';
 import 'package:step_ai/features/chat/domain/repository/bot_thread_repository.dart';
 import 'package:step_ai/shared/usecases/refresh_kb_token_usecase.dart';

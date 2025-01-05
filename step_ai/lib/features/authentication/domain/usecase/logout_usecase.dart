@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:step_ai/core/data/local/securestorage/secure_storage_helper.dart';
 import 'package:step_ai/core/data/local/sharedpref/shared_preferences_helper.dart';
-import 'package:step_ai/core/usecase/use_case.dart';
+import 'package:step_ai/core/usecases/use_case.dart';
 import 'package:step_ai/features/authentication/domain/repository/logout_repository.dart';
 
 

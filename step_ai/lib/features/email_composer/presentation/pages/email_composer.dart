@@ -67,18 +67,9 @@ class _EmailComposerState extends State<EmailComposer> {
     _mainIdeaController.addListener(_textChange);
     _yourEmailController.addListener(_textChange);
     final notifier = Provider.of<UsageTokenNotifier>(context, listen: false);
+    notifier.loadUsageToken();
+    Provider.of<EmailComposerNotifier>(context, listen: false).ideas = [];
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await notifier.loadUsageToken();
-    });
-
-    notifier.addListener(() {
-      if (notifier.hasError) {
-        if (context.mounted) {
-          Navigator.of(context).pushReplacementNamed(Routes.authenticate);
-        }
-      }
-    });
   }
 
   void _textChange() {
@@ -96,14 +87,6 @@ class _EmailComposerState extends State<EmailComposer> {
     _receiverController.dispose();
     _yourEmailController.dispose();
     _mainIdeaController.dispose();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        final notifier =
-            Provider.of<UsageTokenNotifier>(context, listen: false);
-        notifier.removeListener(() {});
-      }
-    });
-
     super.dispose();
   }
 
@@ -119,6 +102,28 @@ class _EmailComposerState extends State<EmailComposer> {
     _composerNotifier =
         Provider.of<EmailComposerNotifier>(context, listen: true);
     _notifier = Provider.of<UsageTokenNotifier>(context, listen: true);
+
+    if (_notifier.hasError) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text("Email Composer"),
+        ),
+        resizeToAvoidBottomInset: true,
+        drawer: HistoryDrawer(),
+        onDrawerChanged: (isOpened) {
+          if (isOpened) {
+            FocusScope.of(context).unfocus();
+          }
+        },
+        body: Center(
+          child: Text(
+            "An error has occurred, please try again later!",
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       drawer: HistoryDrawer(),
@@ -152,10 +157,10 @@ class _EmailComposerState extends State<EmailComposer> {
               Text(
                 'Word count: ${email.trim().split(RegExp(r'\s+')).length}',
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                  color: TColor.tamarama,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                ),
+                      color: TColor.tamarama,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    ),
               ),
               Row(
                 children: [
@@ -171,21 +176,27 @@ class _EmailComposerState extends State<EmailComposer> {
               ),
             ],
           ),
-          Text(email, style: Theme.of(context).textTheme.bodyLarge),
+          SizedBox(
+            height: 300,
+              child: SingleChildScrollView(child: Text(email, style: Theme.of(context).textTheme.bodyLarge))),
+          VSpacing.sm,
           Align(
               alignment: Alignment.centerRight,
               child: TextButton(
-                style: ButtonStyle(
-                  backgroundColor: WidgetStateProperty.all(TColor.tamarama),
-                ),
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStateProperty.all(TColor.tamarama),
+                  ),
                   onPressed: Navigator.of(context).pop,
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("Ok", style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: TColor.doctorWhite,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 16,
-                    ),),
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Text(
+                      "Ok",
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color: TColor.doctorWhite,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 16,
+                          ),
+                    ),
                   ))),
         ],
       ),
@@ -310,6 +321,15 @@ class _EmailComposerState extends State<EmailComposer> {
                           padding: const EdgeInsets.only(left: 10),
                           child: Row(
                             children: [
+                              if (_notifier.isLoading)
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Center(
+                                      child:
+                                          LoadingAnimationWidget.discreteCircle(
+                                              color: TColor.doctorWhite,
+                                              size: 9)),
+                                ),
                               ImageByText(
                                 imagePath: "lib/core/assets/imgs/flame.png",
                                 text: _notifier.model != null
@@ -439,7 +459,6 @@ class _EmailComposerState extends State<EmailComposer> {
               width: min(450, MediaQuery.of(context).size.width * 0.8),
               height: 600,
               child: Column(
-
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -463,7 +482,10 @@ class _EmailComposerState extends State<EmailComposer> {
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
                               "Language:",
-                              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall!
+                                  .copyWith(
                                     color: TColor.petRock.withOpacity(0.8),
                                     fontSize: 14,
                                   ),
@@ -485,7 +507,10 @@ class _EmailComposerState extends State<EmailComposer> {
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
                               "Length:",
-                              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall!
+                                  .copyWith(
                                     color: TColor.petRock.withOpacity(0.8),
                                     fontSize: 14,
                                   ),
@@ -506,7 +531,10 @@ class _EmailComposerState extends State<EmailComposer> {
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
                               "Formality:",
-                              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall!
+                                  .copyWith(
                                     color: TColor.petRock.withOpacity(0.8),
                                     fontSize: 14,
                                   ),
@@ -527,7 +555,10 @@ class _EmailComposerState extends State<EmailComposer> {
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
                               "Tone:",
-                              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall!
+                                  .copyWith(
                                     color: TColor.petRock.withOpacity(0.8),
                                     fontSize: 14,
                                   ),
@@ -597,19 +628,19 @@ class _EmailComposerState extends State<EmailComposer> {
                 )
               : IconButton(
                   padding: const EdgeInsets.all(2),
-                  icon:
-                  _composerNotifier.isGeneratingEmail
+                  icon: _composerNotifier.isGeneratingEmail
                       ? Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        color: TColor.tamarama,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: LoadingAnimationWidget.discreteCircle(
-                            color: TColor.doctorWhite, size: 12),
-                      ))
-                      : Icon(Icons.send_rounded, size: 20, color: TColor.petRock),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            color: TColor.tamarama,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: LoadingAnimationWidget.discreteCircle(
+                                color: TColor.doctorWhite, size: 12),
+                          ))
+                      : Icon(Icons.send_rounded,
+                          size: 20, color: TColor.petRock),
                   onPressed: () {
                     showErrorDialog(
                         context, Constant.errorMessage['empty-email']!);

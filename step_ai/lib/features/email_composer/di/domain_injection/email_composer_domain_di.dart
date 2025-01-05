@@ -10,8 +10,13 @@ import '../../domain/usecase/get_usage_usecase.dart';
 final getIt = GetIt.instance;
 
 Future<void> initEmailComposerDomain() async {
-  getIt.registerSingleton<ComposeEmailUsecase>(ComposeEmailUsecase(repository: getIt<ResponseEmailRepository>()));
-  getIt.registerSingleton<GenerateResponseEmailUsecase>(GenerateResponseEmailUsecase(repository: getIt<ResponseEmailRepository>()));
-  getIt.registerSingleton<GenerateIdeaUsecase>(GenerateIdeaUsecase(repository: getIt<ResponseEmailRepository>()));
-  getIt.registerSingleton<GetUsageUsecase>(GetUsageUsecase(repo: getIt<UsageRepository>()));
+  getIt.registerSingleton<ComposeEmailUsecase>(
+      ComposeEmailUsecase(repository: getIt<ResponseEmailRepository>()));
+  getIt.registerSingleton<GenerateResponseEmailUsecase>(
+      GenerateResponseEmailUsecase(
+          repository: getIt<ResponseEmailRepository>()));
+  getIt.registerSingleton<GenerateIdeaUsecase>(
+      GenerateIdeaUsecase(repository: getIt<ResponseEmailRepository>()));
+  getIt.registerSingleton<GetUsageUsecase>(
+      GetUsageUsecase(repo: getIt<UsageRepository>()));
 }

@@ -12,7 +12,11 @@ import 'package:step_ai/features/email_composer/presentation/notifier/usage_toke
 final getIt = GetIt.instance;
 
 Future<void> initEmailComposerPresentation() async {
-  getIt.registerSingleton<EmailComposerNotifier>(EmailComposerNotifier(generateResponseEmailUsecase: getIt<GenerateResponseEmailUsecase>(), generateIdeaUsecase: getIt<GenerateIdeaUsecase>()));
-  getIt.registerSingleton<UsageTokenNotifier>(UsageTokenNotifier(usageTokenUsecase: getIt<GetUsageUsecase>()));
-  getIt.registerSingleton<AiActionNotifier>(AiActionNotifier(composeEmailUsecase: getIt<ComposeEmailUsecase>()));
+  getIt.registerSingleton<EmailComposerNotifier>(EmailComposerNotifier(
+      generateResponseEmailUsecase: getIt<GenerateResponseEmailUsecase>(),
+      generateIdeaUsecase: getIt<GenerateIdeaUsecase>()));
+  getIt.registerSingleton<UsageTokenNotifier>(
+      UsageTokenNotifier(usageTokenUsecase: getIt<GetUsageUsecase>()));
+  getIt.registerSingleton<AiActionNotifier>(
+      AiActionNotifier(composeEmailUsecase: getIt<ComposeEmailUsecase>()));
 }
