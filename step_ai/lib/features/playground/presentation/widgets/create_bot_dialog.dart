@@ -64,7 +64,7 @@ class _BotCreateDialogState extends State<BotCreateDialog> {
             ),
             VSpacing.sm,
             SizedBox(
-              height: 400,
+              height: 450,
               child: SingleChildScrollView(
                 child: Column(
                   children: [
