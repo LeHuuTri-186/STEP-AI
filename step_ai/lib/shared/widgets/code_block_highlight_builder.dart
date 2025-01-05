@@ -44,10 +44,38 @@ class CodeBlockHighlightBuilder extends MarkdownElementBuilder {
         borderRadius: BorderRadius.circular(isBlockCode ? 8.0 : 4.0),
       ),
       child: isBlockCode
-          ? Stack(
+          ? Column(
         children: [
+          if (isAi)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  element.attributes['class']?.replaceFirst('language-', '') ?? 'plaintext',
+                  style: GoogleFonts.jetBrainsMono(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w500,
+                    color: TColor.squidInk,
+                  ),
+                ),
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(8),
+                    splashColor: TColor.northEastSnow,
+                    child: Padding(
+                      padding: const EdgeInsets.all(3.0),
+                      child: Icon(Icons.copy, size: 16.0, color: TColor.squidInk),
+                    ),
+                    onTap: () {
+                      Clipboard.setData(ClipboardData(text: code));
+                    },
+                  ),
+                ),
+              ],
+            ),
           Padding(
-            padding: const EdgeInsets.only(top: 25.0),
+            padding: const EdgeInsets.only(top: 10.0),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: HighlightView(
@@ -58,24 +86,6 @@ class CodeBlockHighlightBuilder extends MarkdownElementBuilder {
               ),
             ),
           ),
-          if (isAi)
-            Positioned(
-              right: 0.0,
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(8),
-                  splashColor: TColor.petRock.withOpacity(0.5),
-                  child: Padding(
-                    padding: const EdgeInsets.all(3.0),
-                    child: Icon(Icons.copy, size: 16.0, color: TColor.squidInk),
-                  ),
-                  onTap: () {
-                    Clipboard.setData(ClipboardData(text: code));
-                  },
-                ),
-              ),
-            ),
         ],
       )
           : Text(
