@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'dart:io' show Platform;
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -280,14 +281,20 @@ class _ChatPageState extends State<ChatPage> {
                                                 MainAxisAlignment.spaceBetween,
                                             direction: Axis.horizontal,
                                             children: [
-                                              Text(
-                                                "Don't know what to say? Use a prompt!",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyMedium!
-                                                    .copyWith(
-                                                        fontWeight:
-                                                            FontWeight.normal),
+                                              SizedBox(
+                                                width: max(300, MediaQuery.of(context).size.width * 0.5),
+                                                child: FittedBox(
+                                                  fit: BoxFit.scaleDown,
+                                                  child: Text(
+                                                    "Don't know what to say? Use a prompt!",
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium!
+                                                        .copyWith(
+                                                            fontWeight:
+                                                                FontWeight.normal),
+                                                  ),
+                                                ),
                                               ),
                                               Material(
                                                 color: Colors.transparent,
