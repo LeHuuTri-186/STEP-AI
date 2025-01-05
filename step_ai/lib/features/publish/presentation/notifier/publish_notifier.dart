@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:step_ai/features/authentication/domain/usecase/logout_usecase.dart';
 import 'package:step_ai/features/chat/domain/entity/assistant.dart';
-import 'package:step_ai/features/publish/domain/entity/telegram_publish.dart';
+import 'package:step_ai/features/publish/domain/entity/published.dart';
 import 'package:step_ai/features/publish/domain/params/disconnector_param.dart';
 import 'package:step_ai/features/publish/domain/params/messenger_publish_param.dart';
 import 'package:step_ai/features/publish/domain/params/messenger_validate_param.dart';
@@ -14,7 +14,7 @@ import 'package:step_ai/features/publish/domain/usecase/messenger_publish_usecas
 import 'package:step_ai/features/publish/domain/usecase/messenger_validate_usecase.dart';
 import 'package:step_ai/features/publish/domain/usecase/slack_publish_usecase.dart';
 import 'package:step_ai/features/publish/domain/usecase/slack_validate_usecase.dart';
-import 'package:step_ai/features/publish/domain/usecase/telegram_disconnect_usecase.dart';
+import 'package:step_ai/features/publish/domain/usecase/disconnect_usecase.dart';
 import 'package:step_ai/features/publish/domain/usecase/telegram_publish_usecase.dart';
 import 'package:step_ai/features/publish/domain/usecase/telegram_validate_usecase.dart';
 
@@ -26,7 +26,7 @@ class PublishNotifier extends ChangeNotifier{
   bool isConfiguredMessenger = false;
   bool isConfiguredTelegram = false;
 
-  List<TelegramPublish> publishedList = [];
+  List<Published> publishedList = [];
 
   String? telegramUrl, messengerUrl, slackUrl;
 
@@ -42,7 +42,7 @@ class PublishNotifier extends ChangeNotifier{
   final SlackValidateUseCase _slackValidateUseCase;
   final SlackPublishUseCase _slackPublishUseCase;
 
-  final TelegramDisconnectUseCase _telegramDisconnectUseCase;
+  final DisconnectUsecase _telegramDisconnectUseCase;
 
   final LogoutUseCase _logoutUseCase;
 

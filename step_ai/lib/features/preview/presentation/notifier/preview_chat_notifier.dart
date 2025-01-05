@@ -12,16 +12,20 @@ import 'package:step_ai/features/knowledge_base/domain/entity/knowledge.dart';
 import 'package:step_ai/features/knowledge_base/domain/entity/knowledge_list.dart';
 import 'package:step_ai/features/knowledge_base/domain/params/get_knowledges_param.dart';
 import 'package:step_ai/features/knowledge_base/domain/usecase/get_knowledge_list_usecase.dart';
+import 'package:step_ai/features/playground/data/models/bot_res_dto.dart';
 import 'package:step_ai/features/preview/domain/entity/kb_in_bot.dart';
+import 'package:step_ai/features/preview/domain/entity/preview_message.dart';
 import 'package:step_ai/features/preview/domain/params/import_kb_param.dart';
 import 'package:step_ai/features/preview/domain/params/remove_kb_param.dart';
 import 'package:step_ai/features/preview/domain/usecase/get_kb_in_bot_usecase.dart';
 import 'package:step_ai/features/preview/domain/usecase/import_kb_usecase.dart';
 import 'package:step_ai/features/preview/domain/usecase/remove_kb_usecase.dart';
+import 'package:step_ai/features/preview/domain/usecase/retrieve_history_usecase.dart';
 
 class PreviewChatNotifier extends ChangeNotifier{
   ThreadDto? currentThread;
   Assistant? currentAssistant;
+  BotResDto? currentBot;
 
   final PersonalAssistantNotifier _assistantNotifier;
   bool isCreatingThread = false;
@@ -52,6 +56,7 @@ class PreviewChatNotifier extends ChangeNotifier{
   final GetKnowledgeListUsecase _getKnowledgeListUsecase;
   final ImportKbUseCase _importKbUseCase;
   final RemoveKbUseCase _removeKbUseCase;
+  final RetrieveHistoryUseCase _retrieveHistoryUseCase;
   //
   PreviewChatNotifier(
       this._assistantNotifier,
@@ -61,7 +66,7 @@ class PreviewChatNotifier extends ChangeNotifier{
       this._getKbInBotUseCase,
       this._getKnowledgeListUsecase,
       this._importKbUseCase, 
-      this._removeKbUseCase
+      this._removeKbUseCase, this._retrieveHistoryUseCase
       );
 
   //Setter:
@@ -72,6 +77,11 @@ class PreviewChatNotifier extends ChangeNotifier{
 
   void updateCurrentAssistant(Assistant assistant){
     currentAssistant = assistant;
+    notifyListeners();
+  }
+
+  void updateCurrentBot(BotResDto bot) {
+    currentBot = bot;
     notifyListeners();
   }
   //Methods:--------------------------------------------------------------------
@@ -112,6 +122,40 @@ class PreviewChatNotifier extends ChangeNotifier{
         updateLastMessage("Server not response. Try again!");
       }
       rethrow; //Rethrowing e
+    }
+  }
+
+  //Load
+  Future<void> loadHistoryMessage(String assistantId) async {
+    isCreatingThread = true;
+    if (currentBot != null && currentBot!.openAiThreadIdPlay != null) {
+      currentThread ??= ThreadDto(
+          openAiThreadId: currentBot!.openAiThreadIdPlay!,
+          assistantId: currentAssistant!.id!,
+          createdAt: DateTime.now(),
+          id: '',
+          threadName: ''
+      );
+      currentThread!.openAiThreadId = currentBot!.openAiThreadIdPlay!;
+      try {
+        List<PreviewMessage> res = await _retrieveHistoryUseCase.call(
+            params: currentBot!.openAiThreadIdPlay!);
+
+        for (int i = res.length - 1; i >= 0; i--) {
+          PreviewMessage mes = res.elementAt(i);
+          addMessage(Message(
+              assistant: currentAssistant!,
+              role: mes.role == "assistant" ? "model" : "user",
+              content: mes.content.first.text.value ?? "")
+          );
+        }
+      } catch (e) {
+        print(e.toString());
+      }
+
+      isCreatingThread = false;
+      notifyListeners();
+      return;
     }
   }
 
@@ -284,6 +328,7 @@ class PreviewChatNotifier extends ChangeNotifier{
     _historyMessages.clear();
     currentThread = null;
     currentAssistant = null;
+    currentBot = null;
 
     _assistantNotifier.reset();
   }

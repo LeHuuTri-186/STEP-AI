@@ -29,6 +29,7 @@ import 'package:step_ai/features/chat/notifier/history_conversation_list_notifie
 import 'package:step_ai/features/preview/domain/usecase/get_kb_in_bot_usecase.dart';
 import 'package:step_ai/features/preview/domain/usecase/import_kb_usecase.dart';
 import 'package:step_ai/features/preview/domain/usecase/remove_kb_usecase.dart';
+import 'package:step_ai/features/preview/domain/usecase/retrieve_history_usecase.dart';
 import 'package:step_ai/features/preview/presentation/notifier/preview_chat_notifier.dart';
 import 'package:step_ai/features/knowledge_base/domain/usecase/add_knowledge_usecase.dart';
 import 'package:step_ai/features/knowledge_base/domain/usecase/delete_knowledge_usecase.dart';
@@ -41,7 +42,7 @@ import 'package:step_ai/features/publish/domain/usecase/messenger_publish_usecas
 import 'package:step_ai/features/publish/domain/usecase/messenger_validate_usecase.dart';
 import 'package:step_ai/features/publish/domain/usecase/slack_publish_usecase.dart';
 import 'package:step_ai/features/publish/domain/usecase/slack_validate_usecase.dart';
-import 'package:step_ai/features/publish/domain/usecase/telegram_disconnect_usecase.dart';
+import 'package:step_ai/features/publish/domain/usecase/disconnect_usecase.dart';
 import 'package:step_ai/features/publish/domain/usecase/telegram_publish_usecase.dart';
 import 'package:step_ai/features/publish/domain/usecase/telegram_validate_usecase.dart';
 import 'package:step_ai/features/publish/presentation/notifier/publish_notifier.dart';
@@ -175,6 +176,7 @@ class ProviderModule {
         getIt<GetKnowledgeListUsecase>(),
         getIt<ImportKbUseCase>(),
         getIt<RemoveKbUseCase>(),
+        getIt<RetrieveHistoryUseCase>(),
       ),
     );
 
@@ -184,7 +186,7 @@ class ProviderModule {
       getIt<LogoutUseCase>(),
       getIt<TelegramValidateUseCase>(),
       getIt<TelegramPublishUseCase>(),
-      getIt<TelegramDisconnectUseCase>(),
+      getIt<DisconnectUsecase>(),
       getIt<MessengerValidateUseCase>(),
       getIt<MessengerPublishUseCase>(),
       getIt<SlackValidateUseCase>(),

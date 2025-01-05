@@ -39,12 +39,10 @@ class _PreviewChatPageState extends State<PreviewChatPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       _previewChatNotifier = Provider.of<PreviewChatNotifier>(context, listen: false);
       assistant = _previewChatNotifier.currentAssistant!;
-      if (_previewChatNotifier.currentThread == null) {
-        _previewChatNotifier.createThread(assistant.id!);
-      }
+      await _previewChatNotifier.loadHistoryMessage(assistant.id!);
     });
   }
 
@@ -102,7 +100,7 @@ class _PreviewChatPageState extends State<PreviewChatPage> {
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.displayLarge?.copyWith(
                   color: TColor.petRock,
-                  fontSize: 25,
+                  fontSize: 18,
                 ),
               ),
             ],
@@ -111,6 +109,16 @@ class _PreviewChatPageState extends State<PreviewChatPage> {
         backgroundColor: TColor.doctorWhite,
         //Button knowledge_base here
         actions: [
+          // IconButton(
+          //     onPressed: () async{
+          //       await _previewChatNotifier.createThread(
+          //         _previewChatNotifier.currentAssistant!.id!
+          //       );
+          //       _previewChatNotifier.clearHistoryMessages();
+          //     },
+          //     icon: const Icon(Icons.add)
+          // ),
+
           IconButton(
               onPressed: () async {
                 //Knowledge_base linking

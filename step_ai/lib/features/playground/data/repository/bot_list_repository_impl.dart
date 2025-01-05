@@ -31,10 +31,11 @@ class BotListRepositoryImpl extends BotListRepository {
       "${Constant.botGetEndpoint}=$finalQuery${Constant.botGetOrderSet}${Constant.botOffset}${Constant.botLimit}",
       headers: headers
     );
-
+    String stream = await request.stream.bytesToString();
+    print(stream);
     if (request.statusCode == 200) {
       BotListResDto bots = BotListResDto.fromJson(
-          jsonDecode(await request.stream.bytesToString())
+          jsonDecode(stream)
       );
       return bots;
     } //

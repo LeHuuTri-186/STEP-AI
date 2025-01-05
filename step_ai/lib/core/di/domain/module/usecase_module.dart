@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:http/http.dart';
 import 'package:step_ai/core/data/local/securestorage/secure_storage_helper.dart';
 import 'package:step_ai/core/data/local/sharedpref/shared_preferences_helper.dart';
 import 'package:step_ai/features/authentication/domain/usecase/is_logged_in_usecase.dart';
@@ -23,18 +24,25 @@ import 'package:step_ai/features/chat/domain/usecase/get_history_conversation_li
 import 'package:step_ai/features/chat/domain/usecase/get_messages_by_conversation_id_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/get_usage_token_usecase.dart';
 import 'package:step_ai/features/chat/domain/usecase/send_message_usecase.dart';
+import 'package:step_ai/features/playground/domain/repository/bot_list_repository.dart';
+import 'package:step_ai/features/playground/domain/usecase/create_bot_usecase.dart';
+import 'package:step_ai/features/playground/domain/usecase/delete_bot_usecase.dart';
+import 'package:step_ai/features/playground/domain/usecase/get_bot_list_usecase.dart';
+import 'package:step_ai/features/playground/domain/usecase/update_bot_usecase.dart';
+import 'package:step_ai/features/preview/domain/repository/kb_in_bot_repository.dart';
 import 'package:step_ai/features/preview/domain/usecase/get_kb_in_bot_usecase.dart';
 import 'package:step_ai/features/preview/domain/usecase/import_kb_usecase.dart';
 import 'package:step_ai/features/preview/domain/usecase/remove_kb_usecase.dart';
+import 'package:step_ai/features/preview/domain/usecase/retrieve_history_usecase.dart';
+import 'package:step_ai/features/publish/domain/repository/publisher_repository.dart';
 import 'package:step_ai/features/publish/domain/usecase/get_published_usecase.dart';
 import 'package:step_ai/features/publish/domain/usecase/messenger_publish_usecase.dart';
 import 'package:step_ai/features/publish/domain/usecase/messenger_validate_usecase.dart';
 import 'package:step_ai/features/publish/domain/usecase/slack_publish_usecase.dart';
 import 'package:step_ai/features/publish/domain/usecase/slack_validate_usecase.dart';
-import 'package:step_ai/features/publish/domain/usecase/telegram_disconnect_usecase.dart';
+import 'package:step_ai/features/publish/domain/usecase/disconnect_usecase.dart';
 import 'package:step_ai/features/publish/domain/usecase/telegram_publish_usecase.dart';
 import 'package:step_ai/features/publish/domain/usecase/telegram_validate_usecase.dart';
-import 'package:step_ai/shared/usecases/refresh_kb_token_usecase.dart';
 import 'package:step_ai/features/knowledge_base/domain/entity/knowledge.dart';
 import 'package:step_ai/features/knowledge_base/domain/repository/knowledge_repository.dart';
 import 'package:step_ai/features/knowledge_base/domain/usecase/add_knowledge_usecase.dart';
@@ -53,14 +61,10 @@ import 'package:step_ai/features/units_in_knowledge/domain/usecase/upload_slack_
 import 'package:step_ai/features/units_in_knowledge/domain/usecase/upload_web_usecase.dart';
 import 'package:step_ai/features/plan/domain/repository/subscription_repository.dart';
 import 'package:step_ai/features/plan/domain/usecases/get_subscription_usecase.dart';
+import 'package:step_ai/shared/usecases/refresh_kb_token_usecase.dart';
 import 'package:step_ai/shared/usecases/refresh_token_usecase.dart';
 
 import '../../../../features/authentication/domain/repository/register_repository.dart';
-import '../../../../features/playground/domain/repository/bot_list_repository.dart';
-import '../../../../features/playground/domain/usecase/create_bot_usecase.dart';
-import '../../../../features/playground/domain/usecase/delete_bot_usecase.dart';
-import '../../../../features/playground/domain/usecase/get_bot_list_usecase.dart';
-import '../../../../features/playground/domain/usecase/update_bot_usecase.dart';
 import '../../../di/service_locator.dart';
 
 class UseCaseModule {
@@ -176,40 +180,43 @@ class UseCaseModule {
         getIt<RefreshKbTokenUseCase>(), getIt<BotThreadRepository>()));
 
     getIt.registerSingleton<GetKbInBotUseCase>(GetKbInBotUseCase(
-        getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()));
+        getIt<KbInBotRepository>(), getIt<RefreshKbTokenUseCase>()));
+
     getIt.registerSingleton<ImportKbUseCase>(ImportKbUseCase(
-        getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()));
+     getIt<RefreshKbTokenUseCase>(),  getIt<KbInBotRepository>()));
 
     getIt.registerSingleton<RemoveKbUseCase>(RemoveKbUseCase(
-        getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()));
+        getIt<RefreshKbTokenUseCase>(), getIt<KbInBotRepository>()));
 
     getIt.registerSingleton<GetPublishedUseCase>(GetPublishedUseCase(
-        getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()));
-
+        getIt<RefreshKbTokenUseCase>(), getIt<PublisherRepository>()));
+    getIt.registerSingleton<RetrieveHistoryUseCase>(RetrieveHistoryUseCase(
+        getIt<KbInBotRepository>(), getIt<RefreshKbTokenUseCase>()
+    ));
     //Telegram
     getIt.registerSingleton<TelegramValidateUseCase>(TelegramValidateUseCase(
-        getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()));
+        getIt<RefreshKbTokenUseCase>(), getIt<PublisherRepository>()));
 
     getIt.registerSingleton<TelegramPublishUseCase>(TelegramPublishUseCase(
-        getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()));
+        getIt<RefreshKbTokenUseCase>(), getIt<PublisherRepository>()));
 
-    getIt.registerSingleton<TelegramDisconnectUseCase>(
-        TelegramDisconnectUseCase(
-            getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()));
+    getIt.registerSingleton<DisconnectUsecase>(
+        DisconnectUsecase(
+            getIt<RefreshKbTokenUseCase>(), getIt<PublisherRepository>()));
 
     //Messenger
     getIt.registerSingleton<MessengerValidateUseCase>(MessengerValidateUseCase(
-        getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()));
+        getIt<RefreshKbTokenUseCase>(), getIt<PublisherRepository>()));
 
     getIt.registerSingleton<MessengerPublishUseCase>(MessengerPublishUseCase(
-        getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()));
+        getIt<RefreshKbTokenUseCase>(), getIt<PublisherRepository>()));
 
     //Slack
     getIt.registerSingleton<SlackValidateUseCase>(SlackValidateUseCase(
-        getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()));
+        getIt<RefreshKbTokenUseCase>(), getIt<PublisherRepository>()));
 
     getIt.registerSingleton<SlackPublishUseCase>(SlackPublishUseCase(
-        getIt<RefreshKbTokenUseCase>(), getIt<SecureStorageHelper>()));
+        getIt<RefreshKbTokenUseCase>(), getIt<PublisherRepository>()));
 
     ///Knowledge base:-----------------------------------------------------------
     getIt.registerSingleton<GetKnowledgeListUsecase>(GetKnowledgeListUsecase(

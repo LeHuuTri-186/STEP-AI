@@ -104,12 +104,19 @@ class _PublishPageState extends State<PublishPage> {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
                 SizedBox(height: 5),
-                Text(
-                  'How to obtain Slack configurations?',
-                  style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.blue),
+                GestureDetector(
+                  child: Text(
+                    'How to obtain Slack configurations?',
+                    style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.blue),
+                  ),
+                  onTap: () {
+                    launchUrl(
+                        Uri.parse('https://jarvis.cx/help/knowledge-base/publish-bot/slack')
+                    );
+                  },
                 ),
                 SizedBox(height: 20),
                 const Text(
@@ -262,12 +269,19 @@ class _PublishPageState extends State<PublishPage> {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 5),
-                const Text(
-                  'How to obtain Telegram configurations?',
-                  style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.blue),
+                GestureDetector(
+                  child: const Text(
+                    'How to obtain Telegram configurations?',
+                    style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.blue),
+                  ),
+                  onTap: () {
+                    launchUrl(
+                        Uri.parse('https://jarvis.cx/help/knowledge-base/publish-bot/telegram')
+                    );
+                  },
                 ),
                 const SizedBox(height: 20),
                 const Text(
@@ -365,16 +379,23 @@ class _PublishPageState extends State<PublishPage> {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
                 SizedBox(height: 5),
-                const Text(
-                  'How to obtain Slack configurations?',
-                  style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.blue),
+                GestureDetector(
+                  child: const Text(
+                    'How to obtain Messenger configurations?',
+                    style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.blue),
+                  ),
+                  onTap: () {
+                    launchUrl(
+                        Uri.parse('https://jarvis.cx/help/knowledge-base/publish-bot/messenger')
+                    );
+                  },
                 ),
                 SizedBox(height: 20),
                 const Text(
-                  '1. Message copy link\n'
+                  '1. Messenger copy link\n'
                   'Copy the following content to your Slack app configuration page.',
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                 ),
@@ -687,7 +708,7 @@ class _PublishPageState extends State<PublishPage> {
                     ? Text(
                         "Published",
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    color: TColor.slate,
+                    color: TColor.tamarama,
                     fontWeight: FontWeight.w800
                   ),
                       )

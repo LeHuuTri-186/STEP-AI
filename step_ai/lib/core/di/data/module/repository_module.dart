@@ -18,6 +18,10 @@ import 'package:step_ai/features/chat/domain/repository/conversation_repository.
 import 'package:step_ai/features/knowledge_base/data/network/knowledge_api.dart';
 import 'package:step_ai/features/knowledge_base/data/repository/knowledge_repository_impl.dart';
 import 'package:step_ai/features/knowledge_base/domain/repository/knowledge_repository.dart';
+import 'package:step_ai/features/preview/data/repository/kb_in_bot_repository_impl.dart';
+import 'package:step_ai/features/preview/domain/repository/kb_in_bot_repository.dart';
+import 'package:step_ai/features/publish/data/repository/publisher_repository_impl.dart';
+import 'package:step_ai/features/publish/domain/repository/publisher_repository.dart';
 import 'package:step_ai/features/units_in_knowledge/data/network/unit_api.dart';
 import 'package:step_ai/features/units_in_knowledge/data/repository/unit_repository_impl.dart';
 import 'package:step_ai/features/units_in_knowledge/domain/repository/unit_repository.dart';
@@ -72,5 +76,12 @@ class RepositoryModule {
     getIt.registerSingleton<SubscriptionRepository>(
         SubscriptionRepositoryImpl(getIt<ApiSubscription>())
         as SubscriptionRepository);
+
+    //Preview:------------------------------------------------------------------
+    getIt.registerSingleton<KbInBotRepository>(
+        KbInBotRepositoryImpl(getIt<SecureStorageHelper>()) as KbInBotRepository);
+    //Publish:------------------------------------------------------------------
+    getIt.registerSingleton<PublisherRepository>(
+        PublisherRepositoryImpl(getIt<SecureStorageHelper>()) as PublisherRepository);
   }
 }

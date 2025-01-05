@@ -39,13 +39,21 @@ class BotListView extends StatelessWidget {
           bot: bots[index],
           index: index,
           onTap: () {
-            Provider.of<PreviewChatNotifier>(context, listen: false).updateCurrentAssistant(
+            Provider.of<PreviewChatNotifier>(context, listen: false)
+                .reset();
+            Provider.of<PreviewChatNotifier>(context, listen: false)
+                .updateCurrentAssistant(
                 Assistant(
                   name: bots[index].assistantName,
                   id: bots[index].id,
                   model: 'personal',
                 )
             );
+
+            Provider.of<PreviewChatNotifier>(context, listen: false)
+                .updateCurrentBot(bots[index]);
+
+
             //Load assistant chat view.
             Navigator.of(context).pushNamed(Routes.previewChat);
           },
@@ -93,12 +101,33 @@ class BotListView extends StatelessWidget {
             );
           },
           onToggleAddBot: () {
+            if (personalAssistantNotifier.personalAssistants.isNotEmpty) {
+              Assistant? ast =  personalAssistantNotifier
+                  .personalAssistants.firstWhere(
+                    (element) => element!.id == bots[index].id,
+              ); //Check if assistant is already in model list
+              if (ast != null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Assistant already in model list'),
+                    duration: Duration(seconds: 1),
+                  ),
+                );
+                return;
+              }
+            }
             personalAssistantNotifier.addAssistant(
                 Assistant(
                   id: bots[index].id,
                   model: 'personal',
                   name: bots[index].assistantName,
                 )
+            );
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Assistant added to model list'),
+                duration: Duration(seconds: 1),
+              ),
             );
           },
         );

@@ -1,16 +1,16 @@
-class TelegramMetadata {
+class PublishedMetadata {
   final String botName;
   final String botToken;
   final String redirect;
 
-  TelegramMetadata({
+  PublishedMetadata({
     required this.botName,
     required this.botToken,
     required this.redirect,
   });
 
-  factory TelegramMetadata.fromJson(Map<String, dynamic> json) {
-    return TelegramMetadata(
+  factory PublishedMetadata.fromJson(Map<String, dynamic> json) {
+    return PublishedMetadata(
       botName: json['botName'] ?? '',
       botToken: json['botToken'] ?? '',
       redirect: json['redirect'] ?? '',
@@ -21,17 +21,17 @@ class TelegramMetadata {
 
 
 
-class TelegramPublish {
+class Published {
   final String id;
   final String type;
   final String? accessToken;
-  final TelegramMetadata metadata;
+  final PublishedMetadata metadata;
   final String assistantId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime? deletedAt;
 
-  TelegramPublish({
+  Published({
     required this.id,
     required this.type,
     this.accessToken,
@@ -42,12 +42,12 @@ class TelegramPublish {
     this.deletedAt,
   });
 
-  factory TelegramPublish.fromJson(Map<String, dynamic> json) {
-    return TelegramPublish(
+  factory Published.fromJson(Map<String, dynamic> json) {
+    return Published(
       id: json['id'] ?? '',
       type: json['type'] ?? '',
       accessToken: json['accessToken'],
-      metadata: TelegramMetadata.fromJson(json['metadata'] ?? {}),
+      metadata: PublishedMetadata.fromJson(json['metadata'] ?? {}),
       assistantId: json['assistantId'] ?? '',
       createdAt: DateTime.parse(json['createdAt'] ?? ''),
       updatedAt: DateTime.parse(json['updatedAt'] ?? ''),
@@ -58,13 +58,13 @@ class TelegramPublish {
   }
 }
 class ResponseData {
-  final List<TelegramPublish> items;
+  final List<Published> items;
 
   ResponseData({required this.items});
 
   factory ResponseData.fromJson(List<dynamic> jsonList) {
     return ResponseData(
-      items: jsonList.map((json) => TelegramPublish.fromJson(json)).toList(),
+      items: jsonList.map((json) => Published.fromJson(json)).toList(),
     );
   }
 }
