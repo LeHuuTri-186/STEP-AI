@@ -87,7 +87,6 @@ class _PreviewChatPageState extends State<PreviewChatPage> {
           FocusScope.of(context).unfocus();
         }
       },
-      drawer: HistoryDrawer(),
       appBar: AppBar(
         title: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -220,5 +219,4 @@ class _PreviewChatPageState extends State<PreviewChatPage> {
       ),
     );
   }
-
 }

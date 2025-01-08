@@ -33,36 +33,34 @@ class _AddKnowledgeDialogState extends State<AddKnowledgeDialog> {
         Provider.of<AddKnowledgeDialogNotifier>(context, listen: true);
     return AlertDialog(
       backgroundColor: TColor.doctorWhite,
-      title: Text(
-        'Create Knowledge',
-        textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-          fontSize: 20,
-      color: TColor.slate,)
-      ),
+      title: Text('Create Knowledge',
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                fontSize: 20,
+                color: TColor.slate,
+              )),
       content: SizedBox(
         width: 400,
         child: Form(
           key: _formKey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               TextFormField(
                 controller: _nameController,
                 maxLength: 50,
                 decoration: InputDecoration(
-                  labelStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      fontSize: 15,
-                    color: TColor.petRock
-                  ),
+                  labelStyle: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(fontSize: 15, color: TColor.petRock),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: TColor.tamarama)
-                  ),
+                      borderSide: BorderSide(color: TColor.tamarama)),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: TColor.tamarama)
-                  ),
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: TColor.tamarama)),
                   labelText: 'Name',
                   counterText: '${_nameController.text.length}/50',
                   errorText: _addKnowledgeDialogNotifier
@@ -86,18 +84,16 @@ class _AddKnowledgeDialogState extends State<AddKnowledgeDialog> {
                 maxLength: 2000,
                 maxLines: 5,
                 decoration: InputDecoration(
-                  labelStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    fontSize: 15,
-                      color: TColor.petRock
-                  ),
+                  labelStyle: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(fontSize: 15, color: TColor.petRock),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: TColor.tamarama)
-                  ),
+                      borderSide: BorderSide(color: TColor.tamarama)),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: TColor.tamarama)
-                  ),
+                      borderSide: BorderSide(color: TColor.tamarama)),
                   labelText: 'Description',
                   alignLabelWithHint: true,
                   counterText: '${_descriptionController.text.length}/2000',
@@ -113,7 +109,7 @@ class _AddKnowledgeDialogState extends State<AddKnowledgeDialog> {
           ),
         ),
       ),
-      actionsAlignment: MainAxisAlignment.center,
+      actionsAlignment: MainAxisAlignment.end,
       actions: [
         TextButton(
           onPressed: () {
@@ -125,13 +121,12 @@ class _AddKnowledgeDialogState extends State<AddKnowledgeDialog> {
           child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Colors.grey,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: TColor.tamarama, width: 2),
               ),
-              child: const Text('Cancel', style: TextStyle(color: Colors.white))),
+              child: Text('Cancel',
+                  style: Theme.of(context).textTheme.bodyMedium)),
         ),
-
-
         TextButton(
           onPressed: _addKnowledgeDialogNotifier.isLoadingWhenCreateNewKnowledge
               ? null
@@ -182,13 +177,15 @@ class _AddKnowledgeDialogState extends State<AddKnowledgeDialog> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(8),
                     color: TColor.tamarama,
                   ),
-                  child: const Text(
-                    'Create',
-                    style: TextStyle(color: Colors.white),
-                  )),
+                  child: Text('Create',
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: TColor.doctorWhite,
+                        fontWeight: FontWeight.w700
+                      )),
+                ),
         ),
       ],
     );

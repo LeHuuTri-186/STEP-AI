@@ -28,21 +28,23 @@ class KnowledgePage extends StatelessWidget {
       child: Column(
         children: [
           VSpacing.sm,
-          Row(
-            children: [
-              Expanded(
-                  child: CustomSearchBar(
-                      onChanged: (value) => {
-                            knowledgeNotifier
-                                .changeDisplayKnowledgeWhenSearching(value)
-                          })),
-            ],
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Expanded(
+                    child: CustomSearchBar(
+                        onChanged: (value) => {
+                              knowledgeNotifier
+                                  .changeDisplayKnowledgeWhenSearching(value)
+                            })),
+              ],
+            ),
           ),
           VSpacing.sm,
           //Button add knowledge
           const Align(
-            alignment: Alignment.centerRight,
-              child: ButtonAddNewKnowledge()),
+              alignment: Alignment.centerRight, child: ButtonAddNewKnowledge()),
 
           //Knowledge list view
           Expanded(

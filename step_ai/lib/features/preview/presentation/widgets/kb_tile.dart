@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:step_ai/features/preview/domain/entity/kb_in_bot.dart';
 import 'package:step_ai/features/prompt/data/models/prompt_model.dart';
+import 'package:step_ai/shared/styles/horizontal_spacing.dart';
 
 import '../../../../shared/styles/colors.dart';
 
@@ -48,11 +50,17 @@ class KbTile extends StatelessWidget {
   }
 
   Widget _buildDataColumn(BuildContext context) {
-    return Text(
-      kb.knowledgeName,
-      style: Theme.of(context).textTheme.displayLarge?.copyWith(
-        fontSize: 14,
-      ),
+    return Row(
+      children: [
+        const Icon(FontAwesomeIcons.server),
+        HSpacing.lg,
+        Text(
+          kb.knowledgeName,
+          style: Theme.of(context).textTheme.displayLarge?.copyWith(
+            fontSize: 16,
+          ),
+        ),
+      ],
     );
   }
 

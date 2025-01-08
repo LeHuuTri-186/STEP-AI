@@ -95,7 +95,6 @@ class _AddedKbPanelState extends State<AddedKbPanel> {
     );
   }
 
-
   void _onScroll() {
     final preview = Provider.of<PreviewChatNotifier>(context, listen: false);
 

@@ -66,7 +66,6 @@ class _ChatBarState extends State<ChatBar> {
           _images = pickedFiles.map((file) => File(file.path)).toList();
         });
       }
-    } catch (e) {
     } finally {
       setState(() {
         _isUploading = false; // Stop loading
@@ -85,7 +84,6 @@ class _ChatBarState extends State<ChatBar> {
           _images = [File(pickedFile.path)];
         });
       }
-    } catch (e) {
     } finally {
       setState(() {
         _isUploading = false; // Stop loading
@@ -327,8 +325,6 @@ class _ChatBarState extends State<ChatBar> {
                                     context, listen: false
                                 ).sendMessageForPersonalBot(message);
                               }
-
-
                             } catch (e) {
                               //e is 401 and return to login screen
 
@@ -344,7 +340,7 @@ class _ChatBarState extends State<ChatBar> {
                             }
                             setState(() {
                               //print("set state ABCDDDDDE");
-                              _showIconSend = true;
+                              _showIconSend = false;
                             });
                             // _controller.clear();
                           })

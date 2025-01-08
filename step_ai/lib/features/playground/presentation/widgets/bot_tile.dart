@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:step_ai/shared/styles/horizontal_spacing.dart';
 
 import '../../../../shared/styles/colors.dart';
@@ -42,6 +43,7 @@ class BotTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                const Icon(FontAwesomeIcons.robot),
                 Flexible(
                   flex: 2,
                   child: _buildDataColumn(context),

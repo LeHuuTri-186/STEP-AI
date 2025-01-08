@@ -208,6 +208,7 @@ class PreviewChatNotifier extends ChangeNotifier{
 
   Future<void> removeKbInList(KbInBot? kb) async{
     isLoading = true;
+    notifyListeners();
     try {
       int code = await _removeKbUseCase.call(params: RemoveKbParam(kb!, currentAssistant!));
       if (code == 200) {
@@ -275,18 +276,9 @@ class PreviewChatNotifier extends ChangeNotifier{
   }
 
   Future<void> addKbToBot(Knowledge kl) async {
-
-    // KbInBot kb = KbInBot(
-    //     createdAt: kl.createdAt,
-    //     description: kl.description,
-    //     knowledgeName: kl.knowledgeName,
-    //     userId: kl.userId,
-    //     updatedAt: kl.updatedAt,
-    //     updatedBy: kl.updatedBy
-    // );
-    //Call import
     try {
       isLoading = true;
+      notifyListeners();
       int code = await _importKbUseCase.call(params: ImportKbParam(kl, currentAssistant!));
       if (code == 200) {
         try {
@@ -306,7 +298,7 @@ class PreviewChatNotifier extends ChangeNotifier{
       }
       rethrow;
     } finally {
-      isLoading =false;
+      isLoading = false;
       notifyListeners();
     }
   }
@@ -351,5 +343,4 @@ class PreviewChatNotifier extends ChangeNotifier{
 
     errorString = "";
   }
-
 }

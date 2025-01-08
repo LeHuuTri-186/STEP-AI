@@ -902,9 +902,6 @@ class _ChatPageState extends State<ChatPage> {
                 );
               }
             }
-            if (context.mounted) {
-              Navigator.of(context).pop();
-            }
           },
         );
       },
